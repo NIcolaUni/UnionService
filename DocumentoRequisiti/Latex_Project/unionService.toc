@@ -1,0 +1,18 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Requisiti}{2}
+\contentsline {subsection}{\numberline {1.1}I dipendenti}{2}
+\contentsline {subsubsection}{\numberline {1.1.1}Il dirigente}{2}
+\contentsline {subsection}{\numberline {1.2}Registrazione e accesso}{3}
+\contentsline {subsection}{\numberline {1.3}Funzionalit\'a comuni}{5}
+\contentsline {subsubsection}{\numberline {1.3.1}Il calendario aziendale}{5}
+\contentsline {subsubsection}{\numberline {1.3.2}Le ferie}{5}
+\contentsline {subsubsection}{\numberline {1.3.3}Le note}{6}
+\contentsline {subsection}{\numberline {1.4}Funzionalit\'a accessibili dall'\textit {ufficio commerciale}}{6}
+\contentsline {subsubsection}{\numberline {1.4.1}Il cliente}{7}
+\contentsline {subsection}{\numberline {1.5}Funzionalit\'a accessibili dall'\textit {ufficio tecnico}}{7}
+\contentsline {subsection}{\numberline {1.6}Funzionalit\'a accessibili dall'\textit {ufficio capi-cantiere}}{7}
+\contentsline {subsection}{\numberline {1.7}Il responsabile}{8}
+\contentsline {subsubsection}{\numberline {1.7.1}Schermata \textit {avanzamento lavori}}{8}
+\contentsline {section}{\numberline {2}Lavori, tempi e costi}{9}
+\contentsline {section}{\numberline {3}Documentazione progettazione database}{10}
+\contentsline {subsection}{\numberline {3.1}Modello Logico}{11}

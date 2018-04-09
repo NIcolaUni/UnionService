@@ -1,0 +1,127 @@
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[italian]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+
+
+\usepackage{sectsty} % Allows customizing section commands
+\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{
+\normalfont \normalsize
+\textsc{documento requisiti} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Gestionale Aziendale SpeedCasa \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Dr. Nicola Pancheri}
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+\section{Requisiti}
+
+%------------------------------------------------
+
+Si vuole realizzare un sistema informativo per gestire le informazioni relative all’attività svolta da
+l’azienda di ristrutturazioni \textit{SpeedCasa}.
+I dipendenti di tal azienda faranno accesso a tal sistema tramite
+un'applicazione realizzata appositamente con lo scopo di coordinare gli uffici.
+L'applicazione sar\'a una web-app accessibile tramite browser; i dipendenti
+dovranno essere in grado di accedervi anche da casa.
+Vi sono tre tipi di ufficio: ufficio commerciale, ufficio tecnico e ufficio capi cantiere.
+I dipendenti, per accedere alle funzionalit\'a dell'applicazione e ai dati contenuti
+nel database, dovranno prima essere registrati.
+La registrazione di un dipendete viene effettuata da un apposito responsabile.
+I dipendenti vengono registrati memorizzando: nome, cognome, un'identificativo di login con
+la relativa password, l'ufficio, una foto personale (opzionale).
+Ogni dipendente dovr\'a effettuare un login prima di poter aver accesso al sistema.
+Ogni dipendente pu\'o avere accesso solo ad un gruppo ristretto di informazioni e funzionalit\'a
+in base al ufficio a cui appartiene;
+Tramite l'applicazione i dipendenti, a prescindere dall'ufficio d'appertenenza, devono essere
+in grado di comunicare tra loro.
+Successivamente al fase di login al dipendente viene presentanta la sua pagina di lavoro
+personalizzata in base all'ufficio di appartenenza.
+A prescindere dall'ufficio deve essere disponibile una finestra \textit{cose da fare}:
+tramite questa finestra un dipendente deve essere in grado di visualizzare
+i suoi impegni giornalieri. Tali impegni devono essere impostati precedente
+dall'dipendete stesso.
+
+
+\subsection{Base di Dati}
+
+\begin{align}
+
+\end{align}
+
+%------------------------------------------------
+
+\subsection{Applicazione}
+
+\lipsum[3] % Dummy text
+
+\paragraph{Heading on level 4 (paragraph)}
+
+\lipsum[6] % Dummy text
+
+%----------------------------------------------------------------------------------------
+%	PROBLEM 2
+%----------------------------------------------------------------------------------------
+
+\section{Lists}
+
+%------------------------------------------------
+
+\subsection{Example of list (3*itemize)}
+\begin{itemize}
+	\item First item in a list
+		\begin{itemize}
+		\item First item in a list
+			\begin{itemize}
+			\item First item in a list
+			\item Second item in a list
+			\end{itemize}
+		\item Second item in a list
+		\end{itemize}
+	\item Second item in a list
+\end{itemize}
+
+%------------------------------------------------
+
+\subsection{Example of list (enumerate)}
+\begin{enumerate}
+\item First item in a list
+\item Second item in a list
+\item Third item in a list
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
