@@ -38,9 +38,11 @@
 		id = id.split('-');
 		$('a.active').removeClass('active');
 	  	$(this).addClass('active');
+
 		$("#menu-container .content").slideUp('slow');
 		$("#menu-container .homepage").slideUp('slow');
 		$("#menu-container #menu-"+id[1]).slideDown('slow');
+
 
 		return false;
 	});
@@ -78,7 +80,7 @@
 	      header: {
 	        left: 'prev,next today',
 	        center: 'title',
-	        right: 'month,agendaWeek,agendaDay,listWeek'
+	        right: 'year,month,agendaWeek,agendaDay,listWeek'
 	      },
 	      defaultDate: '2018-02-12',
 	      navLinks: true, // can click day/week names to navigate views
