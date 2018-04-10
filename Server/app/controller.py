@@ -1,4 +1,4 @@
-from flask import render_template, redirect
+from flask import render_template
 from flask_login import current_user, login_user
 from app import server
 from app.model.form import LoginForm
@@ -29,14 +29,17 @@ def regDip():
 
 @server.route('/', methods=["GET", "POST"])
 def login():
-    #if current_user.is_autenticated():
-    #    return redirect(url_for('index'))
+    if current_user.is_authenticated:
+        return render_template("index.html")
 
     form = LoginForm()
 
     if form.validate_on_submit():
-        if Dipendente.query.filter_by(username=form.username.data, hash_passwd_login=form.password.data).first() is None:
+        dip=Dipendente.query.filter_by(username=form.username.data, hash_passwd_login=form.password.data).first()
+        if dip is None:
             return render_template("login.html", form=form, error="Credenziali errate!")
+
+        login_user(dip)
         return render_template("index.html")
 
 
