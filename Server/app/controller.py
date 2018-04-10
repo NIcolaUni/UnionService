@@ -1,7 +1,7 @@
 from flask import render_template, redirect
 from flask_login import current_user, login_user
 from app import server
-from app.model.form import CompletaProfilo, LoginForm
+#from app.model.form import CompletaProfilo, LoginForm
 
 '''
 @server.route('/', methods=["GET", "POST"])
@@ -27,7 +27,7 @@ def regDip():
 @server.route('/index')
 def index():
     return render_template("index.html")
-
+'''
 @server.route('/', methods=["GET", "POST"])
 def login():
     if current_user.is_autenticated():
@@ -39,3 +39,4 @@ def login():
 
 
     return render_template("login.html", form=form)
+'''

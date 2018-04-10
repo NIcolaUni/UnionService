@@ -7,10 +7,12 @@ name = "pypi"
 python_version = "3.5"
 
 [packages]
-flask = "*"
-flask-wtf = "*"
-flask-login = "*"
-sqlalchemy = "*"
+Flask = "*"
+Flask-WTF = "*"
+Flask-Login = "*"
+SQLAlchemy = "*"
+Flask-SQLAlchemy = "*"
 "psycopg2" = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
