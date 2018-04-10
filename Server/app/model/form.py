@@ -31,4 +31,5 @@ class RegistraDipendente(FlaskForm):
 class LoginForm(FlaskForm):
     username = StringField("Inserire il proprio username", validators=[DataRequired()])
     password = PasswordField("Inserire la propria password d'accesso", validators=[DataRequired()])
+    submit =SubmitField("Login")
 

@@ -1,10 +1,10 @@
 from app import server, database
-from app.model.db.dipendenteDBmodel import Dipendente
+from app.model.dipendente import Dipendente
 import os
 
 if __name__ == '__main__':
-    database.create_all()
-    if bool(os.environ.get("FIRST_DIP")):
+    if os.environ.get("FIRST_DIP") == True:
+        database.create_all()
         newDip = Dipendente(cf="nicpnc123", nome="nicola", cognome="pancheri", username="NicoPan", hash_passwd_login="password_forte")
         database.session.add(newDip)
         database.session.commit()

@@ -1,34 +1,49 @@
 <!DOCTYPE html>
 <html lang="it" >
 
-<head>
-  <meta charset="UTF-8">
-  <title>Login UnionService</title>
+    <head>
+      <meta charset="UTF-8">
+      <title>Login UnionService</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-  <link rel="stylesheet" href="{{url_for('static', filename='login/css/style.css') }}">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+      <link rel="stylesheet" href="{{url_for('static', filename='login/css/style.css') }}">
 
-</head>
+    </head>
 
-<body>
+    <body>
 
-  <form class="login-form"  action="/completaProfilo" method="post">
-  <p class="login-text">
-    <span class="fa-stack fa-lg">
-      <i class="fa fa-circle fa-stack-2x"></i>
-      <i class="fa fa-lock fa-stack-1x"></i>
-    </span>
-  </p>
-  <input type="email" class="login-username" autofocus="true" required="true" placeholder="Email" />
-  <input type="password" class="login-password" required="true" placeholder="Password" />
-  <input type="submit" name="Login" value="Login" class="login-submit" />
-</form>
-<a href="#" class="login-forgot-pass">forgot password?</a>
-<div class="underlay-photo"></div>
-<div class="underlay-black"></div>
+        <form class="login-form" method="post">
+          {{form.hidden_tag()}}
+          <p class="login-text">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-lock fa-stack-1x"></i>
+            </span>
+          </p>
+          <p class="error-message">
+              {{error}}
+          </p>
 
+          {{form.username}}
+          {{form.password}}
+          {{form.submit}}
 
+        </form>
 
-</body>
+        <div class="underlay-photo"></div>
+        <div class="underlay-black"></div>
+
+        <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
+        <script>
+            $("input#username").addClass("login-username");
+            $("input#username").attr("autofocus","true");
+            $("input#username").attr("required","true");
+            $("input#password").addClass("login-password");
+            $("input#password").attr("required","true");
+            $("input#submit").addClass("login-submit");
+
+        </script>
+
+    </body>
 
 </html>
