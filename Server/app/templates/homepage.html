@@ -2,319 +2,319 @@
 
 {% block content %}
 
-  <div id="page-wrapper">
+<div id="page-wrapper">
 
 
-    <div class="visible-xs visible-sm responsive-menu">
-      <a href="#" class="toggle-menu">
-          <i class="fa fa-bars"></i> Show Menu
-      </a>
-      <div class="show-menu">
-        <ul class="main-menu">
-          <li>
-              <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
-          </li>
-          <li>
-              <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
-          </li>
-          <li>
-              <a class="show-3 registraDipButton" href="#"><i class="fa fa-user-plus"></i>Registra <br/> Dipendente</a>
-          </li>
-          <li>
-              <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
-          </li>
-          <li>
-              <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
-          </li>
-          <li>
-              <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
-          </li>
-        </ul>
-      </div>
+  <div class="visible-xs visible-sm responsive-menu">
+    <a href="#" class="toggle-menu">
+        <i class="fa fa-bars"></i> Show Menu
+    </a>
+    <div class="show-menu">
+      <ul class="main-menu">
+        <li>
+            <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
+        </li>
+        <li>
+            <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
+        </li>
+        <li>
+            <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
+        </li>
+        <li>
+            <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
+        </li>
+        <li>
+            <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
+        </li>
+        <li>
+            <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
+        </li>
+      </ul>
     </div>
+  </div>
 
 
-  <!--=============================================== Note ========================================-->
-    <header class="header header-fixheight header--fixed">
-      <div class="container">
+<!--==================================================================================================-->
 
-        <div class="header__inner">
-          <div class="btn-right">
-            <div class="search-btn"><i class="fa fa-pencil"></i></div>
+
+  <div class="container" id="page-content">
+
+    <div class="row" id="row-content">
+
+      <div id="colonnaSx" class="col-md-3 hidden-sm">
+
+        <nav id="nav" class="main-navigation hidden-xs hidden-sm">
+          <ul class="main-menu">
+            <li>
+                <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
+            </li>
+            <li>
+                <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
+            </li>
+            <li>
+                <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
+            </li>
+            <li>
+                <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
+            </li>
+            <li>
+                <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
+            </li>
+            <li>
+                <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
+            </li>
+          </ul>
+        </nav>
+
+      </div> <!-- fine colonnaSx -->
+
+
+      <div class="col-md-6 col-sm-12 content-holder" id="colonnaCentrale">
+        <div id="menu-container">
+
+          <div id="menu-1" class="row homepage home-section text-center">
+            <div class="welcome-text col-md-12">
+
+              <h2>Welcome  <span class="red"> Mario Rossi</span></h2>
+              <p> <span class="orange">Dirigente</span></p>
+              <div id="noteDipendenti">
+                <p > Cerca un cliente nella barra qua sotto;
+                <br/><br/>
+                 Nota: le virgolette vengono usate per indicare una parola inserita da voi,
+                          non vanno ritrascritte nel comando.
+                <br/>
+                <br/>
+
+                 Lista keyword:
+                 <ul>
+                   <li>
+                     "cognome" : ritorna la lista di tutti i clienti che hanno per cognome "cognome"
+                   </li>
+                   <li>
+                     "cognome nome" : ritorna la lista di tutti i clienti che si chiamano "cognome nome"
+                   </li>
+                   <li>
+                      @all : ritorna la lista di tutti i clienti
+                   </li>
+                   <li>
+                      @name "nome" : ritorna la lista di tutti i clienti che hanno per nome "nome"
+                   </li>
+                   <li>
+                      @city "city" : ritorna la lista di tutti i clienti provvenienti da "city"
+                   </li>
+                 </ul>
+                </p>
+
+              </div>
+
+
+
+              <form action="#" method="get" class="cercaCliente-form">
+                <div class="row" id="rowClientForm">
+                  <input name="clientField"  class="clientField"  placeholder="Cerca qua un cliente...">
+                  <input name="submit" type="submit" class="button default cercaCliente alt header"  href="#menu" value="Cerca">
+                </div>
+              </form>
+
+
+            </div> <!-- fine welcome-text -->
+          </div> <!-- fine homepage -->
+
+<!--============================ Sezioni "chiamate" via Ajax =====================================-->
+
+          <div id="menu-2" class="row content calendario-section col-sm-12">
+              <div id='calendar'></div>
+
           </div>
-    <!--
-          <div class="searchbar">
 
-            <ul>
-              <li>
-                <span class="contact100-form-check m-t-15 notaEseguita">
-                              <input  class="input-check100" id="nota1" type="checkbox" name="nota1" value="true">
-                              <label class="label-check100" for="nota1">
-                                  Chiamare cliente Franzoni
-                              </label>
-                          </span>
-              </li>
-              <li>
-                <span class="contact100-form-check m-t-15 notaEseguita">
-                  <input  class="input-check100" id="nota2" type="checkbox" name="nota2" value="true">
-                  <label class="label-check100" for="nota2">
-                    Concludere lavoro Benini
-                  </label>
-                </span>
-              </li>
-
-            </ul>
-            <div class="searchbar__group"><span class="searchbar__addon"><i class="fa fa-pencil"></i></span>
-              <input class="searchbar__input" type="text" name="aggiungiNota" value="" placeholder="Aggiungi una nota"/><span class="searchbar__close"></span>
-            </div>
+          <div id="menu-3" class="content gestioneDip-section col-sm-12">
 
           </div>
-           -->
 
-        </div>
+          <div id="menu-4" class="content cercaDip-section col-sm-12">
+
+          </div>
+
+          <div id="menu-5" class="content profiloDip-section col-sm-12">
+
+          </div>
+
+
+<!--==============================================================================================-->
+
+        </div> <!-- fine menu-container -->
+      </div> <!-- fine colonnaCentrale -->
+
+      <div class="side-button">
+            <a class="btn btn-1">
+              <span class="round"><i class="fa fa-chevron-left immagine-bottone"></i></span>
+            </a>
       </div>
-    </header>
-  <!--==================================================================================================-->
 
+      <div class="col-md-3  side" id="chat-section">
+        <div class="side-chat ">
 
-    <div class="container" id="page-content">
+          <div class="row searchBox">
 
-      <div class="row" id="row-content">
-
-        <div id="colonnaSx" class="col-md-3 hidden-sm">
-
-          <nav id="nav" class="main-navigation hidden-xs hidden-sm">
-            <ul class="main-menu">
-              <li>
-                  <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
-              </li>
-              <li>
-                  <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
-              </li>
-              <li>
-                  <a class="show-3 registraDipButton" href="#"><i class="fa fa-user-plus"></i>Registra <br/> Dipendente</a>
-              </li>
-              <li>
-                  <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
-              </li>
-              <li>
-                  <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
-              </li>
-              <li>
-                  <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
-              </li>
-            </ul>
-          </nav>
-
-        </div> <!-- fine colonnaSx -->
-
-
-        <div class="col-md-6 col-sm-12 content-holder" id="colonnaCentrale">
-          <div id="menu-container">
-
-            <div id="menu-1" class="row homepage home-section text-center">
-              <div class="welcome-text col-md-12">
-
-                <h2>Welcome  <span class="red"> Mario Rossi</span></h2>
-                <p> <span class="orange">Dirigente</span></p>
-                <div id="noteDipendenti">
-                  <p > Cerca un cliente nella barra qua sotto;
-                  <br/><br/>
-                   Nota: le virgolette vengono usate per indicare una parola inserita da voi,
-                            non vanno ritrascritte nel comando.
-                  <br/>
-                  <br/>
-
-                   Lista keyword:
-                   <ul>
-                     <li>
-                       "cognome" : ritorna la lista di tutti i clienti che hanno per cognome "cognome"
-                     </li>
-                     <li>
-                       "cognome nome" : ritorna la lista di tutti i clienti che si chiamano "cognome nome"
-                     </li>
-                     <li>
-                        @all : ritorna la lista di tutti i clienti
-                     </li>
-                     <li>
-                        @name "nome" : ritorna la lista di tutti i clienti che hanno per nome "nome"
-                     </li>
-                     <li>
-                        @city "city" : ritorna la lista di tutti i clienti provvenienti da "city"
-                     </li>
-                   </ul>
-                  </p>
-
-                </div>
-
-
-
-                <form action="#" method="get" class="cercaCliente-form">
-                  <div class="row" id="rowClientForm">
-                    <input name="clientField"  class="clientField"  placeholder="Cerca qua un cliente...">
-                    <input name="submit" type="submit" class="button default cercaCliente alt header"  href="#menu" value="Cerca">
-                  </div>
-                </form>
-
-
-              </div> <!-- fine welcome-text -->
-            </div> <!-- fine homepage -->
-
-  <!--============================ Sezioni "chiamate" via Ajax =====================================-->
-
-            <div id="menu-2" class="row content calendario-section col-md-6 col-sm-12">
-
-                <div id='calendar'></div>
-
+            <div class="col-md-12 searchBox-inner">
+              <div class="form-group has-feedback">
+                <input id="searchText" type="text" class="form-control" name="searchText" placeholder="Search">
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+              </div>
             </div>
 
-            <div id="menu-3" class="content registraDip-section col-sm-12">
+          </div> <!-- fine searchbox -->
 
-            </div>
+          <div class="sideBar">
+            <!-- Sezione lista dipendenti chat-->
 
-            <div id="menu-4" class="content cercaDip-section col-sm-12">
-
-            </div>
-
-            <div id="menu-5" class="content profiloDip-section col-sm-12">
-
-            </div>
-
-
-  <!--==============================================================================================-->
-
-          </div> <!-- fine menu-container -->
-        </div> <!-- fine colonnaCentrale -->
-
-        <div class="side-button">
-              <a class="btn btn-1">
-                <span class="round"><i class="fa fa-chevron-left immagine-bottone"></i></span>
-              </a>
-        </div>
-
-        <div class="col-md-3  side" id="chat-section">
-          <div class="side-chat ">
-
-            <div class="row searchBox">
-
-              <div class="col-md-12 searchBox-inner">
-                <div class="form-group has-feedback">
-                  <input id="searchText" type="text" class="form-control" name="searchText" placeholder="Search">
-                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            <div class="row sideBar-body">
+              <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                <div class="avatar-icon">
+                  <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
                 </div>
               </div>
-
-            </div> <!-- fine searchbox -->
-
-            <div class="sideBar">
-              <!-- Sezione lista dipendenti chat-->
-
-              <div class="row sideBar-body">
-                <div class="col-sm-3 col-xs-3 sideBar-avatar">
-                  <div class="avatar-icon">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
+              <div class="col-sm-9 col-xs-9 sideBar-main">
+                <div class="row">
+                  <div class="col-sm-8 col-xs-8 sideBar-name">
+                    <span class="name-meta">John Doe
+                  </span>
                   </div>
-                </div>
-                <div class="col-sm-9 col-xs-9 sideBar-main">
-                  <div class="row">
-                    <div class="col-sm-8 col-xs-8 sideBar-name">
-                      <span class="name-meta">John Doe
-                    </span>
-                    </div>
-                    <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                      <span class="time-meta pull-right">18:18
-                    </span>
-                    </div>
+                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                    <span class="time-meta pull-right">18:18
+                  </span>
                   </div>
                 </div>
               </div>
-
-              <div class="row sideBar-body">
-                <div class="col-sm-3 col-xs-3 sideBar-avatar">
-                  <div class="avatar-icon">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                  </div>
-                </div>
-                <div class="col-sm-9 col-xs-9 sideBar-main">
-                  <div class="row">
-                    <div class="col-sm-8 col-xs-8 sideBar-name">
-                      <span class="name-meta">John Doe
-                    </span>
-                    </div>
-                    <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                      <span class="time-meta pull-right">18:18
-                    </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="row sideBar-body">
-                <div class="col-sm-3 col-xs-3 sideBar-avatar">
-                  <div class="avatar-icon">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                  </div>
-                </div>
-                <div class="col-sm-9 col-xs-9 sideBar-main">
-                  <div class="row">
-                    <div class="col-sm-8 col-xs-8 sideBar-name">
-                      <span class="name-meta">John Doe
-                    </span>
-                    </div>
-                    <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                      <span class="time-meta pull-right">18:18
-                    </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="row sideBar-body">
-                <div class="col-md-3 col-md-3 sideBar-avatar">
-                  <div class="avatar-icon">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                  </div>
-                </div>
-                <div class="col-sm-9 col-xs-9 sideBar-main">
-                  <div class="row">
-                    <div class="col-sm-8 col-xs-8 sideBar-name">
-                      <span class="name-meta">John Doe
-                    </span>
-                    </div>
-                    <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                      <span class="time-meta pull-right">18:18
-                    </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
             </div>
-          </div> <!-- fine side-chat -->
-        </div> <!--fine chat section-->
+
+            <div class="row sideBar-body">
+              <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                <div class="avatar-icon">
+                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                </div>
+              </div>
+              <div class="col-sm-9 col-xs-9 sideBar-main">
+                <div class="row">
+                  <div class="col-sm-8 col-xs-8 sideBar-name">
+                    <span class="name-meta">John Doe
+                  </span>
+                  </div>
+                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                    <span class="time-meta pull-right">18:18
+                  </span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
 
-      </div> <!-- fine row-content -->
-    </div> <!-- fine page content -->
-  </div> <!-- fine page-wrapper -->
+            <div class="row sideBar-body">
+              <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                <div class="avatar-icon">
+                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                </div>
+              </div>
+              <div class="col-sm-9 col-xs-9 sideBar-main">
+                <div class="row">
+                  <div class="col-sm-8 col-xs-8 sideBar-name">
+                    <span class="name-meta">John Doe
+                  </span>
+                  </div>
+                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                    <span class="time-meta pull-right">18:18
+                  </span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-  <script>
-    	$(".main-menu a.registraDipButton").click(function(){
-			$(".registraDip-section").load("{{url_for('regDip')}} #container-contact100");
+            <div class="row sideBar-body">
+              <div class="col-md-3 col-md-3 sideBar-avatar">
+                <div class="avatar-icon">
+                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                </div>
+              </div>
+              <div class="col-sm-9 col-xs-9 sideBar-main">
+                <div class="row">
+                  <div class="col-sm-8 col-xs-8 sideBar-name">
+                    <span class="name-meta">John Doe
+                  </span>
+                  </div>
+                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                    <span class="time-meta pull-right">18:18
+                  </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div> <!-- fine side-chat -->
+      </div> <!--fine chat section-->
 
 
-			$.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
-			$.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
-			$.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
-			$.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
-			$.getScript("{{url_for('static', filename='form/js/main.js')}}");
+    </div> <!-- fine row-content -->
+  </div> <!-- fine page content -->
+</div> <!-- fine page-wrapper -->
 
+<script>
+
+ /* Collego i bottoni alle pagine che devono ritornare */
+
+	$(".main-menu a").click(function(){
+		var id =  $(this).attr('class');
+		id = id.split('-');
+		$('a.active').removeClass('active');
+	  	$(this).addClass('active');
+		$("#menu-container .content").slideUp('slow');
+		$("#menu-container .homepage").slideUp('slow');
+		$("#menu-container #menu-"+id[1]).slideDown('slow');
+
+		return false;
+	});
+
+
+	$(".main-menu a.homebutton").click(function(){
+		//	$("#menu-container .content").slideUp('slow');
+			$("#menu-container .homepage").slideDown('slow');
 
 			return false;
-	     });
-  </script>
+	});
+/*
+	$(".main-menu a.registraDipButton").click(function(){
+			$(".registraDip-section").load("static/templates/registraDip.html #container-contact100");
+			//$("#menu-container .content").slideUp('slow');
+			$("#menu-container .registraDip-section").slideDown('slow');
+
+
+
+			$.getScript("static/form/js/main.js");
+			return false;
+	});
+*/
+	$(".main-menu a.calendarButton").click(function(){
+		//	$("#menu-container .content").slideUp('slow');
+			$("#menu-container .calendario-section").slideDown('slow');
+			$("#calendar").fullCalendar("render");
+			return false;
+	});
+
+
+	 $(".main-menu a.profiloDipButton").click(function(){
+			$(".profiloDip-section").load("{{url_for('paginaProfilo')}} #container-profiloDip");
+    	    $("#menu-container .profiloDip-section").slideDown('slow');
+
+			return false;
+	 });
+
+	 $(".main-menu a.gestioneDipButton").click(function(){
+			$(".gestioneDip-section").load("{{url_for('gestioneDip')}} #container-gestioneDip");
+		//	$("#menu-container .content").slideUp('slow');
+	    	$("#menu-container .gestioneDip-section").slideDown('slow');
+
+			return false;
+	 });
+</script>
 
 {% endblock %}
-
-

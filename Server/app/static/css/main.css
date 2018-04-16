@@ -335,20 +335,15 @@ h1, h2, h3, h4, h5 {
 
 
 #noteDipendenti {
-
   margin-top: 10%;
   height: 300px;
   overflow-y: hidden;
-
 }
 
 #noteDipendenti p{
   background-color: rgba(92, 100, 100, 0.8);
   width: 60%;
   margin-left: 20%;
-    border-radius: 20%;
-  -moz-border-radius: 20%;
-  -webkit-border-radius: 20%
 }
 
 #noteDipendenti ul{
@@ -360,10 +355,6 @@ h1, h2, h3, h4, h5 {
   text-align: left;
   list-style: circle;
   list-style-position: inside;
-      border-radius: 10%;
-  -moz-border-radius: 10%;
-  -webkit-border-radius: 10%
-}
 }
 
 
@@ -432,7 +423,8 @@ h1, h2, h3, h4, h5 {
 /* Contenuto pagina calendario */
 
 .calendario-section {
-
+  height: 100%;
+  margin-top: 10%;
 }
 
 #calendar {
@@ -531,7 +523,7 @@ h1, h2, h3, h4, h5 {
 
 }
 
-.registraDipButton {
+.gestioneDipButton {
   /*background: #5c9faf;*/
   background: #00603C;
 }

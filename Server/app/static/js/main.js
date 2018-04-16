@@ -33,37 +33,8 @@
   });
 
 
-	$(".main-menu a").click(function(){
-		var id =  $(this).attr('class');
-		id = id.split('-');
-		$('a.active').removeClass('active');
-	  	$(this).addClass('active');
 
-		$("#menu-container .content").slideUp('slow');
-		$("#menu-container .homepage").slideUp('slow');
-		$("#menu-container #menu-"+id[1]).slideDown('slow');
-
-
-		return false;
-	});
-
-	$(".main-menu a.homebutton").click(function(){
-			$("#menu-container .homepage").slideDown('slow');
-
-			return false;
-	});
-
-	$(".main-menu a.registraDipButton").click(function(){
-			$("#menu-container .registraDip-section").slideDown('slow');
-
-			return false;
-	});
-
-	$(".main-menu a.calendarButton").click(function(){
-			$("#menu-container .calendario-section").slideDown('slow');
-			$("#calendar").fullCalendar("render");
-			return false;
-	});
+	/*
 
 	$(".main-menu a.profiloDipButton").click(function(){
 			$(".profiloDip-section").load("static/templates/profiloDip.html #container-profiloDip");
@@ -74,13 +45,13 @@
 
 			return false;
 	});
-
+*/
 
 	$('#calendar').fullCalendar({
 	      header: {
 	        left: 'prev,next today',
 	        center: 'title',
-	        right: 'year,month,agendaWeek,agendaDay,listWeek'
+	        right: 'month,agendaWeek,agendaDay,listWeek'
 	      },
 	      defaultDate: '2018-02-12',
 	      navLinks: true, // can click day/week names to navigate views

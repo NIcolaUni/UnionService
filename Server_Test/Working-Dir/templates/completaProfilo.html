@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Gestionale Aziendale UnionService</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="{{url_for('static', filename='bootstrap/css/normalize.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+<!--==================== css form registrazione e profilo =============================================-->
+
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/fonts/iconic/css/material-design-iconic-font.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animate/animate.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/css-hamburgers/hamburgers.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animsition/css/animsition.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/select2/select2.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/daterangepicker/daterangepicker.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/noui/nouislider.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/main.css') }}">
+<!--===============================================================================================-->
+
+  <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
+
+
+  <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
+
+</head>
+  <body>
+    <div class="site-bg"></div>
+    <div class="site-bg-overlay"></div>
+
+    <div id="page-wrapper">
+
+
+
+
+
+      <div class="container" id="page-content">
+
+        <div class="row" id="row-content">
+
+          <div id="colonnaSx" class="col-md-3 hidden-sm">
+
+
+
+          </div> <!-- fine colonnaSx -->
+
+
+          <div class="col-md-6 col-sm-12 content-holder" id="colonnaCentrale">
+            <div id="menu-container">
+
+              <div id="menu-1" class="row homepage registraDip-section text-center">
+                <div class="container-contact100 container-completaProfilo" id="container-contact100">
+              		<div class="wrap-contact100" id="wrap-contact100">
+              			<form class="contact100-form validate-form" action="/index" method="post">
+              				<span class="contact100-form-title">
+              					Completa il tuo profilo!
+              				</span>
+
+              					<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+              						<span class="label-input100">Username</span>
+              						<input class="input100" type="text" name="username" placeholder="Inserire un username a scelta">
+              					</div>
+
+              					<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+              						<span class="label-input100">Password</span>
+              						<input class="input100" type="password" name="pass_accesso" placeholder="Inserire una password per l'accesso">
+              					</div>
+
+              					<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+              						<span class="label-input100">Conferma password</span>
+              						<input class="input100" type="password" name="conferma_pass_accesso" placeholder="Conferma password d'accesso">
+              					</div>
+
+              					<div class="wrap-input100 input100-select bg1">
+              						<span class="label-input100">Sesso</span>
+              						<div>
+              							<select class="js-select2" name="tipoOrario">
+              								<option>Maschio</option>
+              								<option>Femmina</option>
+              							</select>
+              							<div class="dropDownSelect2"></div>
+              						</div>
+              					</div>
+
+              					<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+              						<span class="label-input100">Città</span>
+              						<input class="input100" type="text" name="citta" placeholder="Inserire il nome della propria città">
+              					</div>
+
+                				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+                					<span class="label-input100">Via</span>
+                					<input class="input100" type="text" name="via" placeholder="Inserire il nome della propria via ">
+                				</div>
+
+                				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+                					<span class="label-input100">Civico</span>
+                					<input class="input100" type="text" name="civico" placeholder="Inserire il proprio civico">
+                				</div>
+
+                        <div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+                					<span class="label-input100">CAP</span>
+                					<input class="input100" type="number" name="cap" placeholder="Inserire il priorio CAP">
+                				</div>
+
+              					<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+                					<span class="label-input100">Telefono</span>
+                					<input class="input100" type="number" name="telefono" placeholder="Inserire il priorio numero di telefono">
+                				</div>
+
+                        <div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+                          <span class="label-input100">Email</span>
+                          <input class="input100" type="text" name="citta" placeholder="Inserire il proprio indirizzo email">
+                        </div>
+
+              					<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+              						<span class="label-input100">Password email</span>
+              						<input class="input100" type="password" name="pass_email" placeholder="Inserire la password associata all'indirizzo email">
+              					</div>
+
+              					<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+              						<span class="label-input100">Conferma password email</span>
+              						<input class="input100" type="password" name="conferma_pass_email" placeholder="Conferma password email">
+              					</div>
+
+
+              					<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+              						<span class="label-input100">IBAN</span>
+              						<input class="input100" type="text" name="iban" placeholder="Inserire il proprio IBAN">
+              					</div>
+
+              					<div class="container-contact100-form-btn">
+              						<button class="contact100-form-btn">
+              							<span>
+
+              								<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true">Completa Registrazione</i>
+              							</span>
+              						</button>
+              					</div>
+
+              			</form>
+              		</div>
+              	</div>
+
+              </div> <!-- fine homepage -->
+
+
+            </div> <!-- fine menu-container -->
+          </div> <!-- fine colonnaCentrale -->
+
+
+
+        </div> <!-- fine row-content -->
+      </div> <!-- fine page content -->
+    </div> <!-- fine page-wrapper -->
+
+   <!--===================== JS Form =================================================================-->
+   <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
+   <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
+   <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+ 	 <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
+    <!--===============================================================================================-->
+   <script src="{{url_for('static', filename='form/js/main.js') }}"></script>
+
+
+  </body>
+</html>

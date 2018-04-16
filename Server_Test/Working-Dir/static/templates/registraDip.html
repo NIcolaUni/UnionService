@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Contact V5</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="form/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/vendor/noui/nouislider.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="form/css/util.css">
+	<link rel="stylesheet" type="text/css" href="form/css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
+
+
+	<div class="container-contact100" id="container-contact100">
+		<div class="wrap-contact100" id="wrap-contact100">
+			<form class="contact100-form validate-form">
+				<span class="contact100-form-title">
+					Registrazione Dipendente
+				</span>
+
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+					<span class="label-input100">Nome</span>
+					<input class="input100" type="text" name="nome" placeholder="Inserire il nome del dipendente ">
+				</div>
+
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+					<span class="label-input100">Cognome</span>
+					<input class="input100" type="text" name="cognome" placeholder="Inserire il cognome del dipendente ">
+				</div>
+
+				<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+					<span class="label-input100">Codice Fiscale</span>
+					<input class="input100" type="text" name="cf" placeholder="Inserire il codice fiscale del dipendente">
+				</div>
+
+				<div class="wrap-contact100-form-check">
+					<div class="contact100-form-check m-t-15">
+						<input  class="input-check100" id="checkboxDirigente" type="checkbox" name="dirigente" value="si">
+						<label class="label-check100" for="checkboxDirigente">
+							Dirigente
+						</label>
+					</div>
+				</div>
+
+				<div class="wrap-input100 input100-select bg1" data-validate="Campo obbligatorio">
+					<span class="label-input100">Tipologia dipendente</span>
+					<div>
+						<select class="js-select2 tipoDip" name="tipoDip">
+							<option>Commerciale</option>
+							<option>Tecnico</option>
+							<option>Capo-Cantiere</option>
+							<option>Contabile</option>
+							<option>Esterno</option>
+						</select>
+						<div class="dropDownSelect2"></div>
+					</div>
+				</div>
+
+
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100">
+					<span class="label-input100">Costo orario</span>
+					<input class="input100" type="number" name="costo" placeholder="Inserire quanto prende per ora il dipendente">
+				</div>
+
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate="Campo obbligatorio">
+					<span class="label-input100">Data scadenza contratto</span>
+					<input class="input100" type="date" name="scandenzaContratto">
+				</div>
+
+				<div class="wrap-input100 input100-select bg1 rs1-wrap-input100">
+					<span class="label-input100">Orario lavorativo</span>
+					<div>
+						<select class="js-select2" name="tipoOrario">
+							<option>Full-time</option>
+							<option>Part-time</option>
+						</select>
+						<div class="dropDownSelect2"></div>
+					</div>
+				</div>
+
+				<div class="wrap-contact100-form-check">
+					<span class="label-input100">Disponibilità settimanale</span>
+					<div class="contact100-form-check m-t-15">
+						<input  class="input-check100" id="checkbox1" type="checkbox" name="disponibilita" value="lunedì">
+						<label class="label-check100" for="checkbox1">
+							Lunedì
+						</label>
+
+						<input  class="input-check100" id="checkbox2" type="checkbox" name="disponibilita" value="martedì">
+						<label class="label-check100" for="checkbox2">
+							Martedì
+						</label>
+
+						<input  class="input-check100" id="checkbox3" type="checkbox" name="disponibilita" value="mercoledì">
+						<label class="label-check100" for="checkbox3">
+							Mercoledì
+						</label>
+
+						<input  class="input-check100" id="checkbox4" type="checkbox" name="disponibilita" value="giovedì">
+						<label class="label-check100" for="checkbox4">
+							Giovedì
+						</label>
+
+						<input  class="input-check100" id="checkbox5" type="checkbox" name="disponibilita" value="venerdì">
+						<label class="label-check100" for="checkbox5">
+							Venerdì
+						</label>
+
+						<input  class="input-check100" id="checkbox6" type="checkbox" name="disponibilita" value="sabato">
+						<label class="label-check100" for="checkbox6">
+							Sabato
+						</label>
+
+						<input  class="input-check100" id="checkbox7" type="checkbox" name="disponibilita" value="domenica">
+						<label class="label-check100" for="checkbox7">
+							Domenica
+						</label>
+
+					</div>
+
+
+				</div>
+				<br/><br/>
+
+				<div class="wrap-contact100-form-check w-full dis-none js-show-service">
+
+						<span class="label-input100">Completa il profilo del dipendente esterno</span><br/><br/>
+
+						<div class="wrap-input100 input100-select bg1">
+							<span class="label-input100">Sesso</span>
+							<div>
+								<select class="js-select2" name="tipoOrario">
+									<option>Maschio</option>
+									<option>Femmina</option>
+								</select>
+								<div class="dropDownSelect2"></div>
+							</div>
+						</div>
+
+						<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+							<span class="label-input100">Città</span>
+							<input class="input100" type="text" name="citta" placeholder="Inserire il nome della propria città">
+						</div>
+
+	  				<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+	  					<span class="label-input100">Via</span>
+	  					<input class="input100" type="text" name="via" placeholder="Inserire il nome della propria via ">
+	  				</div>
+
+	  				<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+	  					<span class="label-input100">Civico</span>
+	  					<input class="input100" type="text" name="civico" placeholder="Inserire il proprio civico">
+	  				</div>
+
+	          <div class="wrap-input100 validate-input bg1">
+	  					<span class="label-input100">CAP</span>
+	  					<input class="input100" type="number" name="cap" placeholder="Inserire il priorio CAP">
+	  				</div>
+
+						<div class="wrap-input100 validate-input bg1">
+	  					<span class="label-input100">Telefono</span>
+	  					<input class="input100" type="number" name="telefono" placeholder="Inserire il priorio numero di telefono">
+	  				</div>
+
+	          <div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+	            <span class="label-input100">Email</span>
+	            <input class="input100" type="text" name="citta" placeholder="Inserire il proprio indirizzo email">
+	          </div>
+
+						<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+							<span class="label-input100">IBAN</span>
+							<input class="input100" type="text" name="iban" placeholder="Inserire il proprio IBAN">
+						</div>
+
+						<div class="wrap-input100 validate-input bg1" data-validate="Campo obbligatorio">
+							<span class="label-input100">Partita IVA</span>
+							<input class="input100" type="text" name="iban" placeholder="Inserire la propria partita IVA">
+						</div>
+
+
+				</div>
+
+				<div class="container-contact100-form-btn">
+					<button class="contact100-form-btn">
+						<span>
+							Registra
+							<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+
+
+<!--===============================================================================================-->
+	<script src="form/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="form/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="form/vendor/bootstrap/js/popper.js"></script>
+	<script src="form/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="form/vendor/select2/select2.min.js"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+
+
+			$(".tipoDip").each(function(){
+				$(this).on('select2:close', function (e){
+					if($(this).val() == "Esterno") {
+						$('.js-show-service').slideDown();
+
+					}
+					else {
+						$('.js-show-service').slideUp();
+					//	$('.js-show-service').slideUp();
+
+					}
+				});
+			});
+		});
+	</script>
+<!--===============================================================================================-->
+
+<!--===============================================================================================-->
+	<script src="form/js/main.js"></script>
+
+</body>
+</html>
