@@ -11,5 +11,10 @@
 }
 
 #generaCredenziali {
-    background-image: url(../images/generaCred.jpeg);
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+    background-image: url("../images/generaCred.ico");
+
 }
+
