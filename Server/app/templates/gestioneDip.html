@@ -1,10 +1,40 @@
-<div class="row wrap-contact100" id="container-gestioneDip">
+<div class="row " id="container-gestioneDip">
     <span class="contact100-form-title">
         Gestione Dipendenti
     </span>
 
-    <div class="row">
-        <button id="generaCredenziali"></button>
+    <div class="wrap-contact100" id="contenuto">
+
+        <div class="row" id="rigaCredenziali">
+            <span class="contact100-form-title button-title">
+                Genera credenziali
+            </span>
+
+            <button onclick="JSalert()" id="generaCredenziali"></button>
+        </div>
     </div>
 
+
 </div>
+
+<script type="text/javascript">
+    function JSalert(){
+        swal({   title: "Stai per aggiungere un nuovo dipendente",
+        text: "Sei sicuro di voler procedere?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Sono sicuro!",
+        cancelButtonText: "Ho sbagliato...",
+        closeOnConfirm: false,
+        closeOnCancel: false },
+        function(isConfirm){
+            if (isConfirm)
+            {
+                 swal("", "username: \n"+"password:", "success");
+            }
+            else {
+                swal("", "Operazione Annullata", "error");
+            } });
+    }
+</script>

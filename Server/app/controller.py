@@ -1,6 +1,9 @@
 from flask import Flask, render_template
 from app import server
 
+@server.route('/homeheader')
+def homeheader():
+    return render_template('header_homepage.html')
 
 @server.route('/gestioneDip')
 def gestioneDip():

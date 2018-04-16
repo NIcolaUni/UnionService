@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Gestionale Aziendale UnionService</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Gestionale Aziendale UnionService</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link href="{{url_for('static', filename='bootstrap/css/normalize.css') }}" rel="stylesheet">
-  <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{url_for('static', filename='bootstrap/css/normalize.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
 <!--==================== css form registrazione e profilo =============================================-->
 
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/fonts/iconic/css/material-design-iconic-font.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animate/animate.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/css-hamburgers/hamburgers.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animsition/css/animsition.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/select2/select2.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/daterangepicker/daterangepicker.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/noui/nouislider.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/util.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/fonts/iconic/css/material-design-iconic-font.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animate/animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/css-hamburgers/hamburgers.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animsition/css/animsition.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/noui/nouislider.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/util.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/main.css') }}">
 <!--===============================================================================================-->
 
-  <link rel="stylesheet" href="{{url_for('static', filename='css/profiloDip.css') }}" />
-  <link rel="stylesheet" href="{{url_for('static', filename='css/chat.css') }}">
-  <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
-  <link rel="stylesheet" href="{{url_for('static', filename='css/button-chat.css') }}">
-  <link rel="stylesheet" href="{{url_for('static', filename='css/listaClienti.css') }}">
-  <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
-  <link rel="stylesheet" href="{{url_for('static', filename='css/profiloDip.css') }}">
-  <link rel="stylesheet" href="{{url_for('static', filename='css/button-modificaProfilo.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='headerAndForm/css/header.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/button-chat.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/listaClienti.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/profiloDip.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/button-modificaProfilo.css') }}">
 
 <!--==================== css calendario e agenda====== =============================================-->
-  <link href="{{url_for('static', filename='calendario/fullcalendar.min.css') }}" rel='stylesheet' />
-  <link href="{{url_for('static', filename='calendario/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
+    <link href="{{url_for('static', filename='calendario/fullcalendar.min.css') }}" rel='stylesheet' />
+    <link href="{{url_for('static', filename='calendario/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
 
-  <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
+    <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
 
-  <script src="{{url_for('static', filename='calendario/lib/moment.min.js') }}"></script>
-  <script src="{{url_for('static', filename='calendario/fullcalendar.min.js') }}"></script>
-  <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
+    <script src="{{url_for('static', filename='calendario/lib/moment.min.js') }}"></script>
+    <script src="{{url_for('static', filename='calendario/fullcalendar.min.js') }}"></script>
+    <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
 <!--===============================================================================================-->
 
+    <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css') }}" rel='stylesheet' />
+    <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js') }}"></script>
 
 
 </head>
@@ -56,17 +59,15 @@
 
    {% block content %}
    {% endblock %}
-
-   <!--===================== JS Form =================================================================-->
+<!--================================= JS Form =================================================================-->
    <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
    <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
    <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
    <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
-    <!--===============================================================================================-->
+<!--===========================================================================================================-->
 
    <script src="{{url_for('static', filename='js/main.js') }}"></script>
    <script src="{{url_for('static', filename='js/listaClienti.js') }}"></script>
-
 
 
   </body>

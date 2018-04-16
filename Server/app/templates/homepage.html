@@ -35,8 +35,7 @@
 
 
 <!--==================================================================================================-->
-
-
+  <header id="header"></header>
   <div class="container" id="page-content">
 
     <div class="row" id="row-content">
@@ -309,12 +308,16 @@
 	 });
 
 	 $(".main-menu a.gestioneDipButton").click(function(){
-			$(".gestioneDip-section").load("{{url_for('gestioneDip')}} #container-gestioneDip");
+			$(".gestioneDip-section").load("{{url_for('gestioneDip')}}");
 		//	$("#menu-container .content").slideUp('slow');
 	    	$("#menu-container .gestioneDip-section").slideDown('slow');
 
 			return false;
 	 });
+
+
+	 $("header#header").load("{{url_for('homeheader')}}");
+
 </script>
 
 {% endblock %}
