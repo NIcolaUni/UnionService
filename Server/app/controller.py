@@ -1,13 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from app import server
+from app.model.form import DipFittizioForm
 
 @server.route('/homeheader')
 def homeheader():
     return render_template('header_homepage.html')
 
-@server.route('/gestioneDip')
+@server.route('/gestioneDip', methods=['GET','POST'])
 def gestioneDip():
-    return render_template('gestioneDip.html')
+    form = DipFittizioForm()
+    if form.validate_on_submit():
+        return redirect('/')
+    else:
+        return render_template('gestioneDip.html', form=form )
 
 @server.route('/paginaProfilo')
 def paginaProfilo():

@@ -33,3 +33,8 @@ class LoginForm(FlaskForm):
     password = PasswordField("Inserire la propria password d'accesso", validators=[DataRequired()])
     submit =SubmitField("Login")
 
+class DipFittizioForm(FlaskForm):
+    tipo_dip = SelectField("Tipo Dipendente", choices=[("commerciale","Commerciale"), ("tecnico", "Tecnico"),
+                                                       ("capo-cantiere", "Capo-cantiere"), ("contabile", "Contabile"), ("esterno", "Esterno")])
+    dirigente = BooleanField("Dirigente")
+    submit = SubmitField("Genera")

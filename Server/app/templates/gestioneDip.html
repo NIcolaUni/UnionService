@@ -6,20 +6,69 @@
     <div class="wrap-contact100" id="contenuto">
 
         <div class="row" id="rigaCredenziali">
-            <span class="contact100-form-title button-title">
-                Genera credenziali
-            </span>
 
-            <button onclick="JSalert()" id="generaCredenziali"></button>
+            <form id="formTipoDip" class="contact100-form validate-form" method="post" action="gestioneDip">
+
+                    {{form.hidden_tag()}}
+
+
+
+                <div class="wrap-input100 input100-select bg1" data-validate="Campo obbligatorio">
+                    <span class="label-input100">Tipologia dipendente</span>
+                    <div>
+                        {{form.tipo_dip}}
+                        <div class="dropDownSelect2"></div>
+                    </div>
+                </div>
+
+
+
+                <div class="wrap-contact100-form-check">
+                    <div class="contact100-form-check m-t-15">
+                         {{form.dirigente}}
+                        <label class="label-check100" for="dirigente">
+                            Dirigente
+                        </label>
+                    </div>
+			    </div>
+
+
+            </form>
+                      <span class="contact100-form-title button-title">
+                    Genera credenziali
+                </span>
+
+                <button onclick="JSalert()" id="generaCredenziali"></button>
+
+
+
         </div>
     </div>
 
 
 </div>
 
+<!-- Common Vendors
+<script src="{{url_for('static', filename='vendors/bower_components/jquery.nicescroll/jquery.nicescroll.min.js') }}"></script>
+<script src="{{url_for('static', filename='vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js') }}"></script>
+<script src="{{url_for('static', filename='vendors/bower_components/Waves/dist/waves.min.js') }}"></script>
+<script src="{{url_for('static', filename='vendors/bootstrap-growl/bootstrap-growl.min.js') }}"></script>
+<script src="{{url_for('static', filename='vendors/bower_components/ng-table/dist/ng-table.min.js') }}"></script>
+ -->
 <script type="text/javascript">
+
+    form= $('#formTipoDip');
+    form.addClass("bella");
+    $('input#dirigente').addClass("input-check100");
+    $('select#tipo_dip').addClass("js-select2");
+    //$('input#submit').attr("onClick", "JSalert()");
+
     function JSalert(){
-        swal({   title: "Stai per aggiungere un nuovo dipendente",
+        var classe=$('select#tipo_dip option:selected').text();
+        if($('input#dirigente').is(':checked')){
+            classe= classe + " dirigente"
+        }
+        swal({   title: "Stai per aggiungere un nuovo dipendente\n"+ classe,
         text: "Sei sicuro di voler procedere?",
         type: "warning",
         showCancelButton: true,
@@ -31,10 +80,27 @@
         function(isConfirm){
             if (isConfirm)
             {
-                 swal("", "username: \n"+"password:", "success");
+                 swal({
+                    title: "Operazione eseguita!",
+                    text: "username: \n"+"password:",
+                    icon: "success",
+                    type: "success",
+                    confirmButtonText: "ok",
+                    closeOnConfirm: true
+                    }, function(){
+                        form.submit();
+                    });
+
             }
             else {
                 swal("", "Operazione Annullata", "error");
+
             } });
     }
+
+    $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+    $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/js/main.js')}}");
 </script>

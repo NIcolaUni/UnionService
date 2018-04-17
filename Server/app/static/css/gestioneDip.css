@@ -37,3 +37,18 @@
     padding-bottom: 10px;
 }
 
+#select2-tipoDip-container{
+    color: white;
+}
+
+label#dir {
+    color: white;
+}
+
+p.text-muted {
+    margin-bottom: 0;
+}
+
+div.icon.success.animate::before {
+    visibility: hidden;
+}
