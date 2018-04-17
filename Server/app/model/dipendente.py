@@ -17,8 +17,8 @@ class Dipendente(UserMixin, DipendenteDBmodel):
         return "<Dipendente - {0} {1}>".format(self.nome, self.cognome)
 
     def get_id(self):
-        return self.cf
+        return self.username
 
 @login_manager.user_loader
-def load_user(cf):
-    return Dipendente.query.get(cf)
+def load_user(username):
+    return Dipendente.query.get(username)

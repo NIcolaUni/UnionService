@@ -1,11 +1,12 @@
 from sqlalchemy import String, Column, Boolean
 from app import database
-from app.model.db.dipFittizioDBmodel import DipFittizioDBmodel
 
-class DipFittizioDBmodel(database.Model):
+
+class DipRegistratoDBmodel(database.Model):
     __tablename__="dipendente_registrato"
     username = Column(String(30), primary_key=True )
-    password = Column(String(30), nullable=False)
+    password = Column(String(30), nullable=False, unique=True)
     fittizio = Column(Boolean, nullable=False)
-    dipFittizio = relationship("DipFittizioDBmodel", uselist=False, back_populates="dipReg", cascade="all, delete-orphan")
-
+    dipFittizio = database.relationship("DipFittizioDBmodel", uselist=False, back_populates="dipReg")
+  #  dipUser = database.relationship("DipendenteDBmodel",  back_populates="regUser")
+   # dipPass = database.relationship("DipendenteDBmodel",  back_populates="regPass")

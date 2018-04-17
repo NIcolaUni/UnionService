@@ -1,9 +1,10 @@
 from flask import Flask, render_template, redirect
 from app import server, database
-from app.model.form import DipFittizioForm
+from app.model.form import DipFittizioForm, LoginForm, CompletaProfilo
 from app.model.dipendenteFittizio import DipendenteFittizio
+from app.model.db.dipRegistratoDBmodel import DipRegistratoDBmodel
+from app.model.dipendente import Dipendente
 from flask_login import current_user, login_user
-from app.model.form import LoginForm
 
 @server.route('/homeheader')
 def homeheader():
@@ -13,8 +14,10 @@ def homeheader():
 def gestioneDip():
     form = DipFittizioForm()
     if form.validate_on_submit():
-        newDip = DipendenteFittizio(username=form.username.data, password=form.password.data, classe=form.tipo_dip.data, dirigente=form.dirigente.data)
-        database.session.add(newDip)
+        dipReg = DipRegistratoDBmodel(username=form.username.data, password=form.password.data, fittizio=True)
+        newDipFittizio = DipendenteFittizio(username=form.username.data, password=form.password.data, classe=form.tipo_dip.data, dirigente=form.dirigente.data)
+        database.session.add(dipReg)
+        database.session.add(newDipFittizio)
         database.session.commit()
         return redirect('/homepage')
     else:
@@ -30,6 +33,9 @@ def index():
     return render_template('homepage.html')
 
 @server.route('/registraDipendente', methods=['GET','POST'])
+def registraDipendente():
+    form = CompletaProfilo()
+    return render_template("registrazioneDip.html", form=form)
 
 
 @server.route('/', methods=['GET','POST'])
@@ -41,12 +47,16 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        dip=DipendenteFittizio.query.filter_by(username=form.username.data, password=form.password.data).first()
+        dip=DipRegistratoDBmodel.query.filter_by(username=form.username.data, password=form.password.data).first()
         if dip is None:
             return render_template("login.html", form=form, error="Credenziali errate!")
 
-        login_user(dip)
+       # print("\n\n\n\n\nBELLA IO SONO IL DIP {0}{1}".format(dip.username, dip.fittizio))
 
+        if dip.fittizio :
+            dip=DipendenteFittizio.query.filter_by(username=dip.username).first()
+            login_user(dip)
+            return redirect('/registraDipendente')
         return render_template("homepage.html")
 
 

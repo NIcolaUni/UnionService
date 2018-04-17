@@ -1,11 +1,11 @@
-from sqlalchemy import String, Column, Boolean
+from sqlalchemy import String, Column, Boolean, ForeignKey
 from app import database
-from app.model.db.dipRegistratoDBmodel import DipRegistratoDBmodel
+
 
 class DipFittizioDBmodel(database.Model):
     __tablename__="dipendente_fittizio"
-    username = Column(String(30), primary_key=True, database.ForeignKey('dipReg.username'))
+    username = Column(String(30), ForeignKey('dipendente_registrato.username'), primary_key=True, )
     password = Column(String(30), nullable=False)
     classe = Column(String(20), nullable=False)
     dirigente = Column(Boolean, nullable=False)
-    dipReg = relationship("DipRegistratoDBmodel", uselist=False, back_populates="dipFittizio")
+    dipReg = database.relationship("DipRegistratoDBmodel", uselist=False, back_populates="dipFittizio", single_parent=True)
