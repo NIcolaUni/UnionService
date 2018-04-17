@@ -10,7 +10,9 @@ if __name__ == '__main__':
         database.session.add(newDip)
         database.session.commit()
 '''
-from app import server
+from app import server, database
 
-server.run(host='0.0.0.0', port=8000)
+if __name__ == '__main__':
+    database.create_all()
+    server.run(host='0.0.0.0', port=8000)
 

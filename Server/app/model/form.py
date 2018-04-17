@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, DateField, BooleanField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired
+import random
+import datetime
+import string
 
 class CompletaProfilo(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
@@ -34,7 +37,13 @@ class LoginForm(FlaskForm):
     submit =SubmitField("Login")
 
 class DipFittizioForm(FlaskForm):
+    username = StringField("Inserire il proprio username")
+    password = PasswordField("Inserire la propria password d'accesso")
     tipo_dip = SelectField("Tipo Dipendente", choices=[("commerciale","Commerciale"), ("tecnico", "Tecnico"),
                                                        ("capo-cantiere", "Capo-cantiere"), ("contabile", "Contabile"), ("esterno", "Esterno")])
     dirigente = BooleanField("Dirigente")
-    submit = SubmitField("Genera")
+
+    def assegnaUserEPass(self):
+        random.seed(datetime.datetime.today())
+        self.username.data = "fittizio"+"".join(random.choice(['_','-','/']))+"".join(random.choice(string.digits) for n in range(5))
+        self.password.data = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])

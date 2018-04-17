@@ -26,20 +26,22 @@
                 <div class="wrap-contact100-form-check">
                     <div class="contact100-form-check m-t-15">
                          {{form.dirigente}}
-                        <label class="label-check100" for="dirigente">
+                        <label class="label-check100 white" for="dirigente">
                             Dirigente
                         </label>
                     </div>
 			    </div>
 
+                        {{form.username}}
+                        {{form.password}}
+
 
             </form>
-                      <span class="contact100-form-title button-title">
-                    Genera credenziali
-                </span>
+            <span class="contact100-form-title button-title">
+                Genera credenziali
+            </span>
 
-                <button onclick="JSalert()" id="generaCredenziali"></button>
-
+            <button onclick="JSalert()" id="generaCredenziali"></button>
 
 
         </div>
@@ -61,7 +63,14 @@
     form.addClass("bella");
     $('input#dirigente').addClass("input-check100");
     $('select#tipo_dip').addClass("js-select2");
-    //$('input#submit').attr("onClick", "JSalert()");
+    $('input#username').hide();
+    $('input#password').hide();
+    $('input#username').attr("value", "{{form.username.data}}");
+    $('input#password').attr("value",  "{{form.password.data}}");
+
+    username = $('input#username').attr("value");
+    password = $('input#password').attr("value");
+
 
     function JSalert(){
         var classe=$('select#tipo_dip option:selected').text();
@@ -82,7 +91,7 @@
             {
                  swal({
                     title: "Operazione eseguita!",
-                    text: "username: \n"+"password:",
+                    text: "username: "+username+"\npassword: "+password,
                     icon: "success",
                     type: "success",
                     confirmButtonText: "ok",

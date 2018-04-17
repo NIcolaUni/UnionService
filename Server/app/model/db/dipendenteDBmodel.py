@@ -6,5 +6,5 @@ class DipendenteDBmodel(database.Model):
     cf = Column(String(16), primary_key=True)
     nome = Column(String(20), nullable=False)
     cognome = Column(String(30), nullable=False)
-    username = Column(String(20), nullable=False, unique=True)
-    hash_passwd_login =Column(String(30), nullable=False)
+    username = Column(String(30), nullable=False, unique=True)
+    password =Column(String(30), nullable=False)
