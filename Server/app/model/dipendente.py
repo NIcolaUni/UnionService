@@ -5,12 +5,25 @@ from app.model.db.dipendenteDBmodel import DipendenteDBmodel
 
 class Dipendente(UserMixin, DipendenteDBmodel):
 
-    def __init__(self, cf, nome, cognome, username, hash_passwd_login):
+    def __init__(self, cf, nome, cognome, username, password, sesso,
+                 dataNascita, via, civico, cap, citta, regione, telefono, email, pass_email, IBAN, partitaIva):
         self.cf = cf
         self.nome = nome
         self.cognome = cognome
         self.username = username
-        self.hash_passwd_login = hash_passwd_login
+        self.password = password
+        self.sesso = sesso
+        self.dataNascita = dataNascita
+        self.via = via
+        self.civico = civico
+        self.cap = cap
+        self.citta = citta
+        self.regione = regione
+        self.telefono = telefono
+        self.email = email
+        self.pass_email = pass_email
+        self.IBAN = IBAN
+        self.partitaIva = partitaIva
 
     # Equivalente al toString() di java
     def __repr__(self):

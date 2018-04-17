@@ -5,20 +5,26 @@ import random
 import datetime
 import string
 
-class CompletaProfilo(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
+class RegistraDipendenteForm(FlaskForm):
+    nome = StringField("Nome del dipendente", validators=[DataRequired()])
+    cognome = StringField("Cognome del dipendente", validators=[DataRequired()])
+    cf = StringField("Codice Fiscale", validators=[DataRequired()])
+    dataNascita = DateField("Data di nascita", validators=[DataRequired()])
     sesso = SelectField("Sesso", choices=[("m","Maschio"), ("f", "Femmina")])
-    citta = StringField("Città", validators=[DataRequired()])
     via = StringField("Via residenza", validators=[DataRequired()])
     civico = StringField("Civico residenza", validators=[DataRequired()])
     cap = IntegerField("CAP residenza", validators=[DataRequired()])
+    citta = StringField("Città", validators=[DataRequired()])
+    regione = StringField("Regione", validators=[DataRequired()])
     telefono = IntegerField("Telefono", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
     email = StringField("Email di lavoro", validators=[DataRequired()])
     pass_email = PasswordField("Password email", validators=[DataRequired()])
     iban = StringField("IBAN", validators=[DataRequired()])
+    partitaIva = StringField("Partita Iva (lasciare vuoto in caso non si posieda)")
     submit = SubmitField('Fatto!')
-
+'''
 class RegistraDipendente(FlaskForm):
     nome = StringField("Nome del dipendente", validators=[DataRequired()])
     cognome = StringField("Cognome del dipendente", validators=[DataRequired()])
@@ -30,6 +36,7 @@ class RegistraDipendente(FlaskForm):
     contract_expire = DateField("Giorno scadenza contratto")
     tipo_orario =SelectField("Tipo Dipendente", choices=[("full", "Full Time"), ("part", "Part Time")])
    # disponibilita =
+'''
 
 class LoginForm(FlaskForm):
     username = StringField("Inserire il proprio username", validators=[DataRequired()])

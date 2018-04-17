@@ -29,18 +29,30 @@
 								Benvenuto! Registrati nel sistema.
 							</span>
 
-								<div class="wrap-input100 bg1 validate-input" data-validate="Campo obbligatorio">
-									<span class="label-input100">Username</span>
-									{{form.username(size=32)}}
+								<div class="wrap-input100  bg1 rs1-wrap-input100">
+									<span class="label-input100">Nome</span>
 
+									{{form.nome(size=30)}}
 								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Password</span>
+									<span class="label-input100">Cognome</span>
 
-									{{form.password(size=32)}}
+									{{form.cognome(size=30)}}
 								</div>
 
+
+								<div class="wrap-input100  bg1 rs1-wrap-input100">
+									<span class="label-input100">Codice Fiscale</span>
+
+									{{form.cf(size=16)}}
+								</div>
+
+								<div class="wrap-input100  bg1 rs1-wrap-input100">
+									<span class="label-input100">Data di nascita</span>
+
+									{{form.dataNascita}}
+								</div>
 
 								<div class="wrap-input100 input100-select bg1">
 									<span class="label-input100">Sesso</span>
@@ -50,10 +62,6 @@
 									</div>
 								</div>
 
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Città</span>
-									{{form.citta}}
-								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
 									<span class="label-input100">Via</span>
@@ -71,9 +79,34 @@
 								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
+									<span class="label-input100">Città</span>
+									{{form.citta}}
+								</div>
+
+								<div class="wrap-input100  bg1 rs1-wrap-input100">
+									<span class="label-input100">Regione</span>
+									{{form.regione}}
+								</div>
+
+
+								<div class="wrap-input100  bg1 rs1-wrap-input100">
 									<span class="label-input100">Telefono</span>
 									{{form.telefono}}
 								</div>
+
+							    <div class="wrap-input100 bg1 validate-input" data-validate="Campo obbligatorio">
+									<span class="label-input100">Username</span>
+									{{form.username(size=30)}}
+
+								</div>
+
+								<div class="wrap-input100  bg1 rs1-wrap-input100">
+									<span class="label-input100">Password</span>
+
+									{{form.password(size=30)}}
+								</div>
+
+
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
 								  <span class="label-input100">Email</span>
@@ -91,6 +124,10 @@
 									{{form.iban}}
 								</div>
 
+								<div class="wrap-input100  bg1">
+									<span class="label-input100">Partita Iva</span>
+									{{form.partitaIva}}
+								</div>
 
 
 
@@ -126,6 +163,9 @@
 		$("input").addClass("input100");
 		$("select#sesso").addClass("js-select2");
 
+		$("input#nome").attr("placeholder", "Inserire il proprio nome");
+		$("input#cognome").attr("placeholder", "Inserire il proprio cognome");
+
 		$("input#username").attr("placeholder", "Inserire uno username a scelta per il login");
 
 		$("input#password").attr("placeholder", "Inserire una password per il login");
@@ -145,6 +185,15 @@
 		$("input#pass_email").attr("placeholder", "Inserire la password dalla email di lavoro" );
 
 		$("input#iban").attr("placeholder", "Inserire il proprio IBAN");
+
+		$("input#partitaIva").attr("placeholder", "Inserire la propria partita Iva (opzionale)");
+
+		$("input#cf").attr("placeholder", "Inserire il proprio codice fiscale");
+		$("input#regione").attr("placeholder", "Inserire la propria regione di residenza");
+		$("input#dataNascita").attr("placeholder", "Inserire la propria data di nascita");
+
+
+
 
 
 	</script>
@@ -184,23 +233,111 @@
 	classe "validate-input" ai tag input*/
 		var notValidated;
 
-/*=================================Imposta stampa errore password=====================================================*/
+/*=================================Imposta stampa errore nome=====================================================*/
 
 		notValidated=true;
-		{% for error in form.password.errors %}
+		{% for error in form.nome.errors %}
 
 		if(notValidated){
-			$("div:has(> input#password)").addClass("validate-input");
+			$("div:has(> input#nome)").addClass("validate-input");
 			notValidated=false;
 		}
-		$("div:has(> input#password)").attr("data-validate", "{{error}}");
-		showValidate($("input#password"));
+		$("div:has(> input#nome)").attr("data-validate", "{{error}}");
+		showValidate($("input#nome"));
 
 		{% endfor %}
 
 /*====================================================================================================================*/
+/*=================================Imposta stampa errore cognome=====================================================*/
 
+		notValidated=true;
+		{% for error in form.cognome.errors %}
 
+		if(notValidated){
+			$("div:has(> input#cognome)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#cognome)").attr("data-validate", "{{error}}");
+		showValidate($("input#cognome"));
+
+		{% endfor %}
+
+/*====================================================================================================================*/
+/*=================================Imposta stampa errore cf=====================================================*/
+
+		notValidated=true;
+		{% for error in form.cf.errors %}
+
+		if(notValidated){
+			$("div:has(> input#cf)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#cf)").attr("data-validate", "{{error}}");
+		showValidate($("input#cf"));
+
+		{% endfor %}
+
+/*====================================================================================================================*/
+/*=================================Imposta stampa errore data nascita=====================================================*/
+
+		notValidated=true;
+		{% for error in form.dataNascita.errors %}
+
+		if(notValidated){
+			$("div:has(> input#dataNascita)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#dataNascita)").attr("data-validate", "{{error}}");
+		showValidate($("input#dataNascita"));
+
+		{% endfor %}
+
+/*====================================================================================================================*/
+/*=================================Imposta stampa errore via=====================================================*/
+
+		notValidated=true;
+		{% for error in form.via.errors %}
+
+		if(notValidated){
+			$("div:has(> input#via)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#via)").attr("data-validate", "{{error}}");
+		showValidate($("input#via"));
+
+		{% endfor %}
+
+/*====================================================================================================================*/
+/*=================================Imposta stampa errore civico=====================================================*/
+
+		notValidated=true;
+		{% for error in form.civico.errors %}
+
+		if(notValidated){
+			$("div:has(> input#civico)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#civico)").attr("data-validate", "{{error}}");
+		showValidate($("input#civico"));
+
+		{% endfor %}
+
+/*====================================================================================================================*/
+/*=================================Imposta stampa errore CAP=====================================================*/
+
+		notValidated=true;
+		{% for error in form.cap.errors %}
+
+		if(notValidated){
+			$("div:has(> input#cap)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#cap)").attr("data-validate", "{{error}}");
+		showValidate($("input#cap"));
+
+		{% endfor %}
+
+/*====================================================================================================================*/
 /*=================================Imposta stampa errore città=====================================================*/
 
 		notValidated=true;
@@ -217,53 +354,33 @@
 
 
 /*====================================================================================================================*/
-
-/*=================================Imposta stampa errore via=====================================================*/
+/*=================================Imposta stampa errore città=====================================================*/
 
 		notValidated=true;
-		{% for error in form.via.errors %}
+		{% for error in form.citta.errors %}
 
 		if(notValidated){
-			$("div:has(> input#via)").addClass("validate-input");
+			$("div:has(> input#citta)").addClass("validate-input");
 			notValidated=false;
 		}
-		$("div:has(> input#via)").attr("data-validate", "{{error}}");
-		showValidate($("input#via"));
+		$("div:has(> input#citta)").attr("data-validate", "{{error}}");
+		showValidate($("input#citta"));
 
 		{% endfor %}
 
 
 /*====================================================================================================================*/
-
-/*=================================Imposta stampa errore civico=====================================================*/
-
-		notValidated=true;
-		{% for error in form.civico.errors %}
-
-		if(notValidated){
-			$("div:has(> input#civico)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#civico)").attr("data-validate", "{{error}}");
-		showValidate($("input#civico"));
-
-		{% endfor %}
-
-
-/*====================================================================================================================*/
-
-/*=================================Imposta stampa errore cap=====================================================*/
+/*=================================Imposta stampa errore regione=====================================================*/
 
 		notValidated=true;
-		{% for error in form.cap.errors %}
+		{% for error in form.regione.errors %}
 
 		if(notValidated){
-			$("div:has(> input#cap)").addClass("validate-input");
+			$("div:has(> input#regione)").addClass("validate-input");
 			notValidated=false;
 		}
-		$("div:has(> input#cap)").attr("data-validate", "{{error}}");
-		showValidate($("input#cap"));
-
+		$("div:has(> input#regione)").attr("data-validate", "{{error}}");
+		showValidate($("input#regione"));
 
 		{% endfor %}
 
@@ -286,6 +403,39 @@
 
 
 /*====================================================================================================================*/
+/*=================================Imposta stampa errore username=====================================================*/
+
+		notValidated=true;
+		{% for error in form.username.errors %}
+
+		if(notValidated){
+			$("div:has(> input#username)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#username)").attr("data-validate", "{{error}}");
+		showValidate($("input#username"));
+
+		{% endfor %}
+
+
+/*====================================================================================================================*/
+
+/*=================================Imposta stampa errore password=====================================================*/
+
+		notValidated=true;
+		{% for error in form.password.errors %}
+
+		if(notValidated){
+			$("div:has(> input#password)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#password)").attr("data-validate", "{{error}}");
+		showValidate($("input#password"));
+
+		{% endfor %}
+
+/*====================================================================================================================*/
+
 
 /*=================================Imposta stampa errore email=====================================================*/
 
@@ -332,6 +482,23 @@
 		}
 		$("div:has(> input#iban)").attr("data-validate", "{{error}}");
 		showValidate($("input#iban"));
+
+		{% endfor %}
+
+
+/*====================================================================================================================*/
+
+/*=================================Imposta stampa errore partita iva=====================================================*/
+
+		notValidated=true;
+		{% for error in form.partitaIva.errors %}
+
+		if(notValidated){
+			$("div:has(> input#partitaIva)").addClass("validate-input");
+			notValidated=false;
+		}
+		$("div:has(> input#partitaIva)").attr("data-validate", "{{error}}");
+		showValidate($("input#partitaIva"));
 
 		{% endfor %}
 

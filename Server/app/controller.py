@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect
 from app import server, database
-from app.model.form import DipFittizioForm, LoginForm, CompletaProfilo
+from app.model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm
 from app.model.dipendenteFittizio import DipendenteFittizio
 from app.model.db.dipRegistratoDBmodel import DipRegistratoDBmodel
 from app.model.dipendente import Dipendente
@@ -34,7 +34,28 @@ def index():
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 def registraDipendente():
-    form = CompletaProfilo()
+    form = RegistraDipendenteForm()
+
+    if form.validate_on_submit():
+        dip=DipRegistratoDBmodel.query.filter_by(username=form.username.data).first();
+        if dip is not None:
+            return render_template("registrazioneDip.html", form=form, usernameError="Username già esistente!")
+
+        dip = DipRegistratoDBmodel(username=form.username.data, password=form.password.data, fittizio=False)
+        newDip = Dipendente(nome=form.nome.data, cognome=form.cognome.data, cf=form.cf.data,
+                                dataNascita=form.dataNascita.data, sesso=form.sesso.data,
+                                via=form.via.data, civico=form.civico.data, cap=form.cap.data,
+                                citta=form.citta.data, regione=form.regione.data, telefono=form.telefono.data,
+                                username=form.username.data, password=form.password.data, email=form.email.data,
+                                pass_email=form.pass_email.data, iban=form.iban.data, partitaIva=form.partitaIva.data)
+        database.session.delete(DipendenteFittizio.query.filter_by(username=current_user.get_id()))
+        database.session.delete(DipRegistratoDBmodel.query.filter_by(username=current_user.get_id()))
+        database.session.add(dip)
+        database.session.add(newDip)
+        database.session.commit()
+        return redirect('/')
+
+
     return render_template("registrazioneDip.html", form=form)
 
 

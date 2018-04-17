@@ -104,11 +104,13 @@ In particolare:
 
 La ricerca di un dipendente da parte di un \textit{dirigente} verr\'a effettuata in una sezione apposita tramite una
 barra di ricerca; il risultato della ricerca ritorner\'a la \textit{Pagina Profilo} del dipendente cercato.
-Tale pagina rispetto alla \textit{Pagina Profilo} personale, da la possibilit\'a di:
+Tale pagina, rispetto alla \textit{Pagina Profilo} personale, da la possibilit\'a di:
 \begin{itemize}
  \item modificare i campi inseriti in fase di registrazione;
  \item vedere le \textit{Ferie confermate};
  \item visualizzare le \textit{Note attive} e  lo \textit{Storico delle note}.
+ \item visualizzare lo \textit{Storico conversazioni} ovvero tutte le conversazioni degli ultimi 30 giorni
+    del dipendente cercato;
 \end{itemize}
 
 Nella sezione \textit{Note attive} il \textit{dirigente} potr\'a visualizzare tutte
@@ -118,54 +120,53 @@ a quest'ultimo ma ancora salvate nel sistema (vedisi sezione "Note").
 
 \subsection{Registrazione e accesso}
 I dipendenti, per accedere alle funzionalit\'a dell'applicazione e ai dati contenuti
-nel database, dovranno prima essere registrati;
-la registrazione di un dipendente viene effettuata da un \textit{dirigente}.
-I dirigenti dovranno inserire solo le informazioni strettamente necessarie lasciando al nuovo dipendente l'onere di
-completare successivamente l'inserimento di tutti i suoi dati personali.
-
-La registrazione avver\'a compilando i campi del form presentato dalla pagina \textit{Registra Dipendente}, strettamente riservata
-ai \textit{dirigenti}; per ogni nuovo dipendente dovranno essere inseriti:
+nel database, dovranno prima essere registrati.\\
+Per registrare un nuovo dipendente, un \textit{dirigente}
+dovr\'a accedere ad una sezione chiamata \textit{Genera Credenziali} della pagina \textit{Gestione Dipendenti}:
+in tale sezione il \textit{dirigente} dovr\'a specificare
+la classe del nuovo dipendente e se il nuovo dipendente \'e un dirigente o meno; alla conferma di quanto inserito, il
+sistema generer\'a un \textit{Utente Fittizio} e ritorner\'a al \textit{dirigente} un nome utente ed una password
+che si incaricher\'a di comunicare al nuovo dipendente.\\\\
+Un  \textit{utente fittizio} \'e un particolare tipo di utente dell'applicazione per cui vengono registrati unicamente
+username e password e che ha il solo potere di registrare un dipendente.\\
+Un \textit{utente fittizio} pu\'o essere creato solo da un \textit{dirigente} attraverso la sezione \textit{Genera Credenziali}
+e username e password vengono generati in maniera randomica dal sistema.\\
+Ad \textit{utente fittizio} che accede al sistema viene presentata unicamente la \textit{Pagina di Registrazione}.\\
+La \textit{Pagina di Registrazione} \'e un form composto da i seguenti campi:
 \begin{itemize}
-	\item Codice Fiscale;
 	\item Nome;
 	\item Cognome;
-	\item Tipologia Contratto (determinato o indeterminato);
-	\item Scadenza Contratto;
-	\item Orario di Lavoro (full-time o part-time);
-  \item Disponibilit\'a settimanale (elenco giorni lavorativi della settimana)
-	\item Costo Orario;
-	\item Classe Dipendente;
-\end{itemize}
-
-Ogni dipendente dovr\'a effettuare un login tramite la
-\textit{Pagina d'accesso}, prima di poter aver accesso al sistema; nella \textit{Pagina d'accesso} verranno richiesti
-uno username ed una password; per i nuovi dipendenti username e password sono uguali e assegnati dal sistema;
-al momento della registrazione, per ogni utente il sistema assegna la stringa "nome\_cognome\_giorno\_mese\_anno" come username e password, dove:
-\begin{itemize}
-	\item nome: \'e il nome con cui il dipendente \'e stato registrato;
-	\item cognome: \'e il cognome con cui il dipendente \'e stato registrato;
-	\item giorno: \'e il giorno in cui scade il contratto del dipendente;
-	\item mese: \'e il mese in cui scade il contratto del dipendente;
-	\item anno: \'e l'anno in cui scade il contratto del dipendente;
-\end{itemize}
-
-In seguito al primo accesso, il sistema presenter\'a la \textit{Pagina CompletaProfilo} al nuovo dipendente; in tale pagina il dipendente
-sar\'a obbligato a compilare un form composto da i seguenti campi:
-\begin{itemize}
-	\item username;
-	\item password;
-    \item sesso;
+	\item Sesso;
+	\item Data di nascita;
+	\item Codice Fiscale;
+    \item Username;
+    \item Password;
 	\item foto personale;
 	\item indirizzo;
 	\item telefono;
 	\item email;
     \item password email (necessaria per poter inviare email col proprio account);
 	\item IBAN;
+	\item Disponibilit\'a settimanale (elenco giorni lavorativi della settimana)
 	\item numero partita IVA (se dipendente \textit{Autonomo});
 \end{itemize}
 
+Alla conferma della registrazione il sistema generer\'a un nuovo \textit{dipendente}, eliminer\'a
+l'\textit{utente fittizio} e invier\'a una \textit{nota automatica} al \textit{dirigente}
+che ha generato le credenziali per questo specifico \textit{utente fittizio}; tale nota informer\'a il dirigente
+dell'avvenuta registrazione del dipendente e gli ricorder\'a di controllare i campi inseriti e di completare i campi
+di propria competenza. Infatti, per ogni nuovo \textit{dipendente} registrato, il dirigente deve specificare attraverso
+un'apposita sezione, accessibile dalla pagina \textit{Gestione Dipendenti}, le seguenti informazioni:
+\begin{itemize}
+	\item Tipologia Contratto (determinato o indeterminato);
+	\item Scadenza Contratto;
+	\item Orario di Lavoro (full-time o part-time);
+	\item Costo Orario;
+\end{itemize}
+
+
 Ogni \textit{dipendente} pu\'o riaccedere in qualunque momento alla \textit{Pagina Profilo}
-per visualizzare/modificare le informazioni inserite al primo accesso.
+per visualizzare/modificare le informazioni inserite in fase di registrazione come \textit{utente fittizio}.
 
 \subsection{Funzionalit\'a comuni}
 
@@ -182,6 +183,14 @@ Tramite l'applicazione, a prescindere dall'ufficio d'appartenenza, i dipendenti 
 \item avere un modo rapido di settare/visualizzare note;
 \item poter cercare velocemente un cliente tramite un'apposita barra di ricerca.
 \end{itemize}
+
+Le conversazioni delle chat devono rimanere registrate nel sistema 30 giorni prima di essere rimosse.
+
+\subsubsection{La pagina profilo}
+Attraverso la propria \textit{Pagina profilo} un dipendente pu\'o visualizzare i propri dati personali
+registrati nel sistema e modificare i dati inseriti al primo accesso;
+un dipendente non pu\'o modificare i dati inseriti in fase di registrazione dal \textit{dirigente}.\\
+Dalla pagina profilo devono essere anche impostabili le proprie ferie annuali.
 
 \subsubsection{Il calendario aziendale}
 
@@ -236,21 +245,108 @@ avente come contenuto il commento lasciato dal \textit{dipendente}.\\\\
 Le note \textit{personali} e \textit{imposte} seppur spuntate o confermate dovranno rimanere memorizzate nel sistema per un periodo
 di tempo di 6 mesi.
 
+\newpage
+\subsection{Il cliente}
+Nel applicazione distinguiamo cinque tipologie di clienti: \textit{accolto},
+\textit{preventivato}, \textit{in lavorazione}, \textit{perso}, \textit{vecchio}.\\
+All'arrivo in azienda, un cliente si interfaccia in primoluogo con l'\textit{ufficio commerciale}:
+in questa fase, il commerciale che lo accoglie registra nel sistema il cliente come \textit{cliente accolto}.
+Nello stesso momento o in uno successivo, il cliente e il commerciale potrebbero decidere di stilare un preventivo:
+al termine della compilazione del preventivo il cliente diventa di tipo \textit{preventivato}.\\
+Un \textit{cliente preventivato} potrebbe ancora rifiutare il lavoro: solo topo la stesura del contratto il cliente diventa
+\textit{in lavorazione} altrimenti il cliente diventa \textit{perso}.\\
+Un cliente per cui \'e stata completato un \textit{lavoro} diventa \textit{vecchio}; ad un \textit{cliente vecchio}
+deve essere possibile associare pi\'u \textit{lavori}.\\
+Ogni cliente dal momento in cui viene registrato possiede una \textit{Pagina Cliente} da cui
+ogni dipendente potr\'a accedere a funzioni dell'applicazione specifiche per lavorare con quel cliente, ad esempio: la
+\textit{Pagina preventivo}, la \textit{Pagina contratto}, la \textit{Pagina avanzamento lavori}, ecc.
+
+Per ogni cliente va registrato: nome, cognome, indirizzo, telefono, email, dati sopralluogo,
+rilievo sopralluogo, archivio foto ( suddiviso in: prima dei lavori, avanzamento lavori,
+completamento lavori), planimetrie catastali, preventivo commerciale, preventivo
+finiture, contratto, cronoprogramma, ordini, identificativi dei dipendenti che lavorano
+col cliente.
+Gran parte delle informazioni vengono inserite a mano a mano che i lavori procedono.
+
+
 \subsection{Funzionalit\'a accessibili dall'\textit{ufficio commerciale}}
 
 Tramite l'applicazione, i dipendenti che lavorano nell'ufficio commerciale
 devono poter:
 \begin{itemize}
-\item aggiungere un nuovo cliente;
-\item togliere un vecchio cliente;
-\item compilare in maniera semplice il preventivo del cliente;
-\item compilare il contratto per il cliente;
-\item aggiungere/togliere/modificare le voci del database riguardanti il preventivo;
-\item compilare il \textit{modulo gradimento lavori}.
+    \item aggiungere un nuovo cliente;
+    \item togliere un vecchio cliente;
+    \item compilare in maniera semplice il preventivo del cliente;
+    \item compilare il contratto per il cliente;
+    \item aggiungere/togliere/modificare le voci del database riguardanti il preventivo;
+    \item compilare il \textit{modulo gradimento lavori}.
 \end{itemize}
 
-Ogni preventivo vien fatto basandosi su una lista di oggetti e mansioni
-registrata nel database.
+\subsubsection{Registrazione cliente}
+Ogni commerciale pu\'o registrare nel sistema un cliente come \textit{accolto}
+tramite la pagina \textit{Registrazione Cliente}.\\
+In tale pagina viene presentato un form con i seguenti campi da compilare:
+\begin{itemize}
+    \item nome e cognome del cliente;
+    \item indirizzo del cliente;
+    \item un campo di testo "libero" in cui il commerciale si annota il tipo di lavoro richiesto;
+    \item un grado di difficolt\'a del cliente da 1 a 3;
+    \item una tipologia di cliente tra: immobiliare, privato, azienda;
+    \item referenza: passaparola, fiera, ufficio, internet o altro.
+\end{itemize}
+
+Oltre a ci\'o, il sistema richieder\'a se per il lavoro richiesto \'e necessario fare un sopraluogo:
+in caso di risposta affermativa, si dovr\'a impostare l'appuntamento per il sopraluogo attraverso la \textit{Pagina sopraluogo},
+accessibile dalla pagina \textit{Registrazione Cliente}.\\
+Per vari motivi, i dati per l'appuntamento potrebbero non essere subito noti: al commerciale deve essere data
+la possibilit\'a di impostarli in un secondo momento; se il commerciale decide impostarli in un secondo momento,
+il sistema generer\'a una \textit{nota automatica} che gli ricorder\'a, i giorni successivi, di dover impostare
+l'appuntamento con quel cliente.
+Attraverso questa nota dev'essere possibile riaprire la \textit{Pagina sopraluogo} per quel cliente.\\
+\'E possibile che il commerciale subito dopo la registrazione del cliente voglia preventivarlo subito:
+dalla pagina \textit{Registrazione} deve essere possibile accedere alla pagina \textit{Preventivo}.
+Se non \'e necessario alcun sopraluogo e il preventivo viene rimandato, il sistema obbligher\'a il
+commerciale a inserire una data indicante entro quando fare il preventivo: dal giorno indicato in poi, apparir\'a
+una \textit{nota automatica} che ricorda al commerciale di fare il preventivo per quel cliente.
+
+\subsubsection{Pagina sopraluogo}
+Nella \textit{Pagina sopraluogo} il commerciale fissa l'appuntamento per il sopraluogo per un dato cliente;
+in particolare dovr\'a inserire le seguenti informazioni:
+\begin{itemize}
+    \item data e ora;
+    \item tecnico che accompagna (opzionale);
+\end{itemize}
+
+Al termine della compilazione di questa pagina , al commerciale e all'eventuale tecnico comparir\'a in \textit{agenda}
+l'appuntamento.
+Deve essere possibile modificare in un secondo momento l'appuntamento:
+dall'agenda, cliccando sul \textit{evento sopraluogo}, si portanno modificare i dati dell'appuntamento.
+Dopo sette giorno dalla data del sopraluogo, al commerciale deve apparire una \textit{nota automatica} che gli
+ricorda di dover chiamare il cliente per fare il \textit{preventivo}.
+
+\subsubsection{Il preventivo}
+Un preventivo \'e un insieme di \textit{lavorazioni} da compiere per un determinato \textit{lavoro}
+e pu\'o venir compilato da un \textit{commerciale} o da un \textit{tecnico} attraverso la \textit{Pagina Preventivo}
+accessibile dalla \textit{Pagina Cliente};
+ogni \textit{lavorazione} \'e raggruppata in \textit{settori di lavorazione}.\\
+ Per ogni \textit{settore di lavorazione} va registrato il nome e una priorit\'a
+ ( da cui dipender\'a l'ordine di visualizzazione delle \textit{lavorazioni} nel \textit{preventivo}).\\
+Per ogni \textit{lavorazione}  va registrato il nome, un prezzo unitario, il \textit{settore di lavorazione}.\\
+Ogni dipendente di tipo \textit{commerciale} o \textit{tecnico} ha il potere di aggiungere/rimuovere \textit{settori di lavorazione},
+aggiungere nuove \textit{lavorazioni} ad un settore, spostare una \textit{lavorazione} da un settore ad un altro,
+cambiare temporaneamente il settore di default di una lavorazione per un dato preventivo.
+
+
+
+Il preventivo ha due modalit\'a di visualizzazione: \textit{cliente} e \textit{dipendente}; la \textit{visualizzazione cliente}
+\'e una versione ridotta della \textit{visualizzazione dipendente}.\\
+
+Terminata la compilazione di un preventivo, si procede alla \textit{stampa del preventivo}:
+questa fase implica la chiusura del preventivo;
+Entro sette giorni dalla chiusura del preventivo, al dipendente responsabile della sua stesura
+ deve apparire una \textit{nota automatica} che gli ricorda di chiamare il cliente per la
+ compilazione del \textit{contratto}.
+
 Terminata la compilazione del preventivo il sistema calcola il budget
 dei lavori; questo budget \'e un'approssimazione: il budget effettivo
 vien ricalcolato alla fine del \textit{preventivo finiture}.\\
@@ -259,14 +355,6 @@ Entro sette giorni da quando \'e stato effettuato il preventivo per un cliente,
 al commerciale che si \'e occupato del cliente deve comparire una nota ben
 visibile che ricorda di richiamare il cliente.
 
-\subsubsection{Il cliente}
-
-Per ogni cliente va registrato: nome, cognome, indirizzo, telefono, email, dati sopralluogo,
-rilievo sopralluogo, archivio foto ( suddiviso in: prima dei lavori, avanzamento lavori,
-completamento lavori), planimetrie catastali, preventivo commerciale, preventivo
-finiture, contratto, cronoprogramma, ordini, identificativi dei dipendenti che lavorano
-col cliente.
-Gran parte delle informazioni vengono inserite a mano a mano che i lavori procedono.
 
 
 \subsection{Funzionalit\'a accessibili dall'\textit{ufficio tecnico}}
@@ -303,16 +391,8 @@ effettuare gli ordini specificati dall'ufficio tecnico: un mese prima (tale peri
 deve essere impostabile) che un oggetto serva effettivamente, deve essere inviata
 un'email verso l'azienda che lo vende.
 
-\subsection{Il responsabile}
 
-Tra tutti i dipendenti dell'azienda ve ne \'e uno detto \textit{responsabile}
-che deve avere a disposizione funzionalit\'a aggiuntive:
-\begin{itemize}
-\item deve poter registrare/eliminare nel/dal sistema i dipendenti dell'azienda;
-\item deve avere a disposizione una schermata  \textit{avanzamento lavori}.
-\end{itemize}
-
-\subsubsection{Schermata \textit{avanzamento lavori}}
+\subsection{Schermata \textit{avanzamento lavori}}
 
 Tramite questa funzionalit\'a dell'applicazione, il \textit{responsabile}
 deve essere in grado di monitorare il completamento di tutte le attivit\'a
@@ -347,6 +427,8 @@ Il costo preventivato per lo svolgimento complessivo del lavoro (manutenzione ne
 
 \newpage
 
+\section{Tecnologie usate}
+
 \section{Documentazione progettazione database}
 \subsection*{Modello Concettuale}
 
@@ -378,7 +460,7 @@ Il costo preventivato per lo svolgimento complessivo del lavoro (manutenzione ne
         \qquad\qquad
       \end{figure}
 
-\subsection{Modello Logico}
+\subsection*{Modello Logico}
 \begin{itemize}
   \item dipendente(\underline{cf}, username, password, nome, cognome, sesso, via, civico, cap, citta, foto, telefono,
       email, password\_email, tipo\_dipendente, tipo\_contratto, scadenza\_contratto, orario\_lavoro, costo, iban, partita\_iva);
@@ -418,7 +500,8 @@ Il costo preventivato per lo svolgimento complessivo del lavoro (manutenzione ne
 
 \end{itemize}
 
-
+\newpage
+\section{Documentazione progettazione applicazione}
 
 
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2018.1.11)  9 APR 2018 00:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2018.1.11)  12 APR 2018 12:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -662,77 +662,111 @@ LaTeX Font Info:    Try loading font information for TS1+futs on input line 78.
 (/usr/share/texlive/texmf-dist/tex/latex/fourier/ts1futs.fd
 File: ts1futs.fd 2004/03/26 Fontinst v1.926 font definitions for TS1/futs.
 ) [2]
-Overfull \hbox (39.96802pt too wide) in paragraph at lines 140--144
-\T1/futs/m/n/10.95 della reg-is-trazione, per ogni utente il sis-tema as-segna 
-la stringa "nome_cognome_giorno_mese_anno"
+Underfull \hbox (badness 10000) in paragraph at lines 122--136
+
+ []
+
+
+Overfull \hbox (4.72pt too wide) in paragraph at lines 122--136
+\T1/futs/m/n/10.95 Ad \T1/futs/m/it/10.95 utente fit-tizio \T1/futs/m/n/10.95 c
+he ac-cede al sis-tema viene pre-sen-tata uni-ca-mente la \T1/futs/m/it/10.95 P
+ag-ina di Reg-is-trazione\T1/futs/m/n/10.95 . 
  []
 
 [3]
-Overfull \hbox (43.51585pt too wide) in paragraph at lines 167--169
+Overfull \hbox (43.51585pt too wide) in paragraph at lines 168--170
 []\T1/futs/m/n/10.95 Ogni \T1/futs/m/it/10.95 dipen-dente \T1/futs/m/n/10.95 pu
 ó ri-ac-cedere in qualunque mo-mento alla \T1/futs/m/it/10.95 Pag-ina Pro-filo 
 \T1/futs/m/n/10.95 per vi-su-al-iz-zare/modificare
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 188--193
+Underfull \hbox (badness 10000) in paragraph at lines 197--202
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 219--238
+Underfull \hbox (badness 10000) in paragraph at lines 228--247
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 219--238
+Underfull \hbox (badness 10000) in paragraph at lines 228--247
+
+ []
+
+[6]
+Overfull \hbox (5.10336pt too wide) in paragraph at lines 250--263
+\T1/futs/m/n/10.95 Nel ap-pli-cazione dis-tin-guiamo cinque tipolo-gie di cli-e
+nti: \T1/futs/m/it/10.95 ac-colto\T1/futs/m/n/10.95 , \T1/futs/m/it/10.95 pre-v
+en-ti-vato\T1/futs/m/n/10.95 , \T1/futs/m/it/10.95 in la-vo-razione\T1/futs/m/n
+/10.95 ,
+ []
+
+
+Overfull \hbox (8.49782pt too wide) in paragraph at lines 250--263
+\T1/futs/m/n/10.95 dipen-dente potrá ac-cedere a fun-zioni dell'applicazione sp
+eci-fiche per la-vo-rare con quel cliente,
+ []
+
+[7] [8]
+Underfull \hbox (badness 10000) in paragraph at lines 341--343
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 252--257
+Underfull \hbox (badness 10000) in paragraph at lines 350--353
 
  []
 
-[6] [7] [8] [9]
+[9] [10] [11]
 
 Class scrartcl Warning: incompatible usage of \@ssect detected.
 (scrartcl)              You've used the KOMA-Script implementation of \@ssect
 (scrartcl)              from within a non compatible caller, that does not
 (scrartcl)              \scr@s@ct@@nn@m@ locally.
 (scrartcl)              This could result in several error messages on input li
-ne 351.
+ne 433.
 
-<Immagini/ER-dip.jpg, id=34, 613.29124pt x 226.8475pt>
+<Immagini/ER-dip.jpg, id=40, 613.29124pt x 226.8475pt>
 File: Immagini/ER-dip.jpg Graphic file (type jpg)
 
 <use Immagini/ER-dip.jpg>
-Package pdftex.def Info: Immagini/ER-dip.jpg used on input line 359.
+Package pdftex.def Info: Immagini/ER-dip.jpg used on input line 441.
 (pdftex.def)             Requested size: 245.31215pt x 90.73738pt.
 
-<Immagini/ER-completo.jpg, id=35, 1359.0775pt x 1018.80624pt>
+<Immagini/ER-completo.jpg, id=41, 1359.0775pt x 1018.80624pt>
 File: Immagini/ER-completo.jpg Graphic file (type jpg)
 
 <use Immagini/ER-completo.jpg>
-Package pdftex.def Info: Immagini/ER-completo.jpg used on input line 364.
+Package pdftex.def Info: Immagini/ER-completo.jpg used on input line 446.
 (pdftex.def)             Requested size: 407.7264pt x 305.64423pt.
- [10 <./Immagini/ER-dip.jpg> <./Immagini/ER-completo.jpg>]
+ [12 <./Immagini/ER-dip.jpg> <./Immagini/ER-completo.jpg>]
 
 Class scrartcl Warning: incompatible usage of \@ssect detected.
 (scrartcl)              You've used the KOMA-Script implementation of \@ssect
 (scrartcl)              from within a non compatible caller, that does not
 (scrartcl)              \scr@s@ct@@nn@m@ locally.
 (scrartcl)              This could result in several error messages on input li
-ne 370.
+ne 452.
 
-<Immagini/ER-ristrutturato.jpg, id=39, 1263.72125pt x 781.92125pt>
+<Immagini/ER-ristrutturato.jpg, id=45, 1263.72125pt x 781.92125pt>
 File: Immagini/ER-ristrutturato.jpg Graphic file (type jpg)
 
 <use Immagini/ER-ristrutturato.jpg>
-Package pdftex.def Info: Immagini/ER-ristrutturato.jpg used on input line 377.
+Package pdftex.def Info: Immagini/ER-ristrutturato.jpg used on input line 459.
 (pdftex.def)             Requested size: 379.11931pt x 234.57819pt.
 
-Overfull \hbox (1.23824pt too wide) in paragraph at lines 383--385
+
+Class scrartcl Warning: incompatible usage of \@ssect detected.
+(scrartcl)              You've used the KOMA-Script implementation of \@ssect
+(scrartcl)              from within a non compatible caller, that does not
+(scrartcl)              \scr@s@ct@@nn@m@ locally.
+(scrartcl)              This could result in several error messages on input li
+ne 463.
+
+
+Overfull \hbox (1.23824pt too wide) in paragraph at lines 465--467
 \T1/futs/m/n/10.95 tele-fono, email, pass-word_email, tipo_dipendente, tipo_con
 tratto, sca-denza_contratto,
  []
@@ -743,7 +777,7 @@ Class scrartcl Warning: incompatible usage of \@ssect detected.
 (scrartcl)              from within a non compatible caller, that does not
 (scrartcl)              \scr@s@ct@@nn@m@ locally.
 (scrartcl)              This could result in several error messages on input li
-ne 395.
+ne 477.
 
 
 Class scrartcl Warning: incompatible usage of \@ssect detected.
@@ -751,9 +785,9 @@ Class scrartcl Warning: incompatible usage of \@ssect detected.
 (scrartcl)              from within a non compatible caller, that does not
 (scrartcl)              \scr@s@ct@@nn@m@ locally.
 (scrartcl)              This could result in several error messages on input li
-ne 404.
+ne 486.
 
-[11 <./Immagini/ER-ristrutturato.jpg>] [12] (./unionService.aux) ) 
+[13 <./Immagini/ER-ristrutturato.jpg>] [14] [15] (./unionService.aux) ) 
 Here is how much of TeX's memory you used:
  6250 strings out of 493013
  97054 string characters out of 6135682
@@ -762,15 +796,15 @@ Here is how much of TeX's memory you used:
  100831 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  48i,10n,51p,8823b,295s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/t
-exmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texlive/texmf-dist/fo
-nts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/adobe/utop
-ia/putr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/utopia/putri8a.p
-fb></usr/share/texmf/fonts/type1/public/cm-super/sfsx1095.pfb>
-Output written on unionService.pdf (12 pages, 267645 bytes).
+{/usr/sh
+are/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texlive/texmf-di
+st/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/adobe
+/utopia/putr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/utopia/putr
+i8a.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfsx1095.pfb>
+Output written on unionService.pdf (15 pages, 274621 bytes).
 PDF statistics:
- 60 PDF objects out of 1000 (max. 8388607)
- 39 compressed objects within 1 object stream
+ 70 PDF objects out of 1000 (max. 8388607)
+ 46 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
