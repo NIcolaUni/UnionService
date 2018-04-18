@@ -16,7 +16,7 @@ class RegistraDipendenteForm(FlaskForm):
     cap = IntegerField("CAP residenza", validators=[DataRequired()])
     citta = StringField("Città", validators=[DataRequired()])
     regione = StringField("Regione", validators=[DataRequired()])
-    telefono = IntegerField("Telefono", validators=[DataRequired()])
+    telefono = StringField("Telefono", validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     email = StringField("Email di lavoro", validators=[DataRequired()])

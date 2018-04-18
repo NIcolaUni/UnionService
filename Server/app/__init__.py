@@ -9,5 +9,7 @@ server.config.from_object(Config)
 
 database = SQLAlchemy(server)
 login_manager = LoginManager(server)
+login_manager.login_view = 'login'
 
 import app.controller
+
