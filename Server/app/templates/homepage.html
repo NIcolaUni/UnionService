@@ -50,15 +50,17 @@
             <li>
                 <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
             </li>
+            {% if dipendente.dirigente%}
             <li>
                 <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
             </li>
-            <li>
+            {% endif %}
+        <!--      <li>
                 <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
             </li>
-            <li>
+          <li>
                 <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
-            </li>
+            </li>-->
             <li>
                 <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
             </li>
@@ -74,8 +76,9 @@
           <div id="menu-1" class="row homepage home-section text-center">
             <div class="welcome-text col-md-12">
 
-              <h2>Welcome  <span class="red"> Mario Rossi</span></h2>
-              <p> <span class="orange">Dirigente</span></p>
+              <h2>Welcome  <span class="red"> {{dipendente.nome}} {{dipendente.cognome}}</span></h2>
+              <p> <span class="orange">{{dipendente.classe}}
+              {%if dipendente.dirigente%} dirigente {% endif %}</span></p>
               <div id="noteDipendenti">
                 <p > Cerca un cliente nella barra qua sotto;
                 <br/><br/>

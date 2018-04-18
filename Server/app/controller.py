@@ -36,7 +36,8 @@ def paginaProfilo():
 @server.route('/homepage')
 @login_required
 def homepage():
-    return render_template('homepage.html')
+    dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
+    return render_template('homepage.html', dipendente=dip)
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required
