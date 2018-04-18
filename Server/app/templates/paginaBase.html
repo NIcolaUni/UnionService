@@ -16,8 +16,7 @@
 
 
     <!-- CSS -->
-    <link href="{{url_for('static', filename='headerAndForm/css/app.min.1.css') }}" rel="stylesheet" id="app-level">
-    <link href="{{url_for('static', filename='headerAndForm/css/app.min.2.css') }}" rel="stylesheet">
+    <link href="{{url_for('static', filename='headerAndForm/css/app.css') }}" rel="stylesheet">
     <link href="{{url_for('static', filename='headerAndForm/css/demo.css') }}" rel="stylesheet">
 
 
@@ -42,10 +41,7 @@
 <!--===============================================================================================-->
 
     <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='headerAndForm/css/header.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/chat.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/button-chat.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/listaClienti.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/profiloDip.css') }}">
@@ -70,7 +66,7 @@
 
 </head>
 
-<body>
+<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
    <div class="site-bg"></div>
    <div class="site-bg-overlay"></div>
@@ -84,18 +80,18 @@
    <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
 <!--===========================================================================================================-->
 
-        <!-- Angular --
+        <!-- Angular -->
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular/angular.min.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-animate/angular-animate.min.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-resource/angular-resource.min.js') }}"></script>
 
-        <!-- Angular Modules --
+        <!-- Angular Modules -->
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-ui-router/release/angular-ui-router.min.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-loading-bar/src/loading-bar.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/oclazyload/dist/ocLazyLoad.min.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js') }}"></script>
 
-        <!-- Common Vendors --
+        <!-- Common Vendors -->
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/jquery.nicescroll/jquery.nicescroll.min.js') }}"></script>
        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js') }}"></script>
 
@@ -105,18 +101,18 @@
 
 
 
-        <!-- Using below vendors in order to avoid misloading on resolve --
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/flot/jquery.flot.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/flot.curvedlines/curvedLines.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/flot/jquery.flot.resize.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/moment/min/moment.min.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/flot-orderBars/js/jquery.flot.orderBars.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/flot/jquery.flot.pie.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
-        <script src="{{url_for('static', filename='headerAndForm/') }}vendors/bower_components/angular-nouislider/src/nouislider.min.js"></script>
+        <!-- Using below vendors in order to avoid misloading on resolve -->
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.curvedlines/curvedLines.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.resize.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/moment/min/moment.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot-orderBars/js/jquery.flot.orderBars.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.pie.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-nouislider/src/nouislider.min.js') }}"></script>
 
-        <!-- App level --
+        <!-- App level -->
         <script src="{{url_for('static', filename='headerAndForm/js/app.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/js/config.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/js/controllers/main.js') }}"></script>
@@ -126,7 +122,7 @@
         <script src="{{url_for('static', filename='headerAndForm/js/controllers/table.js') }}"></script>
 
 
-        <!-- Template Modules --
+        <!-- Template Modules -->
         <script src="{{url_for('static', filename='headerAndForm/js/modules/template.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/js/modules/ui.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/js/modules/charts/flot.js') }}"></script>

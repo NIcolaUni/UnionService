@@ -69,6 +69,10 @@ def registraDipendente():
 
     return render_template("registrazioneDip.html", form=form)
 
+@server.route('/header')
+def header():
+    return render_template("header_template/header.html")
+
 
 @server.route('/', methods=['GET','POST'])
 @server.route('/login', methods=['GET','POST'])

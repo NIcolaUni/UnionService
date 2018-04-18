@@ -1,26 +1,6 @@
 (function($) {
 
 
-	$('.side-button a.btn').click(function(){
-
-			if( $('.immagine-bottone').hasClass('fa-chevron-left')){
-
-				$('.immagine-bottone').removeClass('fa-chevron-left');
-				$('.immagine-bottone').addClass('fa-chevron-right');
-				$('#chat-section').animate({"right":"0px"}, "slow");
-				$('.side-button').animate({"right":"310px"}, "slow");
-			}
-			else if( $('.immagine-bottone').hasClass('fa-chevron-right') ){
-
-				$('.immagine-bottone').removeClass('fa-chevron-right');
-				$('.immagine-bottone').addClass('fa-chevron-left');
-				$('#chat-section').animate({"right":"-300px"}, "slow");
-				$('.side-button').animate({"right":"5px"}, "slow");
-
-
-			}
-
-	});
 
 	$('.toggle-menu').click(function(){
         $('.show-menu').stop(true,true).slideToggle();
@@ -34,18 +14,7 @@
 
 
 
-	/*
 
-	$(".main-menu a.profiloDipButton").click(function(){
-			$(".profiloDip-section").load("static/templates/profiloDip.html #container-profiloDip");
-			//$("#menu-container .content").slideUp('slow');
-			$("#menu-container .profiloDip-section").slideDown('slow');
-
-			$.getScript("static/js/modificaProfilo.js");
-
-			return false;
-	});
-*/
 
 	$('#calendar').fullCalendar({
 	      header: {

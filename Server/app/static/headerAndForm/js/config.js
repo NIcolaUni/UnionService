@@ -1,6 +1,6 @@
 materialAdmin
     .config(function ($stateProvider, $urlRouterProvider){
-        $urlRouterProvider.otherwise("/home");
+        $urlRouterProvider.otherwise("/homepage");
 
 
         $stateProvider
@@ -9,9 +9,9 @@ materialAdmin
             // HOME
             //------------------------------
         
-            .state ('home', {
-                url: '/home',
-                templateUrl: 'views/home.html',
+            .state ('homepage', {
+                url: '/homepage',
+                templateUrl: '/homepage',
                 resolve: {
                     loadPlugin: function($ocLazyLoad) {
                         return $ocLazyLoad.load ([
@@ -19,16 +19,16 @@ materialAdmin
                                 name: 'css',
                                 insertBefore: '#app-level',
                                 files: [
-                                    'vendors/bower_components/fullcalendar/dist/fullcalendar.min.css',
+                                    '/static/headerAndForm/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css',
                                 ]
                             },
                             {
                                 name: 'vendors',
                                 insertBefore: '#app-level-js',
                                 files: [
-                                    'vendors/sparklines/jquery.sparkline.min.js',
-                                    'vendors/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
-                                    'vendors/bower_components/simpleWeather/jquery.simpleWeather.min.js'
+                                    '/static/headerAndForm/vendors/sparklines/jquery.sparkline.min.js',
+                                    '/static/headerAndForm/vendors/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js',
+                                    '/static/headerAndForm/vendors/bower_components/simpleWeather/jquery.simpleWeather.min.js'
                                 ]
                             }
                         ])
@@ -43,7 +43,7 @@ materialAdmin
         
             .state ('typography', {
                 url: '/typography',
-                templateUrl: 'views/typography.html'
+                templateUrl: '/static/headerAndForm/views/typography.html'
             })
 
 
@@ -53,12 +53,12 @@ materialAdmin
         
             .state ('widgets', {
                 url: '/widgets',
-                templateUrl: 'views/common.html'
+                templateUrl: '/static/headerAndForm/views/common.html'
             })
 
             .state ('widgets.widgets', {
                 url: '/widgets',
-                templateUrl: 'views/widgets.html',
+                templateUrl: '/static/headerAndForm/views/widgets.html',
                 resolve: {
                     loadPlugin: function($ocLazyLoad) {
                         return $ocLazyLoad.load ([
@@ -66,14 +66,14 @@ materialAdmin
                                 name: 'css',
                                 insertBefore: '#app-level',
                                 files: [
-                                    'vendors/bower_components/mediaelement/build/mediaelementplayer.css',
+                                    '/static/headerAndForm/vendors/bower_components/mediaelement/build/mediaelementplayer.css',
                                 ]
                             },
                             {
                                 name: 'vendors',
                                 files: [
-                                    'vendors/bower_components/mediaelement/build/mediaelement-and-player.js',
-                                    'vendors/bower_components/autosize/dist/autosize.min.js'
+                                    '/static/headerAndForm/vendors/bower_components/mediaelement/build/mediaelement-and-player.js',
+                                    '/static/headerAndForm/vendors/bower_components/autosize/dist/autosize.min.js'
                                 ]
                             }
                         ])
@@ -83,7 +83,7 @@ materialAdmin
 
             .state ('widgets.widget-templates', {
                 url: '/widget-templates',
-                templateUrl: 'views/widget-templates.html',
+                templateUrl: '/static/headerAndForm/views/widget-templates.html',
             })
 
 
@@ -93,17 +93,17 @@ materialAdmin
         
             .state ('tables', {
                 url: '/tables',
-                templateUrl: 'views/common.html'
+                templateUrl: '/static/headerAndForm/views/common.html'
             })
             
             .state ('tables.tables', {
                 url: '/tables',
-                templateUrl: 'views/tables.html'
+                templateUrl: '/static/headerAndForm/views/tables.html'
             })
             
             .state ('tables.data-table', {
                 url: '/data-table',
-                templateUrl: 'views/data-table.html'
+                templateUrl: '/static/headerAndForm/views/data-table.html'
             })
 
         
@@ -117,14 +117,14 @@ materialAdmin
 
             .state ('form.basic-form-elements', {
                 url: '/basic-form-elements',
-                templateUrl: 'views/form-elements.html',
+                templateUrl: '/static/headerAndForm/views/form-elements.html',
                 resolve: {
                     loadPlugin: function($ocLazyLoad) {
                         return $ocLazyLoad.load ([
                             {
                                 name: 'vendors',
                                 files: [
-                                    'vendors/bower_components/autosize/dist/autosize.min.js'
+                                    '/static/headerAndForm/vendors/bower_components/autosize/dist/autosize.min.js'
                                 ]
                             }
                         ])
@@ -134,7 +134,7 @@ materialAdmin
 
             .state ('form.form-components', {
                 url: '/form-components',
-                templateUrl: 'views/form-components.html',
+                templateUrl: '/static/headerAndForm/views/form-components.html',
                 resolve: {
                     loadPlugin: function($ocLazyLoad) {
                         return $ocLazyLoad.load ([
@@ -142,24 +142,24 @@ materialAdmin
                                 name: 'css',
                                 insertBefore: '#app-level',
                                 files: [
-                                    'vendors/bower_components/nouislider/jquery.nouislider.css',
-                                    'vendors/farbtastic/farbtastic.css',
-                                    'vendors/bower_components/summernote/dist/summernote.css',
-                                    'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-                                    'vendors/bower_components/chosen/chosen.min.css'
+                                    '/static/headerAndForm/vendors/bower_components/nouislider/jquery.nouislider.css',
+                                    '/static/headerAndForm/vendors/farbtastic/farbtastic.css',
+                                    '/static/headerAndForm/vendors/bower_components/summernote/dist/summernote.css',
+                                    '/static/headerAndForm/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+                                    '/static/headerAndForm/vendors/bower_components/chosen/chosen.min.css'
                                 ]
                             },
                             {
                                 name: 'vendors',
                                 files: [
-                                    'vendors/input-mask/input-mask.min.js',
-                                    'vendors/bower_components/nouislider/jquery.nouislider.min.js',
-                                    'vendors/bower_components/moment/min/moment.min.js',
-                                    'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-                                    'vendors/bower_components/summernote/dist/summernote.min.js',
-                                    'vendors/fileinput/fileinput.min.js',
-                                    'vendors/bower_components/chosen/chosen.jquery.js',
-                                    'vendors/bower_components/angular-chosen-localytics/chosen.js',
+                                    '/static/headerAndForm/vendors/input-mask/input-mask.min.js',
+                                    '/static/headerAndForm/vendors/bower_components/nouislider/jquery.nouislider.min.js',
+                                    '/static/headerAndForm/vendors/bower_components/moment/min/moment.min.js',
+                                    '/static/headerAndForm/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+                                    '/static/headerAndForm/vendors/bower_components/summernote/dist/summernote.min.js',
+                                    '/static/headerAndForm/vendors/fileinput/fileinput.min.js',
+                                    '/static/headerAndForm/vendors/bower_components/chosen/chosen.jquery.js',
+                                    '/static/headerAndForm/vendors/bower_components/angular-chosen-localytics/chosen.js',
                                 ]
                             }
                         ])
@@ -184,12 +184,12 @@ materialAdmin
         
             .state ('user-interface', {
                 url: '/user-interface',
-                templateUrl: 'views/common.html'
+                templateUrl: '/static/headerAndForm/views/common.html'
             })
         
             .state ('user-interface.ui-bootstrap', {
                 url: '/ui-bootstrap',
-                templateUrl: 'views/ui-bootstrap.html'
+                templateUrl: '/static/headerAndForm/views/ui-bootstrap.html'
             })
 
             .state ('user-interface.colors', {
@@ -199,32 +199,32 @@ materialAdmin
 
             .state ('user-interface.animations', {
                 url: '/animations',
-                templateUrl: 'views/animations.html'
+                templateUrl: '/static/headerAndForm/views/animations.html'
             })
         
             .state ('user-interface.box-shadow', {
                 url: '/box-shadow',
-                templateUrl: 'views/box-shadow.html'
+                templateUrl: '/static/headerAndForm/views/box-shadow.html'
             })
         
             .state ('user-interface.buttons', {
                 url: '/buttons',
-                templateUrl: 'views/buttons.html'
+                templateUrl: '/static/headerAndForm/views/buttons.html'
             })
         
             .state ('user-interface.icons', {
                 url: '/icons',
-                templateUrl: 'views/icons.html'
+                templateUrl: '/static/headerAndForm/views/icons.html'
             })
         
             .state ('user-interface.alerts', {
                 url: '/alerts',
-                templateUrl: 'views/alerts.html'
+                templateUrl: '/static/headerAndForm/views/alerts.html'
             })
         
             .state ('user-interface.notifications-dialogs', {
                 url: '/notifications-dialogs',
-                templateUrl: 'views/notification-dialog.html'
+                templateUrl: '/static/headerAndForm/views/notification-dialog.html'
             })
         
             .state ('user-interface.media', {

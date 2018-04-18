@@ -35,7 +35,18 @@
 
 
 <!--==================================================================================================-->
-  <header id="header"></header>
+
+  <header id="header" data-ng-include="'/static/headerAndForm/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+  <aside id="sidebar" data-ng-include="'/static/headerAndForm/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+  <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+  <section id="main">
+    <section id="content">
+    </section>
+  </section>
+
+<!--===================================================================================================-->
   <div class="container" id="page-content">
 
     <div class="row" id="row-content">
@@ -147,113 +158,7 @@
         </div> <!-- fine menu-container -->
       </div> <!-- fine colonnaCentrale -->
 
-      <div class="side-button">
-            <a class="btn btn-1">
-              <span class="round"><i class="fa fa-chevron-left immagine-bottone"></i></span>
-            </a>
-      </div>
 
-      <div class="col-md-3  side" id="chat-section">
-        <div class="side-chat ">
-
-          <div class="row searchBox">
-
-            <div class="col-md-12 searchBox-inner">
-              <div class="form-group has-feedback">
-                <input id="searchText" type="text" class="form-control" name="searchText" placeholder="Search">
-                <span class="glyphicon glyphicon-search form-control-feedback"></span>
-              </div>
-            </div>
-
-          </div> <!-- fine searchbox -->
-
-          <div class="sideBar">
-            <!-- Sezione lista dipendenti chat-->
-
-            <div class="row sideBar-body">
-              <div class="col-sm-3 col-xs-3 sideBar-avatar">
-                <div class="avatar-icon">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
-                </div>
-              </div>
-              <div class="col-sm-9 col-xs-9 sideBar-main">
-                <div class="row">
-                  <div class="col-sm-8 col-xs-8 sideBar-name">
-                    <span class="name-meta">John Doe
-                  </span>
-                  </div>
-                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                    <span class="time-meta pull-right">18:18
-                  </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row sideBar-body">
-              <div class="col-sm-3 col-xs-3 sideBar-avatar">
-                <div class="avatar-icon">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                </div>
-              </div>
-              <div class="col-sm-9 col-xs-9 sideBar-main">
-                <div class="row">
-                  <div class="col-sm-8 col-xs-8 sideBar-name">
-                    <span class="name-meta">John Doe
-                  </span>
-                  </div>
-                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                    <span class="time-meta pull-right">18:18
-                  </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="row sideBar-body">
-              <div class="col-sm-3 col-xs-3 sideBar-avatar">
-                <div class="avatar-icon">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                </div>
-              </div>
-              <div class="col-sm-9 col-xs-9 sideBar-main">
-                <div class="row">
-                  <div class="col-sm-8 col-xs-8 sideBar-name">
-                    <span class="name-meta">John Doe
-                  </span>
-                  </div>
-                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                    <span class="time-meta pull-right">18:18
-                  </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row sideBar-body">
-              <div class="col-md-3 col-md-3 sideBar-avatar">
-                <div class="avatar-icon">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                </div>
-              </div>
-              <div class="col-sm-9 col-xs-9 sideBar-main">
-                <div class="row">
-                  <div class="col-sm-8 col-xs-8 sideBar-name">
-                    <span class="name-meta">John Doe
-                  </span>
-                  </div>
-                  <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                    <span class="time-meta pull-right">18:18
-                  </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div> <!-- fine side-chat -->
-      </div> <!--fine chat section-->
 
 
     </div> <!-- fine row-content -->
