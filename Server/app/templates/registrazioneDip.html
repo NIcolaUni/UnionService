@@ -22,7 +22,7 @@
 			  <div id="menu-1" class="row homepage registraDip-section text-center">
 				<div class="container-contact100 container-completaProfilo" id="container-contact100">
 					<div class="wrap-contact100" id="wrap-contact100">
-						<form class="contact100-form validate-form" method="post">
+						<form class="contact100-form validate-form" method="post" action="registraDipendente">
 							{{form.hidden_tag()}}
 
 							<span class="contact100-form-title">
@@ -94,7 +94,7 @@
 									{{form.telefono}}
 								</div>
 
-							    <div class="wrap-input100 bg1 validate-input" data-validate="Campo obbligatorio">
+							    <div class="wrap-input100 bg1 validate-input">
 									<span class="label-input100">Username</span>
 									{{form.username(size=30)}}
 
@@ -417,6 +417,15 @@
 		showValidate($("input#username"));
 
 		{% endfor %}
+
+		{% if usernameError %}
+			if(notValidated){
+				$("div:has(> input#username)").addClass("validate-input");
+				notValidated=false;
+			}
+			$("div:has(> input#username)").attr("data-validate", "{{usernameError}}");
+			showValidate($("input#username"));
+		{% endif %}
 
 
 /*====================================================================================================================*/

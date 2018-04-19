@@ -49,14 +49,13 @@ def registraDipendente():
         if dip is not None:
             return render_template("registrazioneDip.html", form=form, usernameError="Username già esistente!")
 
-       # print("\n\n\n\n\n\n\n\n\n\nWEEIIIII GUARDA USERNAME: {0} \n\n\n\n\n\n\n".format(current_user.id))
         dipFittizio=DipendenteFittizio.query.filter_by(username=current_user.get_id()).first();
         dip = DipendenteRegistrato(username=form.username.data, password=form.password.data, fittizio=False)
         newDip = Dipendente(nome=form.nome.data, cognome=form.cognome.data, cf=form.cf.data,
                                 dataNascita=form.dataNascita.data, sesso=form.sesso.data,
                                 via=form.via.data, civico=form.civico.data, cap=form.cap.data,
                                 citta=form.citta.data, regione=form.regione.data, telefono=form.telefono.data,
-                                username=form.username.data, password=form.password.data, email=form.email.data,
+                                username=dip.username, password=dip.password, email=form.email.data,
                                 pass_email=form.pass_email.data, iban=form.iban.data, partitaIva=form.partitaIva.data,
                                 classe=dipFittizio.classe, dirigente=dipFittizio.dirigente)
         database.session.delete(dipFittizio)
@@ -68,10 +67,6 @@ def registraDipendente():
 
 
     return render_template("registrazioneDip.html", form=form)
-
-@server.route('/header')
-def header():
-    return render_template("header_template/header.html")
 
 
 @server.route('/', methods=['GET','POST'])
