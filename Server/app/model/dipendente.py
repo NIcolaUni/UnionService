@@ -7,7 +7,7 @@ from app.model.db.dipendenteDBmodel import DipendenteDBmodel
 class Dipendente(DipendenteDBmodel):
 
     def __init__(self, cf, nome, cognome, username, password, sesso,
-                 dataNascita, via, civico, cap, citta, regione, telefono, email, pass_email,
+                 dataNascita, via, civico, cap, citta, regione, telefono, email_aziendale, email_personale,
                  iban, partitaIva, classe, dirigente):
         self.cf = cf
         self.nome = nome
@@ -22,8 +22,8 @@ class Dipendente(DipendenteDBmodel):
         self.citta = citta
         self.regione = regione
         self.telefono = telefono
-        self.email = email
-        self.pass_email = pass_email
+        self.email_aziendale = email_aziendale
+        self.email_personale = email_personale
         self.iban = iban
         self.partitaIva = partitaIva
         self.classe = classe

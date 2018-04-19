@@ -1,27 +1,26 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, DateField, BooleanField, PasswordField, SelectField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 import random
 import datetime
 import string
 
 class RegistraDipendenteForm(FlaskForm):
-    nome = StringField("Nome del dipendente", validators=[DataRequired("Campo obbligatorio!")])
-    cognome = StringField("Cognome del dipendente", validators=[DataRequired("Campo obbligatorio!")])
-    cf = StringField("Codice Fiscale", validators=[DataRequired("Campo obbligatorio!")])
+    nome = StringField("Nome del dipendente", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
+    cognome = StringField("Cognome del dipendente", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
+    cf = StringField("Codice Fiscale", validators=[DataRequired("Campo obbligatorio!"), Length(min= 10, max=16)])
     dataNascita = DateField("Data di nascita", validators=[DataRequired("Campo obbligatorio!")])
     sesso = SelectField("Sesso", choices=[("m","Maschio"), ("f", "Femmina")])
-    via = StringField("Via residenza", validators=[DataRequired("Campo obbligatorio!")])
-    civico = StringField("Civico residenza", validators=[DataRequired("Campo obbligatorio!")])
+    via = StringField("Via residenza", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
+    civico = IntegerField("Civico residenza", validators=[DataRequired("Campo obbligatorio!")])
     cap = IntegerField("CAP residenza", validators=[DataRequired("Campo obbligatorio!")])
-    citta = StringField("Città", validators=[DataRequired("Campo obbligatorio!")])
-    regione = StringField("Regione", validators=[DataRequired("Campo obbligatorio!")])
-    telefono = StringField("Telefono", validators=[DataRequired("Campo obbligatorio!")])
-    username = StringField("Username", validators=[DataRequired("Campo obbligatorio!")])
-    password = PasswordField("Password", validators=[DataRequired("Campo obbligatorio!")])
-    email = StringField("Email di lavoro", validators=[DataRequired("Campo obbligatorio!")])
-    pass_email = PasswordField("Password email", validators=[DataRequired("Campo obbligatorio!")])
-    iban = StringField("IBAN", validators=[DataRequired("Campo obbligatorio!")])
+    citta = StringField("Città", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
+    regione = StringField("Regione", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
+    telefono = StringField("Telefono", validators=[DataRequired("Campo obbligatorio!"), Length(min= 8, max=12)])
+    password = PasswordField("Impostare la password che si usareà all'accesso", validators=[DataRequired("Campo obbligatorio!"), Length(min= 6, max=30)])
+    email_aziendale = StringField("Email di lavoro", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=50)])
+    email_personale = StringField("Email personale", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=50)])
+    iban = StringField("IBAN")
     partitaIva = StringField("Partita Iva (lasciare vuoto in caso non si posieda)")
     submit = SubmitField('Fatto!')
 '''

@@ -22,7 +22,7 @@
 			  <div id="menu-1" class="row homepage registraDip-section text-center">
 				<div class="container-contact100 container-completaProfilo" id="container-contact100">
 					<div class="wrap-contact100" id="wrap-contact100">
-						<form class="contact100-form validate-form" method="post" action="registraDipendente">
+						<form id="form-reg" class="contact100-form validate-form" method="post" action="registraDipendente">
 							{{form.hidden_tag()}}
 
 							<span class="contact100-form-title">
@@ -32,20 +32,20 @@
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
 									<span class="label-input100">Nome</span>
 
-									{{form.nome(size=30)}}
+									{{form.nome}}
 								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
 									<span class="label-input100">Cognome</span>
 
-									{{form.cognome(size=30)}}
+									{{form.cognome}}
 								</div>
 
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
 									<span class="label-input100">Codice Fiscale</span>
 
-									{{form.cf(size=16)}}
+									{{form.cf}}
 								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
@@ -94,28 +94,23 @@
 									{{form.telefono}}
 								</div>
 
-							    <div class="wrap-input100 bg1 validate-input">
-									<span class="label-input100">Username</span>
-									{{form.username(size=30)}}
 
-								</div>
-
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
+								<div class="wrap-input100  bg1">
 									<span class="label-input100">Password</span>
 
-									{{form.password(size=30)}}
+									{{form.password}}
 								</div>
 
 
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
-								  <span class="label-input100">Email</span>
-								  {{form.email}}
+								  <span class="label-input100">Email aziendale</span>
+								  {{form.email_aziendale}}
 								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100" >
-									<span class="label-input100">Password email</span>
-									{{form.pass_email}}
+									<span class="label-input100">Email personale</span>
+									{{form.email_personale}}
 								</div>
 
 
@@ -131,14 +126,17 @@
 
 
 
-								<div class="container-contact100-form-btn">
-									<button class="contact100-form-btn">
-										{{form.submit}}
-									</button>
-								</div>
 
 
 						</form>
+
+						<div class="container-contact100-form-btn">
+							<button class="contact100-form-btn">
+								{{form.submit}}
+							</button>
+						</div>
+
+
 					</div>
 				</div>
 
@@ -155,6 +153,8 @@
 	</div> <!-- fine page-wrapper -->
 
 	<script>
+
+
 	/*
 		I tag "input" all'interno del form vengono inseriti da flask. Il codice sottostante
 		sistema gli attributi di questi tag per potergli applicare lo styiling corretto.
@@ -166,8 +166,6 @@
 
 		$("input#nome").attr("placeholder", "Inserire il proprio nome");
 		$("input#cognome").attr("placeholder", "Inserire il proprio cognome");
-
-		$("input#username").attr("placeholder", "Inserire uno username a scelta per il login");
 
 		$("input#password").attr("placeholder", "Inserire una password per il login");
 
@@ -181,11 +179,11 @@
 
 		$("input#telefono").attr("placeholder", "Inserire un recapito telefonico");
 
-		$("input#email").attr("placeholder", "Inserire la propria email di lavoro");
+		$("input#email_aziendale").attr("placeholder", "Inserire la propria email di lavoro");
 
-		$("input#pass_email").attr("placeholder", "Inserire la password dalla email di lavoro" );
+		$("input#email_personale").attr("placeholder", "Inserire la propria email personale" );
 
-		$("input#iban").attr("placeholder", "Inserire il proprio IBAN");
+		$("input#iban").attr("placeholder", "Inserire il proprio IBAN (opzionale)");
 
 		$("input#partitaIva").attr("placeholder", "Inserire la propria partita Iva (opzionale)");
 
@@ -193,7 +191,33 @@
 		$("input#regione").attr("placeholder", "Inserire la propria regione di residenza");
 		$("input#dataNascita").attr("placeholder", "Inserire la propria data di nascita");
 
+		form=$('form#form-reg');
+		function JSalert(){
 
+			swal({   title: "AUTORIZZAZIONE AL TRATTAMENTO\nDEI DATI PERSONALI",
+			text: "Procedendo autorizzo il trattamento dei miei dati"+
+					" personali ai sensi del\nDecreto Legislativo 30 giugno 2003, " +
+					  ' n.196\n"Codice in materia di protezione dei dati personali"',
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Accetto!",
+			cancelButtonText: "Ho sbagliato...",
+			closeOnConfirm: false,
+			closeOnCancel: false },
+			function(isConfirm){
+				if (isConfirm)
+				{
+					form.submit();
+
+				}
+				else {
+					swal("", "Operazione Annullata", "error");
+
+				} });
+		}
+
+		$('input#submit').attr('onclick', 'JSalert()');
 
 
 
@@ -404,31 +428,6 @@
 
 
 /*====================================================================================================================*/
-/*=================================Imposta stampa errore username=====================================================*/
-
-		notValidated=true;
-		{% for error in form.username.errors %}
-
-		if(notValidated){
-			$("div:has(> input#username)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#username)").attr("data-validate", "{{error}}");
-		showValidate($("input#username"));
-
-		{% endfor %}
-
-		{% if usernameError %}
-			if(notValidated){
-				$("div:has(> input#username)").addClass("validate-input");
-				notValidated=false;
-			}
-			$("div:has(> input#username)").attr("data-validate", "{{usernameError}}");
-			showValidate($("input#username"));
-		{% endif %}
-
-
-/*====================================================================================================================*/
 
 /*=================================Imposta stampa errore password=====================================================*/
 
@@ -447,34 +446,34 @@
 /*====================================================================================================================*/
 
 
-/*=================================Imposta stampa errore email=====================================================*/
+/*=================================Imposta stampa errore email aziendale=====================================================*/
 
 		notValidated=true;
-		{% for error in form.email.errors %}
+		{% for error in form.email_aziendale.errors %}
 
 		if(notValidated){
-			$("div:has(> input#email)").addClass("validate-input");
+			$("div:has(> input#email_aziendale)").addClass("validate-input");
 			notValidated=false;
 		}
-		$("div:has(> input#email)").attr("data-validate", "{{error}}");
-		showValidate($("input#email"));
+		$("div:has(> input#email_aziendale)").attr("data-validate", "{{error}}");
+		showValidate($("input#email_aziendale"));
 
 		{% endfor %}
 
 
 /*====================================================================================================================*/
 
-/*=================================Imposta stampa errore pass_email=====================================================*/
+/*=================================Imposta stampa errore email personale=====================================================*/
 
 		notValidated=true;
-		{% for error in form.pass_email.errors %}
+		{% for error in form.email_personale.errors %}
 
 		if(notValidated){
-			$("div:has(> input#pass_email)").addClass("validate-input");
+			$("div:has(> input#email_personale)").addClass("validate-input");
 			notValidated=false;
 		}
-		$("div:has(> input#pass_email)").attr("data-validate", "{{error}}");
-		showValidate($("input#pass_email"));
+		$("div:has(> input#email_personale)").attr("data-validate", "{{error}}");
+		showValidate($("input#email_personale"));
 
 		{% endfor %}
 

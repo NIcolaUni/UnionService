@@ -5,7 +5,6 @@ from app.model.dipendenteFittizio import DipendenteFittizio
 from app.model.dipendenteRegistrato import DipendenteRegistrato
 from app.model.dipendente import Dipendente
 from flask_login import current_user, login_user, login_required
-import flask
 
 @server.route('/homeheader')
 @login_required
@@ -45,18 +44,31 @@ def registraDipendente():
     form = RegistraDipendenteForm()
 
     if form.validate_on_submit():
-        dip=DipendenteRegistrato.query.filter_by(username=form.username.data).first();
-        if dip is not None:
-            return render_template("registrazioneDip.html", form=form, usernameError="Username già esistente!")
 
         dipFittizio=DipendenteFittizio.query.filter_by(username=current_user.get_id()).first();
-        dip = DipendenteRegistrato(username=form.username.data, password=form.password.data, fittizio=False)
+        username_candidato = "{0}_{1}".format(form.nome.data, form.cognome.data).lower()
+
+        counter = 0
+        if DipendenteRegistrato.query.filter_by(username=username_candidato).first() != None:
+            counter = 1
+            while DipendenteRegistrato.query.filter_by(username="{0}{1}".format(username_candidato, counter)).first() != None:
+             counter += 1
+
+        dip = None
+
+        if counter == 0:
+            dip = DipendenteRegistrato(username=username_candidato, password=form.password.data, fittizio=False)
+        else:
+            dip = DipendenteRegistrato(username="{0}{1}".format(username_candidato, counter), password=form.password.data, fittizio=False)
+
+
+
         newDip = Dipendente(nome=form.nome.data, cognome=form.cognome.data, cf=form.cf.data,
                                 dataNascita=form.dataNascita.data, sesso=form.sesso.data,
                                 via=form.via.data, civico=form.civico.data, cap=form.cap.data,
                                 citta=form.citta.data, regione=form.regione.data, telefono=form.telefono.data,
-                                username=dip.username, password=dip.password, email=form.email.data,
-                                pass_email=form.pass_email.data, iban=form.iban.data, partitaIva=form.partitaIva.data,
+                                username=dip.username, password=dip.password, email_aziendale=form.email_aziendale.data,
+                                email_personale=form.email_personale.data, iban=form.iban.data, partitaIva=form.partitaIva.data,
                                 classe=dipFittizio.classe, dirigente=dipFittizio.dirigente)
         database.session.delete(dipFittizio)
         database.session.delete(DipendenteRegistrato.query.filter_by(username=current_user.get_id()).first())
