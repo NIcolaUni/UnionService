@@ -323,6 +323,10 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 30px;
 }
 
+#logo-azienda {
+    height: 70px;
+    width: 200px;
+}
 /*Contenuto HomePage*/
 
 .welcome-text {
@@ -431,7 +435,7 @@ h1, h2, h3, h4, h5 {
 /* Menu barra laterale sinistra e menu per piccoli schermi */
 
 #nav {
-  margin-top: 20%;
+  margin-top: 30%;
   position: absolute;
   height: 85%;
   overflow-y: scroll;
