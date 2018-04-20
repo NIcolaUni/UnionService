@@ -43,112 +43,180 @@
 
   <section id="main">
     <section id="content">
-    </section>
-  </section>
+      <div class="container" id="page-content">
 
-<!--===================================================================================================-->
-  <div class="container" id="page-content">
+        <div class="row" id="row-content">
 
-    <div class="row" id="row-content">
+          <div id="colonnaSx" class="col-md-2 hidden-sm">
 
-      <div id="colonnaSx" class="col-md-3 hidden-sm">
+            <nav id="nav" class="main-navigation hidden-xs hidden-sm">
+              <ul class="main-menu">
+                <li>
+                    <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
+                </li>
+                <li>
+                    <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
+                </li>
+                {% if dipendente.dirigente%}
+                <li>
+                    <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
+                </li>
+                {% endif %}
+            <!--      <li>
+                    <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
+                </li>
+              <li>
+                    <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
+                </li>-->
+                <li>
+                    <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
+                </li>
+              </ul>
+            </nav>
 
-        <nav id="nav" class="main-navigation hidden-xs hidden-sm">
-          <ul class="main-menu">
-            <li>
-                <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
-            </li>
-            <li>
-                <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
-            </li>
-            {% if dipendente.dirigente%}
-            <li>
-                <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
-            </li>
-            {% endif %}
-        <!--      <li>
-                <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
-            </li>
-          <li>
-                <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
-            </li>-->
-            <li>
-                <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
-            </li>
-          </ul>
-        </nav>
-
-      </div> <!-- fine colonnaSx -->
+          </div> <!-- fine colonnaSx -->
 
 
-      <div class="col-md-6 col-sm-12 content-holder" id="colonnaCentrale">
-        <div id="menu-container">
+          <div class="col-md-8 col-sm-12 content-holder" id="colonnaCentrale">
+            <div id="menu-container">
 
-          <div id="menu-1" class="row homepage home-section text-center">
-            <div class="welcome-text col-md-12">
+              <div id="menu-1" class="row homepage home-section text-center">
+                <div class="welcome-text col-md-12 col-sm-12">
 
-              <h2>Welcome  <span class="red"> {{dipendente.nome}} {{dipendente.cognome}}</span></h2>
-              <p> <span class="orange">{{dipendente.classe}}
-              {%if dipendente.dirigente%} dirigente {% endif %}</span></p>
-              <div id="noteDipendenti">
-                <p >
-                 Lista keyword:
-                 <ul>
-                   <li>
-                     "cognome" : ritorna la lista di tutti i clienti che hanno per cognome "cognome"
-                   </li>
-                   <li>
-                     "cognome nome" : ritorna la lista di tutti i clienti che si chiamano "cognome nome"
-                   </li>
-                   <li>
-                      @all : ritorna la lista di tutti i clienti
-                   </li>
-                   <li>
-                      @name "nome" : ritorna la lista di tutti i clienti che hanno per nome "nome"
-                   </li>
-                   <li>
-                      @city "city" : ritorna la lista di tutti i clienti provvenienti da "city"
-                   </li>
-                 </ul>
-                </p>
+                  <h2>Welcome  <span class="red"> {{dipendente.nome}} {{dipendente.cognome}}</span></h2>
+                  <p> <span class="orange">{{dipendente.classe}}
+                  {%if dipendente.dirigente%} dirigente {% endif %}</span></p>
+                  <div id="noteDipendenti"  class="row">
+                    <div class="row righe-homepage">
+                      <div class="col-md-3"></div>
+                      <div class="col-sm-12 col-md-6">
+
+                          <!-- Todo Lists -->
+                          <div id="todo-lists" data-ng-controller="todoCtrl as tctrl">
+                              <div class="tl-header">
+                                  <h2>Todo Lists</h2>
+                                  <small>Add, edit and manage your Todo Lists</small>
+
+                                  <ul class="actions actions-alt">
+                                      <li class="dropdown" dropdown>
+                                          <a href="" dropdown-toggle>
+                                              <i class="zmdi zmdi-more-vert"></i>
+                                          </a>
+
+                                          <ul class="dropdown-menu dropdown-menu-right">
+                                              <li>
+                                                  <a href="">Refresh</a>
+                                              </li>
+                                              <li>
+                                                  <a href="">Manage Widgets</a>
+                                              </li>
+                                              <li>
+                                                  <a href="">Widgets Settings</a>
+                                              </li>
+                                          </ul>
+                                      </li>
+                                  </ul>
+                              </div>
+
+                              <div class="clearfix"></div>
+
+                              <div class="tl-body">
+
+
+                                  <div id="add-tl-item" data-ng-class="{ 'toggled': tctrl.addTodoStat }" data-ng-click="tctrl.addTodoStat = true">
+                                      <i class="add-new-item zmdi zmdi-plus" data-ng-click="tctrl.addTodo($event)"></i>
+
+                                      <div class="add-tl-body">
+                                          <textarea placeholder="What you want to do..." data-ng-model="tctrl.todo"></textarea>
+
+                                          <div class="add-tl-actions">
+                                              <a class="zmdi zmdi-close" data-tl-action="dismiss" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
+                                              <a class="zmdi zmdi-check" data-tl-action="save" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
+                                          </div>
+                                      </div>
+                                  </div>
+
+
+                                  <div class="checkbox media" data-ng-repeat="w in tctrl.tdResult.list">
+                                      <div class="pull-right">
+                                          <ul class="actions actions-alt">
+                                              <li class="dropdown" dropdown>
+                                                  <a href="" dropdown-toggle>
+                                                      <i class="zmdi zmdi-more-vert"></i>
+                                                  </a>
+
+                                                  <ul class="dropdown-menu dropdown-menu-right">
+                                                      <li><a href="">Delete</a></li>
+                                                      <li><a href="">Archive</a></li>
+                                                  </ul>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                      <div class="media-body">
+                                          <label>
+                                              <input type="checkbox">
+                                              <i class="input-helper"></i>
+                                              <span>fai la spesa</span>
+                                          </label>
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3"></div>
+                    </div>
+                    <div class="row righe-homepage">
+                      <div class="col-md-3"></div>
+                      <div class="col-sm-12 col-md-6">
+                          <!-- Calendar -->
+                          <div id="calendar-widget" data-full-calendar></div>
+
+                      </div>
+                      <div class="col-md-3"></div>
+                    </div>
+                  </div>
+
+                </div> <!-- fine welcome-text -->
+
+              </div> <!-- fine homepage -->
+
+    <!--============================ Sezioni "chiamate" via Ajax =====================================-->
+
+              <div id="menu-2" class="row content calendario-section col-md-6 col-sm-12">
+                  <div id='calendar' data-full-calendar></div>
+
+              </div>
+
+              <div id="menu-3" class="content gestioneDip-section col-sm-12">
+
+              </div>
+
+              <div id="menu-4" class="content cercaDip-section col-sm-12">
+
+              </div>
+
+              <div id="menu-5" class="content profiloDip-section col-sm-12">
 
               </div>
 
 
+    <!--==============================================================================================-->
 
-            </div> <!-- fine welcome-text -->
-          </div> <!-- fine homepage -->
-
-<!--============================ Sezioni "chiamate" via Ajax =====================================-->
-
-          <div id="menu-2" class="row content calendario-section col-sm-12">
-              <div id='calendar'></div>
-
-          </div>
-
-          <div id="menu-3" class="content gestioneDip-section col-sm-12">
-
-          </div>
-
-          <div id="menu-4" class="content cercaDip-section col-sm-12">
-
-          </div>
-
-          <div id="menu-5" class="content profiloDip-section col-sm-12">
-
-          </div>
-
-
-<!--==============================================================================================-->
-
-        </div> <!-- fine menu-container -->
-      </div> <!-- fine colonnaCentrale -->
+            </div> <!-- fine menu-container -->
+          </div> <!-- fine colonnaCentrale -->
 
 
 
 
-    </div> <!-- fine row-content -->
-  </div> <!-- fine page content -->
+        </div> <!-- fine row-content -->
+      </div> <!-- fine page content -->
+
+    </section>
+  </section>
+
+<!--===================================================================================================-->
+
 </div> <!-- fine page-wrapper -->
 
 <script>

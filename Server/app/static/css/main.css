@@ -248,13 +248,16 @@ h1, h2, h3, h4, h5 {
 
 
 
-
 #page-content {
   position: fixed;
-  z-index: 12;
+  z-index: 8;
   width: 100%;
   height: 100%;
+  top: 3%;
+  background-color: transparent;
 }
+
+
 
 @media screen and (max-width: 992px) {
   #page-content {
@@ -283,16 +286,27 @@ h1, h2, h3, h4, h5 {
 
 }
 
+@media screen and  (max-width: 992px) {
+  #colonnaCentrale {
+    height: 100%;
+    margin-top: 10%;
+  }
+}
+
 #menu-container {
   height: 100%;
 }
 
 .homepage {
+  margin-top: 10%;
   height: 100%;
 }
 
 .content {
   display: none;
+}
+#content {
+    margin-top: 5%;
 }
 
 .box-content {
@@ -313,15 +327,21 @@ h1, h2, h3, h4, h5 {
 
 .welcome-text {
   position: relative;
-  margin-left: 13%;
-  width: 70%;
-  height: 100%;
+  height: 80%;
+  text-align: center;
+  margin-right: 0;
+  margin-left: 0;
+
 }
 
-
+.righe-homepage {
+    position:relative;
+    width: 100%;
+    overflow: hidden;
+}
 
 .welcome-text h2 {
-  margin-top: 40%;
+  margin-top: 2%;
   font-size: 35px;
   font-family: 'robotolight';
   margin-bottom: 30px;
@@ -337,102 +357,31 @@ h1, h2, h3, h4, h5 {
 
 
 #noteDipendenti {
-  margin-top: 10%;
-  height: 300px;
-  overflow-y: hidden;
-}
-
-#noteDipendenti p{
-  background-color: rgba(92, 100, 100, 0.8);
-  width: 60%;
-  margin-left: 20%;
-}
-
-#noteDipendenti ul{
-  height: 100px;
-  overflow-y: scroll;
-  width: 60%;
-  margin-left: 20%;
-  background-color: rgba(92, 100, 100, 0.8);
-  text-align: left;
-  list-style: circle;
-  list-style-position: inside;
-}
-
-
-
-
-.cercaCliente-form {
-  position:relative;
-  width: 100%;
-  margin-top: 100px;
-
-}
-
-#rowClientForm {
   position: relative;
-  width: 100%;
+  margin-top: 3%;
+  height: 80%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-.cercaCliente-form input.clientField {
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  outline: 0;
-  border: 1px solid #fff;
-  padding: 10px 15px;
-  width: 100%;
-  display: inline-block;
-  font-size: 14px;
+#noteDipendenti::-webkit-scrollbar {
+  display: none;
 }
 
-.cercaCliente-form input.button {
-  background: #5cb48e;
-  color: white;
-  text-transform: uppercase;
-  font-size: 14px;
-  padding: 10px 20px;
-  outline: 0;
-  border: 0;
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-}
-.cercaCliente-form .button-holder {
-  text-align: left;
-}
-@media screen and (max-width: 992px) {
-  .cercaCliente-form .button-holder {
-    margin-top: 20px;
-    text-align: center;
-  }
-}
 
-.cercaCliente-form ::-webkit-input-placeholder {
-  color: #fff;
-}
-.cercaCliente-form :-moz-placeholder {
-  /* Firefox 18- */
-  color: #fff;
-}
-.cercaCliente-form ::-moz-placeholder {
-  /* Firefox 19+ */
-  color: #fff;
-}
-.cercaCliente-form :-ms-input-placeholder {
-  color: #fff;
-}
 
 /* Contenuto pagina calendario */
 
 .calendario-section {
-  height: 100%;
-  margin-top: 10%;
+
+  height: 80%;
+  width: 70%;
+  margin-top: 5%;
 }
 
 #calendar {
   position: relative;
-  max-width: 900px;
-  height: 900px;
+  height: 100%;
 }
 
 .fc-view-container {
@@ -482,7 +431,7 @@ h1, h2, h3, h4, h5 {
 /* Menu barra laterale sinistra e menu per piccoli schermi */
 
 #nav {
-  margin-top: 15%;
+  margin-top: 20%;
   position: absolute;
   height: 85%;
   overflow-y: scroll;
