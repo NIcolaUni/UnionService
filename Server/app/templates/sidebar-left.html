@@ -1,0 +1,31 @@
+<div class="sidebar-inner c-overflow">    
+    <div class="profile-menu">
+        <a href="" toggle-submenu>
+            <div class="profile-pic">
+                <img src="{{url_for('static', filename='images/senzaImmagine.jpg') }}" alt="">
+            </div>
+
+            <div class="profile-info">
+                {{dipendente.nome}} {{dipendente.cognome}}
+
+            </div>
+        </a>
+
+    </div>
+
+    <ul class="main-menu">
+        <li>
+            <a data-ui-sref="pages.profile.profile-about" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-account"></i> View Profile</a>
+        </li>
+        <li class="sub-menu" >
+            <a href="" toggle-submenu><i class="zmdi zmdi-settings"></i> Settings</a>
+            <ul>
+                <li><a data-ui-sref-active="active" data-ui-sref="form.basic-form-elements" data-ng-click="mactrl.sidebarStat($event)">Cambia immagine profilo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href=""><i class="zmdi zmdi-time-restore"></i> Logout</a>
+        </li>
+
+    </ul>
+</div>

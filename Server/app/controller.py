@@ -38,6 +38,17 @@ def homepage():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
     return render_template('homepage.html', dipendente=dip)
 
+@server.route('/sidebarLeft')
+@login_required
+def sidebarLeft():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    return render_template('sidebar-left.html', dipendente=dip)
+
+@server.route('/header')
+@login_required
+def header():
+    return render_template('header.html')
+
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required
 def registraDipendente():

@@ -321,11 +321,13 @@ h1, h2, h3, h4, h5 {
 
 
 .welcome-text h2 {
-  margin-top: 10%;
-  font-size: 32px;
+  margin-top: 40%;
+  font-size: 35px;
   font-family: 'robotolight';
   margin-bottom: 30px;
   color: white;
+  font-weight: bold;
+
 }
 .welcome-text p {
   font-size: 18px;

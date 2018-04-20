@@ -36,8 +36,8 @@
 
 <!--==================================================================================================-->
 
-  <header id="header" data-ng-include="'/static/headerAndForm/template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
-  <aside id="sidebar" data-ng-include="'/static/headerAndForm/template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+  <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+  <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
   <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
@@ -91,13 +91,7 @@
               <p> <span class="orange">{{dipendente.classe}}
               {%if dipendente.dirigente%} dirigente {% endif %}</span></p>
               <div id="noteDipendenti">
-                <p > Cerca un cliente nella barra qua sotto;
-                <br/><br/>
-                 Nota: le virgolette vengono usate per indicare una parola inserita da voi,
-                          non vanno ritrascritte nel comando.
-                <br/>
-                <br/>
-
+                <p >
                  Lista keyword:
                  <ul>
                    <li>
@@ -120,14 +114,6 @@
 
               </div>
 
-
-
-              <form action="#" method="get" class="cercaCliente-form">
-                <div class="row" id="rowClientForm">
-                  <input name="clientField"  class="clientField"  placeholder="Cerca qua un cliente...">
-                  <input name="submit" type="submit" class="button default cercaCliente alt header"  href="#menu" value="Cerca">
-                </div>
-              </form>
 
 
             </div> <!-- fine welcome-text -->
