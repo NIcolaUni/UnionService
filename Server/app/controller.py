@@ -1,5 +1,5 @@
-from flask import Flask, render_template, redirect, request, url_for
-from app import server, database
+from flask import render_template, redirect, request, url_for
+from app import server, database, socketio
 from app.model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm
 from app.model.dipendenteFittizio import DipendenteFittizio
 from app.model.dipendenteRegistrato import DipendenteRegistrato
@@ -118,5 +118,10 @@ def login():
 
     return render_template("login.html", form=form)
 
-if __name__ == '__main__':
-    	app.run(host='0.0.0.0', port=8000)
+
+################################## SOCKETIO HANDLER ##########################################################
+
+@socketio.on('my_event')
+def handle_connect(message):
+    print('received message: ' + message)
+    emit('my response', {'data': 'brao semo!'})

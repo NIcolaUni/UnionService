@@ -82,6 +82,8 @@
     <meta name="msapplication-TileImage" content="{{url_for('static', filename='favicon/ms-icon-144x144.png') }}">
     <meta name="theme-color" content="#ffffff">
 
+<!--===================================socket io====================================================-->
+    <script src="{{url_for('static', filename='js/vendor/socket.io.js') }}"></script>
 </head>
 
 <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
