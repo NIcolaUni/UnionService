@@ -9,3 +9,5 @@
 .asteriscoRosso {
     color: red;
 }
+
+input.upper { text-transform: uppercase; }
