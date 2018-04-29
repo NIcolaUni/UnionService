@@ -283,16 +283,14 @@
 </script>
 
 <script type="text/javascript" charset="utf-8">
-    var socket = io.connect('http://127.0.0.1:80');
+    var socket = io.connect('http://debtux:80/home');
 
     socket.on('connect', function() {
         console.log('connected');
-        socket.emit('my_event',   {'data': 'Connected'} );
+        socket.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
     });
 
-    socket.on('my response', function(msg) {
-        console.log(msg.data);
-    });
+
 
 </script>
 

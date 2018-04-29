@@ -8,5 +8,6 @@ class DipRegistratoDBmodel(database.Model):
     password = Column(String(30), nullable=False, unique=True)
     fittizio = Column(Boolean, nullable=False)
     dipFittizio = database.relationship("DipFittizioDBmodel", uselist=False, back_populates="dipReg")
+
   #  dipUser = database.relationship("DipendenteDBmodel",  back_populates="regUser")
    # dipPass = database.relationship("DipendenteDBmodel",  back_populates="regPass")

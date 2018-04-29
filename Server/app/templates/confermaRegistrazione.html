@@ -1,0 +1,23 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+    <script>
+
+        $(window).on('load', function(){
+            swal({
+                title: "Operazione completata",
+                text: "username: {{username}}\npassword: {{password}}",
+                icon: "success",
+                type: "success",
+                confirmButtonText: "Ok",
+                closeOnConfirm: true
+                },
+                function(){
+                    window.location.href = "{{url_for('login')}}"
+                }
+             );
+         });
+
+    </script>
+{% endblock %}

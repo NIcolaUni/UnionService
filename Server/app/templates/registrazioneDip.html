@@ -30,88 +30,73 @@
 							</span>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Nome</span>
+									<span class="label-input100">Nome<span class="asteriscoRosso">*</span></span>
 
 									{{form.nome}}
 								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Cognome</span>
+									<span class="label-input100">Cognome<span class="asteriscoRosso">*</span></span>
 
 									{{form.cognome}}
 								</div>
 
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Codice Fiscale</span>
+									<span class="label-input100">Codice Fiscale<span class="asteriscoRosso">*</span></span>
 
 									{{form.cf}}
 								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Data di nascita</span>
+									<span class="label-input100">Data di nascita<span class="asteriscoRosso">*</span></span>
 
 									{{form.dataNascita}}
 								</div>
 
-								<div class="wrap-input100 input100-select bg1">
-									<span class="label-input100">Sesso</span>
-									<div>
-										{{form.sesso}}
-										<div class="dropDownSelect2"></div>
+
+								<div class="wrap-input100  bg1 ">
+									<span class="label-input100">Residenza<span class="asteriscoRosso">*</span></span>
+									{{form.residenza}}
+								</div>
+
+								<div class="wrap-contact100-form-check">
+									<div class="contact100-form-check m-t-15">
+										{{form.resEDomUguali}}
+										<label class="label-check100" for="resEDomUguali">
+										   <span>residenza e domicilio coincidono</span>
+										</label>
 									</div>
 								</div>
 
-
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Via</span>
-									{{form.via}}
-								</div>
-
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Civico</span>
-									{{form.civico}}
-								</div>
-
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">CAP</span>
-									{{form.cap}}
-								</div>
-
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Città</span>
-									{{form.citta}}
-								</div>
-
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Regione</span>
-									{{form.regione}}
+								<div class="wrap-input100  bg1">
+									<span class="label-input100">Domicilio</span>
+									{{form.domicilio}}
 								</div>
 
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
-									<span class="label-input100">Telefono</span>
+									<span class="label-input100">Telefono<span class="asteriscoRosso">*</span></span>
 									{{form.telefono}}
 								</div>
 
-
-								<div class="wrap-input100  bg1">
-									<span class="label-input100">Password</span>
-
-									{{form.password}}
-								</div>
-
-
-
-								<div class="wrap-input100  bg1 rs1-wrap-input100">
-								  <span class="label-input100">Email aziendale</span>
-								  {{form.email_aziendale}}
-								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100" >
 									<span class="label-input100">Email personale</span>
 									{{form.email_personale}}
 								</div>
+
+								<div class="wrap-input100  bg1">
+								  <span class="label-input100">Email aziendale<span class="asteriscoRosso">*</span></span>
+								  {{form.email_aziendale}}
+								</div>
+
+								<div class="wrap-input100  bg1">
+									<span class="label-input100">Password<span class="asteriscoRosso">*</span></span>
+
+									{{form.password}}
+								</div>
+
 
 
 								<div class="wrap-input100  bg1">
@@ -161,7 +146,8 @@
 	*/
 
 		$("input").addClass("input100");
-		$("select#sesso").addClass("js-select2");
+
+    	$('input#resEDomUguali').addClass("input-check100");
 		$("input#dataNascita").attr("type", "date");
 
 		$("input#nome").attr("placeholder", "Inserire il proprio nome");
@@ -169,13 +155,10 @@
 
 		$("input#password").attr("placeholder", "Inserire una password per il login");
 
-		$("input#citta").attr("placeholder", "Inserire la propria città di residenza");
+		$("input#residenza").attr("placeholder", "via, cap, città, regione" );
 
-		$("input#via").attr("placeholder", "Inserire la propria via di residenza" );
+		$("input#domicilio").attr("placeholder", "via, cap, città, regione");
 
-		$("input#civico").attr("placeholder", "Inserire il proprio civico");
-
-		$("input#cap").attr("placeholder", "Inserire il CAP della città di residenza");
 
 		$("input#telefono").attr("placeholder", "Inserire un recapito telefonico");
 
@@ -192,6 +175,7 @@
 		$("input#dataNascita").attr("placeholder", "Inserire la propria data di nascita");
 
 		form=$('form#form-reg');
+
 		function JSalert(){
 
 			swal({   title: "AUTORIZZAZIONE AL TRATTAMENTO\nDEI DATI PERSONALI",
@@ -201,14 +185,15 @@
 			type: "warning",
 			showCancelButton: true,
 			confirmButtonColor: "#DD6B55",
-			confirmButtonText: "Accetto!",
-			cancelButtonText: "Ho sbagliato...",
+			confirmButtonText: "Accetto",
+			cancelButtonText: "Indietro",
 			closeOnConfirm: false,
 			closeOnCancel: false },
 			function(isConfirm){
 				if (isConfirm)
 				{
 					form.submit();
+
 
 				}
 				else {
@@ -219,6 +204,21 @@
 
 		$('input#submit').attr('onclick', 'JSalert()');
 
+
+		// y e n sono invertiti per comodita' di sviluppo
+		// (di default viene assegnato value y alla checkbox non cliccata
+		$('input#resEDomUguali').click(function(){
+			if($('input#resEDomUguali').attr('value') == 'y'){
+				$('input#domicilio').hide();
+				$('input#resEDomUguali').attr('value', 'n')
+
+			}
+			else{
+				$('input#domicilio').show();
+				$('input#resEDomUguali').attr('value', 'y')
+
+			}
+		});
 
 
 	</script>
@@ -318,97 +318,34 @@
 		{% endfor %}
 
 /*====================================================================================================================*/
-/*=================================Imposta stampa errore via=====================================================*/
+/*=================================Imposta stampa errore residenza=====================================================*/
 
 		notValidated=true;
-		{% for error in form.via.errors %}
+		{% for error in form.residenza.errors %}
 
 		if(notValidated){
-			$("div:has(> input#via)").addClass("validate-input");
+			$("div:has(> input#residenza)").addClass("validate-input");
 			notValidated=false;
 		}
-		$("div:has(> input#via)").attr("data-validate", "{{error}}");
-		showValidate($("input#via"));
+		$("div:has(> input#residenza)").attr("data-validate", "{{error}}");
+		showValidate($("input#residenza"));
 
 		{% endfor %}
 
 /*====================================================================================================================*/
-/*=================================Imposta stampa errore civico=====================================================*/
+/*=================================Imposta stampa errore domicilio=====================================================*/
 
 		notValidated=true;
-		{% for error in form.civico.errors %}
+		{% for error in form.domicilio.errors %}
 
 		if(notValidated){
-			$("div:has(> input#civico)").addClass("validate-input");
+			$("div:has(> input#domicilio)").addClass("validate-input");
 			notValidated=false;
 		}
-		$("div:has(> input#civico)").attr("data-validate", "{{error}}");
-		showValidate($("input#civico"));
+		$("div:has(> input#domicilio)").attr("data-validate", "{{error}}");
+		showValidate($("input#domicilio"));
 
 		{% endfor %}
-
-/*====================================================================================================================*/
-/*=================================Imposta stampa errore CAP=====================================================*/
-
-		notValidated=true;
-		{% for error in form.cap.errors %}
-
-		if(notValidated){
-			$("div:has(> input#cap)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#cap)").attr("data-validate", "{{error}}");
-		showValidate($("input#cap"));
-
-		{% endfor %}
-
-/*====================================================================================================================*/
-/*=================================Imposta stampa errore città=====================================================*/
-
-		notValidated=true;
-		{% for error in form.citta.errors %}
-
-		if(notValidated){
-			$("div:has(> input#citta)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#citta)").attr("data-validate", "{{error}}");
-		showValidate($("input#citta"));
-
-		{% endfor %}
-
-
-/*====================================================================================================================*/
-/*=================================Imposta stampa errore città=====================================================*/
-
-		notValidated=true;
-		{% for error in form.citta.errors %}
-
-		if(notValidated){
-			$("div:has(> input#citta)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#citta)").attr("data-validate", "{{error}}");
-		showValidate($("input#citta"));
-
-		{% endfor %}
-
-
-/*====================================================================================================================*/
-/*=================================Imposta stampa errore regione=====================================================*/
-
-		notValidated=true;
-		{% for error in form.regione.errors %}
-
-		if(notValidated){
-			$("div:has(> input#regione)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#regione)").attr("data-validate", "{{error}}");
-		showValidate($("input#regione"));
-
-		{% endfor %}
-
 
 /*====================================================================================================================*/
 
@@ -442,6 +379,18 @@
 		showValidate($("input#password"));
 
 		{% endfor %}
+
+		{% if errPasswd %}
+
+			if(notValidated){
+				$("div:has(> input#password)").addClass("validate-input");
+				notValidated=false;
+			}
+			$("div:has(> input#password)").attr("data-validate", "La password utilizzata è già in uso");
+			showValidate($("input#password"));
+
+
+		{% endif %}
 
 /*====================================================================================================================*/
 
@@ -519,5 +468,6 @@
 
 
 	</script>
+
 {% endblock %}
 

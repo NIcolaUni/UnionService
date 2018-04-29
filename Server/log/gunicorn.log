@@ -1,0 +1,109 @@
+[2018-04-29 18:04:06 +0200] [14631] [DEBUG] Current configuration:
+  logconfig: None
+  initgroups: False
+  certfile: None
+  on_exit: <function OnExit.on_exit at 0x7fbb2f0e7598>
+  ca_certs: None
+  tmp_upload_dir: None
+  max_requests: 0
+  ssl_version: 2
+  workers: 1
+  graceful_timeout: 30
+  on_reload: <function OnReload.on_reload at 0x7fbb2f0e20d0>
+  when_ready: <function WhenReady.when_ready at 0x7fbb2f0e2268>
+  capture_output: False
+  statsd_host: None
+  limit_request_line: 4094
+  post_fork: <function Postfork.post_fork at 0x7fbb2f0e2598>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fbb2f0e2a60>
+  daemon: False
+  proxy_protocol: False
+  worker_connections: 1000
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  syslog_addr: udp://localhost:514
+  worker_class: eventlet
+  child_exit: <function ChildExit.child_exit at 0x7fbb2f0e70d0>
+  reload_engine: auto
+  syslog_prefix: None
+  pidfile: /var/run/gunicorn.pid
+  proc_name: None
+  bind: ['127.0.0.1:3000']
+  on_starting: <function OnStarting.on_starting at 0x7fbb2f0d3ea0>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  spew: False
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  worker_tmp_dir: None
+  syslog_facility: user
+  worker_int: <function WorkerInt.worker_int at 0x7fbb2f0e28c8>
+  worker_exit: <function WorkerExit.worker_exit at 0x7fbb2f0e7268>
+  enable_stdio_inheritance: False
+  config: None
+  ciphers: TLSv1
+  timeout: 30
+  limit_request_field_size: 8190
+  max_requests_jitter: 0
+  keepalive: 2
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fbb2f0e2730>
+  limit_request_fields: 100
+  pre_exec: <function PreExec.pre_exec at 0x7fbb2f0e2bf8>
+  threads: 1
+  keyfile: None
+  pythonpath: None
+  statsd_prefix: 
+  preload_app: False
+  do_handshake_on_connect: False
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fbb2f0e7400>
+  sendfile: None
+  group: 0
+  reload: False
+  check_config: False
+  raw_env: []
+  default_proc_name: Server:application
+  pre_request: <function PreRequest.pre_request at 0x7fbb2f0e2d90>
+  logger_class: gunicorn.glogging.Logger
+  suppress_ragged_eofs: True
+  user: 0
+  umask: 0
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on'}
+  forwarded_allow_ips: ['127.0.0.1']
+  paste: None
+  proxy_allow_ips: ['127.0.0.1']
+  backlog: 2048
+  raw_paste_global_conf: []
+  post_request: <function PostRequest.post_request at 0x7fbb2f0e2ea0>
+  accesslog: None
+  loglevel: debug
+  cert_reqs: 0
+  syslog: False
+  pre_fork: <function Prefork.pre_fork at 0x7fbb2f0e2400>
+[2018-04-29 18:04:06 +0200] [14631] [INFO] Starting gunicorn 19.7.1
+[2018-04-29 18:04:06 +0200] [14631] [DEBUG] Arbiter booted
+[2018-04-29 18:04:06 +0200] [14631] [INFO] Listening at: http://127.0.0.1:3000 (14631)
+[2018-04-29 18:04:06 +0200] [14631] [INFO] Using worker: eventlet
+[2018-04-29 18:04:06 +0200] [14635] [INFO] Booting worker with pid: 14635
+[2018-04-29 18:04:06 +0200] [14631] [DEBUG] 1 workers
+[2018-04-29 18:04:09 +0200] [14635] [DEBUG] GET /socket.io/
+[2018-04-29 18:04:09 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:04:09 +0200] [14635] [DEBUG] POST /socket.io/
+[2018-04-29 18:04:09 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:04:09 +0200] [14635] [DEBUG] GET /socket.io/
+[2018-04-29 18:04:09 +0200] [14635] [DEBUG] GET /socket.io/
+[2018-04-29 18:04:09 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:04:27 +0200] [14635] [DEBUG] GET /
+[2018-04-29 18:04:27 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:04:38 +0200] [14635] [DEBUG] POST /
+[2018-04-29 18:04:38 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:04:38 +0200] [14635] [DEBUG] GET /login
+[2018-04-29 18:04:38 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:04:38 +0200] [14635] [DEBUG] GET /registraDipendente
+[2018-04-29 18:04:39 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:04:40 +0200] [14635] [DEBUG] GET /homepage
+[2018-04-29 18:04:40 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:05:01 +0200] [14635] [DEBUG] POST /registraDipendente
+[2018-04-29 18:05:01 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:05:02 +0200] [14635] [DEBUG] GET /homepage
+[2018-04-29 18:05:02 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:05:02 +0200] [14635] [DEBUG] GET /login
+[2018-04-29 18:05:02 +0200] [14635] [DEBUG] Closing connection. 
+[2018-04-29 18:05:14 +0200] [14635] [DEBUG] GET /login
+[2018-04-29 18:05:14 +0200] [14635] [DEBUG] Closing connection. 

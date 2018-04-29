@@ -1,3 +1,11 @@
 .registraDip-section {
   height: 100%;
 }
+
+.container-completaProfilo {
+  margin-top: 0;
+}
+
+.asteriscoRosso {
+    color: red;
+}

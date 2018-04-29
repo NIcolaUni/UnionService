@@ -15,7 +15,10 @@ Flask-SQLAlchemy = "*"
 "psycopg2" = "*"
 "psycopg2-binary" = "*"
 gunicorn = "*"
-flask-socketio = "*"
+Flask-SocketIO = "*"
 eventlet = "*"
+gevent = "*"
+Flask-Migrate = "*"
+flask-script = "*"
 
 [dev-packages]
