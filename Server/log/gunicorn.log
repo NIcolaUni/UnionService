@@ -864,3 +864,26 @@
 [2018-04-29 20:22:57 +0200] [16557] [DEBUG] GET /socket.io/
 [2018-04-29 20:22:57 +0200] [16557] [DEBUG] GET /socket.io/
 [2018-04-29 20:22:57 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:53 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:53 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] POST /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] POST /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] POST /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [INFO] Registrazione sid dipendete: nicola_pancheri, con sid 0bd4015abb434ad9893d6013734aad7d
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] GET /socket.io/
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 
+[2018-04-29 21:16:55 +0200] [16557] [DEBUG] Closing connection. 

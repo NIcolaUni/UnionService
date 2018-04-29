@@ -20,5 +20,13 @@ class DipendenteDBmodel(database.Model):
     classe = Column(String(30), nullable=False)
     dirigente = Column(Boolean, nullable=False)
     session_id = Column(String(40), unique=True)
-    regUser = database.relationship("DipRegistratoDBmodel", foreign_keys= [username])
-    regPass = database.relationship("DipRegistratoDBmodel", foreign_keys=[password])
+
+    dipRegUser = database.relationship('DipRegistratoDBmodel', backref='dipUser', lazy=True, uselist=False, foreign_keys= [username], cascade="all, delete-orphan")
+    dipRegPass = database.relationship('DipRegistratoDBmodel', backref='dipPass', lazy=True, uselist=False, foreign_keys= [password], cascade="all, delete-orphan")
+
+
+
+    #regUser = database.relationship("DipRegistratoDBmodel", foreign_keys= [username])
+    #egPass = database.relationship("DipRegistratoDBmodel", foreign_keys=[password])
+    #notifichePersonali = db.relationship('NotificheDBmodel', uselist=False, back_populates="destinatario")
+    #otificheInviate = db.relationship('NotificheDBmodel', uselist=False, back_populates="mittente")

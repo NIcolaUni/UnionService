@@ -7,7 +7,6 @@ class DipRegistratoDBmodel(database.Model):
     username = Column(String(30), primary_key=True )
     password = Column(String(30), nullable=False, unique=True)
     fittizio = Column(Boolean, nullable=False)
-    dipFittizio = database.relationship("DipFittizioDBmodel", uselist=False, back_populates="dipReg")
 
   #  dipUser = database.relationship("DipendenteDBmodel",  back_populates="regUser")
    # dipPass = database.relationship("DipendenteDBmodel",  back_populates="regPass")

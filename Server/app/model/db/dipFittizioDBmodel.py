@@ -8,4 +8,6 @@ class DipFittizioDBmodel(database.Model):
     password = Column(String(30), nullable=False)
     classe = Column(String(20), nullable=False)
     dirigente = Column(Boolean, nullable=False)
-    dipReg = database.relationship("DipRegistratoDBmodel", uselist=False, back_populates="dipFittizio", single_parent=True)
+   # dipReg = database.relationship("DipRegistratoDBmodel", uselist=False, back_populates="dipFittizio", single_parent=True)
+
+    dipReg = database.relationship("DipRegistratoDBmodel", backref='dipFitt', lazy=True, uselist=False, cascade="all, delete-orphan")
