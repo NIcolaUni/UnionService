@@ -4,6 +4,8 @@ from app.model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm
 from app.model.dipendenteFittizio import DipendenteFittizio
 from app.model.dipendenteRegistrato import DipendenteRegistrato
 from app.model.dipendente import Dipendente
+from app.model.dirigente import Dirigente
+from app.model.notifica import Notifica
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import types
@@ -101,12 +103,19 @@ def registraDipendente():
                                 email_personale=form.email_personale.data, iban=form.iban.data, partitaIva=form.partitaIva.data,
                                 classe=dipFittizio.classe, dirigente=dipFittizio.dirigente, session_id=None)
 
+
         database.session.delete(dipFittizio)
         database.session.delete(DipendenteRegistrato.query.filter_by(username=current_user.get_id()).first())
         database.session.add(dip)
         database.session.commit()
         database.session.add(newDip)
         database.session.commit()
+
+        if dipFittizio.dirigente:
+            newDirigente = Dirigente(username=dip.username)
+            database.session.add(newDirigente)
+            database.session.commit()
+
 
         #return redirect('/')
         return render_template("confermaRegistrazione.html", username=dip.username, password=dip.password)

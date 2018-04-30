@@ -1,6 +1,3 @@
-#from flask_login import UserMixin
-#from app import login_manager
-#from app import login_manager
 from app.model.db.dipendenteDBmodel import DipendenteDBmodel
 
 

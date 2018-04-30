@@ -8,6 +8,8 @@ class DipFittizioDBmodel(database.Model):
     password = Column(String(30), nullable=False)
     classe = Column(String(20), nullable=False)
     dirigente = Column(Boolean, nullable=False)
+    creatoreCredenziali = Column(String(60), ForeignKey('dirigente.username'))
    # dipReg = database.relationship("DipRegistratoDBmodel", uselist=False, back_populates="dipFittizio", single_parent=True)
 
     dipReg = database.relationship("DipRegistratoDBmodel", backref='dipFitt', lazy=True, uselist=False, cascade="all, delete-orphan")
+    dirigenteCreatore =  database.relationship("DirigenteDBmodel", backref='dipendenteAggiunto', lazy=True, cascade="all, delete-orphan")
