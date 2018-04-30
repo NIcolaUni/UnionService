@@ -8,7 +8,6 @@ from app.model.dirigente import Dirigente
 from app.model.notifica import Notifica
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
-import types
 
 
 ####################################### ROUTE HANDLER #################################################
@@ -24,7 +23,8 @@ def gestioneDip():
     form = DipFittizioForm()
     if form.validate_on_submit():
         dipReg = DipendenteRegistrato(username=form.username.data, password=form.password.data, fittizio=True)
-        newDipFittizio = DipendenteFittizio(username=form.username.data, password=form.password.data, classe=form.tipo_dip.data, dirigente=form.dirigente.data)
+        newDipFittizio = DipendenteFittizio(username=form.username.data, password=form.password.data,
+                                                classe=form.tipo_dip.data, dirigente=form.dirigente.data, creatoreCredenziali=current_user.get_id())
         database.session.add(dipReg)
         database.session.add(newDipFittizio)
         database.session.commit()
@@ -116,9 +116,7 @@ def registraDipendente():
             database.session.add(newDirigente)
             database.session.commit()
 
-
-        #return redirect('/')
-        return render_template("confermaRegistrazione.html", username=dip.username, password=dip.password)
+        return render_template("confermaRegistrazione.html", username=dip.username, password=dip.password, creatoreCredenziali=dipFittizio.creatoreCredenziali)
 
     return render_template("registrazioneDip.html", form=form, fittizio=True)
 
@@ -168,6 +166,12 @@ def handle_registra_sid(message):
     server.logger.info('Registrazione sid dipendete: {0}, con sid {1}'.format(message['username'], request.sid))
     Dipendente.query.filter_by(username=message['username']).update({'session_id' : request.sid })
     database.session.commit()
+
+@socketio.on('registrazione_effettuata', namespace="/notifica")
+def handle_registrazione_effetuata(message):
+    responsabile = Dipendente.query.filter_by(username=message['responsabile']).first()
+
+    emit('notificaRegistrazione', {'dipendente': message['dipendente_registrato']}, namespace='/notifica', room=responsabile.session_id)
 
 
 @socketio.on_error('/home')

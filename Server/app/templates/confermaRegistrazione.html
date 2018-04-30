@@ -20,4 +20,16 @@
          });
 
     </script>
+
+    <script type="text/javascript" charset="utf-8">
+        var socket = io.connect('http://debtux:80/notifica');
+
+        socket.on('connect', function() {
+            console.log('connected');
+            socket.emit('registrazione_effettuata',   {'dipendente_registrato': '{{username}}', 'responsabile': '{{creatoreCredenziali}}'} );
+        });
+
+
+
+    </script>
 {% endblock %}

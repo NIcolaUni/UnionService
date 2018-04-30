@@ -21,8 +21,8 @@ class DipendenteDBmodel(database.Model):
     dirigente = Column(Boolean, nullable=False)
     session_id = Column(String(40), unique=True)
 
-    dipRegUser = database.relationship('DipRegistratoDBmodel', backref='dipUser', lazy=True, uselist=False, foreign_keys= [username], cascade="all, delete-orphan")
-    dipRegPass = database.relationship('DipRegistratoDBmodel', backref='dipPass', lazy=True, uselist=False, foreign_keys= [password], cascade="all, delete-orphan")
+    dipRegUser = database.relationship('DipRegistratoDBmodel', backref='dipUser', lazy=True, uselist=False, single_parent=True ,foreign_keys= [username], cascade="all, delete-orphan")
+    dipRegPass = database.relationship('DipRegistratoDBmodel', backref='dipPass', lazy=True, uselist=False, single_parent=True ,foreign_keys= [password], cascade="all, delete-orphan")
 
 
 
