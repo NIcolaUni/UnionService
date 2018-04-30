@@ -9,6 +9,6 @@ class NotificaDBmodel(database.Model):
     contenuto = Column(String(120))
     dirigente = Column(String(60), ForeignKey('dirigente.username'))
 
-    destinatario = database.relationship('DipendenteDBmodel', backref='notificaPersonale', lazy=True, foreign_keys=[dipendente], cascade="all, delete-orphan")
-    mittente = database.relationship('DirigenteDBmodel', backref='notificaInviata', lazy=True, foreign_keys=[dirigente], cascade="all, delete-orphan")
+    destinatario = database.relationship('DipendenteDBmodel', backref='notificaPersonale', lazy=True, foreign_keys=[dipendente])
+    mittente = database.relationship('DirigenteDBmodel', backref='notificaInviata', lazy=True, foreign_keys=[dirigente])
 

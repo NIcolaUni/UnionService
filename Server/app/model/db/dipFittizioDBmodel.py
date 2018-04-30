@@ -11,5 +11,5 @@ class DipFittizioDBmodel(database.Model):
     creatoreCredenziali = Column(String(60), ForeignKey('dirigente.username'))
    # dipReg = database.relationship("DipRegistratoDBmodel", uselist=False, back_populates="dipFittizio", single_parent=True)
 
-    dipReg = database.relationship("DipRegistratoDBmodel", backref='dipFitt', lazy=True, uselist=False, single_parent=True, cascade="all, delete-orphan")
-    dirigenteCreatore =  database.relationship("DirigenteDBmodel", backref='dipendenteAggiunto', lazy=True, single_parent=True, cascade="all, delete-orphan")
+    dipReg = database.relationship("DipRegistratoDBmodel", backref='dipFitt', lazy=True, uselist=False )
+    dirigenteCreatore =  database.relationship("DirigenteDBmodel", backref='dipendenteAggiunto', lazy=True)

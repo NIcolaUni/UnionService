@@ -1,0 +1,28 @@
+
+server {
+    listen 80;
+    server_name DebTux;
+    charset utf-8;
+    access_log /home/nicola/Documenti/Lavoro/UnionService/Server/log/nginx/access.log;
+    error_log  /home/nicola/Documenti/Lavoro/UnionService/Server/log/nginx/error.log;
+
+    location /static {
+        alias /home/nicola/Documenti/Lavoro/UnionService/Server/app/static;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://127.0.0.1:3000;
+        client_max_body_size 5M;
+    }
+
+    location /socket.io {
+      include proxy_params;
+      proxy_http_version 1.1;
+      proxy_buffering off;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "Upgrade";
+      proxy_pass http://127.0.0.1:3000/socket.io;
+    }
+
+}

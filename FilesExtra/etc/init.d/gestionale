@@ -1,0 +1,65 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:          gestionale
+# Required-Start:    nginx
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Gestionale Union Service
+# Description:       Processo gunicorn che riceve richieste HTTP da
+#                    nginx per il gestionale Union Service
+#
+### END INIT INFO
+#
+# Author:       nicola <nicola.pancheri@gmail.com>
+#
+APPNAME=gestionale
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+VIRTUALENV=/root/.local/share/virtualenvs/Server-WjXv57Cf/bin/activate
+GUNICORN=/root/.local/share/virtualenvs/Server-WjXv57Cf/bin/gunicorn
+APPMODULE=wsgi:application
+DAEMON=gunicorn
+BIND="127.0.0.1:3000"
+PIDFILE=/var/run/gunicorn.pid
+LOGFILE=/home/nicola/Documenti/Lavoro/UnionService/Server/log/$DAEMON.log
+WORKERS=1
+
+
+. /lib/lsb/init-functions
+
+
+case "$1" in
+  start)
+        log_daemon_msg "Starting execution" "$APPNAME" "UnionService"
+        CWD=$PWD
+        log_daemon_msg $PWD
+        cd /home/nicola/Documenti/Lavoro/UnionService/Server
+        . $VIRTUALENV
+        export SECRET_KEY=d23huh2ws
+        export PASS_DB=blablableshi
+        COMMAND="$GUNICORN --bind=$BIND -k eventlet --workers=$WORKERS --log-level debug --pid=$PIDFILE --log-file=$LOGFILE Server:application"
+        $COMMAND
+        log_end_msg $?
+    ;;
+  stop)
+        log_daemon_msg "Stopping execution" "$APPNAME" "UnionService"
+        start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
+        #killproc -p $PIDFILE gunicorn
+        #/usr/bin/pkill gunicorn
+
+        log_end_msg $?
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  status)
+    status_of_proc -p $PIDFILE $DAEMON && exit 0 || exit $?
+    ;;
+  *)
+    echo "Usage: /etc/init.d/$APPNAME {start|stop|restart|force-reload|status}"
+    exit 1
+    ;;
+esac
+
+exit 0

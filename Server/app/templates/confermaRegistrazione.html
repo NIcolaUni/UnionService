@@ -2,7 +2,9 @@
 
 {% block content %}
 
-    <script>
+    <script  type="text/javascript" charset="utf-8">
+
+        var socket = io.connect('http://debtux:80/notifica');
 
         $(window).on('load', function(){
             swal({
@@ -15,21 +17,16 @@
                 },
                 function(){
                     window.location.href = "{{url_for('login')}}"
+                    {% if creatoreCredenziali %}
+                    
+                        socket.emit('registrazione_effettuata',   {'dipendente_registrato': '{{username}}', 'responsabile': '{{creatoreCredenziali}}'} );
+
+                    {% endif %}
                 }
              );
          });
 
     </script>
 
-    <script type="text/javascript" charset="utf-8">
-        var socket = io.connect('http://debtux:80/notifica');
 
-        socket.on('connect', function() {
-            console.log('connected');
-            socket.emit('registrazione_effettuata',   {'dipendente_registrato': '{{username}}', 'responsabile': '{{creatoreCredenziali}}'} );
-        });
-
-
-
-    </script>
 {% endblock %}

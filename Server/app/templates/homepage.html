@@ -292,7 +292,7 @@
 
     var socketNotifica = io.connect('http://debtux:80/notifica');
 
-    {% if dip.dirigente %}
+    {% if dipendente.dirigente %}
         socketNotifica.on('notificaRegistrazione', function(msg) {
             console.log('Avvenuta registrazione del dipendente: ' + msg['dipendente']);
 
