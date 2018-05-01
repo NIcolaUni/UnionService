@@ -19,7 +19,7 @@
             </li>
 
             <li class="dropdown" dropdown>
-                <a dropdown-toggle class="tm-notification" href=""><i class="tmn-counts">0</i></a>
+                <a dropdown-toggle class="tm-notification" href=""><i id="numeroNotifiche" class="tmn-counts">0</i></a>
                 <div class="dropdown-menu dropdown-menu-lg stop-propagate pull-right">
                     <div class="listview" id="notifications">
                         <div class="lv-header">
@@ -40,19 +40,16 @@
                                         <img class="lv-img-sm" ng-src="{{url_for('static', filename='images/sys_notifica.png') }}" alt="">
                                     </div>
                                     <div class="media-body">
-                                        <div class="lv-title">Notifica di sistema</div>
+                                        <div class="lv-title">Notifica di sistema </div>
                                         <small class="lv-small"></small>
+
                                     </div>
-                                </div>
-                                <div class="add-tl-actions">
-                                  <a class="zmdi zmdi-close" data-tl-action="dismiss" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
                                 </div>
                             </a>
                         </div>
                         
                         <div class="clearfix"></div>
 
-                        <a class="lv-footer" href="">View Previous</a>
                     </div>
 
                 </div>
@@ -70,3 +67,33 @@
     <input type="text" placeholder="Cerca qua i tuoi clienti...">
     <i id="top-search-close" data-ng-click="hctrl.closeSearch()">&times;</i>
 </div>
+
+<script type="text/javascript" charset="utf-8">
+
+    function aggiornataNotifiche(){
+
+        //DA FARE ANCORA, SOLO ABBOZZO!!!!
+        var numeroNotifiche=parseInt($('i#numeroNotifiche').text());
+        numeroNotifiche=numeroNotifiche+1;
+        $('i#numeroNotifiche').text(numeroNotifiche+1);
+
+    }
+
+
+    var socketHome = io.connect('http://debtux:80/home');
+
+    socketHome.on('connect', function() {
+        console.log('connected');
+        socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+    });
+
+    var socketNotifica = io.connect('http://debtux:80/notifica');
+
+    {% if dipendente.dirigente %}
+        socketNotifica.on('notificaRegistrazione', function(msg) {
+            console.log('Avvenuta registrazione del dipendente: ' + msg['dipendente']);
+
+        });
+    {% endif %}
+
+</script>

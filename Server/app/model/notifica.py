@@ -3,9 +3,8 @@ from app.model.db.notificaDBmodel import NotificaDBmodel
 
 class Notifica(NotificaDBmodel):
 
-    def __init__(self, dipendente, dirigente, titolo, contenuto):
+    def __init__(self, dipendente, titolo, contenuto):
         self.dipendente = dipendente
-        self.dirigente = dirigente
         self.titolo = titolo
         self.contenuto = contenuto
 

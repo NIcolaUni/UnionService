@@ -282,23 +282,5 @@
 
 </script>
 
-<script type="text/javascript" charset="utf-8">
-    var socketHome = io.connect('http://debtux:80/home');
-
-    socketHome.on('connect', function() {
-        console.log('connected');
-        socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-    });
-
-    var socketNotifica = io.connect('http://debtux:80/notifica');
-
-    {% if dipendente.dirigente %}
-        socketNotifica.on('notificaRegistrazione', function(msg) {
-            console.log('Avvenuta registrazione del dipendente: ' + msg['dipendente']);
-
-        });
-    {% endif %}
-
-</script>
 
 {% endblock %}

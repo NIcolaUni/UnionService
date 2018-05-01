@@ -170,6 +170,13 @@ def handle_registra_sid(message):
 @socketio.on('registrazione_effettuata', namespace="/notifica")
 def handle_registrazione_effetuata(message):
     responsabile = Dipendente.query.filter_by(username=message['responsabile']).first()
+    nuovoDip = Dipendente.query.filter_by(username=message['dipendente_registrato']).first()
+
+    daNotificare = Notifica( dipendente=responsabile.username, titolo="Aggiunto nuovo dipendente",
+                                contenuto="Il dipendente {0} {1} ha complatato la sua registrazione.".format(nuovoDip.nome, nuovoDip.cognome)
+                                                +"\nRicorda di completare i campi a te riservati")
+    database.session.add(daNotificare)
+    database.session.commit()
 
     emit('notificaRegistrazione', {'dipendente': message['dipendente_registrato']}, namespace='/notifica', room=responsabile.session_id)
 
