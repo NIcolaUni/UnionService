@@ -1,16 +1,13 @@
 from flask import render_template, redirect, request, url_for, session, request
-from app import server, database, socketio
+from app import server, database, socketio, databaseManager
 from app.model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm
-from app.model.dipendenteFittizio import DipendenteFittizio
-from app.model.dipendenteRegistrato import DipendenteRegistrato
-from app.model.dipendente import Dipendente
-from app.model.dirigente import Dirigente
-from app.model.notifica import Notifica
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 
 
 ####################################### ROUTE HANDLER #################################################
+
+
 
 @server.route('/homeheader')
 @login_required
@@ -22,12 +19,9 @@ def homeheader():
 def gestioneDip():
     form = DipFittizioForm()
     if form.validate_on_submit():
-        dipReg = DipendenteRegistrato(username=form.username.data, password=form.password.data, fittizio=True)
-        newDipFittizio = DipendenteFittizio(username=form.username.data, password=form.password.data,
-                                                classe=form.tipo_dip.data, dirigente=form.dirigente.data, creatoreCredenziali=current_user.get_id())
-        database.session.add(dipReg)
-        database.session.add(newDipFittizio)
-        database.session.commit()
+        databaseManager.registra( 'dipendenteFittizio', colonne=dict(username=form.username.data, password=form.password.data,
+                                                classe=form.tipo_dip.data, dirigente=form.dirigente.data, creatoreCredenziali=current_user.get_id()))
+
         return redirect('/homepage')
     else:
         form.assegnaUserEPass()
@@ -42,21 +36,19 @@ def paginaProfilo():
 @server.route('/homepage')
 @login_required
 def homepage():
-    dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
    # print("\n\n\n\nCiao io sono {0} con l'id {1}:\n\n\n".format(dip.username, dip.session_id))
    # emit('my response', {'data': 'brao semo!'})
-    return render_template('homepage.html', dipendente=dip)
+    return render_template('homepage.html', dipendente=databaseManager.managerDipendente.dip)
 
 @server.route('/sidebarLeft')
 @login_required
 def sidebarLeft():
-    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    return render_template('sidebar-left.html', dipendente=dip)
+    return render_template('sidebar-left.html', dipendente=databaseManager.managerDipendente.dip)
 
 @server.route('/header')
 @login_required
 def header():
-    return render_template('header.html')
+    return render_template('header.html', dipendente=databaseManager.managerDipendente.dip)
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required
@@ -65,25 +57,13 @@ def registraDipendente():
 
     if form.validate_on_submit():
 
+        managerDipFittizio = databaseManager.managerDipendenteFittizio
+        managerDipFittizio.setCurrentUser(username=current_user.get_id())
 
-        if DipendenteRegistrato.query.filter_by(password=form.password.data).first() != None:
+        res = databaseManager.search('dipendenteRegistrato',
+                               colonneDesiderate=dict(password=True), parametriSearch=dict(password=form.password.data))
+        if len(res) > 0:
             return render_template("registrazioneDip.html", form=form, fittizio=True, errPasswd=True)
-
-        dipFittizio=DipendenteFittizio.query.filter_by(username=current_user.get_id()).first();
-        username_candidato = "{0}_{1}".format(form.nome.data, form.cognome.data).lower()
-
-        counter = 0
-        if DipendenteRegistrato.query.filter_by(username=username_candidato).first() != None:
-            counter = 1
-            while DipendenteRegistrato.query.filter_by(username="{0}{1}".format(username_candidato, counter)).first() != None:
-             counter += 1
-
-        dip = None
-
-        if counter == 0:
-            dip = DipendenteRegistrato(username=username_candidato, password=form.password.data, fittizio=False)
-        else:
-            dip = DipendenteRegistrato(username="{0}{1}".format(username_candidato, counter), password=form.password.data, fittizio=False)
 
         domicilioDip = form.resEDomUguali.data
 
@@ -92,31 +72,18 @@ def registraDipendente():
         else:
             domicilioDip = form.domicilio.data
 
+        username=databaseManager.registra('dipendente', currentFittizio=managerDipFittizio.dip,
+                                     colonne=dict( nome=form.nome.data, cognome=form.cognome.data, cf=form.cf.data,
+                                        dataNascita=form.dataNascita.data,
+                                        residenza=form.residenza.data, domicilio=domicilioDip, telefono=form.telefono.data,
+                                        password=form.password.dip,
+                                        email_aziendale=form.email_aziendale.data, email_personale=form.email_personale.data,
+                                        iban=form.iban.data, partitaIva=form.partitaIva.data, session_id=None ) )
 
 
 
-
-        newDip = Dipendente(nome=form.nome.data, cognome=form.cognome.data, cf=form.cf.data,
-                                dataNascita=form.dataNascita.data,
-                                residenza=form.residenza.data, domicilio=domicilioDip, telefono=form.telefono.data,
-                                username=dip.username, password=dip.password, email_aziendale=form.email_aziendale.data,
-                                email_personale=form.email_personale.data, iban=form.iban.data, partitaIva=form.partitaIva.data,
-                                classe=dipFittizio.classe, dirigente=dipFittizio.dirigente, session_id=None)
-
-
-        database.session.delete(dipFittizio)
-        database.session.delete(DipendenteRegistrato.query.filter_by(username=current_user.get_id()).first())
-        database.session.add(dip)
-        database.session.commit()
-        database.session.add(newDip)
-        database.session.commit()
-
-        if dipFittizio.dirigente:
-            newDirigente = Dirigente(username=dip.username)
-            database.session.add(newDirigente)
-            database.session.commit()
-
-        return render_template("confermaRegistrazione.html", username=dip.username, password=dip.password, creatoreCredenziali=dipFittizio.creatoreCredenziali)
+        return render_template("confermaRegistrazione.html", username=username, password=form.password.data,
+                                            creatoreCredenziali=managerDipFittizio.dip.creatoreCredenziali)
 
     return render_template("registrazioneDip.html", form=form, fittizio=True)
 
@@ -126,8 +93,8 @@ def registraDipendente():
 def login():
 
     if current_user.is_authenticated:
-        dip=DipendenteRegistrato.query.filter_by(username=current_user.get_id()).first()
-        if dip.fittizio:
+
+        if databaseManager.managerDipendenteRegistrato.dip.fittizio:
             return redirect(url_for('registraDipendente'))
         return redirect(url_for('homepage'))
 
@@ -135,11 +102,13 @@ def login():
 
 
     if form.validate_on_submit():
-        dip=DipendenteRegistrato.query.filter_by(username=form.username.data, password=form.password.data).first()
-        if dip is None:
+        databaseManager.managerDipendenteRegistrato.setCurrentUser(username=form.username.data, password=form.password.data)
+
+        if databaseManager.managerDipendenteRegistrato.dip is None:
             return render_template("login.html", form=form, error="Credenziali errate!")
 
-        login_user(dip, remember=True)
+
+        login_user(databaseManager.managerDipendenteRegistrato.dip, remember=True)
 
 
         return redirect(url_for('login'))
@@ -164,19 +133,23 @@ def handle_my_event(message):
 @socketio.on('registra_sid', namespace="/home")
 def handle_registra_sid(message):
     server.logger.info('Registrazione sid dipendete: {0}, con sid {1}'.format(message['username'], request.sid))
-    Dipendente.query.filter_by(username=message['username']).update({'session_id' : request.sid })
-    database.session.commit()
+    databaseManager.managerDipendente.updateSid(username=message['username'], sid=request.sid )
+
 
 @socketio.on('registrazione_effettuata', namespace="/notifica")
 def handle_registrazione_effetuata(message):
-    responsabile = Dipendente.query.filter_by(username=message['responsabile']).first()
-    nuovoDip = Dipendente.query.filter_by(username=message['dipendente_registrato']).first()
 
-    daNotificare = Notifica( dipendente=responsabile.username, titolo="Aggiunto nuovo dipendente",
-                                contenuto="Il dipendente {0} {1} ha complatato la sua registrazione.".format(nuovoDip.nome, nuovoDip.cognome)
-                                                +"\nRicorda di completare i campi a te riservati")
-    database.session.add(daNotificare)
-    database.session.commit()
+    responsabile = databaseManager.search('dipendente',
+                               colonneDesiderate=dict(username=True), parametriSearch=dict(username=message['responsabile']))[0]
+    nuovoDip = databaseManager.search('dipendente',
+                               colonneDesiderate=dict(username=True), parametriSearch=dict(username=message['dipendente_registrato']))[0]
+
+
+    databaseManager.managerNotifica.registraNotifica(dict(dipendente=responsabile.username,
+                                                           titolo="Aggiunto nuovo dipendente",
+                                                           contenuto="Il dipendente {0} {1} ha complatato la sua registrazione.".format(nuovoDip.nome, nuovoDip.cognome)
+                                                               +"\nRicorda di completare i campi a te riservati"))
+
 
     emit('notificaRegistrazione', {'dipendente': message['dipendente_registrato']}, namespace='/notifica', room=responsabile.session_id)
 

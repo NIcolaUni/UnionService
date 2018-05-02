@@ -69,7 +69,7 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
-
+/*
     function aggiornataNotifiche(){
 
         //DA FARE ANCORA, SOLO ABBOZZO!!!!
@@ -78,14 +78,7 @@
         $('i#numeroNotifiche').text(numeroNotifiche+1);
 
     }
-
-
-    var socketHome = io.connect('http://debtux:80/home');
-
-    socketHome.on('connect', function() {
-        console.log('connected');
-        socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-    });
+*/
 
     var socketNotifica = io.connect('http://debtux:80/notifica');
 

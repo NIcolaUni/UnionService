@@ -1,8 +1,9 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean
-from app import database
+from app import databaseManager
 
 
-class DipendenteDBmodel(database.Model):
+
+class DipendenteDBmodel(databaseManager.database.Model):
     __tablename__ = "dipendente"
     username = Column(String(60), ForeignKey('dipendente_registrato.username'), primary_key=True, nullable=False)
     password =Column(String(30), ForeignKey('dipendente_registrato.password'), nullable=False)
@@ -21,8 +22,8 @@ class DipendenteDBmodel(database.Model):
     dirigente = Column(Boolean, nullable=False)
     session_id = Column(String(40), unique=True)
 
-    dipRegUser = database.relationship('DipRegistratoDBmodel', backref='dipUser', lazy=True, uselist=False, foreign_keys= [username])
-    dipRegPass = database.relationship('DipRegistratoDBmodel', backref='dipPass', lazy=True, uselist=False, foreign_keys= [password])
+    dipRegUser = databaseManager.database.relationship('DipRegistratoDBmodel', backref='dipUser', lazy=True, uselist=False, foreign_keys= [username])
+    dipRegPass = databaseManager.database.relationship('DipRegistratoDBmodel', backref='dipPass', lazy=True, uselist=False, foreign_keys= [password])
 
 
 

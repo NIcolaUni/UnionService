@@ -1,4 +1,5 @@
-from app.model.db.dipendenteDBmodel import DipendenteDBmodel
+#from app.model.db.dipendenteDBmodel import DipendenteDBmodel
+
 
 
 class Dipendente(DipendenteDBmodel):

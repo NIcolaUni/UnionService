@@ -15,7 +15,7 @@
             <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
         </li>
         <li>
-            <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
+            <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Agenda</a>
         </li>
         <li>
             <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
@@ -55,7 +55,7 @@
                     <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
                 </li>
                 <li>
-                    <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
+                    <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Agenda</a>
                 </li>
                 {% if dipendente.dirigente%}
                 <li>
@@ -282,5 +282,13 @@
 
 </script>
 
+<script>
+    var socketHome = io.connect('http://debtux:80/home');
+
+    socketHome.on('connect', function() {
+        console.log('connected');
+        socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+    });
+</script>
 
 {% endblock %}
