@@ -15,7 +15,7 @@
             <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
         </li>
         <li>
-            <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
+            <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Agenda</a>
         </li>
         <li>
             <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
@@ -36,6 +36,7 @@
 
 <!--==================================================================================================-->
 
+
   <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
   <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
@@ -55,7 +56,7 @@
                     <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
                 </li>
                 <li>
-                    <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario/Agenda</a>
+                    <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Agenda</a>
                 </li>
                 {% if dipendente.dirigente%}
                 <li>
@@ -278,9 +279,39 @@
 	 });
 
 
-	// $("header#header").load("{{url_for('homeheader')}}");
+
 
 </script>
+
+<script type="text/javascript" charset="utf-8">
+
+    /*  $("header#header").remove();
+    $("div#page-wrapper").prepend(
+            "<header id=\"header\" data-ng-include=\"\'header\'\"  data-ng-controller=\"headerCtrl as hctrl\"><\/header>"
+            + "<script>\$(\"header#header\").load(\"header\"); <\/script>"
+         );
+
+    console.log('a questo punto');*/
+
+    var socketHome = io.connect('http://debtux:80/home');
+
+    socketHome.on('connect', function() {
+        console.log('connected');
+
+
+        socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+    });
+
+    var socketNotifica = io.connect('http://debtux:80/notifica');
+
+     socketNotifica.on('aggiornaNotifiche', function() {
+
+         location.href = '/homepage';
+
+
+     });
+</script>
+
 
 
 {% endblock %}

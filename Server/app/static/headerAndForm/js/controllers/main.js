@@ -54,8 +54,10 @@ materialAdmin
     // =========================================================================
     // Header
     // =========================================================================
-    .controller('headerCtrl', function($timeout, messageService){
-    
+    .controller('headerCtrl', function($scope, $timeout, messageService){
+
+        $scope.$apply;
+
          // Top Search
         this.openSearch = function(){
             angular.element('#header').addClass('search-toggled');

@@ -1,3 +1,4 @@
+
 <ul class="header-inner">
     <li id="menu-trigger" data-target="mainmenu" data-toggle-sidebar data-model-left="mactrl.sidebarToggle.left" data-ng-class="{ 'open': mactrl.sidebarToggle.left === true }">
         <div class="line-wrap">
@@ -33,22 +34,13 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="lv-body">
-                            <a class="lv-item" ng-href="" >
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <img class="lv-img-sm" ng-src="{{url_for('static', filename='images/sys_notifica.png') }}" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="lv-title">Notifica di sistema </div>
-                                        <small class="lv-small"></small>
 
-                                    </div>
-                                </div>
-                            </a>
+                        <div id="corpoNote" class="lv-body">
+
                         </div>
-                        
+
                         <div class="clearfix"></div>
+                        
 
                     </div>
 
@@ -67,33 +59,58 @@
     <input type="text" placeholder="Cerca qua i tuoi clienti...">
     <i id="top-search-close" data-ng-click="hctrl.closeSearch()">&times;</i>
 </div>
+<!--================================= JS Form =================================================================-->
+       <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
+       <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
+       <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+       <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
+<!--===========================================================================================================-->
 
 <script type="text/javascript" charset="utf-8">
 
-    function aggiornataNotifiche(){
+    function aggiornaNotifiche(){
 
-        //DA FARE ANCORA, SOLO ABBOZZO!!!!
-        var numeroNotifiche=parseInt($('i#numeroNotifiche').text());
-        numeroNotifiche=numeroNotifiche+1;
-        $('i#numeroNotifiche').text(numeroNotifiche+1);
+        counter = 0;
+
+        {% for note in notifiche %}
+            counter +=1;
+            console.log();
+
+            titolo="{{note.titolo}}"
+            contenuto="{{note.contenuto}}"
+
+
+            console.log(titolo );
+
+            $('div#corpoNote').append(
+              " <a class=\"lv-item\" ng-href=\"\" >" +
+                               " <div class=\"media\"> " +
+                                  "  <div class=\"pull-left\"> " +
+                                      "  <img class=\"lv-img-sm\" ng-src=\"{{url_for('static', filename='images/sys_notifica.png') }}\" alt=\"\"> " +
+                                   " <\/div> "+
+                                    "<div class=\"media-body\">"+
+                                       " <div class=\"lv-title\">" + titolo + "<\/div> " +
+                                     "   <small class=\"lv-small\">"+ contenuto +"<\/small> " +
+                                   " <\/div> " +
+                                "<\/div>"+
+                            "<\/a>"
+             );
+
+
+
+
+
+        {% endfor %}
+
+
+
+
+        $('i#numeroNotifiche').text(counter);
+
 
     }
 
+    aggiornaNotifiche()
 
-    var socketHome = io.connect('http://debtux:80/home');
-
-    socketHome.on('connect', function() {
-        console.log('connected');
-        socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-    });
-
-    var socketNotifica = io.connect('http://debtux:80/notifica');
-
-    {% if dipendente.dirigente %}
-        socketNotifica.on('notificaRegistrazione', function(msg) {
-            console.log('Avvenuta registrazione del dipendente: ' + msg['dipendente']);
-
-        });
-    {% endif %}
 
 </script>

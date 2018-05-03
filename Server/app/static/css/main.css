@@ -376,60 +376,17 @@ h1, h2, h3, h4, h5 {
 
 /* Contenuto pagina calendario */
 
-.calendario-section {
-
-  height: 80%;
-  width: 70%;
-  margin-top: 5%;
+#menu-2 {
+    position: absolute;
+    height: 100%;
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 5%;
 }
 
 #calendar {
-  position: relative;
-  height: 100%;
-}
-
-.fc-view-container {
-  background-color: white;
-  margin-top: 10%;
-}
-
-
-
-.fc-view-container a {
-  color: black;
-
-}
-
-.fc-view-container span{
-  color: black;
-
-}
-
-.fc-list-item {
-  color: black;
-
-}
-
-.fc-day-header span {
-  color: black;
-
-}
-
-.fc-day-header a {
-  color: black;
-
-}
-
-.fc-header-toolbar {
-  height: 50px;
-}
-
-.fc-left {
-  height: 100%;
-}
-
-.fc-center h2 {
-  font-size: 40px;
+    position: relative;
+    display: inline-block;
 }
 
 /* Menu barra laterale sinistra e menu per piccoli schermi */
@@ -538,4 +495,9 @@ h1, h2, h3, h4, h5 {
 }
 .show-menu a i {
   margin-right: 15px;
+}
+
+#corpoNote {
+    height: 100px;
+    overflow-y: scroll;
 }

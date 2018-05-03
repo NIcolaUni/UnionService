@@ -84,26 +84,7 @@
 
 <!--===================================socket io====================================================-->
     <script src="{{url_for('static', filename='js/vendor/socket.io.js') }}"></script>
-</head>
-
-    {% if fittizio %}
-        <body>
-    {% else %}
-        <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
-    {% endif %}
-
-        <div class="site-bg"></div>
-        <div class="site-bg-overlay"></div>
-
-       {% block content %}
-       {% endblock %}
-
-<!--================================= JS Form =================================================================-->
-       <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
-       <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
-       <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-       <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
-<!--===========================================================================================================-->
+    <!--===========================================================================================================-->
 
         <!-- Angular -->
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular/angular.min.js') }}"></script>
@@ -159,6 +140,27 @@
         <script src="{{url_for('static', filename='headerAndForm/js/modules/demo.js') }}"></script>
 
 <!--===========================================================================================================-->
+</head>
+
+    {% if fittizio %}
+        <body>
+    {% else %}
+        <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
+    {% endif %}
+
+        <div class="site-bg"></div>
+        <div class="site-bg-overlay"></div>
+
+       {% block content %}
+       {% endblock %}
+
+<!--================================= JS Form =================================================================-->
+       <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
+       <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
+       <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+       <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
+<!--===========================================================================================================-->
+
         <script src="{{url_for('static', filename='js/main.js') }}"></script>
         <script src="{{url_for('static', filename='js/listaClienti.js') }}"></script>
 

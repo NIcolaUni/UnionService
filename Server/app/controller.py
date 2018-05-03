@@ -12,11 +12,6 @@ from flask_socketio import emit, join_room, leave_room
 
 ####################################### ROUTE HANDLER #################################################
 
-@server.route('/homeheader')
-@login_required
-def homeheader():
-    return render_template('header_homepage.html')
-
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
 def gestioneDip():
@@ -56,7 +51,9 @@ def sidebarLeft():
 @server.route('/header')
 @login_required
 def header():
-    return render_template('header.html')
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    notifiche = Notifica.query.filter_by(dipendente=current_user.get_id())
+    return render_template('header.html', dipendente=dip, notifiche=notifiche)
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required
@@ -169,18 +166,23 @@ def handle_registra_sid(message):
 
 @socketio.on('registrazione_effettuata', namespace="/notifica")
 def handle_registrazione_effetuata(message):
+    server.logger.info('Registrazione Effetuata')
+
     responsabile = Dipendente.query.filter_by(username=message['responsabile']).first()
     nuovoDip = Dipendente.query.filter_by(username=message['dipendente_registrato']).first()
 
-    daNotificare = Notifica( dipendente=responsabile.username, titolo="Aggiunto nuovo dipendente",
-                                contenuto="Il dipendente {0} {1} ha complatato la sua registrazione.".format(nuovoDip.nome, nuovoDip.cognome)
-                                                +"\nRicorda di completare i campi a te riservati")
+    daNotificare = Notifica( dipendente=responsabile.username, titolo="Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
+                             contenuto="Ricorda di completare la sua registrazione.")
     database.session.add(daNotificare)
     database.session.commit()
 
-    emit('notificaRegistrazione', {'dipendente': message['dipendente_registrato']}, namespace='/notifica', room=responsabile.session_id)
-
+    #emit('notificaRegistrazione', {'dipendente': message['dipendente_registrato']}, namespace='/notifica', room=responsabile.session_id)
+    emit('aggiornaNotifiche', namespace='/notifica', room=responsabile.session_id)
 
 @socketio.on_error('/home')
 def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
+@socketio.on_error('/notifica')
+def error_handler_notifica(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
