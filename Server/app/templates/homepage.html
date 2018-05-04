@@ -17,12 +17,17 @@
         <li>
             <a class="show-2 calendarButton" href="#"><i class="fa fa-calendar"></i>Agenda</a>
         </li>
+          {% if dipendente.dirigente%}
         <li>
             <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
         </li>
+          {% endif %}
+          {% if dipendente.classe == 'commerciale' %}
         <li>
-            <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
+            <a class="show-4 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
         </li>
+          {% endif %}
+
         <li>
             <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
         </li>
@@ -61,6 +66,12 @@
                 {% if dipendente.dirigente%}
                 <li>
                     <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
+                </li>
+                {% endif %}
+
+                {% if dipendente.classe == 'commerciale' %}
+                <li>
+                    <a class="show-4 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
                 </li>
                 {% endif %}
             <!--      <li>
@@ -193,7 +204,7 @@
 
               </div>
 
-              <div id="menu-4" class="content cercaDip-section col-sm-12">
+              <div id="menu-4" class="content accoglienza-section col-sm-12">
 
               </div>
 
@@ -278,7 +289,16 @@
 			return false;
 	 });
 
+	$(".main-menu a.accoglienzaButton").click(function(){
+			$(".accoglienza-section").load("{{url_for('accoglienza')}}");
+			//$("#menu-container .content").slideUp('slow');
+			$("#menu-container .accoglienza-section").slideDown('slow');
 
+
+
+			$.getScript("static/form/js/main.js");
+			return false;
+	});
 
 
 </script>

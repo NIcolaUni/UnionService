@@ -384,10 +384,6 @@ h1, h2, h3, h4, h5 {
     margin-top: 5%;
 }
 
-#calendar {
-    position: relative;
-    display: inline-block;
-}
 
 /* Menu barra laterale sinistra e menu per piccoli schermi */
 
@@ -440,7 +436,7 @@ h1, h2, h3, h4, h5 {
   background: #00603C;
 }
 
-.cercaDipButton{
+.accoglienzaButton{
   background: #002041;
 }
 

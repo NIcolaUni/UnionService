@@ -33,6 +33,10 @@ def gestioneDip():
 def paginaProfilo():
     return render_template('paginaProfilo.html')
 
+@server.route('/accoglienza')
+@login_required
+def accoglienza():
+    return render_template('accoglienzaCliente.html')
 
 @server.route('/homepage')
 @login_required
