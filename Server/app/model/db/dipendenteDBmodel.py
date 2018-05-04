@@ -1,11 +1,15 @@
-from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean
+from sqlalchemy import Column, String, Date, Boolean, ForeignKeyConstraint
 from app import database
 
 
 class DipendenteDBmodel(database.Model):
     __tablename__ = "dipendente"
-    username = Column(String(60), ForeignKey('dipendente_registrato.username'), primary_key=True, nullable=False)
-    password =Column(String(30), ForeignKey('dipendente_registrato.password'), nullable=False)
+    __table_args__ = (
+            ForeignKeyConstraint(['username', 'password'], ['dipendente_registrato.username', 'dipendente_registrato.password'],
+                                 onupdate="CASCADE", ondelete="CASCADE"),
+                    )
+    username = Column(String(60), primary_key=True, nullable=False)
+    password =Column(String(30), nullable=False)
     cf = Column(String(16), unique=True, nullable=False)
     nome = Column(String(30), nullable=False)
     cognome = Column(String(30), nullable=False)
@@ -20,13 +24,3 @@ class DipendenteDBmodel(database.Model):
     classe = Column(String(30), nullable=False)
     dirigente = Column(Boolean, nullable=False)
     session_id = Column(String(40), unique=True)
-
-    dipRegUser = database.relationship('DipRegistratoDBmodel', backref='dipUser', lazy=True, uselist=False, foreign_keys= [username])
-    dipRegPass = database.relationship('DipRegistratoDBmodel', backref='dipPass', lazy=True, uselist=False, foreign_keys= [password])
-
-
-
-    #regUser = database.relationship("DipRegistratoDBmodel", foreign_keys= [username])
-    #egPass = database.relationship("DipRegistratoDBmodel", foreign_keys=[password])
-    #notifichePersonali = db.relationship('NotificheDBmodel', uselist=False, back_populates="destinatario")
-    #otificheInviate = db.relationship('NotificheDBmodel', uselist=False, back_populates="mittente")
