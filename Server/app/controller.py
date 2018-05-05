@@ -55,9 +55,10 @@ def sidebarLeft():
 @server.route('/header')
 @login_required
 def header():
-    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    notifiche = Notifica.query.filter_by(dipendente=current_user.get_id())
-    return render_template('header.html', dipendente=dip, notifiche=notifiche)
+    #dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+   # notifiche = Notifica.query.filter_by(dipendente=current_user.get_id())
+    numNot = Notifica.get_counter(dipendente=current_user.get_id())
+    return render_template('header.html', numNotifiche=numNot)
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required
@@ -104,11 +105,8 @@ def registraDipendente():
                                 email_personale=form.email_personale.data, iban=form.iban.data, partitaIva=form.partitaIva.data,
                                 classe=dipFittizio.classe, dirigente=dipFittizio.dirigente, session_id=None)
 
-
-        database.session.delete(dipFittizio)
         database.session.delete(DipendenteRegistrato.query.filter_by(username=current_user.get_id()).first())
         database.session.add(dip)
-        database.session.commit()
         database.session.add(newDip)
         database.session.commit()
 
@@ -153,6 +151,17 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@server.route('/getNotifiche')
+@login_required
+def getNotifiche():
+    notiche = Notifica.query.filter_by(dipendente=current_user.get_id());
+
+    returnList = ""
+
+    for nota in notiche:
+        returnList += '{ "titolo": "' +nota.titolo+ '", "contenuto": "' + nota.contenuto +'" },'
+
+    return '{ "list":[' +returnList[:-1]+'] }'
 
 ################################## SOCKETIO HANDLER ##########################################################
 
@@ -181,7 +190,9 @@ def handle_registrazione_effetuata(message):
     database.session.commit()
 
     #emit('notificaRegistrazione', {'dipendente': message['dipendente_registrato']}, namespace='/notifica', room=responsabile.session_id)
-    emit('aggiornaNotifiche', namespace='/notifica', room=responsabile.session_id)
+    emit('aggiornaNotifiche', {'titolo': daNotificare.titolo, 'contenuto': daNotificare.contenuto},
+                                namespace='/notifica', room=responsabile.session_id)
+
 
 @socketio.on_error('/home')
 def error_handler(e):

@@ -4,9 +4,10 @@ materialAdmin
     // Header Messages and Notifications list Data
     // =========================================================================
 
-    .service('messageService', ['$resource', function($resource){
-        this.getMessage = function(img, user, text) {
-            var gmList = $resource("/static/headerAndForm/data/messages-notifications.json");
+    .service('messageService', ['$resource', function($resource, $scope, socketNotifica){
+        this.getMessage = function(img, user, text, msg) {
+
+            var gmList = $resource('getNotifiche');
             
             return gmList.get({
                 img: img,

@@ -102,79 +102,80 @@
                     <div class="row righe-homepage">
                       <div class="col-md-3"></div>
                       <div class="col-sm-12 col-md-6">
-
+                        {% raw %}
                           <!-- Todo Lists -->
                           <div id="todo-lists" data-ng-controller="todoCtrl as tctrl">
-                              <div class="tl-header">
-                                  <h2>Todo Lists</h2>
-                                  <small>Add, edit and manage your Todo Lists</small>
+                            <div class="tl-header">
+                                <h2>Todo Lists</h2>
+                                <small>Add, edit and manage your Todo Lists</small>
 
-                                  <ul class="actions actions-alt">
-                                      <li class="dropdown" dropdown>
-                                          <a href="" dropdown-toggle>
-                                              <i class="zmdi zmdi-more-vert"></i>
-                                          </a>
+                                <ul class="actions actions-alt">
+                                    <li class="dropdown" dropdown>
+                                        <a href="" dropdown-toggle>
+                                            <i class="zmdi zmdi-more-vert"></i>
+                                        </a>
 
-                                          <ul class="dropdown-menu dropdown-menu-right">
-                                              <li>
-                                                  <a href="">Refresh</a>
-                                              </li>
-                                              <li>
-                                                  <a href="">Manage Widgets</a>
-                                              </li>
-                                              <li>
-                                                  <a href="">Widgets Settings</a>
-                                              </li>
-                                          </ul>
-                                      </li>
-                                  </ul>
-                              </div>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li>
+                                                <a href="">Refresh</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Widgets</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Widgets Settings</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
 
-                              <div class="clearfix"></div>
+                            <div class="clearfix"></div>
 
-                              <div class="tl-body">
-
-
-                                  <div id="add-tl-item" data-ng-class="{ 'toggled': tctrl.addTodoStat }" data-ng-click="tctrl.addTodoStat = true">
-                                      <i class="add-new-item zmdi zmdi-plus" data-ng-click="tctrl.addTodo($event)"></i>
-
-                                      <div class="add-tl-body">
-                                          <textarea placeholder="What you want to do..." data-ng-model="tctrl.todo"></textarea>
-
-                                          <div class="add-tl-actions">
-                                              <a class="zmdi zmdi-close" data-tl-action="dismiss" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
-                                              <a class="zmdi zmdi-check" data-tl-action="save" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
-                                          </div>
-                                      </div>
-                                  </div>
+                            <div class="tl-body">
 
 
-                                  <div class="checkbox media" data-ng-repeat="w in tctrl.tdResult.list">
-                                      <div class="pull-right">
-                                          <ul class="actions actions-alt">
-                                              <li class="dropdown" dropdown>
-                                                  <a href="" dropdown-toggle>
-                                                      <i class="zmdi zmdi-more-vert"></i>
-                                                  </a>
+                                <div id="add-tl-item" data-ng-class="{ 'toggled': tctrl.addTodoStat }" data-ng-click="tctrl.addTodoStat = true">
+                                    <i class="add-new-item zmdi zmdi-plus" data-ng-click="tctrl.addTodo($event)"></i>
 
-                                                  <ul class="dropdown-menu dropdown-menu-right">
-                                                      <li><a href="">Delete</a></li>
-                                                      <li><a href="">Archive</a></li>
-                                                  </ul>
-                                              </li>
-                                          </ul>
-                                      </div>
-                                      <div class="media-body">
-                                          <label>
-                                              <input type="checkbox">
-                                              <i class="input-helper"></i>
-                                              <span>fai la spesa</span>
-                                          </label>
-                                      </div>
-                                  </div>
+                                    <div class="add-tl-body">
+                                        <textarea placeholder="What you want to do..." data-ng-model="tctrl.todo"></textarea>
 
-                              </div>
+                                        <div class="add-tl-actions">
+                                            <a class="zmdi zmdi-close" data-tl-action="dismiss" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
+                                            <a class="zmdi zmdi-check" data-tl-action="save" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="checkbox media" data-ng-repeat="w in tctrl.tdResult.list">
+                                    <div class="pull-right">
+                                        <ul class="actions actions-alt">
+                                            <li class="dropdown" dropdown>
+                                                <a href="" dropdown-toggle>
+                                                    <i class="zmdi zmdi-more-vert"></i>
+                                                </a>
+
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a href="">Delete</a></li>
+                                                    <li><a href="">Archive</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="media-body">
+                                        <label>
+                                            <input type="checkbox">
+                                            <i class="input-helper"></i>
+                                            <span>{{ w.todo }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
                           </div>
+                        {% endraw %}
                       </div>
                       <div class="col-md-3"></div>
                     </div>
@@ -322,14 +323,7 @@
         socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
     });
 
-    var socketNotifica = io.connect('http://debtux:80/notifica');
 
-     socketNotifica.on('aggiornaNotifiche', function() {
-
-         location.href = '/homepage';
-
-
-     });
 </script>
 
 

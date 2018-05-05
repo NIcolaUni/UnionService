@@ -54,9 +54,30 @@ materialAdmin
     // =========================================================================
     // Header
     // =========================================================================
-    .controller('headerCtrl', function($scope, $timeout, messageService){
+    .controller('headerCtrl', function($scope, $timeout, messageService, socketNotifica){
 
-        $scope.$apply;
+
+
+          socketNotifica.on('aggiornaNotifiche', function (msg) {
+
+             angular.element('#corpoNote').append(
+              " <a class=\"lv-item\" ng-href=\"\" >" +
+                               " <div class=\"media\"> " +
+                                  "  <div class=\"pull-left\"> " +
+                                      "  <img class=\"lv-img-sm\" ng-src=\"/static/images/sys_notifica.png\" alt=\"\"> " +
+                                   " </div> "+
+                                    "<div class=\"media-body\">"+
+                                       " <div class=\"lv-title\">" + msg['titolo'] + "</div> " +
+                                     "   <small class=\"lv-small\">"+ msg['contenuto'] +"</small> " +
+                                   " </div> " +
+                                "</div>"+
+                            "</a>"
+             );
+
+             var numNot=angular.element('#corpoNote a').length;
+             angular.element("counterNotifiche").text(numNot);
+
+          });
 
          // Top Search
         this.openSearch = function(){
@@ -73,8 +94,8 @@ materialAdmin
         this.user = messageService.user;
         this.user = messageService.text;
 
-        this.messageResult = messageService.getMessage(this.img, this.user, this.text);
 
+        this.messageResult = messageService.getMessage(this.img, this.user, this.text);
 
         //Clear Notification
         this.clearNotification = function($event) {
