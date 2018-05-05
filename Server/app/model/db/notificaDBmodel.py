@@ -12,3 +12,7 @@ class NotificaDBmodel(database.Model):
     dipendente = Column(String(60), ForeignKey('dipendente.username',  onupdate="CASCADE", ondelete="CASCADE"))
     titolo = Column(String(60))
     contenuto = Column(String(500))
+
+    def commitNotifica(notifica):
+        database.session.add(notifica)
+        database.session.commit()

@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from app import login_manager
-from app.model.db.dipRegistratoDBmodel import DipRegistratoDBmodel
+from .db.dipRegistratoDBmodel import DipRegistratoDBmodel
 
 class DipendenteRegistrato(UserMixin, DipRegistratoDBmodel):
 
@@ -14,6 +14,7 @@ class DipendenteRegistrato(UserMixin, DipRegistratoDBmodel):
 
     def get_id(self):
         return self.username
+
 
 @login_manager.user_loader
 def load_user(username):

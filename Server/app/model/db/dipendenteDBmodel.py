@@ -23,4 +23,15 @@ class DipendenteDBmodel(database.Model):
     partitaIva = Column(String(30))
     classe = Column(String(30), nullable=False)
     dirigente = Column(Boolean, nullable=False)
-    session_id = Column(String(40), unique=True)
+    session_id = Column(String(40), unique=True, default=None)
+
+
+    def commitRegistrazione(dipFitReg, dipReg, dip):
+        database.session.delete(dipFitReg)
+        database.session.add(dipReg)
+        database.session.commit()
+        database.session.add(dip)
+        database.session.commit()
+
+    def commitSid():
+        database.session.commit()

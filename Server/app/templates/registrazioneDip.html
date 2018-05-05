@@ -304,7 +304,17 @@
 		showValidate($("input#cf"));
 
 		{% endfor %}
+		{% if errCf %}
 
+			if(notValidated){
+				$("div:has(> input#cf)").addClass("validate-input");
+				notValidated=false;
+			}
+			$("div:has(> input#cf)").attr("data-validate", "Il codice fiscale inserito è già presente!");
+			showValidate($("input#cf"));
+
+
+		{% endif %}
 /*====================================================================================================================*/
 /*=================================Imposta stampa errore data nascita=====================================================*/
 
@@ -383,17 +393,6 @@
 
 		{% endfor %}
 
-		{% if errPasswd %}
-
-			if(notValidated){
-				$("div:has(> input#password)").addClass("validate-input");
-				notValidated=false;
-			}
-			$("div:has(> input#password)").attr("data-validate", "La password utilizzata è già in uso");
-			showValidate($("input#password"));
-
-
-		{% endif %}
 
 /*====================================================================================================================*/
 

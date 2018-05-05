@@ -1,4 +1,4 @@
-from app.model.db.dirigenteDBmodel import DirigenteDBmodel
+from .db.dirigenteDBmodel import DirigenteDBmodel
 
 
 class Dirigente(DirigenteDBmodel):

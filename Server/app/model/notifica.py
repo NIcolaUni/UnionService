@@ -1,4 +1,4 @@
-from app.model.db.notificaDBmodel import NotificaDBmodel
+from .db.notificaDBmodel import NotificaDBmodel
 from sqlalchemy import  func
 
 
@@ -22,3 +22,8 @@ class Notifica(NotificaDBmodel):
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
         count = q.session.execute(count_q).scalar()
         return count
+
+    def registraNotifica( dipendente, titolo, contenuto):
+        daNotificare = Notifica(dipendente=dipendente, titolo=titolo, contenuto=contenuto)
+        NotificaDBmodel.commitNotifica(daNotificare)
+

@@ -13,4 +13,9 @@ class DipFittizioDBmodel(database.Model):
     password = Column(String(30), nullable=False)
     classe = Column(String(20), nullable=False)
     dirigente = Column(Boolean, nullable=False)
-    creatoreCredenziali = Column(String(60), ForeignKey('dirigente.username',  onupdate="CASCADE", ondelete="CASCADE"))
+    creatoreCredenziali = Column(String(60), ForeignKey('dirigente.username',  onupdate="CASCADE", ondelete="CASCADE"), default=None)
+
+    def commitRegistrazione(dipReg, dipFit):
+        database.session.add(dipReg)
+        database.session.add(dipFit)
+        database.session.commit()
