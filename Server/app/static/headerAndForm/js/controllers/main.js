@@ -64,7 +64,7 @@ materialAdmin
               " <a class=\"lv-item\" ng-href=\"\" >" +
                                " <div class=\"media\"> " +
                                   "  <div class=\"pull-left\"> " +
-                                      "  <img class=\"lv-img-sm\" ng-src=\"/static/images/sys_notifica.png\" alt=\"\"> " +
+                                      "  <img class=\"lv-img-sm\" ng-src=\"/static/images/sys_notifica.png\" src=\"/static/images/sys_notifica.png\" alt=\"\"> " +
                                    " </div> "+
                                     "<div class=\"media-body\">"+
                                        " <div class=\"lv-title\">" + msg['titolo'] + "</div> " +
@@ -75,7 +75,7 @@ materialAdmin
              );
 
              var numNot=angular.element('#corpoNote a').length;
-             angular.element("counterNotifiche").text(numNot);
+             angular.element("#counterNotifiche").text(numNot);
 
           });
 
