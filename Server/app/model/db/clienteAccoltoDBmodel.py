@@ -22,3 +22,6 @@ class ClienteAccoltoDBmodel(database.Model):
     tecnico = Column(String(60), ForeignKey('dipendente_registrato.username',  onupdate="CASCADE", ondelete="SET NULL"))
     capocantiere = Column(String(60), ForeignKey('dipendente_registrato.username',  onupdate="CASCADE", ondelete="SET NULL"))
 
+    def commitClienteAccolto(cliente):
+        database.session.add(cliente)
+        database.session.commit()

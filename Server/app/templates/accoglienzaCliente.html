@@ -1,134 +1,58 @@
     <div class="container-contact100 container-completaProfilo" id="container-contact100">
         <div class="wrap-contact100" id="wrap-contact100">
 
-			<form class="contact100-form validate-form">
+			<form  id="form-regCli" class="contact100-form validate-form" method="post" action="accoglienza">
+                {{form.hidden_tag()}}
+
 				<span class="contact100-form-title">
 					Accoglienza cliente
 				</span>
 
 				<div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Name is required">
 					<span class="label-input100">Nome<span class="asteriscoRosso">*</span></span>
-					<input class="input100" type="text" name="name" placeholder="Nome del cliente">
-					<span class="focus-input100"></span>
+					{{form.nome}}
 				</div>
 
                 <div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Name is required">
 					<span class="label-input100">Cognome<span class="asteriscoRosso">*</span></span>
-					<input class="input100" type="text" name="name" placeholder="Cognome del cliente">
-					<span class="focus-input100"></span>
+			        {{form.cognome}}
 				</div>
 
                 <div class="wrap-input100 validate-input" data-validate="Name is required">
 					<span class="label-input100">Indirizzo<span class="asteriscoRosso">*</span></span>
-					<input class="input100" type="text" name="name" placeholder="Via, Cap, Città...">
-					<span class="focus-input100"></span>
+		            {{form.indirizzo}}
 				</div>
 
                 <div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Name is required">
 					<span class="label-input100">Telefono<span class="asteriscoRosso">*</span></span>
-					<input class="input100" type="text" name="name" placeholder="Inserire un recapito telefonico">
-					<span class="focus-input100"></span>
+			        {{form.telefono}}
 				</div>
 
 				<div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
 					<span class="label-input100">Email</span>
-					<input class="input100" type="text" name="email" placeholder="Inserire un recapito email (opzionale) ">
-					<span class="focus-input100"></span>
+				    {{form.email}}
 				</div>
 
                 <div class="wrap-contact100-form-radio">
-                    <span class="radio-label label-input100">Difficoltà cliente: </span>
+                    {{form.difficolta}}
 
-                    <div class="contact100-form-radio m-t-15">
-                        <input class="input-radio100" id="radio1-dif" type="radio" name="difficolta" value="1" checked="checked">
-                        <label class="label-radio100" for="radio1-dif">
-                            Facile
-                        </label>
-                    </div>
-
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio2-dif" type="radio" name="difficolta" value="2">
-                        <label class="label-radio100" for="radio2-dif">
-                            Media
-                        </label>
-                    </div>
-
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio3-dif" type="radio" name="difficolta" value="3">
-                        <label class="label-radio100" for="radio3-dif">
-                            Difficile
-                        </label>
-                    </div>
                 </div>
 
                 <div class="wrap-contact100-form-radio">
-                    <span class="radio-label label-input100">Tipologia cliente: </span>
 
-                    <div class="contact100-form-radio m-t-15">
-                        <input class="input-radio100" id="radio1-tip" type="radio" name="type" value="immobiliare" checked="checked">
-                        <label class="label-radio100" for="radio1-tip">
-                            Immobiliare
-                        </label>
-                    </div>
+                    {{form.tipologia}}
 
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio2-tip" type="radio" name="type" value="privato">
-                        <label class="label-radio100" for="radio2-tip">
-                            Privato
-                        </label>
-                    </div>
-
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio3-tip" type="radio" name="type" value="azienda">
-                        <label class="label-radio100" for="radio3-tip">
-                            Azienda
-                        </label>
-                    </div>
                 </div>
 
                 <div class="wrap-contact100-form-radio">
-                    <span class="radio-label label-input100">Referenza: </span>
 
-                    <div class="contact100-form-radio m-t-15">
-                        <input class="input-radio100" id="radio1-ref" type="radio" name="referenza" value="passaparola" checked="checked">
-                        <label class="label-radio100" for="radio1-ref">
-                            Passaparola
-                        </label>
-                    </div>
-
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio2-ref" type="radio" name="referenza" value="fiera">
-                        <label class="label-radio100" for="radio2-ref">
-                            Fiera
-                        </label>
-                    </div>
-
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio3-ref" type="radio" name="referenza" value="ufficio">
-                        <label class="label-radio100" for="radio3-ref">
-                            Ufficio
-                        </label>
-                    </div>
-
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio4-ref" type="radio" name="referenza" value="internet">
-                        <label class="label-radio100" for="radio4-ref">
-                            Internet
-                        </label>
-                    </div>
-
-                    <div class="contact100-form-radio">
-                        <input class="input-radio100" id="radio5-ref" type="radio" name="referenza" value="altro">
-                        <label class="label-radio100" for="radio5-ref">
-                            Altro
-                        </label>
-                    </div>
+                    {{form.referenza}}
 
                 </div>
 
                 <div class="wrap-contact100-form-check">
                     <div class="contact100-form-check m-t-15">
-                        <input type="checkbox" class="input-check100" id="sopraluogo" value="y">
+                        {{form.sopraluogo}}
                         <label class="label-check100" for="sopraluogo">
                            <span>Necessario sopraluogo</span>
                         </label>
@@ -137,19 +61,80 @@
 
 				<div class="wrap-input100 validate-input" data-validate = "Message is required">
 					<span class="label-input100">Lavorazione<span class="asteriscoRosso">*</span></span>
-					<textarea class="input100" name="message" placeholder="Inserire una breve descrizione della lavorazione richiesta"></textarea>
-					<span class="focus-input100"></span>
+					{{form.lavorazione}}
 				</div>
 
-				<div class="container-contact100-form-btn">
-					<button class="contact100-form-btn">
-						<span>
-							Registra cliente
-							<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
-						</span>
-					</button>
-				</div>
+
 			</form>
-
+            <div class="container-contact100-form-btn">
+                <button class="contact100-form-btn">
+                    {{form.submit}}
+                </button>
+            </div>
 		</div>
     </div>
+
+    <script>
+        $("input").addClass("input100");
+        $("textarea").addClass("input100");
+
+        $("ul#difficolta").prepend("<span class='radio-label label-input100'>Difficoltà cliente: </span>");
+        $("ul#difficolta li").addClass("figliDifficolta");
+        $(".figliDifficolta input").addClass("input-radio100");
+        $(".figliDifficolta label").addClass("label-radio100");
+        $(".figliDifficolta").wrap("<div class='contact100-form-radio'></div>");
+        $("#difficolta-0").attr("checked", "checked");
+
+        $("ul#tipologia").prepend("<span class='radio-label label-input100'>Tipologia cliente: </span>");
+        $("ul#tipologia li").addClass("figliTipologia");
+        $(".figliTipologia input").addClass("input-radio100");
+        $(".figliTipologia label").addClass("label-radio100");
+        $(".figliTipologia").wrap("<div class='contact100-form-radio'></div>");
+        $("#tipologia-0").attr("checked", "checked");
+
+        $("ul#referenza").prepend("<span class='radio-label label-input100'>Referenza: </span>");
+        $("ul#referenza li").addClass("figliReferenza");
+        $(".figliReferenza input").addClass("input-radio100");
+        $(".figliReferenza label").addClass("label-radio100");
+        $(".figliReferenza").wrap("<div class='contact100-form-radio'></div>");
+        $("#referenza-0").attr("checked", "checked");
+
+        $('input#sopraluogo').addClass("input-check100");
+
+
+        function registraClienteAlert(){
+
+            var form=$('form#form-regCli');
+            var nomeCliente = $('input#nome').attr('value');
+            var cognomeCliente = $('input#cognome').attr('value');
+
+			swal({
+
+			title: "Registrazione cliente " + nomeCliente,
+			text: "Si sta per registrare un nuovo cliente,\n"+
+			            "passare alla pagina del preventivo al termine?",
+			type: "info",
+			showCloseButton: true,
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "procedere col preventivo",
+			cancelButtonText: "registra soltanto",
+			 },
+			function(isConfirm){
+				if (isConfirm)
+				{
+					form.submit();
+
+
+				}
+				else {
+					swal("", "Operazione Annullata", "error");
+
+				} });
+
+
+		}
+
+		$('input#submit').attr('onclick', 'registraClienteAlert()');
+
+    </script>

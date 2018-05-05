@@ -1,10 +1,11 @@
 from flask import render_template, redirect, request, url_for, session, request
 from app import server, socketio
-from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm
+from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, ClienteAccoltoForm
 from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
 from .model.dipendente import Dipendente
 from .model.notifica import Notifica
+from .model.clienteAccolto import ClienteAccolto
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 
@@ -30,10 +31,20 @@ def gestioneDip():
 def paginaProfilo():
     return render_template('paginaProfilo.html')
 
-@server.route('/accoglienza')
+@server.route('/accoglienza', methods=['GET','POST'])
 @login_required
 def accoglienza():
-    return render_template('accoglienzaCliente.html')
+    form = ClienteAccoltoForm()
+    if form.validate_on_submit():
+
+        ClienteAccolto.registraCliente(nome=form.nome.data, cognome=form.cognome.data, indirizzo=form.indirizzo.data,
+                                       telefono=form.telefono.data, email=form.email.data, difficolta=form.difficolta.data,
+                                       tipologia=form.tipologia.data, referenza=form.referenza.data, sopraluogo=form.sopraluogo.data,
+                                       datasopraluogo=form.datasopraluogo.data, lavorazione=form.lavorazione.data, commerciale=current_user.get_id())
+
+        return redirect('/homepage')
+
+    return render_template('accoglienzaCliente.html', form=form)
 
 @server.route('/homepage')
 @login_required
