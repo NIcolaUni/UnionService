@@ -291,7 +291,7 @@
 	 });
 
 	$(".main-menu a.accoglienzaButton").click(function(){
-			$(".accoglienza-section").load("{{url_for('accoglienza')}}");
+			$(".accoglienza-section").load("{{url_for('accoglienza', error=0)}}");
 			//$("#menu-container .content").slideUp('slow');
 			$("#menu-container .accoglienza-section").slideDown('slow');
 
@@ -326,6 +326,9 @@
 
 </script>
 
+<script type="text/javascript" charset="utf-8">
+
+</script>
 
 
 {% endblock %}

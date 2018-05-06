@@ -1,5 +1,5 @@
 from flask import render_template, redirect, request, url_for, session, request
-from app import server, socketio
+from app import server, socketio, accoglienzaForm
 from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, ClienteAccoltoForm
 from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
@@ -8,7 +8,7 @@ from .model.notifica import Notifica
 from .model.clienteAccolto import ClienteAccolto
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
-
+import app
 
 ####################################### ROUTE HANDLER #################################################
 
@@ -31,20 +31,50 @@ def gestioneDip():
 def paginaProfilo():
     return render_template('paginaProfilo.html')
 
-@server.route('/accoglienza', methods=['GET','POST'])
+@server.route('/accoglienza/<int:error>', methods=['GET','POST'])
 @login_required
-def accoglienza():
-    form = ClienteAccoltoForm()
-    if form.validate_on_submit():
+def accoglienza(error):
+    '''
+    :param error:
+    :return:
+    '''
 
-        ClienteAccolto.registraCliente(nome=form.nome.data, cognome=form.cognome.data, indirizzo=form.indirizzo.data,
-                                       telefono=form.telefono.data, email=form.email.data, difficolta=form.difficolta.data,
-                                       tipologia=form.tipologia.data, referenza=form.referenza.data, sopraluogo=form.sopraluogo.data,
-                                       datasopraluogo=form.datasopraluogo.data, lavorazione=form.lavorazione.data, commerciale=current_user.get_id())
+    '''
+    Questo if è necessario poichè, al ritorno di una pagina per form non valido,
+    la variabile accoglienzaForm viene sovrascritta con un form nuovo, ovvero quello
+    richiamato dalla pagina stessa ritornata.
+    '''
+    if error == 1 :
+        server.logger.info("\n\nEntrato in ERROR 1\n\n")
+        if app.accoglienzaOk:
+            app.accoglienzaOk=False
+            return render_template('confermaRegistrazioneCliente.html')
+        else:
+            return render_template('accoglienzaCliente.html', form=app.accoglienzaForm)
 
-        return redirect('/homepage')
+    app.accoglienzaForm = ClienteAccoltoForm(request.form)
 
-    return render_template('accoglienzaCliente.html', form=form)
+    if request.method == 'POST':
+
+        server.logger.info("\n\nEntrato in Post {}\n\n".format(app.accoglienzaForm))
+        server.logger.info("\n\nEntrato in Post222 {}\n\n".format(app.accoglienzaForm.nome))
+
+        if app.accoglienzaForm.validate_on_submit():
+            server.logger.info("\n\n\nSono entrato nel validate!!!!\n\n\n")
+
+            ClienteAccolto.registraCliente(nome=app.accoglienzaForm.nome.data, cognome=app.accoglienzaForm.cognome.data, indirizzo=app.app.accoglienzaForm.indirizzo.data,
+                                           telefono=app.accoglienzaForm.telefono.data, email=app.accoglienzaForm.email.data, difficolta=app.accoglienzaForm.difficolta.data,
+                                           tipologia=app.accoglienzaForm.tipologia.data, referenza=app.accoglienzaForm.referenza.data, sopraluogo=app.accoglienzaForm.sopraluogo.data,
+                                           datasopraluogo=app.accoglienzaForm.datasopraluogo.data, lavorazione=app.accoglienzaForm.lavorazione.data, commerciale=current_user.get_id())
+
+            app.accoglienzaOk=True
+            return render_template('confermaRegistrazioneCliente.html')
+
+    server.logger.info("\n\nAlternativa al post {}{}\n\n".format(app.accoglienzaForm.nome.errors, app.accoglienzaForm))
+
+    return render_template('accoglienzaCliente.html', form=app.accoglienzaForm)
+
+
 
 @server.route('/homepage')
 @login_required
@@ -63,9 +93,23 @@ def sidebarLeft():
 @server.route('/header')
 @login_required
 def header():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+
+    listaClienti = []
+
+    if dip.classe == 'commerciale':
+        listaClienti = ClienteAccolto.query.filter_by(commerciale=current_user.get_id()).order_by(ClienteAccolto.cognome, ClienteAccolto.nome).all()
+
+    elif dip.classe == 'commerciale':
+        listaClienti = ClienteAccolto.query.filter_by(tecnico=current_user.get_id()).order_by(ClienteAccolto.cognome, ClienteAccolto.nome).all()
+
+    elif dip.classe == 'capocantiere':
+        listaClienti = ClienteAccolto.query.filter_by(capocantiere=current_user.get_id()).order_by(ClienteAccolto.cognome, ClienteAccolto.nome).all()
+
+
 
     numNot = Notifica.get_counter(dipendente=current_user.get_id())
-    return render_template('header.html', numNotifiche=numNot)
+    return render_template('header.html', numNotifiche=numNot, listaClienti=listaClienti)
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required
@@ -74,11 +118,9 @@ def registraDipendente():
 
     if form.validate_on_submit():
 
-        '''
-        cambiare controllo con cf
-        if DipendenteRegistrato.query.filter_by(password=form.password.data).first() != None:
+        if Dipendente.query.filter_by(cf=form.cf.data).first() != None:
             return render_template("registrazioneDip.html", form=form, fittizio=True, errCf=True)
-        '''
+
         domicilioDip = form.resEDomUguali.data
 
         if domicilioDip:

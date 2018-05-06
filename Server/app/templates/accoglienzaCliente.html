@@ -1,34 +1,35 @@
+
     <div class="container-contact100 container-completaProfilo" id="container-contact100">
         <div class="wrap-contact100" id="wrap-contact100">
 
-			<form  id="form-regCli" class="contact100-form validate-form" method="post" action="accoglienza">
+			<form  id="form-regCli" class="contact100-form validate-form" method="post" action="{{url_for('accoglienza', error=0)}}">
                 {{form.hidden_tag()}}
 
 				<span class="contact100-form-title">
 					Accoglienza cliente
 				</span>
 
-				<div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Name is required">
+				<div class="wrap-input100 rs1-wrap-input100 " >
 					<span class="label-input100">Nome<span class="asteriscoRosso">*</span></span>
 					{{form.nome}}
 				</div>
 
-                <div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Name is required">
+                <div class="wrap-input100 rs1-wrap-input100 " >
 					<span class="label-input100">Cognome<span class="asteriscoRosso">*</span></span>
 			        {{form.cognome}}
 				</div>
 
-                <div class="wrap-input100 validate-input" data-validate="Name is required">
+                <div class="wrap-input100 " >
 					<span class="label-input100">Indirizzo<span class="asteriscoRosso">*</span></span>
 		            {{form.indirizzo}}
 				</div>
 
-                <div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate="Name is required">
+                <div class="wrap-input100 rs1-wrap-input100 " >
 					<span class="label-input100">Telefono<span class="asteriscoRosso">*</span></span>
 			        {{form.telefono}}
 				</div>
 
-				<div class="wrap-input100 rs1-wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+				<div class="wrap-input100 rs1-wrap-input100 " >
 					<span class="label-input100">Email</span>
 				    {{form.email}}
 				</div>
@@ -59,7 +60,7 @@
                     </div>
                 </div>
 
-				<div class="wrap-input100 validate-input" data-validate = "Message is required">
+				<div class="wrap-input100" >
 					<span class="label-input100">Lavorazione<span class="asteriscoRosso">*</span></span>
 					{{form.lavorazione}}
 				</div>
@@ -67,15 +68,18 @@
 
 			</form>
             <div class="container-contact100-form-btn">
-                <button class="contact100-form-btn">
-                    {{form.submit}}
+                <button id="btnRegCli" class="contact100-form-btn">
+                    <span>
+							Registra cliente
+
+						</span>
                 </button>
             </div>
 		</div>
     </div>
 
     <script>
-        $("input").addClass("input100");
+        $("#form-regCli input").addClass("input100");
         $("textarea").addClass("input100");
 
         $("ul#difficolta").prepend("<span class='radio-label label-input100'>Difficoltà cliente: </span>");
@@ -102,6 +106,21 @@
         $('input#sopraluogo').addClass("input-check100");
 
 
+      $('form#form-regCli').on('submit',function(e){
+            e.preventDefault();
+            $.ajax({
+                type     : "POST",
+                cache    : false,
+                url      : $(this).attr('action'),
+                data     : $(this).serialize(),
+                success  : function(data) {
+                   $(".accoglienza-section").load("{{url_for('accoglienza', error=1)}}");
+
+                }
+            });
+
+        });
+
         function registraClienteAlert(){
 
             var form=$('form#form-regCli');
@@ -119,22 +138,166 @@
 			confirmButtonColor: "#DD6B55",
 			confirmButtonText: "procedere col preventivo",
 			cancelButtonText: "registra soltanto",
-			 },
-			function(isConfirm){
-				if (isConfirm)
-				{
-					form.submit();
+			 });
+
+			 swal({
+              title: "Registrazione cliente",
+              text: "Si sta per registrare un nuovo cliente,\n"+
+			            "passare alla pagina del preventivo al termine?",
+              type: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: "procedere col preventivo",
+              cancelButtonText: "registra soltanto",
+            }).then((result) => {
+              if (result.value) {
+
+                  form.submit();
 
 
-				}
-				else {
-					swal("", "Operazione Annullata", "error");
+              }else {
 
-				} });
+
+              }
+            });
 
 
 		}
 
-		$('input#submit').attr('onclick', 'registraClienteAlert()');
+
+		$('#btnRegCli').attr('onclick', 'registraClienteAlert()');
+
 
     </script>
+
+    <script>
+
+    function stampaErrori(){
+            /*
+            Questo script permette di stampare gli errori di compilazione del form rilevati nel lato server.
+            Poichè lo script viene modificato da flask è necessario inserirlo qua.
+        */
+
+           function showValidate(input) {
+                var thisAlert = $(input).parent();
+
+                $(thisAlert).addClass('alert-validate');
+
+                $(thisAlert).append('<span class="btn-hide-validate">&#xf136;</span>')
+                $('.btn-hide-validate').each(function(){
+                    $(this).on('click',function(){
+                       hideValidate(this);
+                    });
+                });
+            }
+
+            function hideValidate(input) {
+                var thisAlert = $(input).parent();
+                $(thisAlert).removeClass('alert-validate');
+                $(thisAlert).find('.btn-hide-validate').remove();
+            }
+
+        /*Variabile necessaria per evitare che nel ciclo for di flask venga continuamente aggiunta
+        classe "validate-input" ai tag input*/
+            var notValidated;
+
+    /*=================================Imposta stampa errore nome=====================================================*/
+         console.log("ci provo");
+            notValidated=true;
+            {% for error in form.nome.errors %}
+             console.log("c'è un errore o forsde no");
+            if(notValidated){
+                $("div:has(> input#nome)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#nome)").attr("data-validate", "{{error}}");
+            showValidate($("input#nome"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+    /*=================================Imposta stampa errore cognome=====================================================*/
+
+            notValidated=true;
+            {% for error in form.cognome.errors %}
+
+            if(notValidated){
+                $("div:has(> input#cognome)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#cognome)").attr("data-validate", "{{error}}");
+            showValidate($("input#cognome"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+    /*=================================Imposta stampa errore indirizzo=====================================================*/
+
+            notValidated=true;
+            {% for error in form.indirizzo.errors %}
+
+            if(notValidated){
+                $("div:has(> input#indirizzo)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#indirizzo)").attr("data-validate", "{{error}}");
+            showValidate($("input#indirizzo"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+    /*=================================Imposta stampa errore telefono=====================================================*/
+
+            notValidated=true;
+            {% for error in form.telefono.errors %}
+
+            if(notValidated){
+                $("div:has(> input#telefono)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#telefono)").attr("data-validate", "{{error}}");
+            showValidate($("input#telefono"));
+
+            {% endfor %}
+
+
+    /*====================================================================================================================*/
+
+
+    /*=================================Imposta stampa errore email=====================================================*/
+
+            notValidated=true;
+            {% for error in form.email.errors %}
+
+            if(notValidated){
+                $("div:has(> input#email)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#email)").attr("data-validate", "{{error}}");
+            showValidate($("input#email"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+
+    /*=================================Imposta stampa errore lavorazione=====================================================*/
+
+            notValidated=true;
+            {% for error in form.lavorazione.errors %}
+
+            if(notValidated){
+                $("div:has(> input#lavorazione)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#lavorazione)").attr("data-validate", "{{error}}");
+            showValidate($("input#lavorazione"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+    }
+
+    stampaErrori();
+    </script>
+

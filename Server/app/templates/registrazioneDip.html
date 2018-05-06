@@ -181,28 +181,25 @@
 
 		function JSalert(){
 
-			swal({   title: "AUTORIZZAZIONE AL TRATTAMENTO\nDEI DATI PERSONALI",
-			text: "Procedendo autorizzo il trattamento dei miei dati"+
+
+			swal({
+              title: "AUTORIZZAZIONE AL TRATTAMENTO\nDEI DATI PERSONALI",
+              text:  "Procedendo autorizzo il trattamento dei miei dati"+
 					" personali ai sensi del\nDecreto Legislativo 30 giugno 2003, " +
 					  ' n.196\n"Codice in materia di protezione dei dati personali"',
-			type: "warning",
-			showCancelButton: true,
-			confirmButtonColor: "#DD6B55",
-			confirmButtonText: "Accetto",
-			cancelButtonText: "Indietro",
-			closeOnConfirm: false,
-			closeOnCancel: false },
-			function(isConfirm){
-				if (isConfirm)
-				{
-					form.submit();
-
-
-				}
-				else {
-					swal("", "Operazione Annullata", "error");
-
-				} });
+              type: 'warning',
+              showCancelButton: true,
+              cancelButtonColor: '#d33',
+         	  confirmButtonColor: "#DD6B55",
+			  confirmButtonText: "Accetto",
+			  cancelButtonText: "Indietro",
+            }).then((result) => {
+              if (result.value) {
+                form.submit();
+              }else {
+                swal("", "Operazione Annullata", "error");
+              }
+            });
 		}
 
 		$('input#submit').attr('onclick', 'JSalert()');

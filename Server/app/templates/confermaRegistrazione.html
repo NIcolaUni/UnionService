@@ -7,23 +7,22 @@
         var socket = io.connect('http://debtux:80/notifica');
 
         $(window).on('load', function(){
+
             swal({
                 title: "Operazione completata",
                 text: "username: {{username}}\npassword: {{password}}",
-                icon: "success",
                 type: "success",
                 confirmButtonText: "Ok",
-                closeOnConfirm: true
-                },
-                function(){
+            }).then((result) => {
+
                     window.location.href = "{{url_for('login')}}"
                     {% if creatoreCredenziali %}
-                    
+
                         socket.emit('registrazione_effettuata',   {'dipendente_registrato': '{{username}}', 'responsabile': '{{creatoreCredenziali}}'} );
 
                     {% endif %}
-                }
-             );
+            });
+
          });
 
     </script>

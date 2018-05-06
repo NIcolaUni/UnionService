@@ -1,0 +1,68 @@
+
+
+.expanded{
+  height:160px;
+}
+
+
+/* ==========================
+   Search Box
+   ========================== */
+
+
+
+.searchBtn {
+border: 0;
+position: absolute;
+width: 38px;
+cursor: pointer;
+margin: 2px -38PX;
+border-left: 2px solid skyblue;
+height: 26px;
+font-weight: 900;
+font-size: 12px;
+background-color: #f6f5ef;
+color:#009F8A;
+-webkit-border-radius:0px 5px 5px 0px;
+-moz-border-radius:0px 5px 5px 0px;
+border-radius:0px 5px 5px 0px;
+}
+
+/* ==========================
+   tooltip/hover popup
+   ========================== */
+
+.suggestionBox {
+display:none;
+background-color:white;
+color: #3b3835;
+border: 1px solid rgba(0,0,0,0.3);
+border-top: 0;
+float: left;
+left: 0;
+list-style: none;
+margin: 20px;
+padding: 8px;
+position: absolute;
+top: 31px;
+width: 180px;
+z-index: 1000;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+
+.suggestionBox:before {
+content: '';
+display: inline-block;
+border-left: 7px solid transparent;
+border-right: 7px solid transparent;
+border-bottom: 7px solid #fff;
+position: absolute;
+top: -7px;
+left: 9px;
+}
+

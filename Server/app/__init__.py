@@ -31,7 +31,8 @@ gunicorn_logger = logging.getLogger('gunicorn.error')
 server.logger.handlers = gunicorn_logger.handlers
 server.logger.setLevel(gunicorn_logger.level)
 
-
+accoglienzaForm = None
+accoglienzaOk = False
 
 
 import app.controller
