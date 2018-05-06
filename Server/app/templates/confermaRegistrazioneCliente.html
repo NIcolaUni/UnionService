@@ -6,6 +6,8 @@
           text: "Registrazione cliente avvenuta con successo",
           type: 'info',
           confirmButtonText: "ok",
+        }).then((result) => {
+            window.location = "{{url_for('homepage')}}";
         });
 
 
