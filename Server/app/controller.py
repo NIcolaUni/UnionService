@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, url_for, session, request
 from app import server, socketio, accoglienzaForm
-from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, ClienteAccoltoForm
+from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, ClienteAccoltoForm, ApriPaginaClienteForm
 from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
 from .model.dipendente import Dipendente
@@ -11,6 +11,7 @@ from flask_socketio import emit, join_room, leave_room
 import app
 
 ####################################### ROUTE HANDLER #################################################
+
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -30,6 +31,19 @@ def gestioneDip():
 @login_required
 def paginaProfilo():
     return render_template('paginaProfilo.html')
+
+@server.route('/apriPaginaCliente', methods=['POST'])
+@login_required
+def apriPaginaCliente():
+
+    app.formCercaCliente = ApriPaginaClienteForm(request.form)
+    scelta = app.formCercaCliente.nome_cognome_indirizzo.data
+    (cognomeCliente, nomeCliente, indirizzoCliente) = scelta.split(" . ")
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    cliente = ClienteAccolto.query.filter_by(nome=nomeCliente, cognome=cognomeCliente, indirizzo=indirizzoCliente, commerciale=current_user.get_id()).first()
+
+    return render_template('paginaCliente.html', dip=dip, cliente=cliente )
+
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
 @login_required
@@ -81,8 +95,8 @@ def accoglienza(error):
 def homepage():
 
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-
     return render_template('homepage.html', dipendente=dip)
+
 
 @server.route('/sidebarLeft')
 @login_required
@@ -93,6 +107,9 @@ def sidebarLeft():
 @server.route('/header')
 @login_required
 def header():
+
+    app.formCercaCliente = ApriPaginaClienteForm(request.form)
+
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
 
     listaClienti = []
@@ -109,7 +126,7 @@ def header():
 
 
     numNot = Notifica.get_counter(dipendente=current_user.get_id())
-    return render_template('header.html', numNotifiche=numNot, listaClienti=listaClienti)
+    return render_template('header.html', numNotifiche=numNot, listaClienti=listaClienti, form=app.formCercaCliente)
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required

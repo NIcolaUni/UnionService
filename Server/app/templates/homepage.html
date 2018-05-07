@@ -106,8 +106,8 @@
                           <!-- Todo Lists -->
                           <div id="todo-lists" data-ng-controller="todoCtrl as tctrl">
                             <div class="tl-header">
-                                <h2>Todo Lists</h2>
-                                <small>Add, edit and manage your Todo Lists</small>
+                                <h2>Impegni lavorativi</h2>
+                                <small>Memorandum degli impegni di lavoro</small>
 
                                 <ul class="actions actions-alt">
                                     <li class="dropdown" dropdown>
@@ -306,13 +306,6 @@
 
 <script type="text/javascript" charset="utf-8">
 
-    /*  $("header#header").remove();
-    $("div#page-wrapper").prepend(
-            "<header id=\"header\" data-ng-include=\"\'header\'\"  data-ng-controller=\"headerCtrl as hctrl\"><\/header>"
-            + "<script>\$(\"header#header\").load(\"header\"); <\/script>"
-         );
-
-    console.log('a questo punto');*/
 
     var socketHome = io.connect('http://debtux:80/home');
 

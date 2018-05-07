@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html lang="it" data-ng-app="materialAdmin" data-ng-controller="materialadminCtrl as mactrl">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Gestionale Aziendale UnionService</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+		<title>Cliente {{cliente.nome}} {{cliente.cognome}}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 <!--==================================================================================================-->
@@ -139,28 +142,264 @@
         <script src="{{url_for('static', filename='headerAndForm/js/modules/demo.js') }}"></script>
 
 <!--===========================================================================================================-->
-</head>
 
-    {% if fittizio %}
-        <body>
-    {% else %}
-        <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
-    {% endif %}
 
-        <div class="site-bg"></div>
-        <div class="site-bg-overlay"></div>
 
-       {% block content %}
-       {% endblock %}
 
-<!--================================= JS Form =================================================================-->
-       <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
-       <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
-       <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-       <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
-<!--===========================================================================================================-->
+		<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/html5shiv.js') }}"></script><![endif]-->
+		<link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/main.css') }}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie9.css') }}" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie8.css') }}" /><![endif]-->
+	</head>
+	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
-        <script src="{{url_for('static', filename='js/main.js') }}"></script>
 
-    </body>
+	<header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+  <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+	<aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+	<div class="row">
+		<!-- Sidebar -->
+			<div class="col-md-3">
+			<section id="sidebar-client">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a class="menuBar" href="#intro">Profilo cliente</a></li>
+							<li><a class="menuBar" href="#one">Preventivo</a></li>
+							<li><a class="menuBar" href="#two">What we do</a></li>
+							<li><a class="menuBar" href="#three">Get in touch</a></li>
+							<li><a class="menuBar" href="{{url_for('homepage')}}">Home</a></li>
+						</ul>
+					</nav>
+				</div>
+			</section>
+			</div>
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="col-md-9">
+
+				<!-- Intro -->
+					<section id="intro" class="wrapper style1 fullscreen fade-up">
+						<div class="inner">
+							<h1>{{cliente.nome}} {{cliente.cognome}}</h1>
+
+							<div class="row">
+								<div class="col-md-6">
+									<ul class="contact">
+										<li>
+											<h3>Indirizzo:</h3>
+											<span>{{cliente.indirizzo}}</span>
+										</li>
+										<li>
+											<h3>Email:</h3>
+											<a href="#">{{cliente.email}}</a>
+										</li>
+										<li>
+											<h3>Telefono:</h3>
+											<span>{{cliente.telefono}}</span>
+										</li>
+										<li>
+											<h3>Lavorazione in corso:</h3>
+												<span>Rifacimento interni bagno</span>
+										</li>
+										<li>
+											<h3>Sopraluogo:</h3>
+											<span>Non necessario</span>
+											<br/><br/><br/>
+											<a class="button">Imposta data sopraluogo</a>
+										</li>
+									</ul>
+								</div>
+								<div class="col-md-6">
+									{%if dip.dirigente %}
+
+									<ul class="contact">
+										<h2>Dipendenti associati al cliente</h2>
+											<li>
+												<h3>Ufficio commerciale:</h3>
+
+											</li>
+											<li>
+												<h3>Ufficio tecnico:</h3>
+												<span>(000) 000-0000</span>
+											</li>
+											<li>
+												<h3>Ufficio capicantiere:</h3>
+													<span>Rifacimento interni bagno</span>
+											</li>
+									</ul>
+									{% endif %}
+								</div>
+							<div>
+
+						</div>
+					</section>
+
+				<!-- One -->
+					<section id="one" class="wrapper style2 spotlights">
+						<section>
+							<a href="#" class="image"><img src="images/pic01.jpg" alt="" data-position="center center" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Sed ipsum dolor</h2>
+									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
+									<ul class="actions">
+										<li><a href="#" class="button">Learn more</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+						<section>
+							<a href="#" class="image"><img src="images/pic02.jpg" alt="" data-position="top center" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Feugiat consequat</h2>
+									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
+									<ul class="actions">
+										<li><a href="#" class="button">Learn more</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+						<section>
+							<a href="#" class="image"><img src="images/pic03.jpg" alt="" data-position="25% 25%" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Ultricies aliquam</h2>
+									<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
+									<ul class="actions">
+										<li><a href="#" class="button">Learn more</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+					</section>
+
+				<!-- Two -->
+					<section id="two" class="wrapper style3 fade-up">
+						<div class="inner">
+							<h2>What we do</h2>
+							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+							<div class="features">
+								<section>
+									<span class="icon major fa-code"></span>
+									<h3>Lorem ipsum amet</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-lock"></span>
+									<h3>Aliquam sed nullam</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-cog"></span>
+									<h3>Sed erat ullam corper</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-desktop"></span>
+									<h3>Veroeros quis lorem</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-chain"></span>
+									<h3>Urna quis bibendum</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+								<section>
+									<span class="icon major fa-diamond"></span>
+									<h3>Aliquam urna dapibus</h3>
+									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+								</section>
+							</div>
+							<ul class="actions">
+								<li><a href="#" class="button">Learn more</a></li>
+							</ul>
+						</div>
+					</section>
+
+				<!-- Three -->
+					<section id="three" class="wrapper style1 fade-up">
+						<div class="inner">
+							<h2>Get in touch</h2>
+							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+							<div class="split style1">
+								<section>
+									<form method="post" action="#">
+										<div class="field half first">
+											<label for="name">Name</label>
+											<input type="text" name="name" id="name" />
+										</div>
+										<div class="field half">
+											<label for="email">Email</label>
+											<input type="text" name="email" id="email" />
+										</div>
+										<div class="field">
+											<label for="message">Message</label>
+											<textarea name="message" id="message" rows="5"></textarea>
+										</div>
+										<ul class="actions">
+											<li><a href="" class="button submit">Send Message</a></li>
+										</ul>
+									</form>
+								</section>
+								<section>
+									<ul class="contact">
+										<li>
+											<h3>Address</h3>
+											<span>12345 Somewhere Road #654<br />
+											Nashville, TN 00000-0000<br />
+											USA</span>
+										</li>
+										<li>
+											<h3>Email</h3>
+											<a href="#">user@untitled.tld</a>
+										</li>
+										<li>
+											<h3>Phone</h3>
+											<span>(000) 000-0000</span>
+										</li>
+										<li>
+											<h3>Social</h3>
+											<ul class="icons">
+												<li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+												<li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+												<li><a href="#" class="fa-github"><span class="label">GitHub</span></a></li>
+												<li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+												<li><a href="#" class="fa-linkedin"><span class="label">LinkedIn</span></a></li>
+											</ul>
+										</li>
+									</ul>
+								</section>
+							</div>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<!--================================= JS Form =================================================================-->
+		   <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
+		   <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
+		   <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+		   <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
+	<!--===========================================================================================================-->
+<!--
+			<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.min.js') }}"></script> -->
+			<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrollex.min.js') }}"></script>
+			<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrolly.min.js') }}"></script>
+			<script src="{{url_for('static', filename='paginaCliente/assets/js/skel.min.js') }}"></script>
+			<script src="{{url_for('static', filename='paginaCliente/assets/js/util.js') }}"></script>
+			<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/respond.min.js') }}"></script><![endif]-->
+			<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
+
+			<script>
+				console.log('bella');
+				$('#header > a').css('border-bottom', 'None' );
+			</script>
+
+	</div>
+	</body>
 </html>

@@ -5,7 +5,7 @@ materialAdmin
 
     .controller('materialadminCtrl', function($timeout, $state, growlService){
         //Welcome Message
-        growlService.growl('Buongiorno!', 'inverse')
+      //  growlService.growl('Buongiorno!', 'inverse')
         
         
         // Detact Mobile Browser

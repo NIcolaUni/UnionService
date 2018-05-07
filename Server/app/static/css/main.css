@@ -503,3 +503,17 @@ h1, h2, h3, h4, h5 {
   height: 100%;
   margin-top: 10%;
 }
+
+
+#nome_cognome_indirizzo::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: pink;
+}
+#nome_cognome_indirizzo::-moz-placeholder { /* Firefox 19+ */
+  color: pink;
+}
+#nome_cognome_indirizzo:-ms-input-placeholder { /* IE 10+ */
+  color: pink;
+}
+#nome_cognome_indirizzo:-moz-placeholder { /* Firefox 18- */
+  color: pink;
+}

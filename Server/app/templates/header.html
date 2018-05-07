@@ -69,14 +69,21 @@
 
 <!-- Top Search Content -->
 <div id="top-search-wrap">
-    <input type="text"  list="clienti"  placeholder="Cerca qua i tuoi clienti...">
-    <i id="top-search-close" data-ng-click="hctrl.closeSearch()">&times;</i>
-             <datalist  id="clienti">
-                 {% for cliente in listaClienti %}
-                    <option value="{{cliente.cognome}} {{cliente.nome}}" >
-                 {% endfor %}
+    <form  method="post" action="apriPaginaCliente">
+        {{form.hidden_tag()}}
 
-            </datalist>
+        {{form.nome_cognome_indirizzo(list='clienti')}}
+       <!-- <input type="text"  list="clienti"  placeholder="Cerca qua i tuoi clienti..."> -->
+        <i id="top-search-close" data-ng-click="hctrl.closeSearch()">&times;</i>
+                 <datalist  id="clienti">
+                     {% for cliente in listaClienti %}
+                        <option value="{{cliente.cognome}} . {{cliente.nome}} . {{cliente.indirizzo}}" >
+                     {% endfor %}
+
+                </datalist>
+
+    </form>
+
 </div>
 <!--================================= JS Form =================================================================-->
        <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
@@ -84,3 +91,7 @@
        <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
        <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
 <!--===========================================================================================================-->
+    <script>
+        $("input#nome_cognome_indirizzo").attr("list", "clienti");
+        $("input#nome_cognome_indirizzo").attr("placeholder", "Cerca qua i tuoi clienti...");
+    </script>

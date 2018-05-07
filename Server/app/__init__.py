@@ -33,6 +33,7 @@ server.logger.setLevel(gunicorn_logger.level)
 
 accoglienzaForm = None
 accoglienzaOk = False
+formCercaCliente =None
 
 
 import app.controller

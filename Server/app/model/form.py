@@ -53,3 +53,5 @@ class ClienteAccoltoForm(FlaskForm):
     lavorazione = TextAreaField("Lavorazione", validators=[DataRequired("Campo obbligatorio!"), Length( max=500)])
     submit = SubmitField('Registra cliente')
 
+class ApriPaginaClienteForm(FlaskForm):
+    nome_cognome_indirizzo = StringField("Nome cognome indirizzo")
