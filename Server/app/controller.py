@@ -41,8 +41,12 @@ def apriPaginaCliente():
     (cognomeCliente, nomeCliente, indirizzoCliente) = scelta.split(" . ")
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     cliente = ClienteAccolto.query.filter_by(nome=nomeCliente, cognome=cognomeCliente, indirizzo=indirizzoCliente, commerciale=current_user.get_id()).first()
+    ufficioCommerciale = Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
+    ufficioTecnico = Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
+    ufficioCapicantiere = Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
 
-    return render_template('paginaCliente.html', dip=dip, cliente=cliente )
+    return render_template('paginaCliente.html', dip=dip, cliente=cliente, ufficioCommerciale=ufficioCommerciale,
+                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere )
 
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])

@@ -166,11 +166,13 @@
 				<div class="inner">
 					<nav>
 						<ul>
-							<li><a class="menuBar" href="#intro">Profilo cliente</a></li>
-							<li><a class="menuBar" href="#one">Preventivo</a></li>
-							<li><a class="menuBar" href="#two">What we do</a></li>
+							<li><a class="menuBar local" href="#intro">Profilo cliente</a></li>
+							<li><a class="menuBar local" href="#one">Preventivo</a></li>
+							<li><a class="menuBar local" href="#two">What we do</a></li>
 							<li><a class="menuBar" href="#three">Get in touch</a></li>
-							<li><a class="menuBar" href="{{url_for('homepage')}}">Home</a></li>
+						</ul>
+						<ul>
+							    <li><a class="menuBar" href="{{url_for('homepage')}}">Home</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -184,6 +186,15 @@
 					<section id="intro" class="wrapper style1 fullscreen fade-up">
 						<div class="inner">
 							<h1>{{cliente.nome}} {{cliente.cognome}}</h1>
+							{% if cliente.difficolta == "facile" %}
+								<span>Livello: 1</span>
+							{% elif  cliente.difficolta == "media" %}
+								<span>Livello: 2</span>
+							{% elif  cliente.difficolta == "alta" %}
+								<span>Livello: 3</span>
+							{% endif %}
+
+							<span>	Tipologia: {{cliente.tipologia}} </span>
 
 							<div class="row">
 								<div class="col-md-6">
@@ -202,11 +213,15 @@
 										</li>
 										<li>
 											<h3>Lavorazione in corso:</h3>
-												<span>Rifacimento interni bagno</span>
+												<span>{{cliente.lavorazione}}</span>
 										</li>
 										<li>
 											<h3>Sopraluogo:</h3>
-											<span>Non necessario</span>
+											{% if not cliente.sopraluogo %}
+												<span>Non necessario</span>
+											{% else %}
+												<span>{{cliente.datasopralugo}}</span>
+											{% endif %}
 											<br/><br/><br/>
 											<a class="button">Imposta data sopraluogo</a>
 										</li>
@@ -216,18 +231,26 @@
 									{%if dip.dirigente %}
 
 									<ul class="contact">
-										<h2>Dipendenti associati al cliente</h2>
+										<h2>Dipendenti associati al cliente:</h2>
 											<li>
 												<h3>Ufficio commerciale:</h3>
-
+												{% for dip  in ufficioCommerciale %}
+													<span>{{dip.nome}} {{dip.cognome}}</span><br/>
+												{% endfor %}
 											</li>
 											<li>
 												<h3>Ufficio tecnico:</h3>
-												<span>(000) 000-0000</span>
+												{% for dip  in ufficioTecnico %}
+													<span>{{dip.nome}} {{dip.cognome}}</span><br/>
+												{% endfor %}
+
 											</li>
 											<li>
 												<h3>Ufficio capicantiere:</h3>
-													<span>Rifacimento interni bagno</span>
+												{% for dip  in ufficioCapicantiere %}
+													<span>{{dip.nome}} {{dip.cognome}}</span><br/>
+												{% endfor %}
+
 											</li>
 									</ul>
 									{% endif %}
@@ -252,7 +275,7 @@
 							</div>
 						</section>
 						<section>
-							<a href="#" class="image"><img src="images/pic02.jpg" alt="" data-position="top center" /></a>
+							<a href="#" class="image"><img src="" alt="" data-position="top center" /></a>
 							<div class="content">
 								<div class="inner">
 									<h2>Feugiat consequat</h2>
@@ -264,7 +287,7 @@
 							</div>
 						</section>
 						<section>
-							<a href="#" class="image"><img src="images/pic03.jpg" alt="" data-position="25% 25%" /></a>
+							<a href="#" class="image"><img src="" alt="" data-position="25% 25%" /></a>
 							<div class="content">
 								<div class="inner">
 									<h2>Ultricies aliquam</h2>
