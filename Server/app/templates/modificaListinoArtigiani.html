@@ -1,0 +1,88 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+
+    <div id="pagewrap">
+
+          <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+          <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+          <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+            <span class="contact100-form-title">
+               Listino Artigiani
+            </span>
+
+            <div id="formListArt" class="container-contact100 container-completaProfilo" id="container-contact100">
+                <div class="wrap-contact100" id="wrap-contact100">
+                    <form   class="contact100-form validate-form">
+                         <div class="wrap-input100 validate-input bg1" data-validate="Please Type Your Name">
+                            <span class="label-input100">FULL NAME *</span>
+                            <input class="input100" type="text" name="name" placeholder="Enter Your Name">
+                         </div>
+
+                    </form>
+                </div>
+            </div>
+
+
+            <div id="contenuto" class="table100 ver2 ">
+                <table id="listino" data-vertable="ver2">
+                    <thead id="headListino">
+                        <tr id="trHead" class="row100 head">
+                            <th class="column100" data-column="column1">Tipologia</th>
+                            <th class="column100" data-column="column2">L</th>
+                            <th class="column100" data-column="column3">P</th>
+                            <th class="column100" data-column="column4">H</th>
+                            <th class="column100" data-column="column5">Unità</th>
+                            <th class="column100 " data-column="column6">Prezzo min</th>
+                            <th class="column100 " data-column="column7">Prezzo max</th>
+                            <th class="column100 " data-column="column8">Fornitore</th>
+                            <th class="column100 " data-column="column9">Tempistiche</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody id="bodyListino">
+                        <tr class="row100">
+                            <td class="column100 " data-column="column1">Porta Blindata</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 50 &euro; </td>
+                            <td class="column100 " data-column="column7">--</td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                        <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+
+
+
+
+
+
+
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script src="{{url_for('static', filename='modificaListino/js/main.js') }}"></script>
+
+
+    </div>
+
+{% endblock %}

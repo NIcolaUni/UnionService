@@ -3,7 +3,7 @@
         Gestione Dipendenti
     </span>
 
-    <div class="wrap-contact100" id="contenuto">
+    <div class="wrap-contact100" id="contenutoGestDip">
 
         <div class="row" id="rigaCredenziali">
 
@@ -41,7 +41,7 @@
                 Genera credenziali
             </span>
 
-            <button onclick="JSalert()" id="generaCredenziali"></button>
+            <button onclick="newDipFittAllert()" id="generaCredenziali"></button>
 
 
         </div>
@@ -72,7 +72,7 @@
     var password = $('input#password').attr("value");
 
 
-    function JSalert(){
+    function newDipFittAllert(){
         var classe=$('select#tipo_dip option:selected').text();
         if($('input#dirigente').is(':checked')){
             classe= classe + " dirigente"
@@ -84,28 +84,28 @@
         confirmButtonColor: "#DD6B55",
         confirmButtonText: "Sono sicuro!",
         cancelButtonText: "Ho sbagliato...",
-        closeOnConfirm: false,
-        closeOnCancel: false },
-        function(isConfirm){
-            if (isConfirm)
-            {
-                 swal({
+        }).then((result) => {
+              if (result.value) {
+                     swal({
                     title: "Operazione eseguita!",
                     text: "username: "+username+"\npassword: "+password,
                     icon: "success",
                     type: "success",
                     confirmButtonText: "ok",
-                    closeOnConfirm: true
-                    }, function(){
+                    }).then((result) => {
                         form.submit();
                     });
 
-            }
-            else {
-                swal("", "Operazione Annullata", "error");
 
-            } });
+              }else {
+                swal("", "Operazione Annullata", "error");
+              }
+            });
+
     }
+
+
+	//	$('input#submit').attr('onclick', 'JSalert()');
 
     $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
     $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");

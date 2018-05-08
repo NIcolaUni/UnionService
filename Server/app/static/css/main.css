@@ -384,6 +384,9 @@ h1, h2, h3, h4, h5 {
     margin-top: 5%;
 }
 
+.fc-axis > span{
+    color: black;
+}
 
 /* Menu barra laterale sinistra e menu per piccoli schermi */
 
@@ -516,4 +519,8 @@ h1, h2, h3, h4, h5 {
 }
 #nome_cognome_indirizzo:-moz-placeholder { /* Firefox 18- */
   color: pink;
+}
+
+a#listProdotti{
+    cursor: pointer;
 }

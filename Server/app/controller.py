@@ -12,6 +12,10 @@ import app
 
 ####################################### ROUTE HANDLER #################################################
 
+@server.route('/modListinoArtigiani')
+@login_required
+def modListinoArtigiani():
+    return render_template('modificaListinoArtigiani.html')
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required

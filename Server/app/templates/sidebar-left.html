@@ -23,9 +23,22 @@
                 <li><a data-ui-sref-active="active" data-ui-sref="form.basic-form-elements" data-ng-click="mactrl.sidebarStat($event)">Cambia immagine profilo</a></li>
             </ul>
         </li>
+        {%if dipendente.dirigente %}
+        <li class="sub-menu" >
+            <a href="" toggle-submenu><i class="zmdi zmdi-storage"></i> Database </a>
+            <ul>
+                <li><a href="{{ url_for('modListinoArtigiani') }}">Listino Artigiani</a></li>
+                <li><a href="">Listino Prodotti</a></li>
+                <li><a href="">Listino Fornitori</a></li>
+            </ul>
+        </li>
+        {% endif %}
+        <li>
         <li>
             <a href="{{ url_for('logout') }}"><i class="zmdi zmdi-time-restore"></i> Logout</a>
         </li>
 
     </ul>
+
+
 </div>
