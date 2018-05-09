@@ -2,13 +2,17 @@ from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, Forei
 from app import database
 
 class ListinoArtigianiDBmodel(database.Model):
-    __tablename__="listinoartigiani"
+    __tablename__="listino_artigiani"
 
-    settore =
-    tipologia =
-    larghezza =
-    altezza =
-    profondita =
-    unitaMisura =
-    prezzoMin =
-    prezzoMax =
+    __table_args__ = (
+            PrimaryKeyConstraint('settore', 'tipologia'),
+            )
+
+    settore = Column(String(30), ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="CASCADE"))
+    tipologia = Column(String(30))
+    larghezza = Column(Integer)
+    altezza = Column(Integer)
+    profondita = Column(Integer)
+    unitaMisura = Column(String(5))
+    prezzoMin = Column(Integer)
+    prezzoMax = Column(Integer)

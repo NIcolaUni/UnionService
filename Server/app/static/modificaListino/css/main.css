@@ -369,7 +369,7 @@ table#listino th, td {
 #contenuto {
     display: block;
     position: absolute;
-    height: 50%;
+    height: 60%;
     width: 80%;
     left: 10%;
     bottom: 30px;
@@ -385,17 +385,22 @@ table#listino th, td {
 }
 
 
+#buttonListino {
+    display: inline-block;
+    height: 10%;
+}
 
 #listino {
  display: block;
  position: relative;
  width: 100%;
+ height: 90%;
 }
 
 #bodyListino {
     display: block;
     position: relative;
-    height: 90%;
+    height: 70%;
     width: 100%;
     overflow-y: scroll;
 }
@@ -424,8 +429,9 @@ table#listino th, td {
 }
 
 #headListino {
-    display: inline-block;
+    display: block;
     width: 100%;
+    height: 25%;
 }
 
 table#listino tr {
@@ -435,12 +441,13 @@ table#listino tr {
 }
 
 #formListArt {
-    display: block;
+    display: inline-block;
     position: relative;
     height: 30%;
     width: 80%;
     z-index: 5;
     margin-left: 10%;
+
 }
 
 .container {
@@ -449,3 +456,33 @@ table#listino tr {
   text-align: center
 }
 
+.fieldSettoreLav {
+    background-color: white;
+    margin-bottom: 0;
+}
+
+#inTable {
+    background-color: black;
+    color: white;
+    height: 50px;
+}
+
+.inputNum {
+    width: 60px;
+    color: black;
+    margin-top: 5%;
+    padding-top: 10px;
+}
+
+.inputText {
+    width: 100px;
+    color: black;
+    margin-top: 5%;
+    padding-top: 10px;
+}
+
+.inputSel {
+    color: black;
+    margin-top: 5%;
+    padding-top: 10px;
+}

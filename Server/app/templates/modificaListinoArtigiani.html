@@ -9,24 +9,57 @@
           <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
           <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-            <span class="contact100-form-title">
+            <span class="contact100-form-title row">
                Listino Artigiani
             </span>
 
-            <div id="formListArt" class="container-contact100 container-completaProfilo" id="container-contact100">
-                <div class="wrap-contact100" id="wrap-contact100">
+            <div id="formListArt" class="container-contact100 container-completaProfilo row" id="container-contact100">
+
                     <form   class="contact100-form validate-form">
-                         <div class="wrap-input100 validate-input bg1" data-validate="Please Type Your Name">
-                            <span class="label-input100">FULL NAME *</span>
-                            <input class="input100" type="text" name="name" placeholder="Enter Your Name">
-                         </div>
+                        <div class="wrap-input100 validate-input bg1 fieldSettoreLav">
+					        <span class="label-input100">Aggiungi settore</span>
+					        <input class="input100" type="text" name="nuovoSettore" placeholder="Nome del nuovo settore">
+				        </div>
 
                     </form>
-                </div>
+                    <form   class="contact100-form validate-form">
+
+
+
+
+                        <div class="wrap-contact100-form-check">
+                            <div class="contact100-form-check m-t-15">
+                                 <input class="input-check100" type="checkbox" name="elimina" id="elimina">
+                                <label class="label-check100" for="elimina">
+                                   <span class="white">Elimina settore selezionato.</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="wrap-input100 input100-select bg1 fieldSettoreLav">
+                            <span class="label-input100">Settore di Lavorazione</span>
+                            <div>
+                                <select class="js-select2" name="service">
+                                    <option>Posatori serramenti/porte</option>
+                                    <option>Piastrellisti</option>
+                                    <option>Pitture</option>
+                                    <option>Cartongesso</option>
+                                </select>
+                                <div class="dropDownSelect2"></div>
+                            </div>
+                        </div>
+                    </form>
+
             </div>
 
 
-            <div id="contenuto" class="table100 ver2 ">
+            <div id="contenuto" class="table100 ver2 row">
+                <div id="buttonListino" class="container-contact100-form-btn">
+					<button class="contact100-form-btn">
+						<span>
+							Inserisci
+						</span>
+					</button>
+				</div>
                 <table id="listino" data-vertable="ver2">
                     <thead id="headListino">
                         <tr id="trHead" class="row100 head">
@@ -40,7 +73,24 @@
                             <th class="column100 " data-column="column8">Fornitore</th>
                             <th class="column100 " data-column="column9">Tempistiche</th>
 
-
+                        </tr>
+                        <tr id="inTable"  >
+                            <td class="column100 " data-column="column1"><input class="inputText" type="text" name="tipologia" placeholder="tipologia"></td>
+                            <td class="column100 " data-column="column2"><input class="inputNum" type="number" name="larghezza" placeholder="larghezza"></td>
+                            <td class="column100 " data-column="column3"><input class="inputNum" type="number" name="altezza" placeholder="altezza"></td>
+                            <td class="column100 " data-column="column4"><input class="inputNum" type="number" name="profondita" placeholder="profondità"></td>
+                            <td class="column100 " data-column="column5">
+                                <select class="inputSel"  name="unita">
+                                    <option>cad</option>
+                                    <option>m</option>
+                                    <option>m<sup>2</sup></option>
+                                    <option>m<sup>3</sup></option>
+                                </select>
+                            </td>
+                            <td class="column100 " data-column="column6"> <input class="inputNum" type="number" name="prezzoMin" placeholder="prezzo min"> </td>
+                            <td class="column100 " data-column="column7"> <input class="inputNum" type="number" name="prezzoMax" placeholder="prezzo max"> </td>
+                            <td class="column100 " data-column="column8"> <input class="inputText" type="text" name="fonitore" placeholder="fornitore"> </td>
+                            <td class="column100 " data-column="column9">--</td>
                         </tr>
                     </thead>
                     <tbody id="bodyListino">
@@ -66,6 +116,105 @@
                             <td class="column100 " data-column="column8">--</td>
                             <td class="column100 " data-column="column9">--</td>
                         </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
+                          <tr class="row100">
+                            <td class="column100 " data-column="column1">Box Doccia</td>
+                            <td class="column100 " data-column="column2">--</td>
+                            <td class="column100 " data-column="column3">--</td>
+                            <td class="column100 " data-column="column4">--</td>
+                            <td class="column100 " data-column="column5">cad</td>
+                            <td class="column100 " data-column="column6"> 100 &euro; </td>
+                            <td class="column100 " data-column="column7"> 120 &euro; </td>
+                            <td class="column100 " data-column="column8">--</td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>
 
 
 
@@ -77,11 +226,18 @@
 
                     </tbody>
                 </table>
+
             </div>
         </div>
 
         <script src="{{url_for('static', filename='modificaListino/js/main.js') }}"></script>
-
+        <script>
+                $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+    $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+        </script>
 
     </div>
 
