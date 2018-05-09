@@ -34,18 +34,18 @@
 				    {{form.email}}
 				</div>
 
-                <div class="wrap-contact100-form-radio">
+                <div class="radioLeft wrap-contact100-form-radio">
                     {{form.difficolta}}
 
                 </div>
 
-                <div class="wrap-contact100-form-radio">
+                <div class="radioLeft wrap-contact100-form-radio">
 
                     {{form.tipologia}}
 
                 </div>
 
-                <div class="wrap-contact100-form-radio">
+                <div class="radioLeft wrap-contact100-form-radio">
 
                     {{form.referenza}}
 
@@ -77,6 +77,13 @@
             </div>
 		</div>
     </div>
+    <script>
+                $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+                $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+    </script>
 
     <script>
         $("#form-regCli input").addClass("input100");
@@ -124,21 +131,9 @@
         function registraClienteAlert(){
 
             var form=$('form#form-regCli');
-            var nomeCliente = $('input#nome').attr('value');
-            var cognomeCliente = $('input#cognome').attr('value');
-
-			swal({
-
-			title: "Registrazione cliente " + nomeCliente,
-			text: "Si sta per registrare un nuovo cliente,\n"+
-			            "passare alla pagina del preventivo al termine?",
-			type: "info",
-			showCloseButton: true,
-			showCancelButton: true,
-			confirmButtonColor: "#DD6B55",
-			confirmButtonText: "procedere col preventivo",
-			cancelButtonText: "registra soltanto",
-			 });
+            var nomeCliente = $('input#nome').val();
+            var cognomeCliente = $('input#cognome').val();
+            var indirizzoCliente = $('input#indirizzo').val();
 
 			 swal({
               title: "Registrazione cliente",
@@ -153,11 +148,14 @@
             }).then((result) => {
               if (result.value) {
 
+                /*  var url='apriPaginaClienteAccoglienza/'+nomeCliente+ '/'+cognomeCliente;
+                  console.log(url + "  dai" );
+                  form.submit();
+                  window.location=url;*/
                   form.submit();
 
-
               }else {
-
+                form.submit();
 
               }
             });

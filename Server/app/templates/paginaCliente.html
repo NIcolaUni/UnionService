@@ -264,10 +264,9 @@
 									<span>Settore di Lavorazione</span></br>
 									<div>
 										<select class="js-select2" name="service">
-											<option>Posatori serramenti/porte</option>
-											<option>Piastrellisti</option>
-											<option>Pitture</option>
-											<option>Cartongesso</option>
+									        {% for settore in settori %}
+												<option>{{settore.nome}}</option>
+											{% endfor %}
 										</select>
 										<div class="dropDownSelect2"></div>
 									</div>

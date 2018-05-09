@@ -15,10 +15,10 @@
 
             <div id="formListArt" class="container-contact100 container-completaProfilo row" id="container-contact100">
 
-                    <form   class="contact100-form validate-form">
-                        <div class="wrap-input100 validate-input bg1 fieldSettoreLav">
+                    <form id="form-addSettore" class="contact100-form">
+                        <div class="wrap-input100 bg1 fieldSettoreLav">
 					        <span class="label-input100">Aggiungi settore</span>
-					        <input class="input100" type="text" name="nuovoSettore" placeholder="Nome del nuovo settore">
+					        <input id="input-addSettore" class="input100" type="text" name="nuovoSettore" placeholder="Nome del nuovo settore">
 				        </div>
 
                     </form>
@@ -38,11 +38,10 @@
                         <div class="wrap-input100 input100-select bg1 fieldSettoreLav">
                             <span class="label-input100">Settore di Lavorazione</span>
                             <div>
-                                <select class="js-select2" name="service">
-                                    <option>Posatori serramenti/porte</option>
-                                    <option>Piastrellisti</option>
-                                    <option>Pitture</option>
-                                    <option>Cartongesso</option>
+                                <select id="settoriDisponibili" class="js-select2" name="service">
+                                    {% for settore in settori %}
+                                    <option>{{settore.nome}}</option>
+                                    {% endfor %}
                                 </select>
                                 <div class="dropDownSelect2"></div>
                             </div>
@@ -233,10 +232,102 @@
         <script src="{{url_for('static', filename='modificaListino/js/main.js') }}"></script>
         <script>
                 $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
-    $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
-    $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
-    $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
-    $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+                $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+                $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+        </script>
+        <script>
+
+            var socketListino= io.connect("{{sockUrl}}"+'/listino');
+
+            var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+            socketHome.on('connect', function() {
+                console.log('connected listino');
+
+
+                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+            });
+
+            socketListino.on('aggiornaPagina', function() {
+                location.reload();
+
+            });
+
+            socketListino.on('abortAggiorna', function() {
+                    swal({
+                          title: "Settore già presente",
+                          type: 'error',
+                          confirmButtonColor: '#3085d6',
+                          confirmButtonText: "Ok",
+
+                     });
+
+            });
+
+
+            $('#elimina').change(function() {
+                if(this.checked) {
+                     swal({
+                          title: "Eliminazione settore " + $('#settoriDisponibili').val(),
+                          text: "Sei sicuro di voler procedere?",
+                          type: 'info',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: "Sì",
+                          cancelButtonText: "No",
+                     }).then((result) => {
+                          if (result.value) {
+                            socketListino.emit('elimina_settore',   {'dip': '{{dipendente.username}}','nome': $('#settoriDisponibili').val()} );
+                            $('#elimina').attr('checked', false);
+
+                          }else {
+                             $('#elimina').attr('checked', false);
+
+                          }
+                        });
+                }
+
+            });
+
+          $('form#form-addSettore').on('submit',function(e){
+                e.preventDefault();
+                $.ajax({
+                    cache    : false,
+                    data     : $(this).serialize(),
+                    success  : function(data) {
+
+                         swal({
+                          title: "Creazione nuovo settore",
+                          text: "Sei sicuro di voler procedere?",
+                          type: 'info',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: "Sì",
+                          cancelButtonText: "No",
+                        }).then((result) => {
+                          if (result.value) {
+
+                            socketListino.emit('registra_settore',   {'dip': '{{dipendente.username}}','nome': $('input#input-addSettore').val()} );
+                            $('input#input-addSettore').val("")
+
+
+                          }else {
+                            $('input#input-addSettore').val("")
+
+
+                          }
+                        });
+
+
+
+                    }
+                });
+
+            });
         </script>
 
     </div>

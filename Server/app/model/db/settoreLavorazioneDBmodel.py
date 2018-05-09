@@ -6,3 +6,11 @@ class SettoreLavorazioneDBmodel(database.Model):
     __tablename__ = "settore_lavorazione"
 
     nome = Column(String(30), primary_key=True)
+
+    def commitSettore(nuovoSettore):
+        database.session.add(nuovoSettore)
+        database.session.commit()
+
+    def commitEliminaSettore(settore):
+        database.session.delete(settore)
+        database.session.commit()

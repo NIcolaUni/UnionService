@@ -5,6 +5,7 @@ from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
 from .model.dipendente import Dipendente
 from .model.notifica import Notifica
+from .model.settoreLavorazione import SettoreLavorazione
 from .model.clienteAccolto import ClienteAccolto
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
@@ -15,7 +16,9 @@ import app
 @server.route('/modListinoArtigiani')
 @login_required
 def modListinoArtigiani():
-    return render_template('modificaListinoArtigiani.html')
+    dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
+    settori = SettoreLavorazione.query.all()
+    return render_template('modificaListinoArtigiani.html', dipendente=dip, settori=settori, sockUrl=app.appUrl)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -36,6 +39,26 @@ def gestioneDip():
 def paginaProfilo():
     return render_template('paginaProfilo.html')
 
+'''
+@server.route('/apriPaginaClienteAccoglienza/<nome>/<cognome>')
+@login_required
+def apriPaginaClienteAccoglienza(nome, cognome):
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    server.logger.info("\n\n\nStampa dipendente {}\n\n\n".format(dip))
+    cliente = ClienteAccolto.query.filter_by(nome=nome, cognome=cognome, commerciale=current_user.get_id()).first()
+
+    ufficioCommerciale = Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
+    ufficioTecnico = Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
+    ufficioCapicantiere = Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
+    settori = SettoreLavorazione.query.all()
+    server.logger.info("\n\n\nStampa cliente {}\n\n\n".format(cliente))
+
+    return render_template('paginaCliente.html', dip=dip, cliente=cliente, ufficioCommerciale=ufficioCommerciale,
+                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
+'''
+
+
+
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required
 def apriPaginaCliente():
@@ -48,9 +71,10 @@ def apriPaginaCliente():
     ufficioCommerciale = Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
     ufficioTecnico = Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
     ufficioCapicantiere = Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
+    settori = SettoreLavorazione.query.all()
 
     return render_template('paginaCliente.html', dip=dip, cliente=cliente, ufficioCommerciale=ufficioCommerciale,
-                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere )
+                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
 
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
@@ -67,7 +91,6 @@ def accoglienza(error):
     richiamato dalla pagina stessa ritornata.
     '''
     if error == 1 :
-        server.logger.info("\n\nEntrato in ERROR 1\n\n")
         if app.accoglienzaOk:
             app.accoglienzaOk=False
             return render_template('confermaRegistrazioneCliente.html')
@@ -103,7 +126,7 @@ def accoglienza(error):
 def homepage():
 
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-    return render_template('homepage.html', dipendente=dip)
+    return render_template('homepage.html', dipendente=dip, sockUrl=app.appUrl)
 
 
 @server.route('/sidebarLeft')
@@ -160,7 +183,7 @@ def registraDipendente():
                                 email_personale=form.email_personale.data, iban=form.iban.data, partitaIva=form.partitaIva.data )
 
 
-        return render_template("confermaRegistrazione.html", username=username, password=password, creatoreCredenziali=creatoreCredenziali)
+        return render_template("confermaRegistrazione.html", username=username, password=password, creatoreCredenziali=creatoreCredenziali, sockUrl=app.appUrl )
 
     return render_template("registrazioneDip.html", form=form, fittizio=True)
 
@@ -234,6 +257,27 @@ def handle_registrazione_effetuata(message):
                                'contenuto': "Ricorda di completare la sua registrazione."},
                                 namespace='/notifica', room=responsabile.session_id)
 
+@socketio.on('registra_settore', namespace="/listino")
+def handle_registra_settore(message):
+
+  #verifico che il settore non sia gia presente
+
+  dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+  if SettoreLavorazione.query.filter_by(nome=message['nome'] ).first() is None:
+      SettoreLavorazione.registraSettore(nome=message['nome'])
+      emit('aggiornaPagina', namespace='/listino', room=dip.session_id)
+
+  else:
+      emit('abortAggiorna', namespace='/listino', room=dip.session_id)
+
+
+@socketio.on('elimina_settore', namespace="/listino")
+def handle_elimina_settore(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    SettoreLavorazione.eliminaSettore(nome=message['nome'])
+    emit('aggiornaPagina', namespace='/listino', room=dip.session_id)
+
 
 @socketio.on_error('/home')
 def error_handler(e):
@@ -241,4 +285,8 @@ def error_handler(e):
 
 @socketio.on_error('/notifica')
 def error_handler_notifica(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
+@socketio.on_error('/listino')
+def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))

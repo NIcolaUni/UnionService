@@ -298,7 +298,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .homepage {
-  margin-top: 10%;
+  margin-top: 4%;
   height: 100%;
 }
 
@@ -391,7 +391,7 @@ h1, h2, h3, h4, h5 {
 /* Menu barra laterale sinistra e menu per piccoli schermi */
 
 #nav {
-  margin-top: 30%;
+  margin-top: 15%;
   position: absolute;
   height: 85%;
   overflow-y: scroll;
@@ -504,7 +504,7 @@ h1, h2, h3, h4, h5 {
 
 .accoglienza-section {
   height: 100%;
-  margin-top: 10%;
+  margin-top: 4%;
 }
 
 
@@ -523,4 +523,8 @@ h1, h2, h3, h4, h5 {
 
 a#listProdotti{
     cursor: pointer;
+}
+
+.radioLeft {
+    text-align: left;
 }

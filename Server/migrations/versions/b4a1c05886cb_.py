@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 5711eb4afcc9
+Revision ID: b4a1c05886cb
 Revises: 
-Create Date: 2018-05-05 12:33:13.118676
+Create Date: 2018-05-09 13:13:09.452820
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5711eb4afcc9'
+revision = 'b4a1c05886cb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,30 @@ def upgrade():
     sa.Column('fittizio', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('username'),
     sa.UniqueConstraint('username', 'password')
+    )
+    op.create_table('settore_lavorazione',
+    sa.Column('nome', sa.String(length=30), nullable=False),
+    sa.PrimaryKeyConstraint('nome')
+    )
+    op.create_table('clienteAccolto',
+    sa.Column('nome', sa.String(length=30), nullable=False),
+    sa.Column('cognome', sa.String(length=30), nullable=False),
+    sa.Column('indirizzo', sa.String(length=120), nullable=False),
+    sa.Column('telefono', sa.String(length=12), nullable=False),
+    sa.Column('email', sa.String(length=50), nullable=False),
+    sa.Column('difficolta', sa.String(length=30), nullable=False),
+    sa.Column('tipologia', sa.String(length=30), nullable=False),
+    sa.Column('referenza', sa.String(length=30), nullable=False),
+    sa.Column('sopraluogo', sa.Boolean(), nullable=False),
+    sa.Column('datasopraluogo', sa.Date(), nullable=True),
+    sa.Column('lavorazione', sa.String(length=500), nullable=False),
+    sa.Column('commerciale', sa.String(length=60), nullable=False),
+    sa.Column('tecnico', sa.String(length=60), nullable=True),
+    sa.Column('capocantiere', sa.String(length=60), nullable=True),
+    sa.ForeignKeyConstraint(['capocantiere'], ['dipendente_registrato.username'], onupdate='CASCADE', ondelete='SET NULL'),
+    sa.ForeignKeyConstraint(['commerciale'], ['dipendente_registrato.username'], onupdate='CASCADE'),
+    sa.ForeignKeyConstraint(['tecnico'], ['dipendente_registrato.username'], onupdate='CASCADE', ondelete='SET NULL'),
+    sa.PrimaryKeyConstraint('nome', 'cognome', 'indirizzo')
     )
     op.create_table('dipendente',
     sa.Column('username', sa.String(length=60), nullable=False),
@@ -78,5 +102,7 @@ def downgrade():
     op.drop_table('notifica')
     op.drop_table('dirigente')
     op.drop_table('dipendente')
+    op.drop_table('clienteAccolto')
+    op.drop_table('settore_lavorazione')
     op.drop_table('dipendente_registrato')
     # ### end Alembic commands ###
