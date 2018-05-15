@@ -5,20 +5,26 @@ from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
 from .model.dipendente import Dipendente
 from .model.notifica import Notifica
+from .model.categoria import Categoria
+from .model.pertinenza import Pertinenza
 from .model.settoreLavorazione import SettoreLavorazione
 from .model.clienteAccolto import ClienteAccolto
+from .model.impegni import Impegni
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import app
 
 ####################################### ROUTE HANDLER #################################################
 
-@server.route('/modListinoArtigiani')
+@server.route('/prezzarioEdile')
 @login_required
-def modListinoArtigiani():
+def prezzarioEdile():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
     settori = SettoreLavorazione.query.all()
-    return render_template('modificaListinoArtigiani.html', dipendente=dip, settori=settori, sockUrl=app.appUrl)
+    categorie = Categoria.query.all()
+    pertinenze = Pertinenza.query.all()
+    return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, categorie=categorie, pertinenze=pertinenze,
+                                    sockUrl=app.appUrl, prezzario=True)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -129,6 +135,11 @@ def homepage():
     return render_template('homepage.html', dipendente=dip, sockUrl=app.appUrl)
 
 
+@server.route('/impegni')
+@login_required
+def impegni():
+    return render_template('impegni.html')
+
 @server.route('/sidebarLeft')
 @login_required
 def sidebarLeft():
@@ -231,6 +242,21 @@ def getNotifiche():
 
     return '{ "list":[' +returnList[:-1]+'] }'
 
+@server.route('/listImpegni')
+@login_required
+def listImpegni():
+
+    impegni = Impegni.query.filter_by(dipendente=current_user.get_id())
+
+    return render_template('impegni.html', impegni=impegni)
+
+@server.route('/getImpegni')
+@login_required
+def getImpegni():
+
+    returnList = '{"todo": "sono un impegno difficile", "dirigente": "gianni"},'
+    return '{ "list":[' +returnList[:-1]+'] }'
+
 ################################## SOCKETIO HANDLER ##########################################################
 
 @socketio.on('my_event', namespace="/test")
@@ -257,26 +283,88 @@ def handle_registrazione_effetuata(message):
                                'contenuto': "Ricorda di completare la sua registrazione."},
                                 namespace='/notifica', room=responsabile.session_id)
 
-@socketio.on('registra_settore', namespace="/listino")
+
+@socketio.on('registra_categoria', namespace='/prezzario')
+def handle_registra_categoria(message):
+    # verifico che il settore non sia gia presente
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    if Categoria.query.filter_by(nome=message['categoria']).first() is None:
+        Categoria.registraCategoria(nome=message['categoria'])
+        emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+    else:
+        emit('abortAggiorna', {'what': 'categoria'},namespace='/listino', room=dip.session_id)
+
+@socketio.on('elimina_categoria', namespace="/prezzario")
+def handle_elimina_settore(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    Categoria.eliminaCategoria(nome=message['categoria'])
+    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+
+
+@socketio.on('registra_pertinenza', namespace='/prezzario')
+def handle_registra_pertinenza(message):
+    # verifico che il settore non sia gia presente
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    if Pertinenza.query.filter_by(nome=message['pertinenza']).first() is None:
+        Pertinenza.registraPertinenza(nome=message['pertinenza'])
+        emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+    else:
+        emit('abortAggiorna', {'what': 'Pertinenza'},namespace='/listino', room=dip.session_id)
+
+@socketio.on('elimina_pertinenza', namespace="/prezzario")
+def handle_elimina_settore(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    Pertinenza.eliminaPertinenza(nome=message['pertinenza'])
+    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+
+
+@socketio.on('registra_settore', namespace="/prezzario")
 def handle_registra_settore(message):
 
   #verifico che il settore non sia gia presente
 
   dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-  if SettoreLavorazione.query.filter_by(nome=message['nome'] ).first() is None:
-      SettoreLavorazione.registraSettore(nome=message['nome'])
-      emit('aggiornaPagina', namespace='/listino', room=dip.session_id)
+  if SettoreLavorazione.query.filter_by(nome=message['settore'] ).first() is None:
+      SettoreLavorazione.registraSettore(nome=message['settore'], categoria=message['categoria'], pertinenza=message['pertinenza'] )
+      emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
 
   else:
-      emit('abortAggiorna', namespace='/listino', room=dip.session_id)
+      emit('abortAggiorna', namespace='/prezzario', room=dip.session_id)
 
 
-@socketio.on('elimina_settore', namespace="/listino")
+@socketio.on('elimina_settore', namespace="/prezzario")
 def handle_elimina_settore(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    SettoreLavorazione.eliminaSettore(nome=message['nome'])
-    emit('aggiornaPagina', namespace='/listino', room=dip.session_id)
+    SettoreLavorazione.eliminaSettore(nome=message['settore'])
+    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+
+
+
+@socketio.on('registraImpegno', namespace='/impegni')
+def handle_registraImpegno(message):
+    server.logger.info("Mi è arrivato da registrare per {}: {} ".format(message['dip'], message['testo']))
+
+    if message['dir'] == "":
+        Impegni.registraImpegni(dipendente=message['dip'], testo=message['testo'])
+    else:
+        Impegni.registraImpegni(dipendente=message['dip'], testo=message['testo'], dirigente=message['dir'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    emit('aggiornaImpegni', namespace='/impegni', room=dip.session_id)
+
+
+
+
+
+
+
+@socketio.on_error('/impegni')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
 
 
 @socketio.on_error('/home')
@@ -287,6 +375,6 @@ def error_handler(e):
 def error_handler_notifica(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
 
-@socketio.on_error('/listino')
+@socketio.on_error('/prezzario')
 def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))

@@ -1,0 +1,478 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+      <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+      <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+      <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+
+
+    <div id="pagewrap">
+
+
+
+
+            <div id="formListArt" class="container-contact100 container-completaProfilo row" id="container-contact100">
+
+                      <span class="contact100-form-title">
+                           Prezzario Edile
+                      </span>
+
+                    <form   class="contact100-form validate-form">
+
+                        <div class="wrap-input100 input100-select bg1 fieldSettoreLav">
+                            <span class="label-input100">Settore di Lavorazione</span>
+                            <div>
+                                <select id="settoriDisponibili" class="js-select2" name="service">
+                                    {% for settore in settori %}
+                                    <option>{{settore.nome}}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="dropDownSelect2"></div>
+                            </div>
+                        </div>
+                        <div class="wrap-contact100-form-check small-check ">
+                                 <input class="input-check100" type="checkbox" name="addCategoria" id="addCategoria">
+                                <label class="label-check100" for="addCategoria">
+                                   <span class="white">Aggiungi/elimina categoria</span>
+                                </label>
+                        </div>
+                        <div class="wrap-contact100-form-check small-check">
+                                 <input class="input-check100" type="checkbox" name="addPertinenza" id="addPertinenza">
+                                <label class="label-check100" for="addPertinenza">
+                                   <span class="white">Aggiungi/elimina pertinenza</span>
+                                </label>
+                        </div>
+                        <div class="wrap-contact100-form-check small-check">
+                                 <input class="input-check100" type="checkbox" name="addSettore" id="addSettore">
+                                <label class="label-check100" for="addSettore">
+                                   <span class="white">Aggiungi/elimina settore</span>
+                                </label>
+                        </div>
+                    </form>
+
+            </div>
+
+
+            <div id="contenuto" class="table100 ver2 row">
+        <!--        <div id="buttonListino" class="container-contact100-form-btn">
+					<button class="contact100-form-btn">
+						<span>
+							Inserisci
+						</span>
+					</button>
+				</div> -->
+                <table data-vertable="ver2">
+                    <thead >
+                        <tr class="row100 head">
+                            <th class="column100 leftify-firstCol" data-column="column1">Segnala irregolarità</th>
+                            <th class="column100 leftify" data-column="column2">Modifica </th>
+                            <th class="column100 leftify" data-column="column3">Tipologia lavorazione</th>
+                            <th class="column100 leftify" data-column="column4">Categoria</th>
+                            <th class="column100 leftify" data-column="column5">Pertinenza</th>
+                            <th class="column100 leftify" data-column="column6">Unità</th>
+                            <th class="column100 leftify" data-column="column7">Costo</th>
+                            <th class="column100 leftify" data-column="column8">Prezzo min</th>
+                            <th class="column100 leftify" data-column="column9">Prezzo max</th>
+                            <th class="column100 leftify" data-column="column10">Dimensione</th>
+                            <th class="column100 leftify" data-column="column11">Fornitura</th>
+                            <th class="column100 leftify" data-column="column12">Posa</th>
+                            <th class="column100 leftify" data-column="column13">Totale</th>
+                            <th class="column100 leftify" data-column="column14">Note</th>
+                            <th class="column100 leftify" data-column="column15"></th>
+
+                        </tr>
+                    </thead>
+                </table>
+
+                <table id="listino" data-vertable="ver2">
+                    <thead id="headListino">
+                        <tr id="trHead" class="row100 head">
+                            <th class="leftify" data-column="column1"></th>
+                            <th class="leftify" data-column="column2"></th>
+                            <th class="column100 leftify" data-column="column3"><input class="inputText" type="text" name="tipologia" placeholder="tipologia"></th>
+                            <th class="column100 leftify" data-column="column4"><input class="inputText" type="text" name="categoria" placeholder="categoria"></th>
+                            <th class="column100 leftify" data-column="column5"><input class="inputText" type="text" name="pertinenza" placeholder="pertinenza"></th>
+                            <th class="column100 leftify" data-column="column6">
+                                <select class="inputSel"  name="unita">
+                                    <option>cad</option>
+                                    <option>m</option>
+                                    <option>m<sup>2</sup></option>
+                                    <option>m<sup>3</sup></option>
+                                </select></th>
+                            <th class="column100 leftify" data-column="column7"><input class="inputNum" type="number" name="costo" placeholder="costo"></th>
+                            <th class="column100 leftify" data-column="column8"><input class="inputNum" type="number" name="prezzoMin" placeholder="prezzo min"></th>
+                            <th class="column100 leftify" data-column="column9"><input class="inputNum" type="number" name="prezzoMax" placeholder="prezzo max"></th>
+                            <th class="column100 leftify" data-column="column10"><input class="inputText" type="text" name="dimensione" placeholder="dimensione"></th>
+                            <th class="column100 leftify" data-column="column11"><input class="inputNum" type="number" name="fornitura" placeholder="fornitura"></th>
+                            <th class="column100 leftify" data-column="column12"><input class="inputNum" type="number" name="posa" placeholder="posa"></th>
+                            <th class="column100 leftify" data-column="column13">--</th>
+                            <th class="column100 leftify" data-column="column14"><input class="inputNum" type="number" name="note" placeholder="note"></th>
+                            <th class="column100 leftify" data-column="column15"><button type="button">Inserisci</button></th>
+
+
+                        </tr>
+                        <!--
+                        <tr id="inTable"  >
+                            <td class="column100 " data-column="column1"><input class="inputText" type="text" name="tipologia" placeholder="tipologia"></td>
+                            <td class="column100 " data-column="column2"><input class="inputNum" type="number" name="larghezza" placeholder="larghezza"></td>
+                            <td class="column100 " data-column="column3"><input class="inputNum" type="number" name="altezza" placeholder="altezza"></td>
+                            <td class="column100 " data-column="column4"><input class="inputNum" type="number" name="profondita" placeholder="profondità"></td>
+                            <td class="column100 " data-column="column5">
+                                <select class="inputSel"  name="unita">
+                                    <option>cad</option>
+                                    <option>m</option>
+                                    <option>m<sup>2</sup></option>
+                                    <option>m<sup>3</sup></option>
+                                </select>
+                            </td>
+                            <td class="column100 " data-column="column6"> <input class="inputNum" type="number" name="prezzoMin" placeholder="prezzo min"> </td>
+                            <td class="column100 " data-column="column7"> <input class="inputNum" type="number" name="prezzoMax" placeholder="prezzo max"> </td>
+                            <td class="column100 " data-column="column8"> <input class="inputText" type="text" name="fonitore" placeholder="fornitore"> </td>
+                            <td class="column100 " data-column="column9">--</td>
+                        </tr>-->
+                    </thead>
+                    <tbody id="bodyListino">
+                        <tr class="row100">
+                            <td class="column100 leftify-firstCol" data-column="column1"><input type="checkbox"></td>
+                            <td class="column100 leftify" data-column="column2"><input type="checkbox"></td>
+                            <td class="column100 leftify" data-column="column3">--</td>
+                            <td class="column100 leftify" data-column="column4">--</td>
+                            <td class="column100 leftify" data-column="column5">--</td>
+                            <td class="column100 leftify" data-column="column6">--</td>
+                            <td class="column100 leftify" data-column="column7">--</td>
+                            <td class="column100 leftify" data-column="column8">--</td>
+                            <td class="column100 leftify" data-column="column9">--</td>
+                            <td class="column100 leftify" data-column="column10">--</td>
+                            <td class="column100 leftify" data-column="column11">--</td>
+                            <td class="column100 leftify" data-column="column12">--</td>
+                            <td class="column100 leftify" data-column="column13">--</td>
+                            <td class="column100 leftify" data-column="column14">--</td>
+                            <td class="column100 leftify" data-column="column15"></td>
+
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+        <script src="{{url_for('static', filename='modificaListino/js/main.js') }}"></script>
+        <script>
+                $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+                $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+                $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+        </script>
+        <script>
+/*
+            var socketListino= io.connect("{{sockUrl}}"+'/listino');
+
+            var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+            socketHome.on('connect', function() {
+                console.log('connected listino');
+
+
+                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+            });
+
+            socketListino.on('aggiornaPagina', function() {
+                location.reload();
+
+            });
+
+            socketListino.on('abortAggiorna', function() {
+                    swal({
+                          title: "Settore già presente",
+                          type: 'error',
+                          confirmButtonColor: '#3085d6',
+                          confirmButtonText: "Ok",
+
+                     });
+
+            });
+
+
+            $('#elimina').change(function() {
+                if(this.checked) {
+                     swal({
+                          title: "Eliminazione settore " + $('#settoriDisponibili').val(),
+                          text: "Sei sicuro di voler procedere?",
+                          type: 'info',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: "Sì",
+                          cancelButtonText: "No",
+                     }).then((result) => {
+                          if (result.value) {
+                            socketListino.emit('elimina_settore',   {'dip': '{{dipendente.username}}','nome': $('#settoriDisponibili').val()} );
+                            $('#elimina').attr('checked', false);
+
+                          }else {
+                             $('#elimina').attr('checked', false);
+
+                          }
+                        });
+                }
+
+            });
+
+          $('form#form-addSettore').on('submit',function(e){
+                e.preventDefault();
+                $.ajax({
+                    cache    : false,
+                    data     : $(this).serialize(),
+                    success  : function(data) {
+
+                         swal({
+                          title: "Creazione nuovo settore",
+                          text: "Sei sicuro di voler procedere?",
+                          type: 'info',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: "Sì",
+                          cancelButtonText: "No",
+                        }).then((result) => {
+                          if (result.value) {
+
+                            socketListino.emit('registra_settore',   {'dip': '{{dipendente.username}}','nome': $('input#input-addSettore').val()} );
+                            $('input#input-addSettore').val("")
+
+
+                          }else {
+                            $('input#input-addSettore').val("")
+
+
+                          }
+                        });
+
+
+
+                    }
+                });
+
+            });*/
+        </script>
+
+
+        <script>
+
+            var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
+
+            var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+            socketHome.on('connect', function() {
+                console.log('connected listino');
+
+
+                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+            });
+
+            socketPrezzario.on('aggiornaPagina', function() {
+                location.reload();
+
+            });
+
+            socketPrezzario.on('abortAggiorna', function(message) {
+                    swal({
+                          title: message["what"] + " già presente",
+                          type: 'error',
+                          confirmButtonColor: '#3085d6',
+                          confirmButtonText: "Ok",
+
+                     });
+
+            });
+
+            $('#addCategoria').change(function() {
+                if(this.checked) {
+
+                     function lotsOfFields () {
+                          swal.withForm({
+                            title: 'Aggiungi/elimina categoria',
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                              { id: 'newCategoria', placeholder: 'Inserire il nome della nuova categoria' },
+                              { id: 'delCategoria', value: 'Cancella categoria', type: 'checkbox' },
+                              { id: 'select',
+                                type: 'select',
+                                options: [
+                                    {% for categoria in categorie %}
+                                        {value: "{{categoria.nome}}", text: "{{categoria.nome}}"},
+
+                                    {% endfor %}
+
+                                ]}
+
+                            ]
+                          }, function (isConfirm) {
+
+                                  if (isConfirm) {
+                                    var form=this.swalForm
+
+                                    if( form['delCategoria'] ){
+                                        socketPrezzario.emit("elimina_categoria", {'dip': '{{dipendente.username}}', 'categoria': form['select']});
+
+
+                                    }
+                                    else
+                                        socketPrezzario.emit("registra_categoria", {'dip': '{{dipendente.username}}', 'categoria': form['newCategoria']});
+
+                                  }
+
+                                  $('#addCategoria').attr('checked', false);
+
+
+                          })
+                     }
+                     lotsOfFields();
+                }
+
+            });
+
+            $('#addPertinenza').change(function() {
+                if(this.checked) {
+
+                     function lotsOfFields () {
+                          swal.withForm({
+                            title: 'Aggiungi/elimina pertinenza',
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                              { id: 'newPertinenza', placeholder: 'Inserire il nome della nuova pertinenza' },
+                              { id: 'delPertinenza', value: 'Cancella pertinenza', type: 'checkbox' },
+                              { id: 'select',
+                                type: 'select',
+                                options: [
+                                    {% for pertinenza in pertinenze %}
+                                        {value: "{{pertinenza.nome}}", text: "{{pertinenza.nome}}"},
+
+                                    {% endfor %}
+
+                                ]}
+
+                            ]
+                          }, function (isConfirm) {
+
+                                  if (isConfirm) {
+                                    var form=this.swalForm
+
+                                    if( form['delPertinenza'] ){
+                                        socketPrezzario.emit("elimina_pertinenza", {'dip': '{{dipendente.username}}', 'pertinenza': form['select']});
+
+
+                                    }
+                                    else
+                                        socketPrezzario.emit("registra_pertinenza", {'dip': '{{dipendente.username}}', 'pertinenza': form['newPertinenza']});
+
+                                  }
+
+                                  $('#addPertinenza').attr('checked', false);
+
+
+                          })
+                     }
+                     lotsOfFields();
+
+
+                }
+            });
+
+            $('#addSettore').change(function() {
+                if(this.checked) {
+
+
+                     function lotsOfFields () {
+                          swal.withForm({
+                            title: 'Aggiungi/elimina settore',
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                              { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore' },
+                              { id: 'select1',
+                                type: 'select',
+                                options: [
+                                    {% for categoria in categorie %}
+                                        {value: "{{categoria.nome}}", text: "{{categoria.nome}}"},
+
+                                    {% endfor %}
+
+                                ]},
+                              { id: 'select2',
+                                type: 'select',
+                                options: [
+                                    {% for pertinenza in pertinenze %}
+                                        {value: "{{pertinenza.nome}}", text: "{{pertinenza.nome}}"},
+
+                                    {% endfor %}
+
+                                ]},
+
+                              { id: 'select3',
+                                type: 'select',
+                                options: [
+                                    {% for settore in settori %}
+                                        {value: "{{settore.nome}}", text: "{{settore.nome}}"},
+
+                                    {% endfor %}
+
+                                ]},
+                              { id: 'delSettore', value: 'Cancella settore', type: 'checkbox' }
+
+                            ]
+                          }, function (isConfirm) {
+
+                                  if (isConfirm) {
+                                    var form=this.swalForm
+
+                                    if( form['delSettore'] ){
+                                        socketPrezzario.emit("elimina_settore", {'dip': '{{dipendente.username}}', 'settore': form['select3']});
+
+
+                                    }
+                                    else
+                                        socketPrezzario.emit("registra_settore",
+                                           {'dip': '{{dipendente.username}}', 'settore': form['newSettore'],
+                                             'categoria': form['select1'], 'pertinenza': form['select2']});
+
+                                  }
+
+                                  $('#addSettore').attr('checked', false);
+
+
+                          })
+                     }
+                     lotsOfFields();
+
+
+
+                }
+            });
+
+        </script>
+
+    </div>
+
+{% endblock %}

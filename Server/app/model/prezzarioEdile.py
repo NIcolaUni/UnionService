@@ -1,6 +1,6 @@
-from .db.listinoArtigianiDBmodel import ListinoArtigianiDBmodel
+from .db.prezzarioEdileDBmodel import PrezzarioEdileDBmodel
 
-class ListinoArtigiani(ListinoArtigianiDBmodel):
+class PrezzarioEdile(PrezzarioEdileDBmodel):
 
     def __init__(self, settore, tipologia, larghezza=None, altezza=None, profondita=None, unitaMisura=None, prezzoMin=None, prezzoMax=None):
         self.settore = settore

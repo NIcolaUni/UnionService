@@ -205,7 +205,7 @@ materialAdmin
         //Get Todo List Widget Data
         this.todo = todoService.todo;
         
-        this.tdResult = todoService.getTodo(this.todo);
+        this.tdResult = todoService.getTodo(this.todo, this.dirigente);
         
         //Add new Item (closed by default)
         this.addTodoStat = false;

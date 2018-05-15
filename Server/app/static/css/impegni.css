@@ -1,0 +1,58 @@
+#delImpegno {
+    font-size: 30px;
+    color: black;
+    float: right;
+}
+
+#delImpegno:hover {
+    color: red;
+}
+
+
+.media-body{
+    text-align: left;
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+}
+
+
+#dirImpegni {
+
+     font-weight: bold;
+     color: red;
+}
+
+
+/* Select style here */
+
+select#dipImpegni {
+	margin: 0 auto;
+	color: black;
+	width: 200px;
+	height: 25px;
+	cursor: pointer;
+	background-color: transparent;
+
+
+
+}
+
+select#dipImpegni:hover {
+	background-color: transparent;
+
+}
+
+select#dipImpegni option {
+	background-color: white;
+	color: gray;
+	width: 310px;
+	padding: 10px 15px;
+	height: 20px;
+	cursor: pointer;
+}
+
+select#dipImpegni option:hover {
+	padding-left: 25px;
+	width: 270px;
+	color: #EC6F66;
+}

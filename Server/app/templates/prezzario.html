@@ -1,0 +1,31 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+    <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+
+
+    <div id="pagewrap">
+        <span class="contact100-form-title row">
+           Prezzario Edile
+        </span>
+
+    </div>
+
+
+
+    <script>
+
+        $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
+        $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+        $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+        $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+        $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+    </script>
+
+
+{% endblock %}

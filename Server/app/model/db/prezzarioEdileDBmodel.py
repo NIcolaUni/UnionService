@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
 from app import database
 
-class ListinoArtigianiDBmodel(database.Model):
-    __tablename__="listino_artigiani"
+class PrezzarioEdileDBmodel(database.Model):
+    __tablename__="prezzario_edile"
 
     __table_args__ = (
             PrimaryKeyConstraint('settore', 'tipologia'),

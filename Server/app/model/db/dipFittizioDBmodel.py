@@ -17,5 +17,6 @@ class DipFittizioDBmodel(database.Model):
 
     def commitRegistrazione(dipReg, dipFit):
         database.session.add(dipReg)
+        database.session.commit()
         database.session.add(dipFit)
         database.session.commit()

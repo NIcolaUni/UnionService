@@ -1,0 +1,36 @@
+
+{% for impegno in impegni %}
+
+    <div class="pull-right">
+        <a id="delImpegno"  href="" > × </a>
+    </div>
+    <div class="media-body">
+        <label>
+            <input id="checkImpegni" type="checkbox">
+            <i class="input-helper"></i>
+            <span> &emsp;
+                {% if impegno.dirigente == None %}
+
+                    <span id="dirImpegni">Personale</span>: {{ impegno.testo }}</span>
+                {% else %}
+                    <span id="dirImpegni">{{impegno.dirigente}}</span>: {{ impegno.testo }}</span>
+
+                {% endif %}
+        </label>
+    </div>
+
+{% endfor %}
+
+<script>
+
+    $('#delImpegno').click( function(){
+        console.log( "evvai");
+
+        console.log( $(this).parent().html() );
+    });
+
+//var socketImpegni = io.connect("{{sockUrl}}"+'/impegni');
+
+
+//socketImpegni.emit('eliminaImpegno', );
+</script>

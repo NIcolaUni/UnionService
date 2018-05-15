@@ -10685,6 +10685,7 @@ a.lv-footer:hover {
 .tl-body .checkbox .input-helper:after {
   border-color: #fff;
 }
+
 #add-tl-item {
   width: 50px;
   height: 50px;
@@ -10729,7 +10730,7 @@ a.lv-footer:hover {
   width: 100%;
   font-size: 24px;
   color: #ffc107;
-  position: absolute;
+  //position: absolute;
   height: 100%;
   border: 0;
   outline: none;
@@ -10806,6 +10807,8 @@ a.lv-footer:hover {
 #add-tl-item.toggled .add-tl-body .add-tl-actions [data-tl-action="save"] {
   color: #4caf50;
 }
+
+
 .btn {
   border: 0;
   text-transform: uppercase;
@@ -15806,4 +15809,8 @@ hr.fc-divider {
   padding: 6px 12px;
   font-size: 13px;
   margin: 20px 2px 0;
+}
+
+#top-search-wrap {
+    background: #FFBF18;
 }

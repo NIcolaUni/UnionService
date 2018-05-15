@@ -40,11 +40,12 @@ materialAdmin
     // =========================================================================
 
     .service('todoService', ['$resource', function($resource){
-        this.getTodo = function(todo) {
-            var todoList = $resource("/static/headerAndForm/data/todo.json");
+        this.getTodo = function(todo, dirigente) {
+            var todoList = $resource("getImpegni");
             
             return todoList.get({
-                todo: todo
+                todo: todo,
+                dirigente: dirigente
             });
         }
     }])

@@ -22,7 +22,7 @@
             <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
         </li>
           {% endif %}
-          {% if dipendente.classe == 'commerciale' %}
+          {% if dipendente.classe == 'commerciale' or  dipendente.dirigente %}
         <li>
             <a class="show-4 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
         </li>
@@ -69,7 +69,7 @@
                 </li>
                 {% endif %}
 
-                {% if dipendente.classe == 'commerciale' %}
+                {% if dipendente.classe == 'commerciale' or  dipendente.dirigente  %}
                 <li>
                     <a class="show-4 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
                 </li>
@@ -98,97 +98,81 @@
                   <h2>Welcome  <span class="red"> {{dipendente.nome}} {{dipendente.cognome}}</span></h2>
                   <p> <span class="orange">{{dipendente.classe}}
                   {%if dipendente.dirigente%} dirigente {% endif %}</span></p>
-                  <div id="noteDipendenti"  class="row">
-                    <div class="row righe-homepage">
-                      <div class="col-md-3"></div>
-                      <div class="col-sm-12 col-md-6">
-                        {% raw %}
-                          <!-- Todo Lists -->
-                          <div id="todo-lists" data-ng-controller="todoCtrl as tctrl">
-                            <div class="tl-header">
-                                <h2>Impegni lavorativi</h2>
-                                <small>Memorandum degli impegni di lavoro</small>
 
-                                <ul class="actions actions-alt">
-                                    <li class="dropdown" dropdown>
-                                        <a href="" dropdown-toggle>
-                                            <i class="zmdi zmdi-more-vert"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li>
-                                                <a href="">Refresh</a>
-                                            </li>
-                                            <li>
-                                                <a href="">Manage Widgets</a>
-                                            </li>
-                                            <li>
-                                                <a href="">Widgets Settings</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="clearfix"></div>
-
-                            <div class="tl-body">
+                    <div id="noteDipendenti"  class="row">
 
 
-                                <div id="add-tl-item" data-ng-class="{ 'toggled': tctrl.addTodoStat }" data-ng-click="tctrl.addTodoStat = true">
-                                    <i class="add-new-item zmdi zmdi-plus" data-ng-click="tctrl.addTodo($event)"></i>
+            <div class="row righe-homepage">
+              <div class="col-md-3"></div>
+              <div class="col-sm-12 col-md-6">
+                {% raw %}
+                  <!-- Todo Lists -->
+                  <div id="todo-lists" data-ng-controller="todoCtrl as tctrl">
+                    <div class="tl-header">
+                        <h2>Impegni lavorativi</h2>
+                        <small>Memorandum degli impegni di lavoro</small>
 
-                                    <div class="add-tl-body">
-                                        <textarea placeholder="What you want to do..." data-ng-model="tctrl.todo"></textarea>
-
-                                        <div class="add-tl-actions">
-                                            <a class="zmdi zmdi-close" data-tl-action="dismiss" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
-                                            <a class="zmdi zmdi-check" data-tl-action="save" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="checkbox media" data-ng-repeat="w in tctrl.tdResult.list">
-                                    <div class="pull-right">
-                                        <ul class="actions actions-alt">
-                                            <li class="dropdown" dropdown>
-                                                <a href="" dropdown-toggle>
-                                                    <i class="zmdi zmdi-more-vert"></i>
-                                                </a>
-
-                                                <ul class="dropdown-menu dropdown-menu-right">
-                                                    <li><a href="">Delete</a></li>
-                                                    <li><a href="">Archive</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="media-body">
-                                        <label>
-                                            <input type="checkbox">
-                                            <i class="input-helper"></i>
-                                            <span>{{ w.todo }}</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                            </div>
-                          </div>
-                        {% endraw %}
-                      </div>
-                      <div class="col-md-3"></div>
                     </div>
-                    <div class="row righe-homepage">
-                      <div class="col-md-3"></div>
-                      <div class="col-sm-12 col-md-6">
-                          <!-- Calendar -->
-                          <div id="calendar-widget" data-full-calendar></div>
 
-                      </div>
-                      <div class="col-md-3"></div>
+                    <div class="clearfix"></div>
+
+                    <div class="tl-body">
+
+
+                        <div id="add-tl-item" data-ng-class="{ 'toggled': tctrl.addTodoStat }" data-ng-click="tctrl.addTodoStat = true">
+                            <i class="add-new-item zmdi zmdi-plus" data-ng-click="tctrl.addTodo($event)"></i>
+
+                            <div class="add-tl-body">
+                                <textarea id="textImpegno" placeholder="Testo..." data-ng-model="tctrl.todo"></textarea>
+
+                                <div class="add-tl-actions">
+
+                                    {% if dipendente.dirigente %}
+                                    <select id="dipImpegni">
+                                        <option>Personale</option>
+                                        <option>matteo_cittadini</option>
+                                        <option>Franzo</option>
+                                    </select>
+                                    {% endif %}
+
+                                    <a class="zmdi zmdi-close" data-tl-action="dismiss" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
+                                    <a id="addImpegno" class="zmdi zmdi-check" data-tl-action="save" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div id="contentImpegni" class="checkbox media" >
+                        <!--    <div class="pull-right">
+                                <a id="delImpegno" href="" > × </a>
+                            </div>
+                            <div class="media-body">
+                                <label>
+                                    <input id="checkImpegni" type="checkbox">
+                                    <i class="input-helper"></i>
+                                    <span> &emsp;</span>
+                                </label>
+                            </div> -->
+                        </div>
+
                     </div>
                   </div>
+                {% endraw %}
+              </div>
+              <div class="col-md-3"></div>
+            </div>
+            <div class="row righe-homepage">
+              <div class="col-md-3"></div>
+              <div class="col-sm-12 col-md-6">
+                  <!-- Calendar -->
+                  <div id="calendar-widget" data-full-calendar></div>
+
+              </div>
+              <div class="col-md-3"></div>
+            </div>
+
+                    </div>
 
                 </div> <!-- fine welcome-text -->
 
@@ -307,7 +291,7 @@
 <script type="text/javascript" charset="utf-8">
 
 
-    var socketHome = io.connect('http://debtux:80/home');
+    var socketHome = io.connect("{{sockUrl}}"+'/home');
 
     socketHome.on('connect', function() {
         console.log('connected');
@@ -319,7 +303,55 @@
 
 </script>
 
-<script type="text/javascript" charset="utf-8">
+<script>
+
+    $('#contentImpegni').load('listImpegni');
+    var socketImpegni = io.connect("{{sockUrl}}"+'/impegni');
+
+    socketImpegni.on('aggiornaImpegni', function(){
+        $('#contentImpegni').load('listImpegni');
+    });
+
+    {% if dipendente.dirigente %}
+        $('#addImpegno').click(function(){
+
+
+            newImpegno = $('#textImpegno').val();
+            selectImpegno = $('#dipImpegni').val();
+
+            // se non viene inserito nulla nel campo di testo
+            if( newImpegno == "" )
+                return;
+
+            if( selectImpegno == "Personale" )
+            {
+                socketImpegni.emit('registraImpegno', {'testo': newImpegno, 'dip': '{{dipendente.username}}', 'dir': "" });
+            }
+            else
+                socketImpegni.emit('registraImpegno', {'testo': newImpegno, 'dip': selectImpegno, 'dir': '{{dipendente.username}}'});
+
+
+
+        });
+    {% else %}
+
+        $('#addImpegno').click(function(){
+
+
+            newImpegno = $('#textImpegno').val();
+
+            // se non viene inserito nulla nel campo di testo
+            if( newImpegno == "" )
+
+            socketImpegni.emit('registraImpegno', {'testo': newImpegno, 'dip': '{{dipendente.username}}', 'dir': "" });
+
+        });
+
+
+
+    {% endif %}
+
+
 
 </script>
 
