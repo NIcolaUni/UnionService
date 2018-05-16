@@ -35,6 +35,7 @@ accoglienzaForm = None
 accoglienzaOk = False
 formCercaCliente =None
 appUrl="http://debtux:80"
+prezzarioEdileSettoreCorrente = None
 
 
 import app.controller

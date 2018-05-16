@@ -5,14 +5,27 @@ class PrezzarioEdileDBmodel(database.Model):
     __tablename__="prezzario_edile"
 
     __table_args__ = (
-            PrimaryKeyConstraint('settore', 'tipologia'),
+            PrimaryKeyConstraint('settore', 'tipologia_lavorazione'),
             )
 
-    settore = Column(String(30), ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="CASCADE"))
-    tipologia = Column(String(30))
-    larghezza = Column(Integer)
-    altezza = Column(Integer)
-    profondita = Column(Integer)
+    tipologia_lavorazione = Column(String(100))
+    settore = Column(String(100), ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
+    categoria = Column(String(100), ForeignKey('categoria_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
+    pertinenza = Column(String(100), ForeignKey('pertinenza_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
     unitaMisura = Column(String(5))
+    costo = Column(Integer)
     prezzoMin = Column(Integer)
     prezzoMax = Column(Integer)
+    dimensione = Column(String(100))
+    fornitura = Column(Integer)
+    posa = Column(Integer)
+    note = Column(String(500))
+
+    def commitLavorazione(lav):
+        database.session.add(lav)
+        database.session.commit()
+
+
+    def commitEliminaLavorazione(lav):
+        database.session.delete(lav)
+        database.session.commit()
