@@ -4,13 +4,8 @@ from app import database
 
 class SettoreLavorazioneDBmodel(database.Model):
     __tablename__ = "settore_lavorazione"
-    __table_args__ = (
-        ForeignKeyConstraint(['categoria'],
-                             ['categoria_lavorazione.nome'],
-                             onupdate="CASCADE", ondelete="SET NULL"),)
 
     nome = Column(String(100), primary_key=True)
-    categoria = Column(String(100))
 
 
     def commitSettore(nuovoSettore):

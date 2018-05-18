@@ -9,9 +9,8 @@ class PrezzarioEdileDBmodel(database.Model):
             )
 
     tipologia_lavorazione = Column(String(100))
-    settore = Column(String(100), ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
-    categoria = Column(String(100), ForeignKey('categoria_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
-    pertinenza = Column(String(100), ForeignKey('categoria_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
+    settore = Column(String(200),  ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
+    pertinenza = Column(String(100),  ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
     unitaMisura = Column(String(5))
     costo = Column(Integer)
     prezzoMin = Column(Integer)

@@ -2,14 +2,13 @@ from .db.settoreLavorazioneDBmodel import SettoreLavorazioneDBmodel
 
 class SettoreLavorazione(SettoreLavorazioneDBmodel):
 
-    def __init__(self, nome, categoria):
+    def __init__(self, nome):
         self.nome = nome
-        self.categoria = categoria
 
 
 
-    def registraSettore(nome, categoria):
-        new = SettoreLavorazione(nome=nome, categoria=categoria)
+    def registraSettore(nome):
+        new = SettoreLavorazione(nome=nome)
         SettoreLavorazioneDBmodel.commitSettore(new)
 
     def eliminaSettore(nome):

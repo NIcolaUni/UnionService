@@ -2,11 +2,10 @@ from .db.prezzarioEdileDBmodel import PrezzarioEdileDBmodel
 
 class PrezzarioEdile(PrezzarioEdileDBmodel):
 
-    def __init__(self, settore, tipologia_lavorazione, categoria, pertinenza, costo=None, unitaMisura=None, prezzoMin=None, prezzoMax=None,
+    def __init__(self, settore, tipologia_lavorazione, pertinenza, costo=None, unitaMisura=None, prezzoMin=None, prezzoMax=None,
                         dimensione=None, fornitura=None, posa=None, note=None, daVerificare=False):
         self.settore = settore
         self.tipologia_lavorazione = tipologia_lavorazione
-        self.categoria = categoria
         self.pertinenza = pertinenza
         self.unitaMisura = unitaMisura
         self.prezzoMin = prezzoMin
@@ -18,10 +17,10 @@ class PrezzarioEdile(PrezzarioEdileDBmodel):
         self.costo = costo
         self.daVerificare = daVerificare
 
-    def registraLavorazione(settore, tipologia_lavorazione, categoria, pertinenza, unitaMisura=None, prezzoMin=None, prezzoMax=None,
+    def registraLavorazione(settore, tipologia_lavorazione, pertinenza, unitaMisura=None, prezzoMin=None, prezzoMax=None,
                         dimensione=None, fornitura=None, posa=None, note=None, costo=None):
 
-        newLav = PrezzarioEdile(settore=settore, tipologia_lavorazione=tipologia_lavorazione, categoria=categoria, pertinenza=pertinenza,
+        newLav = PrezzarioEdile(settore=settore, tipologia_lavorazione=tipologia_lavorazione, pertinenza=pertinenza,
                                     unitaMisura=unitaMisura, costo=costo, prezzoMin=prezzoMin, prezzoMax=prezzoMax,
                                     dimensione=dimensione, fornitura=fornitura, posa=posa, note=note)
 

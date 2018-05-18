@@ -5,8 +5,6 @@ from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
 from .model.dipendente import Dipendente
 from .model.notifica import Notifica
-from .model.categoria import Categoria
-from .model.pertinenza import Pertinenza
 from .model.settoreLavorazione import SettoreLavorazione
 from .model.prezzarioEdile import PrezzarioEdile
 from .model.clienteAccolto import ClienteAccolto
@@ -23,7 +21,7 @@ def prezzarioEdile():
     #server.logger.info("\n\nchiamato {}\n\n".format(app.prezzarioEdileSettoreCorrente))
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
     settori = SettoreLavorazione.query.all()
-    categorie = Categoria.query.all()
+    #categorie = Categoria.query.all()
    # pertinenze = Pertinenza.query.all()
     lavorazioni = PrezzarioEdile.query.all()
 
@@ -32,16 +30,13 @@ def prezzarioEdile():
             app.prezzarioEdileSettoreCorrente = lavorazioni[0].settore
 
     if app.prezzarioEdileSettoreCorrente is not None:
-        settoreSelezionato=SettoreLavorazione.query.filter_by(nome=app.prezzarioEdileSettoreCorrente).first()
 
         #server.logger.info("\n\nchiamato {} {} {}\n\n".format(settori, categorie, pertinenze))
         return render_template('prezzario.html', dipendente=dip, settori=settori, settoreToSel=app.prezzarioEdileSettoreCorrente,
-                                        categorie=categorie, categoriaToSel=settoreSelezionato.categoria,
                                         lavorazioni=lavorazioni,
                                         sockUrl=app.appUrl, prezzario=True,)
     else:
         return render_template('prezzario.html', dipendente=dip, settori=settori, settoreToSel=None,
-                                        categorie=categorie,  categoriaToSel=None,
                                         lavorazioni=lavorazioni,
                                         sockUrl=app.appUrl, prezzario=True,)
 
@@ -348,11 +343,11 @@ def handle_registra_settore(message):
   dip = Dipendente.query.filter_by(username=message['dip']).first()
 
   if SettoreLavorazione.query.filter_by(nome=message['settore'] ).first() is None:
-      SettoreLavorazione.registraSettore(nome=message['settore'], categoria=message['categoria'] )
+      SettoreLavorazione.registraSettore(nome=message['settore'] )
       emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
 
   else:
-      emit('abortAggiorna', namespace='/prezzario', room=dip.session_id)
+      emit('abortAggiorna',  {'what': 'Settore'}, namespace='/prezzario', room=dip.session_id)
 
 
 @socketio.on('elimina_settore', namespace="/prezzario")
@@ -366,7 +361,7 @@ def handle_registra_lavorazione(message):
     server.logger.info("\n\n\nWei sono il dip: {}\n\n\n".format(message['dip']))
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     PrezzarioEdile.registraLavorazione(settore=message["settore"], tipologia_lavorazione=message["tipologia"],
-                                        categoria=message["categoria"], pertinenza=message["pertinenza"], unitaMisura=message["unita"],
+                                        pertinenza=message["pertinenza"], unitaMisura=message["unita"],
                                          costo=message["costo"], prezzoMin=message["pMin"], prezzoMax=message["pMax"],
                                           dimensione=message["dimensione"], fornitura=message["fornitura"], posa=message["posa"],
                                             note=message["note"])
