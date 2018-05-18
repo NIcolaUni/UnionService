@@ -44,12 +44,7 @@
                                    <span class="white">Aggiungi/elimina categoria</span>
                                 </label>
                         </div>
-                        <div class="wrap-contact100-form-check small-check">
-                                 <input class="input-check100" type="checkbox" name="addPertinenza" id="addPertinenza">
-                                <label class="label-check100" for="addPertinenza">
-                                   <span class="white">Aggiungi/elimina pertinenza</span>
-                                </label>
-                        </div>
+
                         <div class="wrap-contact100-form-check small-check">
                                  <input class="input-check100" type="checkbox" name="addSettore" id="addSettore">
                                 <label class="label-check100" for="addSettore">
@@ -69,24 +64,22 @@
 						</span>
 					</button>
 				</div> -->
-                <table data-vertable="ver2">
+                <table class="intestazione" data-vertable="ver2">
                     <thead >
                         <tr class="row100 head">
-                            <th class="column100 leftify-firstCol" data-column="column1">Da verificare</th>
-                            <th class="column100 leftify" data-column="column2">Modifica </th>
-                            <th class="column100 leftify" data-column="column3">Tipologia lavorazione</th>
-                            <th class="column100 leftify" data-column="column4">Categoria</th>
-                            <th class="column100 leftify" data-column="column5">Pertinenza</th>
-                            <th class="column100 leftify" data-column="column6">Unità</th>
-                            <th class="column100 leftify" data-column="column7">Costo</th>
+
+                            <th class="column100 leftify-firstCol" colspan="2"  data-column="column1">Tipologia lavorazione</th>
+                            <th class="column100 leftify" data-column="column3">Pertinenza</th>
+                            <th class="column100 leftify" data-column="column4">Unità</th>
+                            <th class="column100 leftify" data-column="column5">Fornitura</th>
+                            <th class="column100 leftify" data-column="column6">Posa</th>
+                            <th class="column100 leftify" data-column="column7">Costo &#10; (fornitura+posa)</th>
                             <th class="column100 leftify" data-column="column8">Prezzo min</th>
                             <th class="column100 leftify" data-column="column9">Prezzo max</th>
                             <th class="column100 leftify" data-column="column10">Dimensione</th>
-                            <th class="column100 leftify" data-column="column11">Fornitura</th>
-                            <th class="column100 leftify" data-column="column12">Posa</th>
-                            <th class="column100 leftify" data-column="column13">Totale</th>
-                            <th class="column100 leftify" data-column="column14">Note</th>
-                            <th class="column100 leftify" data-column="column15"></th>
+                            <th class="column100 leftify" data-column="column11">Note</th>
+                            <th class="column100 leftify" colspan="2" data-column="column12"></th>
+
 
                         </tr>
                     </thead>
@@ -95,20 +88,15 @@
                 <table id="listino" data-vertable="ver2">
                     <thead id="headListino">
                         <tr id="trHead" class="row100 head">
-                            <th class="leftify" data-column="column1"></th>
-                            <th class="leftify" data-column="column2"></th>
-                            <th class="column100 leftify" data-column="column3"><input id="lavorazionePrezzario" class="inputText" type="text" name="tipologia" placeholder="tipologia"></th>
-                            <th class="column100 leftify" data-column="column4">
-                                <select id="selCat" class="inputSel"  name="categoria">categoria
 
-                                </select>
-                            </th>
-                            <th class="column100 leftify" data-column="column5">
+                            <th class="column100 leftify-firstCol" colspan="2"  data-column="column1"><input id="lavorazionePrezzario" class="inputText" type="text" name="tipologia" placeholder="tipologia"></th>
+
+                            <th class="column100 leftify" data-column="column3">
                                   <select id="selPert" class="inputSel"  name="pertinenza">pertinenza
 
                                 </select>
                             </th>
-                            <th class="column100 leftify" data-column="column6">
+                            <th class="column100 leftify" data-column="column4">
                                 <select class="inputSel"  name="unita">
                                     <option>cad</option>
                                     <option>m</option>
@@ -116,15 +104,18 @@
                                     <option>m<sup>3</sup></option>
                                 </select>
                             </th>
-                            <th class="column100 leftify" data-column="column7"><input class="inputNum" type="number" name="costo" placeholder="costo"></th>
-                            <th class="column100 leftify" data-column="column8"><input class="inputNum" type="number" name="prezzoMin" placeholder="prezzo min"></th>
-                            <th class="column100 leftify" data-column="column9"><input class="inputNum" type="number" name="prezzoMax" placeholder="prezzo max"></th>
-                            <th class="column100 leftify" data-column="column10"><input class="inputText" type="text" name="dimensione" placeholder="dimensione"></th>
-                            <th class="column100 leftify" data-column="column11"><input class="inputNum" type="number" name="fornitura" placeholder="fornitura"></th>
-                            <th class="column100 leftify" data-column="column12"><input class="inputNum" type="number" name="posa" placeholder="posa"></th>
-                            <th class="column100 leftify" data-column="column13">--</th>
-                            <th class="column100 leftify" data-column="column14"><input class="inputText" type="text" name="note" placeholder="note"></th>
-                            <th class="column100 leftify" data-column="column15"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
+                            <th class="column100 leftify" data-column="column5"><input class="inputNum" type="number" name="fornitura" placeholder="fornitura" value=0></th>
+                            <th class="column100 leftify" data-column="column6"><input class="inputNum" type="number" name="posa" placeholder="posa" value=0></th>
+                            <th class="column100 leftify" data-column="column7"><input class="inputNum" type="number" name="costo" placeholder="costo" value=0></th>
+                            <th class="column100 leftify" data-column="column8"><input class="inputNum" type="number" name="prezzoMin" placeholder="prezzo min" value=0></th>
+                            <th class="column100 leftify" data-column="column9"><input class="inputNum" type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
+                            <th class="column100 leftify" data-column="column10"><input class="inputText" type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
+                            <th class="column100 leftify" data-column="column11">
+                                <input class="inputText" type="text" name="note" placeholder="note" value="">
+                               <!-- <textarea class="inputText"></textarea> -->
+
+                            </th>
+                            <th class="column100 leftify" colspan="2" data-column="column12"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
 
 
                         </tr>
@@ -156,18 +147,12 @@
                     {% if categoria.nome == categoriaToSel %}
 
                              $("#selCat").append( '<option selected="selected">{{categoria.nome}}</option>' );
+                               $("#selPert").append( '<option selected="selected">{{categoria.nome}}</option>' );
+
                     {% else %}
                               $("#selCat").append( '<option>{{categoria.nome}}</option>' );
+                               $("#selPert").append( '<option>{{categoria.nome}}</option>' );
 
-                    {% endif %}
-
-                {% endfor %}
-
-                {% for pertinenza in pertinenze %}
-                    {% if pertinenza.nome == pertinenzaToSel %}
-                             $("#selPert").append( '<option selected="selected">{{pertinenza.nome}}</option>' );
-                    {% else %}
-                                $("#selPert").append( '<option>{{pertinenza.nome}}</option>' );
                     {% endif %}
 
                 {% endfor %}
@@ -176,37 +161,64 @@
 
                 {% for lavorazione in lavorazioni %}
                     if( "{{lavorazione.settore}}" == $("#settoriDisponibili").val()) {
+
+                        {% if lavorazione.daVerificare %}
+                            var classiTr="row100 daVerificare" ;
+                            var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
+                        {% else %}
+                            var classiTr="row100";
+                            var inputToVer='<input class="toVerify" type="checkbox" >';
+
+                        {% endif %}
+
                         $("#bodyListino").append(
-                              '<tr class="row100">'+
-                                  '<td class="column100 leftify-firstCol" data-column="column1">'+
-                                      '<label class="checkPrezzario">'+
-                                          '<input type="checkbox">'+
-                                          '<span class="checkmark"></span>'+
-                                      '</label>'+
-                                   '</td>'+
-                                    '<td class="column100 leftify" data-column="column2">'+
-                                        '<label class="checkPrezzario">'+
+                              '<tr class="'+ classiTr +'">'+
+
+                                    '<td class="column100 tableContent tipologia" colspan="2" data-column="column1">{{lavorazione.tipologia_lavorazione}}</td>'+
+                                    '<td class="column100 tableContent" data-column="column2">{{lavorazione.categoria}}</td>'+
+                                    '<td class="column100 tableContent" data-column="column3">{{lavorazione.pertinenza}}</td>'+
+                                    '<td class="column100 tableContent" data-column="column4">{{lavorazione.unitaMisura}}</td>'+
+                                    '<td class="column100 tableContent" data-column="column5">{{lavorazione.fornitura}} &euro;</td>'+
+                                    '<td class="column100 tableContent" data-column="column6">{{lavorazione.posa}} &euro; </td>'+
+                                    '<td class="column100 tableContent" data-column="column7">{{lavorazione.costo}} &euro;</td>'+
+                                    '<td class="column100 tableContent" data-column="column8">{{lavorazione.prezzoMin}} &euro;</td>'+
+                                    '<td class="column100 tableContent" data-column="column9">{{lavorazione.prezzoMax}} &euro;</td>'+
+                                    '<td class="column100 tableContent" data-column="column10">{{lavorazione.dimensione}}</td>'+
+                                    '<td class="column100 tableContent" data-column="column11">{{lavorazione.note}}</td>'+
+                                    '<td class="column100 iconsTd" data-column="column12">'+
+                                      /*  '<label class="checkPrezzario">'+
+                                              '<input type="checkbox">'+
+                                              '<span class="checkmark toCanc"></span>'+
+                                        '</label>'+*/
+                                        '<div class="iconsDiv">'+
+                                        '<a class="fa fa-trash iconsTab"></a>'+
+                                        '</div>'+
+                                    '</td>'+
+                                    '<td class="column100 iconsTd" data-column="column13">'+
+                                       /* '<label class="checkPrezzario">'+
                                               '<input type="checkbox">'+
                                               '<span class="checkmark"></span>'+
-                                        '</label>'+
+                                        '</label>'+*/
+                                        '<div class="iconsDiv">'+
+                                            '<a class="fa fa-edit iconsTab"></a>'+
+                                        '</div>'+
                                     '</td>'+
-                                    '<td class="column100 leftify" data-column="column3">{{lavorazione.tipologia_lavorazione}}</td>'+
-                                    '<td class="column100 leftify" data-column="column4">{{lavorazione.categoria}}</td>'+
-                                    '<td class="column100 leftify" data-column="column5">{{lavorazione.pertinenza}}</td>'+
-                                    '<td class="column100 leftify" data-column="column6">{{lavorazione.unitaMisura}}</td>'+
-                                    '<td class="column100 leftify" data-column="column7">{{lavorazione.costo}}</td>'+
-                                    '<td class="column100 leftify" data-column="column8">{{lavorazione.prezzoMin}}</td>'+
-                                    '<td class="column100 leftify" data-column="column9">{{lavorazione.prezzoMax}}</td>'+
-                                    '<td class="column100 leftify" data-column="column10">{{lavorazione.dimensione}}</td>'+
-                                    '<td class="column100 leftify" data-column="column11">{{lavorazione.fornitura}}</td>'+
-                                    '<td class="column100 leftify" data-column="column12">{{lavorazione.posa}}</td>'+
-                                    '<td class="column100 leftify" data-column="column13"></td>'+
-                                    '<td class="column100 leftify" data-column="column14">{{lavorazione.note}}</td>'+
-                                    '<td class="column100 leftify" data-column="column15"></td>'+
+                                    '<td class="column100 iconsTd " data-column="column12">'+
+                                      /*'<label class="checkPrezzario">'+
+                                          inputToVer+
+                                          '<span class="checkmark toVerify"></span>'+
+                                      '</label>'+*/
+                                      '<div class="iconsDiv">'+
+                                        '<a class="fa fa-warning iconsTab"></a>'+
+                                      '</div>'+
+                                   '</td>'+
+
                                '</tr>'
                         );
                     }
                 {% endfor %}
+
+
 
         </script>
 
@@ -215,6 +227,7 @@
             var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
 
             var socketHome = io.connect("{{sockUrl}}"+'/home');
+
 
             socketHome.on('connect', function() {
                 console.log('connected listino');
@@ -236,9 +249,32 @@
                           confirmButtonText: "Ok",
 
                      });
-selected="selected"
             });
 
+            $("span.toVerify").click(function() {
+                    console.log("sto stampando " + $(this).closest('input.toVerify').attr('checked') );
+                  if($(this).closest('input.toVerify').attr('checked') != 'checked' ){
+
+
+                   var setDisp = $('#settoriDisponibili').val();
+                    console.log("sono checkkato " + setDisp);
+                   socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
+                                                               'tipologia': $(this).closest('.row100').children('.tipologia').text(),'valore': true});
+                  }
+                  else if ($(this).closest('input.toVerify').attr('checked') == 'checked' ){
+                       console.log("altrimenti");
+                      var setDisp = $('#settoriDisponibili').val();
+                      socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
+                                                               'tipologia': $(this).closest('.row100').children('.tipologia').text(),'valore': false});
+
+                  }
+            });
+
+             $("span.toCanc").click(function() {
+                var setDisp = $('#settoriDisponibili').val();
+               socketPrezzario.emit('elimina_lavorazione', {'dip': '{{dipendente.username}}', 'settore': setDisp,
+                                                               'tipologia': $(this).closest('.row100').children('.tipologia').text()});
+             });
 
             $('#settoriDisponibili').change( function() {
 
@@ -373,15 +409,6 @@ selected="selected"
                                     {% endfor %}
 
                                 ]},
-                              { id: 'select2',
-                                type: 'select',
-                                options: [
-                                    {% for pertinenza in pertinenze %}
-                                        {value: "{{pertinenza.nome}}", text: "{{pertinenza.nome}}"},
-
-                                    {% endfor %}
-
-                                ]},
 
                               { id: 'select3',
                                 type: 'select',
@@ -408,7 +435,7 @@ selected="selected"
                                     else
                                         socketPrezzario.emit("registra_settore",
                                            {'dip': '{{dipendente.username}}', 'settore': form['newSettore'],
-                                             'categoria': form['select1'], 'pertinenza': form['select2']});
+                                             'categoria': form['select1']});
 
                                   }
 
@@ -453,12 +480,21 @@ selected="selected"
 
                             });
 
+                             //se non è stato impostato il tipo di lavorazione non fare nulla
+                            if( datiLavorazione[0] == "" )
+                                return;
+
+                            // se forniture e posa vengono specificate setta costo come la loro somma
+                            if( datiLavorazione[1] != 0 || datiLavorazione[2] != 0 )
+                                datiLavorazione[3] = parseInt(datiLavorazione[1]) + parseInt(datiLavorazione[2]);
+
+
                             socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),"tipologia" : datiLavorazione[0], "categoria" : selectOfLavorazione[0],
                                                                             "pertinenza": selectOfLavorazione[1], "unita": selectOfLavorazione[2],
-                                                                             "costo": datiLavorazione[1], "pMin" : datiLavorazione[2],
-                                                                             "pMax": datiLavorazione[3], "dimensione": datiLavorazione[4],
-                                                                              "fornitura": datiLavorazione[5], "posa": datiLavorazione[6],
-                                                                               "note": datiLavorazione[7]});
+                                                                            "fornitura": datiLavorazione[1], "posa": datiLavorazione[2],
+                                                                             "costo": datiLavorazione[3], "pMin" : datiLavorazione[4],
+                                                                             "pMax": datiLavorazione[5], "dimensione": datiLavorazione[6],
+                                                                              "note": datiLavorazione[7]});
 
 
 

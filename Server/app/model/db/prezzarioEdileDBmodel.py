@@ -11,7 +11,7 @@ class PrezzarioEdileDBmodel(database.Model):
     tipologia_lavorazione = Column(String(100))
     settore = Column(String(100), ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
     categoria = Column(String(100), ForeignKey('categoria_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
-    pertinenza = Column(String(100), ForeignKey('pertinenza_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
+    pertinenza = Column(String(100), ForeignKey('categoria_lavorazione.nome', onupdate="CASCADE", ondelete="SET NULL"))
     unitaMisura = Column(String(5))
     costo = Column(Integer)
     prezzoMin = Column(Integer)
@@ -20,6 +20,7 @@ class PrezzarioEdileDBmodel(database.Model):
     fornitura = Column(Integer)
     posa = Column(Integer)
     note = Column(String(500))
+    daVerificare = Column(Boolean(), default=False)
 
     def commitLavorazione(lav):
         database.session.add(lav)
@@ -28,4 +29,7 @@ class PrezzarioEdileDBmodel(database.Model):
 
     def commitEliminaLavorazione(lav):
         database.session.delete(lav)
+        database.session.commit()
+
+    def commit():
         database.session.commit()

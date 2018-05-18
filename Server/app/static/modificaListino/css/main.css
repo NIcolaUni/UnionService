@@ -30,6 +30,7 @@
 /*//////////////////////////////////////////////////////////////////
 [ Table ]*/
 table#listino {
+  table-layout: fixed;
   width: 100%;
   height: 100%;
   background-color: #fff;
@@ -56,8 +57,8 @@ table#listino th, td {
 }
 
 .row100 td {
-  padding-top: 18px;
-  padding-bottom: 14px;
+ // padding-top: 18px;
+  //padding-bottom: 14px;
 }
 
 
@@ -137,9 +138,10 @@ table#listino th, td {
 
 /*==================================================================
 [ Ver2 ]*/
+/*
 .table100.ver2 tbody tr:nth-child(even) {
   background-color: #eaf8e6;
-}
+}*/
 
 .table100.ver2 td {
   font-family: Montserrat-Regular;
@@ -400,6 +402,12 @@ table#listino th, td {
  height: 100%;
 }
 
+.intestazione {
+  width: 100%;
+  table-layout: fixed;
+
+}
+
 #bodyListino {
     display: block;
     position: relative;
@@ -430,17 +438,32 @@ table#listino th, td {
 #bodyListino::-webkit-scrollbar-thumb:window-inactive {
 	background: rgba(0,0,101,0.4);
 }
-
+/*
 #headListino {
     display: block;
     width: 100%;
     height: 20%;
-}
+}*/
 
 table#listino tr {
-    display: table;
-    position: relative;
+    /* display: table;
+   position: relative;
     width: 100%;
+    height: 100px;*/
+     table-layout: fixed;
+
+    width: 100%;
+    height: 100px;
+}
+
+table#listino th {
+    /* display: table;
+   position: relative;
+    width: 100%;
+    height: 100px;*/
+     table-layout: fixed;
+    width: 100%;
+    height: 100px;
 }
 
 #formListArt {
@@ -451,6 +474,9 @@ table#listino tr {
     z-index: 5;
     margin-left: 10%;
 
+}
+.daVerificare {
+    background-color: #FFE118;
 }
 
 .container {
@@ -470,7 +496,7 @@ table#listino tr {
     color: white;
     height: 50px;
 }
-
+/*
 .inputNum {
     width: 100%;
     color: black;
@@ -494,19 +520,28 @@ table#listino tr {
 
 .small-check{
     width: 30%;
-}
+}*/
 
 .leftify-firstCol {
-    padding-left: 5px;
-    width: 128px;
+   // padding-left: 5px;
+   // width: 128px;
    // height: 80px;
 }
 
 .leftify {
-    padding-left: 5px;
-    width: 128px;
+ //   padding-left: 0px;
+  //  width: 128px;
    // height: 80px;
 }
+
+.tableContent {
+  //  padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    //width: 50px;
+    //height: 100%;
+}
+
 
 .checkPrezzario {
     display: block;
@@ -577,9 +612,10 @@ table#listino tr {
 }
 
 .buttonPrezzario {
+  width: 100px;
   display: inline-block;
   padding: 15px 25px;
-  font-size: 24px;
+  font-size: 100%;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -597,4 +633,17 @@ table#listino tr {
   background-color: #3e8e41;
   box-shadow: 0 5px #666;
   transform: translateY(4px);
+}
+
+.iconsDiv {
+   position: absolute;
+}
+
+.iconsTab {
+   font-size: 3em;
+   margin-top: 30px;
+}
+
+.iconsTd {
+    width: 60px;
 }

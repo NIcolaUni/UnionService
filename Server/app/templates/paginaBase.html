@@ -139,14 +139,22 @@
 
 <!--===========================================================================================================-->
 
-    <!--===============================================================================================-->
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/impegni.css') }}">
+
+
+    {% if prezzario %}
+<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/css/util.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/css/main.css') }}">
-<!--===============================================================================================-->
+	<!--<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/css/main.css') }}">-->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/css/listino.css') }}">
 
-    {% if prezzario %}
+<!--===============================================================================================-->
      <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
      <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
     <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
@@ -154,10 +162,6 @@
 
     {% endif %}
 
-    <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/impegni.css') }}">
 </head>
 
     {% if fittizio %}

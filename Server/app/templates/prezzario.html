@@ -9,23 +9,278 @@
 
 
 
-    <div id="pagewrap">
-        <span class="contact100-form-title row">
-           Prezzario Edile
-        </span>
+    <div id="paginaPrezzario">
+
+        <div id="divIntestazione" class="row">
+            <span class="contact100-form-title">
+               Prezzario Edile
+            </span>
+
+
+
+            <form   class="contact100-form validate-form">
+
+                <div class="row divFormContainer">
+
+                    <div class="wrap-form input100-select bg1 fieldSettoreLav col-md-10">
+                        <span class="label-input100">Settore di Lavorazione</span>
+                        <div>
+                            <select id="settoriDisponibili" class="js-select2" name="service">
+                                {% for settore in settori %}
+
+                                    {% if settore.nome == settoreToSel %}
+                                        <option selected="selected">{{settore.nome}}</option>
+                                    {% else %}
+                                        <option>{{settore.nome}}</option>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </select>
+                            <div class="dropDownSelect2"></div>
+                        </div>
+                    </div>
+                    <div id="buttonsSettori" class="col-md-2">
+                        <a id="addSettore" class="fa fa-plus"></a>
+                        <a id="delSettore" class="fa fa-trash"></a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <div id="tabellaContainer" class="row">
+
+
+                <table id="prezzario">
+                    <thead id="headPrezzario">
+                       <tr id="trIntestazione">
+
+                            <th  class="tableIntestazione" colspan="2"  data-column="column1">Tipologia lavorazione</th>
+                            <th  class="tableIntestazione" data-column="column3">Pertinenza</th>
+                            <th  class="tableIntestazione" data-column="column4">Unità</th>
+                            <th  class="tableIntestazione" data-column="column5">Fornitura</th>
+                            <th  class="tableIntestazione" data-column="column6">Posa</th>
+                           <th  class="tableIntestazione" data-column="column7"> <span> Costo &#10; (fornitura+posa)<span></th>
+                            <th  class="tableIntestazione" data-column="column8">Prezzo min</th>
+                            <th  class="tableIntestazione" data-column="column9">Prezzo max</th>
+                           <th  class="tableIntestazione" data-column="column10"> <span> Dimensione &#10; (cm) </span></th>
+                            <th  class="tableIntestazione" data-column="column11">Note</th>
+                            <th  class="tableIntestazione" colspan="2" data-column="column12"> <a id="showForm" class="fa fa-plus"></a> <a id="hideForm" class="fa fa-minus"></a></th>
+
+                        </tr>
+                        <tr id="trForm">
+
+                            <th  class="tableForm" colspan="2"  data-column="column1"><textarea id="fornituraTextarea"></textarea></th>
+                            <th  class="tableForm" data-column="column3">
+                                <select name="unita">
+                                    <option>cad</option>
+                                    <option>mL</option>
+                                    <option>mQ</option>
+                                    <option>mC</option>
+                                    <option>cmL</option>
+                                    <option>cmQ</option>
+                                    <option>cmC</option>
+                                    <option>mmL</option>
+                                    <option>mmQ</option>
+                                    <option>mmC</option>
+                                </select>
+                            </th>
+                            <th  class="tableForm" data-column="column4">
+
+                                <select name="unita">
+                                    <option>cad</option>
+                                    <option>mL</option>
+                                    <option>mQ</option>
+                                    <option>mC</option>
+                                    <option>cmL</option>
+                                    <option>cmQ</option>
+                                    <option>cmC</option>
+                                    <option>mmL</option>
+                                    <option>mmQ</option>
+                                    <option>mmC</option>
+                                </select>
+
+                            </th>
+                            <th  class="tableForm" data-column="column5"><input type="number" name="fornitura" placeholder="fornitura" value=0></th>
+                            <th  class="tableForm" data-column="column6"><input type="number" name="posa" placeholder="posa" value=0></th>
+                            <th  class="tableForm" data-column="column7"><input type="number" name="costo" placeholder="costo" value=0></th>
+                            <th  class="tableForm" data-column="column8"><input type="number" name="costo" placeholder="costo" value=0></th>
+                            <th  class="tableForm" data-column="column9"><input type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
+                            <th  class="tableForm" data-column="column10"><input type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
+                            <th  class="tableForm" data-column="column11"><textarea id="noteTextarea"></textarea></th>
+                            <th  class="tableForm" colspan="2" data-column="column12"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
+
+                        </tr>
+
+                    </thead>
+                    <tbody id="bodyPrezzario">
+                 <!--  <tr>
+                        <td colspan="2" data-column="column1">C'era una volta un re seduto su un sofa che disse al</td>
+                    </tr>-->
+
+
+                    </tbody>
+
+                </table>
+
+        </div>
 
     </div>
 
+   <script>
+           /* console.log("il settore selezionato è: {{settoreToSel}}");*/
 
+           //Script necessari per renderizzare corretamente il tag select di "settore"
+            $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
+            $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+            $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+            $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+            $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+
+            $('#trForm').hide();
+
+            $('#hideForm').click(function(){
+                $('#trForm').hide();
+            });
+
+              $('#showForm').click(function(){
+                $('#trForm').show();
+            });
+
+            //codice per riempire il #bodyPrezzario
+            {% for lavorazione in lavorazioni %}
+                console.log("{{lavorazione.tipologia_lavorazione}}");
+                if( "{{lavorazione.settore}}" == $("#settoriDisponibili").val()) {
+
+                    {% if lavorazione.daVerificare %}
+                        var classiTr="daVerificare" ;
+                        var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
+                    {% else %}
+                        var classiTr="";
+                        var inputToVer='<input class="toVerify" type="checkbox" >';
+
+                    {% endif %}
+
+                    $("#bodyPrezzario").append(
+                          '<tr class="'+ classiTr +'">'+
+
+                                '<td class="doubleCol" colspan="2" data-column="column1">{{lavorazione.tipologia_lavorazione}}</td>'+
+
+                                '<td  data-column="column3">{{lavorazione.pertinenza}}</td>'+
+                                '<td  data-column="column4">{{lavorazione.unitaMisura}}</td>'+
+                                '<td  data-column="column5">{{lavorazione.fornitura}} &euro;</td>'+
+                                '<td  data-column="column6">{{lavorazione.posa}} &euro; </td>'+
+                                '<td  data-column="column7">{{lavorazione.costo}} &euro;</td>'+
+                                '<td  data-column="column8">{{lavorazione.prezzoMin}} &euro;</td>'+
+                                '<td  data-column="column9">{{lavorazione.prezzoMax}} &euro;</td>'+
+                                '<td  data-column="column10">{{lavorazione.dimensione}}</td>'+
+                                '<td  data-column="column11">{{lavorazione.note}}</td>'+
+                                '<td  class="controlCol" data-column="column12">'+
+
+                                  '<div class="iconsDiv">'+
+                                    '<a class="fa fa-trash iconsTab"></a>'+
+                                  '</div>'+
+                                  '<div class="iconsDiv">'+
+                                    '<a class="fa fa-edit iconsTab"></a>'+
+                                  '</div>'+
+                                  '<div class="iconsDiv">'+
+                                    '<a class="fa fa-warning iconsTab"></a>'+
+                                  '</div>'+
+                               '</td>'+
+
+                           '</tr>'
+                    );
+                }
+            {% endfor %}
+   </script>
+
+   <script>
+
+            var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+
+            socketHome.on('connect', function() {
+                console.log('connected listino');
+
+
+                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+            });
+
+
+   </script>
 
     <script>
+        var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
 
-        $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
-        $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
-        $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
-        $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
-        $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+
+        socketPrezzario.on('aggiornaPagina', function() {
+            location.reload();
+
+        });
+
+        $('#addSettore').click(function() {
+
+              swal.withForm({
+                title: 'Aggiungi un nuovo settore',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+                formFields: [
+
+                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore' }
+
+
+                ]
+              }, function (isConfirm) {
+
+                      if (isConfirm) {
+                            console.log("bella");
+
+                            /*
+                            socketPrezzario.emit("registra_settore",
+                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });*/
+
+                      }
+
+              })
+
+        });
+
+
+
+        $('#delSettore').click(function() {
+
+             var settoreSelezionato = $('#settoriDisponibili').val();
+
+             function registraSettore () {
+                  swal({
+                    title: 'Eliminazione settore '+ settoreSelezionato,
+                    text: 'sicuro di voler procedere?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                  }, function (isConfirm) {
+
+                          if (isConfirm) {
+
+                              console.log("bella");
+
+                          }
+
+                  })
+             }
+             registraSettore();
+
+
+
+
+        });
+
     </script>
-
 
 {% endblock %}

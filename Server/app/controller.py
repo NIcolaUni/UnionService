@@ -20,23 +20,31 @@ import app
 @server.route('/prezzarioEdile')
 @login_required
 def prezzarioEdile():
-    server.logger.info("\n\nchiamato {}\n\n".format(app.prezzarioEdileSettoreCorrente))
+    #server.logger.info("\n\nchiamato {}\n\n".format(app.prezzarioEdileSettoreCorrente))
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
     settori = SettoreLavorazione.query.all()
     categorie = Categoria.query.all()
-    pertinenze = Pertinenza.query.all()
+   # pertinenze = Pertinenza.query.all()
     lavorazioni = PrezzarioEdile.query.all()
 
     if app.prezzarioEdileSettoreCorrente is None:
-        app.prezzarioEdileSettoreCorrente = lavorazioni[0].settore
+        if len(lavorazioni) != 0:
+            app.prezzarioEdileSettoreCorrente = lavorazioni[0].settore
 
-    settoreSelezionato=SettoreLavorazione.query.filter_by(nome=app.prezzarioEdileSettoreCorrente).first()
+    if app.prezzarioEdileSettoreCorrente is not None:
+        settoreSelezionato=SettoreLavorazione.query.filter_by(nome=app.prezzarioEdileSettoreCorrente).first()
 
-    server.logger.info("\n\nchiamato {} {} {}\n\n".format(settori, categorie, pertinenze))
-    return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, settoreToSel=app.prezzarioEdileSettoreCorrente,
-                                    categorie=categorie, pertinenze=pertinenze, categoriaToSel=settoreSelezionato.categoria,
-                                    lavorazioni=lavorazioni, pertinenzaToSel=settoreSelezionato.pertinenza,
-                                    sockUrl=app.appUrl, prezzario=True,)
+        #server.logger.info("\n\nchiamato {} {} {}\n\n".format(settori, categorie, pertinenze))
+        return render_template('prezzario.html', dipendente=dip, settori=settori, settoreToSel=app.prezzarioEdileSettoreCorrente,
+                                        categorie=categorie, categoriaToSel=settoreSelezionato.categoria,
+                                        lavorazioni=lavorazioni,
+                                        sockUrl=app.appUrl, prezzario=True,)
+    else:
+        return render_template('prezzario.html', dipendente=dip, settori=settori, settoreToSel=None,
+                                        categorie=categorie,  categoriaToSel=None,
+                                        lavorazioni=lavorazioni,
+                                        sockUrl=app.appUrl, prezzario=True,)
+
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -340,7 +348,7 @@ def handle_registra_settore(message):
   dip = Dipendente.query.filter_by(username=message['dip']).first()
 
   if SettoreLavorazione.query.filter_by(nome=message['settore'] ).first() is None:
-      SettoreLavorazione.registraSettore(nome=message['settore'], categoria=message['categoria'], pertinenza=message['pertinenza'] )
+      SettoreLavorazione.registraSettore(nome=message['settore'], categoria=message['categoria'] )
       emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
 
   else:
@@ -370,6 +378,23 @@ def handle_cambia_settore_prezzario(message):
     app.prezzarioEdileSettoreCorrente=message['settore']
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+
+
+@socketio.on('setta_daVerificare', namespace='/prezzario')
+def handle_setta_daVerificare(message):
+    server.logger.info("\n\n\nMi è arrivato da registrare  {} {} {} \n\n\n".format(message['settore'], message['tipologia'], message['valore']))
+    PrezzarioEdile.setDaVerificare(settore=message['settore'], tipologia_lavorazione=message['tipologia'], valore=message['valore'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+
+@socketio.on('elimina_lavorazione', namespace='/prezzario')
+def handle_elimina_lavorazione(message):
+    PrezzarioEdile.eliminaLavorazione(settore=message['settore'], tipologia_lavorazione=message['tipologia'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+
 
 @socketio.on('registraImpegno', namespace='/impegni')
 def handle_registraImpegno(message):

@@ -3,7 +3,7 @@ from .db.prezzarioEdileDBmodel import PrezzarioEdileDBmodel
 class PrezzarioEdile(PrezzarioEdileDBmodel):
 
     def __init__(self, settore, tipologia_lavorazione, categoria, pertinenza, costo=None, unitaMisura=None, prezzoMin=None, prezzoMax=None,
-                        dimensione=None, fornitura=None, posa=None, note=None):
+                        dimensione=None, fornitura=None, posa=None, note=None, daVerificare=False):
         self.settore = settore
         self.tipologia_lavorazione = tipologia_lavorazione
         self.categoria = categoria
@@ -16,6 +16,7 @@ class PrezzarioEdile(PrezzarioEdileDBmodel):
         self.posa = posa
         self.note = note
         self.costo = costo
+        self.daVerificare = daVerificare
 
     def registraLavorazione(settore, tipologia_lavorazione, categoria, pertinenza, unitaMisura=None, prezzoMin=None, prezzoMax=None,
                         dimensione=None, fornitura=None, posa=None, note=None, costo=None):
@@ -31,3 +32,7 @@ class PrezzarioEdile(PrezzarioEdileDBmodel):
         toDel= PrezzarioEdile.query.filter_by(settore=settore, tipologia_lavorazione=tipologia_lavorazione).first()
 
         PrezzarioEdileDBmodel.commitEliminaLavorazione(toDel)
+
+    def setDaVerificare(settore, tipologia_lavorazione, valore):
+        PrezzarioEdile.query.filter_by(settore=settore, tipologia_lavorazione=tipologia_lavorazione).update({'daVerificare': valore})
+        PrezzarioEdileDBmodel.commit()
