@@ -2000,6 +2000,7 @@ if (typeof jQuery === 'undefined') {
       .parents('li')
       .addClass('active')
 
+
     if (active.parent('.dropdown-menu').length) {
       active = active
         .closest('li.dropdown')

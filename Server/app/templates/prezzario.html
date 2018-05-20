@@ -21,28 +21,29 @@
             <form   class="contact100-form validate-form">
 
                 <div class="row divFormContainer">
+                    <div id="buttonsSettori" class="col-md-2 ">
+                        <a id="addSettore" class="fa fa-plus"></a>
+                    </div>
 
-                    <div class="wrap-form input100-select bg1 fieldSettoreLav col-md-10">
+                    <div id="selectSettori" class="wrap-form input100-select bg1 fieldSettoreLav col-md-10">
                         <span class="label-input100">Settore di Lavorazione</span>
                         <div>
-                            <select id="settoriDisponibili" class="js-select2" name="service">
+                            <select id="settoriDisponibili" class="js-select2" name="settoriDisponibili">
                                 {% for settore in settori %}
 
                                     {% if settore.nome == settoreToSel %}
                                         <option selected="selected">{{settore.nome}}</option>
                                     {% else %}
-                                        <option>{{settore.nome}}</option>
+                                <option>{{settore.nome}}</option>
                                     {% endif %}
                                 {% endfor %}
 
                             </select>
-                            <div class="dropDownSelect2"></div>
+                           <div id="dropDownSettori" class="dropDownSelect2"></div>
+
                         </div>
                     </div>
-                    <div id="buttonsSettori" class="col-md-2">
-                        <a id="addSettore" class="fa fa-plus"></a>
-                        <a id="delSettore" class="fa fa-trash"></a>
-                    </div>
+
                 </div>
             </form>
 
@@ -55,15 +56,15 @@
                     <thead id="headPrezzario">
                        <tr id="trIntestazione">
 
-                            <th  class="tableIntestazione" colspan="2"  data-column="column1">Tipologia lavorazione</th>
+                            <th  class="tableIntestazione firstCol" colspan="2"  data-column="column1">Tipologia lavorazione</th>
                             <th  class="tableIntestazione" data-column="column3">Pertinenza</th>
                             <th  class="tableIntestazione" data-column="column4">Unità</th>
                             <th  class="tableIntestazione" data-column="column5">Fornitura</th>
                             <th  class="tableIntestazione" data-column="column6">Posa</th>
-                           <th  class="tableIntestazione" data-column="column7"> <span> Costo &#10; (fornitura+posa)<span></th>
+                           <th  class="tableIntestazione" data-column="column7"> <span> Costo &#10; <span class="toLower">(fornitura+posa) </span></span></th>
                             <th  class="tableIntestazione" data-column="column8">Prezzo min</th>
                             <th  class="tableIntestazione" data-column="column9">Prezzo max</th>
-                           <th  class="tableIntestazione" data-column="column10"> <span> Dimensione &#10; (cm) </span></th>
+                           <th  class="tableIntestazione" data-column="column10"> <span> Dimensione &#10; <span class="toLower"> (cm) </span></span></th>
                             <th  class="tableIntestazione" data-column="column11">Note</th>
                             <th  class="tableIntestazione" colspan="2" data-column="column12"> <a id="showForm" class="fa fa-plus"></a> <a id="hideForm" class="fa fa-minus"></a></th>
 
@@ -78,7 +79,7 @@
                                     {% if settore.nome == settoreToSel %}
                                         <option selected="selected">{{settore.nome}}</option>
                                     {% else %}
-                                        <option>{{settore.nome}}</option>
+                                    <option>{{settore.nome}}</option>
                                     {% endif %}
                                 {% endfor %}
 
@@ -86,26 +87,20 @@
                             </th>
                             <th  class="tableForm" data-column="column4">
 
-                                <select name="unita">
+                                <select id="unitaSelect" name="unita">
                                     <option>cad</option>
-                                    <option>mL</option>
-                                    <option>mQ</option>
-                                    <option>mC</option>
-                                    <option>cmL</option>
-                                    <option>cmQ</option>
-                                    <option>cmC</option>
-                                    <option>mmL</option>
-                                    <option>mmQ</option>
-                                    <option>mmC</option>
+                                    <option>ml</option>
+                                    <option>mq</option>
+                                    <option>mc</option>
                                 </select>
 
                             </th>
-                            <th  class="tableForm" data-column="column5"><input type="number" name="fornitura" placeholder="fornitura" value=0></th>
-                            <th  class="tableForm" data-column="column6"><input type="number" name="posa" placeholder="posa" value=0></th>
-                            <th  class="tableForm" data-column="column7"><input type="number" name="costo" placeholder="costo" value=0></th>
-                            <th  class="tableForm" data-column="column8"><input type="number" name="prezzoMin" placeholder="prezzo min" value=0></th>
-                            <th  class="tableForm" data-column="column9"><input type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
-                            <th  class="tableForm" data-column="column10"><input type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
+                            <th  class="tableForm" data-column="column5"><input id="fornituraInput" type="number" name="fornitura" placeholder="fornitura" value=0></th>
+                            <th  class="tableForm" data-column="column6"><input id="posaInput" type="number" name="posa" placeholder="posa" value=0></th>
+                            <th  class="tableForm" data-column="column7"><input id="costoInput" type="number" name="costo" placeholder="costo" value=0></th>
+                            <th  class="tableForm" data-column="column8"><input id="pMinInput" type="number" name="prezzoMin" placeholder="prezzo min" value=0></th>
+                            <th  class="tableForm" data-column="column9"><input id="pMaxInput" type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
+                            <th  class="tableForm" data-column="column10"><input id="dimensioneInput" type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
                             <th  class="tableForm" data-column="column11"><textarea maxlength="500" id="noteTextarea"></textarea></th>
                             <th  class="tableForm" colspan="2" data-column="column12"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
 
@@ -129,11 +124,7 @@
    <script>
            /* console.log("il settore selezionato è: {{settoreToSel}}");*/
 
-           //Script necessari per renderizzare corretamente il tag select di "settore"
-            $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
-            $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
-            $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
-            $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+           //Script necessario per renderizzare corretamente il tag select di "settore"
             $.getScript("{{url_for('static', filename='form/js/main.js')}}");
 
             $('#trForm').hide();
@@ -163,27 +154,27 @@
                     $("#bodyPrezzario").append(
                           '<tr class="'+ classiTr +'">'+
 
-                                '<td class="doubleCol tipologia" colspan="2" data-column="column1">{{lavorazione.tipologia_lavorazione}}</td>'+
+                                '<td class="doubleCol tipologia tdToLeft" colspan="2" data-column="column1">{{lavorazione.tipologia_lavorazione}}</td>'+
 
                                 '<td  data-column="column3">{{lavorazione.pertinenza}}</td>'+
                                 '<td  data-column="column4">{{lavorazione.unitaMisura}}</td>'+
-                                '<td  data-column="column5">{{lavorazione.fornitura}} &euro;</td>'+
-                                '<td  data-column="column6">{{lavorazione.posa}} &euro; </td>'+
-                                '<td  data-column="column7">{{lavorazione.costo}} &euro;</td>'+
-                                '<td  data-column="column8">{{lavorazione.prezzoMin}} &euro;</td>'+
-                                '<td  data-column="column9">{{lavorazione.prezzoMax}} &euro;</td>'+
+                                '<td  data-column="column5">&euro; {{lavorazione.fornitura}} </td>'+
+                                '<td  data-column="column6">&euro; {{lavorazione.posa}}  </td>'+
+                                '<td  data-column="column7">&euro; {{lavorazione.costo}} </td>'+
+                                '<td  data-column="column8">&euro; {{lavorazione.prezzoMin}} </td>'+
+                                '<td  data-column="column9">&euro; {{lavorazione.prezzoMax}} </td>'+
                                 '<td  data-column="column10">{{lavorazione.dimensione}}</td>'+
-                                '<td  data-column="column11">{{lavorazione.note}}</td>'+
+                                '<td  data-column="column11"> {{lavorazione.note}}</td>'+
                                 '<td  class="controlCol" data-column="column12">'+
 
                                   '<div class="iconsDiv">'+
-                                    '<a id="delLavorazione" class="fa fa-trash iconsTab"></a>'+
+                                    '<a class="fa fa-trash iconsTab delLavorazione"></a>'+
                                   '</div>'+
                                   '<div class="iconsDiv">'+
-                                    '<a id="modLavorazione" class="fa fa-edit iconsTab"></a>'+
+                                    '<a  class="fa fa-edit iconsTab modLavorazione"></a>'+
                                   '</div>'+
                                   '<div class="iconsDiv">'+
-                                    '<a id="segnalaLavorazione" class="fa fa-warning iconsTab"></a>'+
+                                    '<a  class="fa fa-warning iconsTab segnalaLavorazione"></a>'+
                                   '</div>'+
                                '</td>'+
 
@@ -191,6 +182,34 @@
                     );
                 }
             {% endfor %}
+
+           /*Codice per aggiungere il cancella e il modifica alle opzioni del select #settoriDisponibili */
+
+           $('#selectSettori').click(function(){
+                 $('#dropDownSettori li').each(function(){
+                    $(this).html(
+                        '<div  class="optionSettori row">'+
+                            '<div class="col-md-11">'+
+                                $(this).html()+
+                            '</div>'+
+                            '<div class="col-md-1">'+
+                              '<div class="row divDelModSelect">'+
+                                '<div class="delSettore col-md-6">'+
+                                    '<a class="downEdit fa fa-edit">'+
+                                '</div>'+
+                                '<div class="delSettore col-md-6">'+
+                                    '<a class="fa fa-trash"></a>'+
+                                '</div>'+
+                              '</div>'+
+                            '</div>'+
+                        '</div>'
+                    );
+                 });
+
+           });
+
+
+
    </script>
 
    <script>
@@ -209,6 +228,11 @@
    </script>
 
     <script>
+
+        //variabili globale per il meccanismo di modifica delle lavorazioni
+        var modificaAttiva=false;
+        var oldTipologia="";
+
         var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
 
 
@@ -263,7 +287,7 @@
 
 
 
-        $('#delSettore').click(function() {
+        $('.delSettore').click(function() {
 
              var settoreSelezionato = $('#settoriDisponibili').val();
 
@@ -336,15 +360,29 @@
                         if( inputOfLavorazione[0] != 0 || inputOfLavorazione[1] != 0 )
                             inputOfLavorazione[2] = parseInt(inputOfLavorazione[0]) + parseInt(inputOfLavorazione[1]);
 
+                        if(!modificaAttiva){
 
-                        socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),
-                                                                       "tipologia" : textareaOfLavorazione[0],
-                                                                        "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
-                                                                        "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
-                                                                         "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
-                                                                         "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
-                                                                          "note": textareaOfLavorazione[1]});
+                            socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),
+                                                                           "tipologia" : textareaOfLavorazione[0],
+                                                                            "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
+                                                                            "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
+                                                                             "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
+                                                                             "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
+                                                                              "note": textareaOfLavorazione[1]});
+                        }
+                        else{
+                             socketPrezzario.emit("modifica_lavorazione", { "dip": "{{dipendente.username}}", "oldTipologia": oldTipologia,
+                                                                                "settore": $("#settoriDisponibili").val(),
+                                                                               "tipologia" : textareaOfLavorazione[0],
+                                                                                "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
+                                                                                "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
+                                                                                 "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
+                                                                                 "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
+                                                                                  "note": textareaOfLavorazione[1]});
+                             modificaAttiva=false;
 
+
+                        }
                   }
 
 
@@ -353,7 +391,7 @@
        }
 
 
-        $("#delLavorazione").click(function() {
+        $(".delLavorazione").click(function() {
             var setDisp = $('#settoriDisponibili').val();
             var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
             swal({
@@ -379,7 +417,7 @@
 
         });
 
-        $("#segnalaLavorazione").click(function() {
+        $(".segnalaLavorazione").click(function() {
             var setDisp = $('#settoriDisponibili').val();
             var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
 
@@ -401,13 +439,55 @@
         });
 
 
-        $("#modLavorazione").click(function() {
+        $(".modLavorazione").click(function() {
             $('#trForm').show();
+            modificaAttiva=true;
             $(this).closest('tr').addClass("inModifica");
+
+            var datiLavorazione=[]
+            $(".inModifica td").each(function(index){
+                datiLavorazione.push($(this).text());
+
+            });
+
+            console.log(datiLavorazione);
+
+            oldTipologia = datiLavorazione[0];
+            $("#tipologiaTextarea").val( datiLavorazione[0]);
+            $("#pertinenzaSelect").val(datiLavorazione[1]);
+            $("#unitaSelect").val(datiLavorazione[2]);
+
+            $("#fornituraInput").attr('value', parseInt(datiLavorazione[3]));
+
+            $("#posaInput").attr('value', parseInt(datiLavorazione[4]));
+
+            $(this).closest('tr').removeClass("inModifica");
+
+
+
+
+            $("#costoInput").val(parseInt(datiLavorazione[5]));
+            $("#pMinInput").val(parseInt(datiLavorazione[6]));
+            $("#pMaxInput").val(parseInt(datiLavorazione[7]));
+            $("#dimensioneInput").val(datiLavorazione[8]);
+            $("#noteTextarea").val(datiLavorazione[9]);
+
+
 
 
         });
 
     </script>
+
+            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
+            swal({
+                title: 'Eliminazione lavorazione '+ lavSel,
+                text: 'sicuro di voler procedere?',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+
 
 {% endblock %}

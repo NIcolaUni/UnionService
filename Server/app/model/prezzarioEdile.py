@@ -26,6 +26,26 @@ class PrezzarioEdile(PrezzarioEdileDBmodel):
 
         PrezzarioEdileDBmodel.commitLavorazione(newLav)
 
+    def modificaLavorazione(settore, oldTipologia, tipologia_lavorazione, pertinenza, unitaMisura=None, prezzoMin=None, prezzoMax=None,
+                        dimensione=None, fornitura=None, posa=None, note=None, costo=None):
+
+        PrezzarioEdile.query.filter_by(settore=settore, tipologia_lavorazione=oldTipologia).update(
+
+            {'settore': settore,
+            'tipologia_lavorazione': tipologia_lavorazione,
+            'pertinenza': pertinenza,
+            'unitaMisura': unitaMisura,
+            'costo': costo,
+            'prezzoMin': prezzoMin,
+            'prezzoMax': prezzoMax,
+            'dimensione': dimensione,
+            'fornitura': fornitura,
+            'posa': posa,
+            'note': note }
+        );
+
+        PrezzarioEdileDBmodel.commit()
+
     def eliminaLavorazione(settore, tipologia_lavorazione):
 
         toDel= PrezzarioEdile.query.filter_by(settore=settore, tipologia_lavorazione=tipologia_lavorazione).first()

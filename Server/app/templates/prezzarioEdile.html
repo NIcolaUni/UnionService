@@ -2,229 +2,277 @@
 
 {% block content %}
 
-      <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
-      <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+    <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
-      <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
-
-
-    <div id="pagewrap">
+    <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
 
 
+    <div id="paginaPrezzario">
 
-            <div id="formListArt" class="container-contact100 container-completaProfilo row" id="container-contact100">
+        <div id="divIntestazione" class="row">
+            <span class="contact100-form-title">
+               Prezzario Edile
+            </span>
 
-                      <span class="contact100-form-title">
-                           Prezzario Edile
-                      </span>
 
-                    <form   class="contact100-form validate-form">
 
-                        <div class="wrap-input100 input100-select bg1 fieldSettoreLav">
-                            <span class="label-input100">Settore di Lavorazione</span>
-                            <div>
-                                <select id="settoriDisponibili" class="js-select2" name="service">
-                                    {% for settore in settori %}
+            <form   class="contact100-form validate-form">
 
-                                        {% if settore.nome == settoreToSel %}
-                                            <option selected="selected">{{settore.nome}}</option>
-                                        {% else %}
-                                            <option>{{settore.nome}}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                                <div class="dropDownSelect2"></div>
-                            </div>
+                <div class="row divFormContainer">
+                    <div id="buttonsSettori" class="col-md-2 ">
+                        <a id="addSettore" class="fa fa-plus"></a>
+                    </div>
+
+                    <div id="selectSettori" class="wrap-form input100-select bg1 fieldSettoreLav col-md-10">
+                        <span class="label-input100">Settore di Lavorazione</span>
+                        <div>
+                            <select id="settoriDisponibili" class="js-select2" name="settoriDisponibili">
+                                {% for settore in settori %}
+
+                                    {% if settore.nome == settoreToSel %}
+                                        <option selected="selected">{{settore.nome}}</option>
+                                    {% else %}
+                                <option>{{settore.nome}}</option>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </select>
+                           <div id="dropDownSettori" class="dropDownSelect2"></div>
+
                         </div>
-                        <div class="wrap-contact100-form-check small-check ">
-                                 <input class="input-check100" type="checkbox" name="addCategoria" id="addCategoria">
-                                <label class="label-check100" for="addCategoria">
-                                   <span class="white">Aggiungi/elimina categoria</span>
-                                </label>
-                        </div>
+                    </div>
 
-                        <div class="wrap-contact100-form-check small-check">
-                                 <input class="input-check100" type="checkbox" name="addSettore" id="addSettore">
-                                <label class="label-check100" for="addSettore">
-                                   <span class="white">Aggiungi/elimina settore</span>
-                                </label>
-                        </div>
-                    </form>
+                </div>
+            </form>
 
-            </div>
+        </div>
+
+        <div id="tabellaContainer" class="row">
 
 
-            <div id="contenuto" class="table100 ver2 row">
-        <!--        <div id="buttonListino" class="container-contact100-form-btn">
-					<button class="contact100-form-btn">
-						<span>
-							Inserisci
-						</span>
-					</button>
-				</div> -->
-                <table class="intestazione" data-vertable="ver2">
-                    <thead >
-                        <tr class="row100 head">
-
-                            <th class="column100 leftify-firstCol" colspan="2"  data-column="column1">Tipologia lavorazione</th>
-                            <th class="column100 leftify" data-column="column3">Pertinenza</th>
-                            <th class="column100 leftify" data-column="column4">Unità</th>
-                            <th class="column100 leftify" data-column="column5">Fornitura</th>
-                            <th class="column100 leftify" data-column="column6">Posa</th>
-                            <th class="column100 leftify" data-column="column7">Costo &#10; (fornitura+posa)</th>
-                            <th class="column100 leftify" data-column="column8">Prezzo min</th>
-                            <th class="column100 leftify" data-column="column9">Prezzo max</th>
-                            <th class="column100 leftify" data-column="column10">Dimensione</th>
-                            <th class="column100 leftify" data-column="column11">Note</th>
-                            <th class="column100 leftify" colspan="2" data-column="column12"></th>
-
+                <table id="prezzario">
+                    <thead id="headPrezzario">
+                       <tr id="trIntestazione">
+                            <th id="primaColonnaIntestazione" class="tableIntestazione" data-column="column1"><a id="showForm" class="fa fa-plus"></a></th>
+                            <th  class="tableIntestazione firstCol" colspan="2"  data-column="column2">Tipologia lavorazione</th>
+                            <th  class="tableIntestazione" data-column="column4">Pertinenza</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column5">Unità</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column6">Fornitura</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column7">Posa</th>
+                           <th  class="tableIntestazione numColMedium" data-column="column8"> <span> Costo <br/><span class="toLower">(fornitura+posa) </span></span></th>
+                            <th  class="tableIntestazione numColSmall" data-column="column9">Prezzo min</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column10">Prezzo max</th>
+                           <th  class="tableIntestazione" data-column="column11"> <span> Dimensione <br/> <span class="toLower"> (cm) </span></span></th>
+                            <th  class="tableIntestazione" data-column="column12">Note</th>
+                            <th  class="tableIntestazione" colspan="2" data-column="column13"> </th>
 
                         </tr>
-                    </thead>
-                </table>
+                        <tr id="trForm">
+                            <th id="primaColonnaForm" class="tableForm" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a></th>
+                            <th  class="tableForm firstCol" colspan="2"  data-column="column2"><textarea maxlength="200"  id="tipologiaTextarea"></textarea></th>
+                            <th  class="tableForm" data-column="column4">
+                                <select id="pertinenzaSelect" name="pertinenza">
+                                {% for settore in settori %}
 
-                <table id="listino" data-vertable="ver2">
-                    <thead id="headListino">
-                        <tr id="trHead" class="row100 head">
-
-                            <th class="column100 leftify-firstCol" colspan="2"  data-column="column1"><input id="lavorazionePrezzario" class="inputText" type="text" name="tipologia" placeholder="tipologia"></th>
-
-                            <th class="column100 leftify" data-column="column3">
-                                  <select id="selPert" class="inputSel"  name="pertinenza">pertinenza
+                                    {% if settore.nome == settoreToSel %}
+                                        <option selected="selected">{{settore.nome}}</option>
+                                    {% else %}
+                                    <option>{{settore.nome}}</option>
+                                    {% endif %}
+                                {% endfor %}
 
                                 </select>
                             </th>
-                            <th class="column100 leftify" data-column="column4">
-                                <select class="inputSel"  name="unita">
+                            <th  class="tableForm numColSmall" data-column="column5">
+
+                                <select id="unitaSelect" name="unita">
                                     <option>cad</option>
-                                    <option>m</option>
-                                    <option>m<sup>2</sup></option>
-                                    <option>m<sup>3</sup></option>
+                                    <option>ml</option>
+                                    <option>mq</option>
+                                    <option>mc</option>
                                 </select>
-                            </th>
-                            <th class="column100 leftify" data-column="column5"><input class="inputNum" type="number" name="fornitura" placeholder="fornitura" value=0></th>
-                            <th class="column100 leftify" data-column="column6"><input class="inputNum" type="number" name="posa" placeholder="posa" value=0></th>
-                            <th class="column100 leftify" data-column="column7"><input class="inputNum" type="number" name="costo" placeholder="costo" value=0></th>
-                            <th class="column100 leftify" data-column="column8"><input class="inputNum" type="number" name="prezzoMin" placeholder="prezzo min" value=0></th>
-                            <th class="column100 leftify" data-column="column9"><input class="inputNum" type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
-                            <th class="column100 leftify" data-column="column10"><input class="inputText" type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
-                            <th class="column100 leftify" data-column="column11">
-                                <input class="inputText" type="text" name="note" placeholder="note" value="">
-                               <!-- <textarea class="inputText"></textarea> -->
 
                             </th>
-                            <th class="column100 leftify" colspan="2" data-column="column12"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
-
+                            <th  class="tableForm numColSmall" data-column="column6"><input id="fornituraInput" type="number" name="fornitura" placeholder="fornitura" value=0></th>
+                            <th  class="tableForm numColSmall" data-column="column7"><input id="posaInput" type="number" name="posa" placeholder="posa" value=0></th>
+                            <th  class="tableForm numColMedium" data-column="column8"><input id="costoInput" type="number" name="costo" placeholder="costo" value=0></th>
+                            <th  class="tableForm numColSmall" data-column="column9"><input id="pMinInput" type="number" name="prezzoMin" placeholder="prezzo min" value=0></th>
+                            <th  class="tableForm numColSmall" data-column="column10"><input id="pMaxInput" type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
+                            <th  class="tableForm" data-column="column11"><input id="dimensioneInput" type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
+                            <th  class="tableForm" data-column="column12"><textarea maxlength="500" id="noteTextarea"></textarea></th>
+                            <th  class="tableForm" colspan="2" data-column="column13"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
 
                         </tr>
 
                     </thead>
-                    <tbody id="bodyListino">
+                    <tbody id="bodyPrezzario">
+                 <!--  <tr>
+                        <td colspan="2" data-column="column1">C'era una volta un re seduto su un sofa che disse al</td>
+                    </tr>-->
 
 
                     </tbody>
+
                 </table>
 
-            </div>
+        </div>
 
+    </div>
 
+   <script>
+           /* console.log("il settore selezionato è: {{settoreToSel}}");*/
 
-        <script src="{{url_for('static', filename='modificaListino/js/main.js') }}"></script>
+           //Script necessario per renderizzare corretamente il tag select di "settore"
+            $.getScript("{{url_for('static', filename='form/js/main.js')}}");
 
+            $('#trForm').hide();
 
-        <script>
-                console.log("il settore selezionato è: {{settoreToSel}}");
-                $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
-                $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
-                $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
-                $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
-                $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+            $('#hideForm').click(function(){
+                $('#trForm').hide();
+                $(showForm).addClass('fa');
+                $(showForm).addClass('fa-plus');
+                $('#bodyPrezzario').css('height', '88%');
 
+            });
 
-                {% for categoria in categorie %}
-                    {% if categoria.nome == categoriaToSel %}
+            $('#showForm').click(function(){
+                $('#trForm').show();
+                $(this).removeClass('fa');
+                $(this).removeClass('fa-plus');
+                $('#bodyPrezzario').css('height', '81%');
 
-                             $("#selCat").append( '<option selected="selected">{{categoria.nome}}</option>' );
-                               $("#selPert").append( '<option selected="selected">{{categoria.nome}}</option>' );
+            });
 
+            //codice per riempire il #bodyPrezzario
+            {% for lavorazione in lavorazioni %}
+                console.log("{{lavorazione.tipologia_lavorazione}}");
+                if( "{{lavorazione.settore}}" == $("#settoriDisponibili").val()) {
+
+                    {% if lavorazione.daVerificare %}
+                        var classiTr="rowBodyTab daVerificare" ;
+                        var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
                     {% else %}
-                              $("#selCat").append( '<option>{{categoria.nome}}</option>' );
-                               $("#selPert").append( '<option>{{categoria.nome}}</option>' );
+                        var classiTr="rowBodyTab";
+                        var inputToVer='<input class="toVerify" type="checkbox" >';
 
                     {% endif %}
 
-                {% endfor %}
+                    $("#bodyPrezzario").append(
+                          '<tr class="'+ classiTr +'">'+
+                                '<td class="controlCol" data-column="column1">'+
 
-
-
-                {% for lavorazione in lavorazioni %}
-                    if( "{{lavorazione.settore}}" == $("#settoriDisponibili").val()) {
-
-                        {% if lavorazione.daVerificare %}
-                            var classiTr="row100 daVerificare" ;
-                            var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
-                        {% else %}
-                            var classiTr="row100";
-                            var inputToVer='<input class="toVerify" type="checkbox" >';
-
-                        {% endif %}
-
-                        $("#bodyListino").append(
-                              '<tr class="'+ classiTr +'">'+
-
-                                    '<td class="column100 tableContent tipologia" colspan="2" data-column="column1">{{lavorazione.tipologia_lavorazione}}</td>'+
-                                    '<td class="column100 tableContent" data-column="column2">{{lavorazione.categoria}}</td>'+
-                                    '<td class="column100 tableContent" data-column="column3">{{lavorazione.pertinenza}}</td>'+
-                                    '<td class="column100 tableContent" data-column="column4">{{lavorazione.unitaMisura}}</td>'+
-                                    '<td class="column100 tableContent" data-column="column5">{{lavorazione.fornitura}} &euro;</td>'+
-                                    '<td class="column100 tableContent" data-column="column6">{{lavorazione.posa}} &euro; </td>'+
-                                    '<td class="column100 tableContent" data-column="column7">{{lavorazione.costo}} &euro;</td>'+
-                                    '<td class="column100 tableContent" data-column="column8">{{lavorazione.prezzoMin}} &euro;</td>'+
-                                    '<td class="column100 tableContent" data-column="column9">{{lavorazione.prezzoMax}} &euro;</td>'+
-                                    '<td class="column100 tableContent" data-column="column10">{{lavorazione.dimensione}}</td>'+
-                                    '<td class="column100 tableContent" data-column="column11">{{lavorazione.note}}</td>'+
-                                    '<td class="column100 iconsTd" data-column="column12">'+
-                                      /*  '<label class="checkPrezzario">'+
-                                              '<input type="checkbox">'+
-                                              '<span class="checkmark toCanc"></span>'+
-                                        '</label>'+*/
-                                        '<div class="iconsDiv">'+
-                                        '<a class="fa fa-trash iconsTab"></a>'+
-                                        '</div>'+
-                                    '</td>'+
-                                    '<td class="column100 iconsTd" data-column="column13">'+
-                                       /* '<label class="checkPrezzario">'+
-                                              '<input type="checkbox">'+
-                                              '<span class="checkmark"></span>'+
-                                        '</label>'+*/
-                                        '<div class="iconsDiv">'+
-                                            '<a class="fa fa-edit iconsTab"></a>'+
-                                        '</div>'+
-                                    '</td>'+
-                                    '<td class="column100 iconsTd " data-column="column12">'+
-                                      /*'<label class="checkPrezzario">'+
-                                          inputToVer+
-                                          '<span class="checkmark toVerify"></span>'+
-                                      '</label>'+*/
-                                      '<div class="iconsDiv">'+
-                                        '<a class="fa fa-warning iconsTab"></a>'+
+                                      '<div class="iconsDiv row">'+
+                                          '<div class="col-md-4 iconContainer firstIconContainer" >'+
+                                            '<a class="fa fa-trash iconsTab delLavorazione"></a>'+
+                                          '</div>'+
+                                          '<div class="col-md-4 iconContainer">'+
+                                            '<a  class="fa fa-edit iconsTab modLavorazione"></a>'+
+                                          '</div>'+
+                                          '<div class="col-md-4 iconContainer">'+
+                                            '<a  class="fa fa-warning iconsTab segnalaLavorazione"></a>'+
+                                          '</div>'+
                                       '</div>'+
-                                   '</td>'+
 
-                               '</tr>'
+                                '</td>'+
+                                '<td class="doubleCol firstCol tipologia tdToLeft" colspan="2" data-column="column2">{{lavorazione.tipologia_lavorazione}}</td>'+
+
+                                '<td  data-column="column4">{{lavorazione.pertinenza}}</td>'+
+                                '<td class="numColSmall" data-column="column5">{{lavorazione.unitaMisura}}</td>'+
+                                '<td class="numColSmall" data-column="column6">&euro; {{lavorazione.fornitura}} </td>'+
+                                '<td class="numColSmall" data-column="column7">&euro; {{lavorazione.posa}}  </td>'+
+                                '<td  class="numColMedium" data-column="column8">&euro; {{lavorazione.costo}} </td>'+
+                                '<td  class="numColSmall" data-column="column9">&euro; {{lavorazione.prezzoMin}} </td>'+
+                                '<td  class="numColSmall" data-column="column10">&euro; {{lavorazione.prezzoMax}} </td>'+
+                                '<td  data-column="column11">{{lavorazione.dimensione}}</td>'+
+                                '<td  class="noteColumn"  colspan="2" data-column="column12"> {{lavorazione.note}}</td>'+
+                               /* '<td  class="controlCol" data-column="column13">'+*/
+
+
+                               '</td>'+
+
+                           '</tr>'
+                    );
+                }
+            {% endfor %}
+
+           /*Codice per aggiungere il cancella e il modifica alle opzioni del select #settoriDisponibili */
+/*
+
+           $('#selectSettori').click(function(){
+                 $('#dropDownSettori li').each(function(){
+                    $(this).html(
+                        '<div  class="optionSettori row">'+
+                            '<div class="col-md-11">'+
+                                $(this).html()+
+                            '</div>'+
+                            '<div class="col-md-1">'+
+                              '<div class="row divDelModSelect">'+
+                                '<div class="delSettore col-md-6">'+
+                                    '<a class="downEdit fa fa-edit">'+
+                                '</div>'+
+                                '<div class="delSettore col-md-6">'+
+                                    '<a class="fa fa-trash"></a>'+
+                                '</div>'+
+                              '</div>'+
+                            '</div>'+
+                        '</div>'
+                    );
+                 });
+
+           });*/
+
+           $('#selectSettori').click(function(){
+                 $('#dropDownSettori span.select2-dropdown').each(function(){
+
+                    $(this).addClass('row');
+                    $(this).html(
+                        '<div class="col-md-11">'+
+                        $(this).html()+
+                        '<div>'
+                    );
+
+
+                    $(this).append(
+                        '<div  class="optionSettori col-md-1"></div>'
+                    );
+                    var counter = 0;
+
+                    $('#dropDownSettori li').each(function(){
+                        $(this).addClass("liSettore"+counter);
+
+                        $('div.optionSettori').html(
+                              '<div class="row divDelModSelect"+counter>'+
+                                '<div class="delSettore col-md-6">'+
+                                    '<a class="downEdit fa fa-edit">'+
+                                '</div>'+
+                                '<div class="delSettore col-md-6">'+
+                                    '<a class="fa fa-trash"></a>'+
+                                '</div>'+
+                              '</div>'
                         );
-                    }
-                {% endfor %}
+                        counter+=1;
 
+                    });
 
+                   /* $(this).html(
+                        '<div  class="optionSettori row">'+
+                            '<div class="col-md-11">'+
+                                $(this).html()+
+                            '</div>'+
+                            '<div class="col-md-1">'+
 
-        </script>
+                            '</div>'+
+                        '</div>'
+                    );*/
+                 });
 
-        <script>
+           });
 
-            var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
+   </script>
+
+   <script>
 
             var socketHome = io.connect("{{sockUrl}}"+'/home');
 
@@ -236,276 +284,261 @@
                 socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
             });
 
-            socketPrezzario.on('aggiornaPagina', function() {
-                location.reload();
 
-            });
+   </script>
 
-            socketPrezzario.on('abortAggiorna', function(message) {
-                    swal({
-                          title: message["what"] + " già presente",
-                          type: 'error',
-                          confirmButtonColor: '#3085d6',
-                          confirmButtonText: "Ok",
+    <script>
 
-                     });
-            });
+        //variabili globale per il meccanismo di modifica delle lavorazioni
+        var modificaAttiva=false;
+        var oldTipologia="";
 
-            $("span.toVerify").click(function() {
-                    console.log("sto stampando " + $(this).closest('input.toVerify').attr('checked') );
-                  if($(this).closest('input.toVerify').attr('checked') != 'checked' ){
+        var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
 
 
-                   var setDisp = $('#settoriDisponibili').val();
-                    console.log("sono checkkato " + setDisp);
-                   socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                               'tipologia': $(this).closest('.row100').children('.tipologia').text(),'valore': true});
-                  }
-                  else if ($(this).closest('input.toVerify').attr('checked') == 'checked' ){
-                       console.log("altrimenti");
-                      var setDisp = $('#settoriDisponibili').val();
-                      socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                               'tipologia': $(this).closest('.row100').children('.tipologia').text(),'valore': false});
+        socketPrezzario.on('aggiornaPagina', function() {
+            location.reload();
 
-                  }
-            });
+        });
 
-             $("span.toCanc").click(function() {
-                var setDisp = $('#settoriDisponibili').val();
-               socketPrezzario.emit('elimina_lavorazione', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                               'tipologia': $(this).closest('.row100').children('.tipologia').text()});
-             });
+        socketPrezzario.on('abortAggiorna', function(message) {
+                swal({
+                      title: message["what"] + " già presente",
+                      type: 'error',
+                      confirmButtonColor: '#3085d6',
+                      confirmButtonText: "Ok",
 
-            $('#settoriDisponibili').change( function() {
+                 });
+        });
 
-              socketPrezzario.emit('cambia_settore_prezzario', {"dip": "{{dipendente.username}}", "settore": $(this).val() })
+        $('#settoriDisponibili').change( function() {
 
-            });
+          socketPrezzario.emit('cambia_settore_prezzario', {"dip": "{{dipendente.username}}", "settore": $(this).val() })
 
-            $('#addCategoria').change(function() {
-                if(this.checked) {
+        });
 
-                     function registraCategoria () {
-                          swal.withForm({
-                            title: 'Aggiungi/elimina categoria',
-                            showCancelButton: true,
-                            confirmButtonColor: '#DD6B55',
-                            confirmButtonText: 'Ok',
-                            cancelButtonText: 'annulla',
-                            closeOnConfirm: true,
-                            formFields: [
+        $('#addSettore').click(function() {
 
-                              { id: 'newCategoria', placeholder: 'Inserire il nome della nuova categoria' },
-                              { id: 'delCategoria', value: 'Cancella categoria', type: 'checkbox' },
-                              { id: 'select',
-                                type: 'select',
-                                options: [
-                                    {% for categoria in categorie %}
-                                        {value: "{{categoria.nome}}", text: "{{categoria.nome}}"},
-
-                                    {% endfor %}
-
-                                ]}
-
-                            ]
-                          }, function (isConfirm) {
-
-                                  if (isConfirm) {
-                                    var form=this.swalForm
-
-                                    if( form['delCategoria'] ){
-                                        socketPrezzario.emit("elimina_categoria", {'dip': '{{dipendente.username}}', 'categoria': form['select']});
-
-
-                                    }
-                                    else
-                                        socketPrezzario.emit("registra_categoria", {'dip': '{{dipendente.username}}', 'categoria': form['newCategoria']});
-
-                                  }
-
-                                  $('#addCategoria').attr('checked', false);
-
-
-                          })
-                     }
-                     registraCategoria();
-                }
-
-            });
-
-            $('#addPertinenza').change(function() {
-                if(this.checked) {
-
-                     function registraPertinenza () {
-                          swal.withForm({
-                            title: 'Aggiungi/elimina pertinenza',
-                            showCancelButton: true,
-                            confirmButtonColor: '#DD6B55',
-                            confirmButtonText: 'Ok',
-                            cancelButtonText: 'annulla',
-                            closeOnConfirm: true,
-                            formFields: [
-
-                              { id: 'newPertinenza', placeholder: 'Inserire il nome della nuova pertinenza' },
-                              { id: 'delPertinenza', value: 'Cancella pertinenza', type: 'checkbox' },
-                              { id: 'select',
-                                type: 'select',
-                                options: [
-                                    {% for pertinenza in pertinenze %}
-                                        {value: "{{pertinenza.nome}}", text: "{{pertinenza.nome}}"},
-
-                                    {% endfor %}
-
-                                ]}
-
-                            ]
-                          }, function (isConfirm) {
-
-                                  if (isConfirm) {
-                                    var form=this.swalForm
-
-                                    if( form['delPertinenza'] ){
-                                        socketPrezzario.emit("elimina_pertinenza", {'dip': '{{dipendente.username}}', 'pertinenza': form['select']});
-
-
-                                    }
-                                    else
-                                        socketPrezzario.emit("registra_pertinenza", {'dip': '{{dipendente.username}}', 'pertinenza': form['newPertinenza']});
-
-                                  }
-
-                                  $('#addPertinenza').attr('checked', false);
-
-
-                          })
-                     }
-                     registraPertinenza();
-
-
-                }
-            });
-
-            $('#addSettore').change(function() {
-                if(this.checked) {
-
-
-                     function registraSettore () {
-                          swal.withForm({
-                            title: 'Aggiungi/elimina settore',
-                            showCancelButton: true,
-                            confirmButtonColor: '#DD6B55',
-                            confirmButtonText: 'Ok',
-                            cancelButtonText: 'annulla',
-                            closeOnConfirm: true,
-                            formFields: [
-
-                              { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore' },
-                              { id: 'select1',
-                                type: 'select',
-                                options: [
-                                    {% for categoria in categorie %}
-                                        {value: "{{categoria.nome}}", text: "{{categoria.nome}}"},
-
-                                    {% endfor %}
-
-                                ]},
-
-                              { id: 'select3',
-                                type: 'select',
-                                options: [
-                                    {% for settore in settori %}
-                                        {value: "{{settore.nome}}", text: "{{settore.nome}}"},
-
-                                    {% endfor %}
-
-                                ]},
-                              { id: 'delSettore', value: 'Cancella settore', type: 'checkbox' }
-
-                            ]
-                          }, function (isConfirm) {
-
-                                  if (isConfirm) {
-                                    var form=this.swalForm
-
-                                    if( form['delSettore'] ){
-                                        socketPrezzario.emit("elimina_settore", {'dip': '{{dipendente.username}}', 'settore': form['select3']});
-
-
-                                    }
-                                    else
-                                        socketPrezzario.emit("registra_settore",
-                                           {'dip': '{{dipendente.username}}', 'settore': form['newSettore'],
-                                             'categoria': form['select1']});
-
-                                  }
-
-                                  $('#addSettore').attr('checked', false);
-
-
-                          })
-                     }
-                     registraSettore();
-
-
-
-                }
-            });
-
-
-           function registraLavorazione() {
-              swal({
-                title: 'Si sta per aggiungere una nuova lavorazione',
-                text: 'Sicuro di voler continuare?',
+              swal.withForm({
+                title: 'Aggiungi un nuovo settore',
                 showCancelButton: true,
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Ok',
                 cancelButtonText: 'annulla',
-                closeOnConfirm: true
+                closeOnConfirm: true,
+                formFields: [
 
+                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore' }
+
+
+                ]
               }, function (isConfirm) {
 
                       if (isConfirm) {
-
-
-                            var datiLavorazione =  [];
-                            var selectOfLavorazione = [];
-
-                            $("#headListino input").each(function(index){
-                                datiLavorazione.push($(this).val());
-
-                            });
-
-                            $("#headListino select").each(function(index){
-                                selectOfLavorazione.push($(this).val());
-
-                            });
-
-                             //se non è stato impostato il tipo di lavorazione non fare nulla
-                            if( datiLavorazione[0] == "" )
-                                return;
-
-                            // se forniture e posa vengono specificate setta costo come la loro somma
-                            if( datiLavorazione[1] != 0 || datiLavorazione[2] != 0 )
-                                datiLavorazione[3] = parseInt(datiLavorazione[1]) + parseInt(datiLavorazione[2]);
-
-
-                            socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),"tipologia" : datiLavorazione[0], "categoria" : selectOfLavorazione[0],
-                                                                            "pertinenza": selectOfLavorazione[1], "unita": selectOfLavorazione[2],
-                                                                            "fornitura": datiLavorazione[1], "posa": datiLavorazione[2],
-                                                                             "costo": datiLavorazione[3], "pMin" : datiLavorazione[4],
-                                                                             "pMax": datiLavorazione[5], "dimensione": datiLavorazione[6],
-                                                                              "note": datiLavorazione[7]});
-
-
+                            var form=this.swalForm
+                            socketPrezzario.emit("registra_settore",
+                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });
 
                       }
 
-
-
               })
-           }
-        </script>
 
-    </div>
+        });
+
+
+
+        $('.delSettore').click(function() {
+
+             var settoreSelezionato = $('#settoriDisponibili').val();
+
+             function registraSettore () {
+                  swal({
+                    title: 'Eliminazione settore '+ settoreSelezionato,
+                    text: 'sicuro di voler procedere?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                  }, function (isConfirm) {
+
+                          if (isConfirm) {
+
+                               socketPrezzario.emit("elimina_settore", {'dip': '{{dipendente.username}}', 'settore': settoreSelezionato});
+
+                          }
+
+                  })
+             }
+             registraSettore();
+
+
+
+
+        });
+
+
+       function registraLavorazione() {
+          swal({
+            title: 'Si sta per aggiungere una nuova lavorazione',
+            text: 'Sicuro di voler continuare?',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ok',
+            cancelButtonText: 'annulla',
+            closeOnConfirm: true
+
+          }, function (isConfirm) {
+
+                  if (isConfirm) {
+
+                        var textareaOfLavorazione = [];
+                        var inputOfLavorazione =  [];
+                        var selectOfLavorazione = [];
+
+                         $("#trForm textarea").each(function(index){
+                            textareaOfLavorazione.push($(this).val());
+
+                        });
+
+                        $("#trForm input").each(function(index){
+                            inputOfLavorazione.push($(this).val());
+
+                        });
+
+                        $("#trForm select").each(function(index){
+                            selectOfLavorazione.push($(this).val());
+
+                        });
+
+                         //se non è stato impostato il tipo di lavorazione non fare nulla
+                        if( textareaOfLavorazione[0] == "" )
+                            return;
+
+                        // se forniture e posa vengono specificate setta costo come la loro somma
+                        if( inputOfLavorazione[0] != 0 || inputOfLavorazione[1] != 0 )
+                            inputOfLavorazione[2] = parseInt(inputOfLavorazione[0]) + parseInt(inputOfLavorazione[1]);
+
+                        if(!modificaAttiva){
+
+                            socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),
+                                                                           "tipologia" : textareaOfLavorazione[0],
+                                                                            "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
+                                                                            "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
+                                                                             "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
+                                                                             "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
+                                                                              "note": textareaOfLavorazione[1]});
+                        }
+                        else{
+                             socketPrezzario.emit("modifica_lavorazione", { "dip": "{{dipendente.username}}", "oldTipologia": oldTipologia,
+                                                                                "settore": $("#settoriDisponibili").val(),
+                                                                               "tipologia" : textareaOfLavorazione[0],
+                                                                                "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
+                                                                                "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
+                                                                                 "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
+                                                                                 "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
+                                                                                  "note": textareaOfLavorazione[1]});
+                             modificaAttiva=false;
+
+
+                        }
+                  }
+
+
+
+          })
+       }
+
+
+        $(".delLavorazione").click(function() {
+            var setDisp = $('#settoriDisponibili').val();
+            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
+            swal({
+                title: 'Eliminazione lavorazione '+ lavSel,
+                text: 'sicuro di voler procedere?',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+
+            }, function (isConfirm) {
+
+                  if (isConfirm) {
+
+                         socketPrezzario.emit('elimina_lavorazione', {'dip': '{{dipendente.username}}', 'settore': setDisp,
+                                                   'tipologia': lavSel });
+
+                  }
+
+            })
+
+
+        });
+
+        $(".segnalaLavorazione").click(function() {
+            var setDisp = $('#settoriDisponibili').val();
+            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
+
+
+            if(!$(this).closest('tr').hasClass('daVerificare') ){
+
+                var setDisp = $('#settoriDisponibili').val();
+                console.log("sono checkkato " + setDisp);
+                socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
+                                                           'tipologia': lavSel,'valore': true});
+            }
+            else {
+              var setDisp = $('#settoriDisponibili').val();
+              socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
+                                                       'tipologia': lavSel,'valore': false});
+
+            }
+
+        });
+
+
+        $(".modLavorazione").click(function() {
+            $('#trForm').show();
+            modificaAttiva=true;
+            $(this).closest('tr').addClass("inModifica");
+
+            var datiLavorazione=[]
+            $(".inModifica td").each(function(index){
+                datiLavorazione.push($(this).text());
+
+            });
+
+            console.log(datiLavorazione);
+
+            oldTipologia = datiLavorazione[0];
+            $("#tipologiaTextarea").val( datiLavorazione[0]);
+            $("#pertinenzaSelect").val(datiLavorazione[1]);
+            $("#unitaSelect").val(datiLavorazione[2]);
+
+            $("#fornituraInput").attr('value', parseInt(datiLavorazione[3]));
+
+            $("#posaInput").attr('value', parseInt(datiLavorazione[4]));
+
+            $(this).closest('tr').removeClass("inModifica");
+
+
+
+
+            $("#costoInput").val(parseInt(datiLavorazione[5]));
+            $("#pMinInput").val(parseInt(datiLavorazione[6]));
+            $("#pMaxInput").val(parseInt(datiLavorazione[7]));
+            $("#dimensioneInput").val(datiLavorazione[8]);
+            $("#noteTextarea").val(datiLavorazione[9]);
+
+
+
+
+        });
+
+    </script>
+
+
 
 {% endblock %}

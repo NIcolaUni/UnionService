@@ -1,0 +1,418 @@
+#paginaPrezzario{
+
+    display: block;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+}
+
+/*##########################Intestazione prezzario#################################*/
+div#divIntestazione {
+    display: block;
+    position: relative;
+    height: 30%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+
+}
+
+
+.divFormContainer{
+    width: 100%;
+}
+
+#buttonsSettori {
+    height: 100px;
+    width: 100px;
+    margin-left: 5%;
+
+}
+
+
+
+#buttonsSettori a{
+    padding-top: 10%;
+    padding-left: 3%;
+    font-size: 5em;
+    cursor: pointer;
+    color: #e6e6e6;
+}
+
+a#addSettore:hover{
+    color: #ffc107;
+}
+
+.fieldSettoreLav {
+    background-color: white;
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+
+.wrap-form {
+    position: relative;
+    border: 1px solid #e6e6e6;
+    border-radius: 13px;
+    padding-top: 10px;
+    padding-bottom: 9px;
+    margin-bottom: 20px;
+    margin-left: 0px;
+}
+
+.select2-dropdown{
+    left: 0 !important;
+}
+
+
+.delSettore {
+    font-size: 1.5em;
+    padding-right: 0;
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 0;
+    z-index: 1000;
+
+}
+
+.delSettore a{
+    color: black;
+    z-index: 1000;
+}
+
+.delSettore a:hover{
+    color: #ffc107;
+}
+
+.delSettore a.downEdit{
+
+    padding-top: 10%;
+
+
+}
+
+.divDelModSelect {
+    position: absolute;
+    width: 60%;
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 0%;
+    padding-left: 0;
+    right: 0;
+    z-index: 1000;
+
+}
+
+.optionSettori{
+  //  width: 100%;
+}
+
+#dropDownSettori span{
+    background-color: green;
+    width: 100%;
+   // z-index: 0;
+}
+
+
+
+/*#######################Prezzario  effettivo###########################################*/
+
+div#tabellaContainer {
+    //background-color: white;
+    display: block;
+    position: relative;
+    height: 65%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    overflow-x: scroll;
+    border-radius: 13px;
+
+
+}
+
+
+#tabellaContainer::-webkit-scrollbar {
+    width: 12px;
+    height: 50px;
+}
+
+/* Track */
+#tabellaContainer::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+#tabellaContainer::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,101,0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+#tabellaContainer::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0,0,101,0.4);
+}
+
+
+
+#prezzario {
+    display: block;
+    border-collapse: collapse;
+    height: 100%;
+    position: relative;
+
+
+}
+
+table#prezzario th, td {
+    border: 1px solid black;
+}
+
+
+table#prezzario th {
+    width: 300px;
+    min-width: 300px;
+    text-align: center;
+    //padding-left: 5px;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+table#prezzario td {
+    width: 300px;
+    min-width: 300px;
+    text-align: center;
+    //padding-left: 5px;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+
+.tableIntestazione {
+    height: 20%;
+    background-color: black;
+    color: white;
+    text-transform: uppercase;
+
+}
+
+
+.firstCol {
+    width: 600px !important;
+    min-width: 600px !important;
+}
+
+.numColSmall {
+    width: 100px !important;
+    min-width: 100px !important;
+}
+
+.numColMedium {
+    width: 200px !important;
+    min-width: 200px !important;
+}
+
+.toLower{
+    text-transform: lowercase;
+}
+
+.tableForm {
+   // height: 20%;
+}
+/*
+th.doubleCol {
+    width: 200px;
+}
+
+*/
+
+#trIntestazione a{
+  //  position: absolute;
+    display: inline-block;
+    font-size: 2em;
+    cursor: pointer;
+    margin-top: 10px;
+
+}
+
+#trForm{
+    background-color: black;
+    color: black;
+    height: 70px;
+
+}
+
+#trForm textarea{
+    width: 100%;
+    height: 30px;
+}
+
+#trForm input{
+    width: 80%;
+}
+
+.buttonPrezzario {
+  width: 50%;
+  height: 50px;
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 100%;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.buttonPrezzario:hover {background-color: #3e8e41}
+
+.buttonPrezzario:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+#bodyPrezzario {
+ //   position: absolute;
+    display: inline-block;
+    background-color: white;
+   // width: 100%;
+    height: 88%;
+    overflow-y: scroll;
+    color: black
+}
+
+
+#bodyPrezzario::-webkit-scrollbar {
+    width: 12px;
+
+}
+
+/* Track */
+#bodyPrezzario::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+#bodyPrezzario::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,101,0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+#bodyPrezzario::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0,0,101,0.4);
+}
+
+#bodyPrezzario tr{
+    width: 100%;
+}
+
+#bodyPrezzario td{
+    width: 155px;
+    min-width: 155px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+
+}
+
+.tdToLeft {
+    text-align: left !important;
+    padding-left: 10px;
+}
+
+td.doubleCol {
+    width: 262px !important;
+}
+
+td.controlCol {
+    width: 250px !important;
+}
+
+td.noteColumn {
+   min-width: 600px !important;
+}
+
+.iconsDiv{
+    width: 100%;
+    font-size: 2em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-align: center;
+
+}
+
+.iconsDiv a{
+  //  padding-left: 20px;
+    cursor: pointer;
+    margin-left: 10%;
+    color: rgba(0,0,101,0.6);
+
+}
+.iconsDiv a:hover{
+    color: black;
+
+}
+
+.iconContainer {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    width: 15%;
+}
+
+.firstIconContainer {
+    margin-left: 30%;
+}
+
+.modLavorazione {
+    padding-top: 3%;
+}
+
+
+
+#bodyPrezzario tr:hover {
+  background-color: #83d160;
+  color: #fff;
+}
+
+#bodyPrezzario td:hover {
+  color: black;
+}
+
+.daVerificare {
+    background-color: #FFE118 !important;
+    color: red;
+}
+
+
+.daVerificare:hover{
+    color: red !important;
+}
+
+.daVerificare td:hover{
+    color: black !important;
+}
+
+#showForm {
+    color: #e6e6e6;
+}
+
+#showForm:hover {
+    color: #ffc107;
+}
+
+#hideForm {
+    font-size: 2em;
+}

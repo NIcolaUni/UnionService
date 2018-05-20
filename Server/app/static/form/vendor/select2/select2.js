@@ -1360,7 +1360,6 @@ S2.define('select2/selection/base',[
 
   BaseSelection.prototype.bind = function (container, $container) {
     var self = this;
-
     var id = container.id + '-container';
     var resultsId = container.id + '-results';
 

@@ -32,11 +32,11 @@ def prezzarioEdile():
     if app.prezzarioEdileSettoreCorrente is not None:
 
         #server.logger.info("\n\nchiamato {} {} {}\n\n".format(settori, categorie, pertinenze))
-        return render_template('prezzario.html', dipendente=dip, settori=settori, settoreToSel=app.prezzarioEdileSettoreCorrente,
+        return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, settoreToSel=app.prezzarioEdileSettoreCorrente,
                                         lavorazioni=lavorazioni,
                                         sockUrl=app.appUrl, prezzario=True,)
     else:
-        return render_template('prezzario.html', dipendente=dip, settori=settori, settoreToSel=None,
+        return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, settoreToSel=None,
                                         lavorazioni=lavorazioni,
                                         sockUrl=app.appUrl, prezzario=True,)
 
@@ -365,6 +365,18 @@ def handle_registra_lavorazione(message):
                                          costo=message["costo"], prezzoMin=message["pMin"], prezzoMax=message["pMax"],
                                           dimensione=message["dimensione"], fornitura=message["fornitura"], posa=message["posa"],
                                             note=message["note"])
+    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+
+@socketio.on('modifica_lavorazione', namespace="/prezzario")
+def handle_modifica_lavorazione(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PrezzarioEdile.modificaLavorazione(settore=message["settore"], oldTipologia=message['oldTipologia'], tipologia_lavorazione=message["tipologia"],
+                                        pertinenza=message["pertinenza"], unitaMisura=message["unita"],
+                                         costo=message["costo"], prezzoMin=message["pMin"], prezzoMax=message["pMax"],
+                                          dimensione=message["dimensione"], fornitura=message["fornitura"], posa=message["posa"],
+                                            note=message["note"])
+
     emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
 
 
