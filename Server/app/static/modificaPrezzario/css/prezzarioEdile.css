@@ -65,32 +65,8 @@ a#addSettore:hover{
 }
 
 
-.delSettore {
-    font-size: 1.5em;
-    padding-right: 0;
-    margin-right: 0;
-    margin-left: 0;
-    padding-right: 0;
-    padding-left: 0;
-    z-index: 1000;
-
-}
-
-.delSettore a{
-    color: black;
-    z-index: 1000;
-}
-
-.delSettore a:hover{
-    color: #ffc107;
-}
-
-.delSettore a.downEdit{
-
-    padding-top: 10%;
 
 
-}
 
 .divDelModSelect {
     position: absolute;
@@ -104,17 +80,102 @@ a#addSettore:hover{
 
 }
 
-.optionSettori{
-  //  width: 100%;
+.optionSettori {
+    margin-left: 75%;
+    width: 100px !important;
+    height: 300px;
+    position: fixed;
+    z-index: 10000;
+    display: inline-block;
+    margin-top: 10px;
+    background-color: white !important;
 }
 
 #dropDownSettori span{
-    background-color: green;
+  //  background-color: green;
     width: 100%;
    // z-index: 0;
 }
 
+.resizedResults {
+    display: inline-block;
+    width: 95% !important;
+}
 
+.delModResults{
+    display: inline-block;
+    width: 5% !important;
+}
+.dropDownEffettivo{
+    display: block;
+    overflow-y: scroll !important;
+    max-height: 300px;
+}
+
+.dropDownEffettivo::-webkit-scrollbar {
+    width: 12px;
+
+}
+
+/* Track */
+.dropDownEffettivo::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+.dropDownEffettivo::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,101,0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.dropDownEffettivo::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0,0,101,0.4);
+}
+
+.controlSelectUl{
+    max-height: 200px;
+    font-size: 14px;
+    color: #555555;
+    line-height: 1.2;
+}
+
+.controlSelectFirstLi{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 24px;
+  //  padding: 6px;
+}
+
+
+
+.controlSelectLi{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 24px;
+    font-size: 1.6em;
+    color: black;
+    cursor: pointer;
+}
+
+.controlSelectLi a{
+      cursor: pointer;
+}
+
+a.leftIcon{
+    margin-left: 20%;
+}
+
+.togliOverflowUlSelect{
+    overflow-y: unset !important;
+}
+
+.togliOverflowUlSelect li{
+    font-size: 1.6em;
+}
 
 /*#######################Prezzario  effettivo###########################################*/
 

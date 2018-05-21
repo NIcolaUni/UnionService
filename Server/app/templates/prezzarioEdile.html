@@ -39,7 +39,7 @@
                                 {% endfor %}
 
                             </select>
-                           <div id="dropDownSettori" class="dropDownSelect2"></div>
+                           <div id="dropDownSettori" class="dropDownSelect2 row"></div>
 
                         </div>
                     </div>
@@ -127,6 +127,7 @@
            //Script necessario per renderizzare corretamente il tag select di "settore"
             $.getScript("{{url_for('static', filename='form/js/main.js')}}");
 
+            /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
             $('#trForm').hide();
 
             $('#hideForm').click(function(){
@@ -198,75 +199,102 @@
             {% endfor %}
 
            /*Codice per aggiungere il cancella e il modifica alle opzioni del select #settoriDisponibili */
-/*
 
-           $('#selectSettori').click(function(){
-                 $('#dropDownSettori li').each(function(){
-                    $(this).html(
-                        '<div  class="optionSettori row">'+
-                            '<div class="col-md-11">'+
-                                $(this).html()+
-                            '</div>'+
-                            '<div class="col-md-1">'+
-                              '<div class="row divDelModSelect">'+
-                                '<div class="delSettore col-md-6">'+
-                                    '<a class="downEdit fa fa-edit">'+
-                                '</div>'+
-                                '<div class="delSettore col-md-6">'+
-                                    '<a class="fa fa-trash"></a>'+
-                                '</div>'+
-                              '</div>'+
-                            '</div>'+
-                        '</div>'
-                    );
-                 });
-
-           });*/
-
-           $('#selectSettori').click(function(){
-                 $('#dropDownSettori span.select2-dropdown').each(function(){
-
-                    $(this).addClass('row');
-                    $(this).html(
-                        '<div class="col-md-11">'+
-                        $(this).html()+
-                        '<div>'
-                    );
+          var firstTime = true;
 
 
-                    $(this).append(
-                        '<div  class="optionSettori col-md-1"></div>'
-                    );
-                    var counter = 0;
+          $('#selectSettori').click(function(){
 
-                    $('#dropDownSettori li').each(function(){
-                        $(this).addClass("liSettore"+counter);
+               if($('#dropDownSettori').children().length > 0) {
+                    if( firstTime )
+                    {
+                        firstTime = false;
+                        $('.select2-results').addClass('resizedResults');
 
-                        $('div.optionSettori').html(
-                              '<div class="row divDelModSelect"+counter>'+
-                                '<div class="delSettore col-md-6">'+
-                                    '<a class="downEdit fa fa-edit">'+
-                                '</div>'+
-                                '<div class="delSettore col-md-6">'+
-                                    '<a class="fa fa-trash"></a>'+
-                                '</div>'+
-                              '</div>'
+                        $('.select2-dropdown').addClass('dropDownEffettivo');
+
+
+                        $('.select2-dropdown').append(
+                            '<span class="delModResults"><ul class="controlSelectUl"></ul></span>'
                         );
-                        counter+=1;
 
-                    });
+                        $('ul.select2-results__options').addClass('togliOverflowUlSelect');
 
-                   /* $(this).html(
-                        '<div  class="optionSettori row">'+
-                            '<div class="col-md-11">'+
-                                $(this).html()+
-                            '</div>'+
-                            '<div class="col-md-1">'+
+                        $('.select2-results li').each(function(){
 
-                            '</div>'+
-                        '</div>'
-                    );*/
-                 });
+
+                                $('.delModResults ul').append(
+
+                                    '<li val="'+$(this).text() +'" class="controlSelectLi"><a class="fa fa-trash delSettore" ></a><a class="fa fa-edit leftIcon modSettore" ></a></li>'
+                                );
+
+
+                        });
+
+
+                        $('.modSettore').click(function() {
+
+                              var oldNome=$(this).parent().attr('val');
+
+                              swal.withForm({
+                                title: 'Modifica nome settore',
+                                text: 'Inserire il nome modificato: ',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore', value: oldNome }
+
+
+                                ]
+                              }, function (isConfirm) {
+
+                                      if (isConfirm) {
+                                            var form=this.swalForm
+                                            socketPrezzario.emit("registra_settore",
+                                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });
+
+                                      }
+
+                              })
+
+                        });
+
+                        $('.delSettore').click(function() {
+
+                                 var settoreSelezionato = $(this).parent().attr('val') //$('#settoriDisponibili').val();
+
+                                  swal({
+                                    title: 'Eliminazione settore '+ settoreSelezionato,
+                                    text: 'sicuro di voler procedere?',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#DD6B55',
+                                    confirmButtonText: 'Ok',
+                                    cancelButtonText: 'annulla',
+                                    closeOnConfirm: true,
+
+                                  }, function (isConfirm) {
+
+                                          if (isConfirm) {
+
+                                               socketPrezzario.emit("elimina_settore", {'dip': '{{dipendente.username}}', 'settore': settoreSelezionato});
+
+                                          }
+
+                                  })
+
+
+                            });
+
+
+                    }
+                }
+
+
+
 
            });
 
@@ -347,41 +375,19 @@
 
 
 
-        $('.delSettore').click(function() {
-
-             var settoreSelezionato = $('#settoriDisponibili').val();
-
-             function registraSettore () {
-                  swal({
-                    title: 'Eliminazione settore '+ settoreSelezionato,
-                    text: 'sicuro di voler procedere?',
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: 'Ok',
-                    cancelButtonText: 'annulla',
-                    closeOnConfirm: true,
-
-                  }, function (isConfirm) {
-
-                          if (isConfirm) {
-
-                               socketPrezzario.emit("elimina_settore", {'dip': '{{dipendente.username}}', 'settore': settoreSelezionato});
-
-                          }
-
-                  })
-             }
-             registraSettore();
-
-
-
-
-        });
-
 
        function registraLavorazione() {
+
+            var titleTxt="";
+
+            if(modificaAttiva)
+            {
+                titleTxt="Si sta per modificare una lavorazione già presente";
+            }else
+                titleTxt='Si sta per aggiungere una nuova lavorazione';
+
           swal({
-            title: 'Si sta per aggiungere una nuova lavorazione',
+            title: titleTxt,
             text: 'Sicuro di voler continuare?',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
@@ -401,6 +407,7 @@
                             textareaOfLavorazione.push($(this).val());
 
                         });
+
 
                         $("#trForm input").each(function(index){
                             inputOfLavorazione.push($(this).val());
@@ -499,10 +506,29 @@
         });
 
 
+
         $(".modLavorazione").click(function() {
-            $('#trForm').show();
-            modificaAttiva=true;
-            $(this).closest('tr').addClass("inModifica");
+
+           if( modificaAttiva ){
+                $('.inModifica').removeClass('inModifica');
+
+
+           }
+            else {
+
+                modificaAttiva=true;
+                $('#trForm').show();
+                $('#showForm').removeClass('fa');
+                $('#showForm').removeClass('fa-plus');
+                /*$('#bodyPrezzario').css('height', '81%');*/
+           }
+
+
+           $(this).closest('tr').addClass("inModifica");
+
+
+
+
 
             var datiLavorazione=[]
             $(".inModifica td").each(function(index){
@@ -512,26 +538,24 @@
 
             console.log(datiLavorazione);
 
-            oldTipologia = datiLavorazione[0];
-            $("#tipologiaTextarea").val( datiLavorazione[0]);
-            $("#pertinenzaSelect").val(datiLavorazione[1]);
-            $("#unitaSelect").val(datiLavorazione[2]);
+            oldTipologia = datiLavorazione[1];
+            $("#tipologiaTextarea").val( datiLavorazione[1]);
+            $("#pertinenzaSelect").val(datiLavorazione[2]);
+            $("#unitaSelect").val(datiLavorazione[3]);
 
-            $("#fornituraInput").attr('value', parseInt(datiLavorazione[3]));
 
-            $("#posaInput").attr('value', parseInt(datiLavorazione[4]));
+
+            $( "#fornituraInput", parseInt(datiLavorazione[4].substring(1, datiLavorazione[4].length)) );
+
+
+            $( "#posaInput", parseInt(datiLavorazione[5].substring(1, datiLavorazione[5].length)));
+            $( "#costoInput",  parseInt(datiLavorazione[6].substring(1, datiLavorazione[6].length)));
+            $( "#pMinInput",  parseInt(datiLavorazione[7].substring(1, datiLavorazione[7].length)));
+            $( "#pMaxInput",  parseInt(datiLavorazione[8].substring(1, datiLavorazione[8].length)));
+            $( "#dimensioneInput",  datiLavorazione[9]);
+            $( "#noteTextarea",   datiLavorazione[10]);
 
             $(this).closest('tr').removeClass("inModifica");
-
-
-
-
-            $("#costoInput").val(parseInt(datiLavorazione[5]));
-            $("#pMinInput").val(parseInt(datiLavorazione[6]));
-            $("#pMaxInput").val(parseInt(datiLavorazione[7]));
-            $("#dimensioneInput").val(datiLavorazione[8]);
-            $("#noteTextarea").val(datiLavorazione[9]);
-
 
 
 
