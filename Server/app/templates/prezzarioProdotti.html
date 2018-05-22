@@ -13,7 +13,7 @@
 
         <div id="divIntestazione" class="row">
             <span class="contact100-form-title">
-               Prezzario Edile
+               Prezzario Prodotti
             </span>
 
 
@@ -26,7 +26,7 @@
                     </div>
 
                     <div id="selectSettori" class="wrap-form input100-select bg1 fieldSelect col-md-10">
-                        <span class="label-input100">Settore di Lavorazione</span>
+                        <span class="label-input100">Tipologia Prodotti</span>
                         <div>
                             <select id="settoriDisponibili" class="js-select2" name="settoriDisponibili">
                                 {% for settore in settori %}
@@ -54,40 +54,51 @@
 
                 <table id="prezzario">
                     <thead id="headPrezzario">
-                       <tr id="trIntestazione">
-                            <th id="primaColonnaIntestazione" class="tableIntestazione" data-column="column1"><a id="showForm" class="fa fa-plus"></a></th>
-                            <th  class="tableIntestazione firstCol" colspan="2"  data-column="column2">Tipologia lavorazione</th>
-                            <th  class="tableIntestazione" data-column="column4">Pertinenza</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column5">Unità</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column6">Fornitura</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column7">Posa</th>
-                           <th  class="tableIntestazione numColMedium" data-column="column8"> <span> Costo <br/><span class="toLower">(fornitura+posa) </span></span></th>
-                            <th  class="tableIntestazione numColSmall" data-column="column9">Prezzo min</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column10">Prezzo max</th>
-                           <th  class="tableIntestazione" data-column="column11"> <span> Dimensione <br/> <span class="toLower"> (cm) </span></span></th>
-                            <th  class="tableIntestazione" data-column="column12">Note</th>
-                            <th  class="tableIntestazione" colspan="2" data-column="column13"> </th>
 
+                       <tr id="headerIntestazioneProdotti">
+                            <th  class="tableIntestazione" data-column="column1"></th>
+                            <th  class="tableIntestazione "  data-column="column2"></th>
+                            <th  class="tableIntestazione " data-column="column3"></th>
+                            <th  class="tableIntestazione numColMedium" data-column="column4"></th>
+                            <th  class="tableIntestazione " data-column="column5"></th>
+                            <th  class="tableIntestazione numColSmall" data-column="column6"> </th>
+                            <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column7"> </th>
+                            <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column8">  </th>
+                            <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column9">  </th>
+                            <th  class="tableIntestazione intestazioneBlu numColSmall" colspan="6" data-column="column10">Extra</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column16"></th>
+                            <th  class="tableIntestazione numColSmall" data-column="column17"></th>
+                            <th  class="tableIntestazione numColMedium" data-column="column18"> </th>
+                       </tr>
+                       <tr id="trIntestazione">
+                            <th  class="tableIntestazione" data-column="column1"><a id="showForm" class="fa fa-plus"></a></th>
+                            <th  class="tableIntestazione "  data-column="column2">Nome prodotto</th>
+                            <th  class="tableIntestazione " data-column="column3">Marchio</th>
+                            <th  class="tableIntestazione numColMedium" data-column="column4">Codice</th>
+                            <th  class="tableIntestazione " data-column="column5">Fornitore</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column6"> &euro; Listino</th>
+                            <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column7"> (+50%) </th>
+                            <th  class="tableIntestazione numColMedium intestazioneRosso" data-column="column8"> Trasporto </th>
+                            <th  class="tableIntestazione numColMedium intestazioneRosso" data-column="column9"> Montaggio </th>
+                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column10"> Sconto </th>
+                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column11">ex.1</th>
+                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column12">ex.2</th>
+                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column13">ex.3</th>
+                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column14">Imballo</th>
+                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column15">Trasporto</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column16">&euro;US</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column17">Rincaro</th>
+                            <th  class="tableIntestazione numColMedium" data-column="column18">Totale cliente</th>
                         </tr>
                         <tr id="trForm">
-                            <th id="primaColonnaForm" class="tableForm" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a></th>
-                            <th  class="tableForm firstCol" colspan="2"  data-column="column2"><textarea maxlength="200"  id="tipologiaTextarea"></textarea></th>
-                            <th  class="tableForm" data-column="column4">
-                                <select id="pertinenzaSelect" name="pertinenza">
-                                {% for settore in settori %}
+                            <th  class="tableForm" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
+                            <th  class="tableForm"  data-column="column2"><input id="nomeProdottoInput" type="text" name="nomeProdotto" placeholder="Inserire il nome del prodotto"></th>
+                            <th  class="tableForm" data-column="column3"><input id="marchioInput" type="text" name="marchio" placeholder="Inserire il marchio"> </th>
+                            <th  class="tableForm numColMedium" data-column="column4"><input id="codiceInput" type="text" name="codice" placeholder="Inserire il codice"> </th>
 
-                                    {% if settore.nome == settoreToSel %}
-                                        <option selected="selected">{{settore.nome}}</option>
-                                    {% else %}
-                                    <option>{{settore.nome}}</option>
-                                    {% endif %}
-                                {% endfor %}
+                            <th  class="tableForm " data-column="column5">
 
-                                </select>
-                            </th>
-                            <th  class="tableForm numColSmall" data-column="column5">
-
-                                <select id="unitaSelect" name="unita">
+                                <select id="fornitoreSelect" name="fornitore">
                                     <option>cad</option>
                                     <option>ml</option>
                                     <option>mq</option>
@@ -95,17 +106,21 @@
                                 </select>
 
                             </th>
-                            <th  class="tableForm numColSmall" data-column="column6"><input id="fornituraInput" type="number" name="fornitura" placeholder="fornitura" value=0></th>
-                            <th  class="tableForm numColSmall" data-column="column7"><input id="posaInput" type="number" name="posa" placeholder="posa" value=0></th>
-                            <th  class="tableForm numColMedium" data-column="column8"><input id="costoInput" type="number" name="costo" placeholder="costo" value=0></th>
-                            <th  class="tableForm numColSmall" data-column="column9"><input id="pMinInput" type="number" name="prezzoMin" placeholder="prezzo min" value=0></th>
-                            <th  class="tableForm numColSmall" data-column="column10"><input id="pMaxInput" type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
-                            <th  class="tableForm" data-column="column11"><input id="dimensioneInput" type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
-                            <th  class="tableForm" data-column="column12"><textarea maxlength="500" id="noteTextarea"></textarea></th>
-                            <th  class="tableForm" colspan="2" data-column="column13"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
+                            <th  class="tableForm numColSmall" data-column="column6"><input id="listinoInput" type="number" name="listino" placeholder="listino" value=0></th>
+                            <th  class="tableForm numColSmall intestazioneRosso" data-column="column7"><input id="piucinquantaInput" type="number" name="piucinquanta" placeholder="" value=0></th>
+                            <th  class="tableForm numColMedium intestazioneRosso" data-column="column8"><input id="trasportoInput" type="number" name="trasporto" placeholder="trasporto" value=0></th>
+                            <th  class="tableForm numColMedium intestazioneRosso" data-column="column9"><input id="montaggioInput" type="number" name="montaggio" placeholder="montaggio" value=0></th>
+                            <th  class="tableForm numColSmall intestazioneBlu" data-column="column10"><input id="scontoInput" type="number" name="sconto" placeholder="sconto" value=0></th>
+                            <th  class="tableForm numColSmall intestazioneBlu" data-column="column11"><input id="ex1Input" type="number" name="ex1" placeholder="ex1" value=0></th>
+                            <th  class="tableForm numColSmall intestazioneBlu" data-column="column12"><input id="ex2Input" type="number" name="ex2" placeholder="ex2" value=0></th>
+                            <th  class="tableForm numColSmall intestazioneBlu" data-column="column13"><input id="ex3Input" type="number" name="ex3" placeholder="ex3" value=0></th>
+                            <th  class="tableForm numColSmall intestazioneBlu" data-column="column14"><input id="imballoInput" type="number" name="imballo" placeholder="imballo" value=0></th>
+                            <th  class="tableForm numColSmall intestazioneBlu" data-column="column15"><input id="trasportoExtraInput" type="number" name="trasportoExtra" placeholder="trasporto extra" value=0></th>
+                                                        <th  class="tableForm numColSmall " data-column="column16"><input id="usInput" type="number" name="us" placeholder="us" value=0></th>
+                            <th  class="tableForm numColSmall" data-column="column17"><input id="rincaroInput" type="number" name="rincaro" placeholder="rincaro" value=0></th>
+                            <th  class="tableForm numColMedium" data-column="column18"></th>
 
                         </tr>
-
                     </thead>
                     <tbody id="bodyPrezzario">
                  <!--  <tr>
@@ -114,6 +129,7 @@
 
 
                     </tbody>
+
 
                 </table>
 

@@ -28,7 +28,8 @@
             <a href="" toggle-submenu><i class="zmdi zmdi-storage"></i> Database </a>
             <ul>
                 <li><a href="{{ url_for('prezzarioEdile') }}">Prezzario Edile</a></li>
-                <li><a href="">Prezzario Prodotti</a></li>
+                <li><a href="{{ url_for('prezzarioProdotti') }}">Prezzario Prodotti</a></li>
+                <li><a href="{{ url_for('schedaFornitori') }}">Scheda Fornitori</a></li>
             </ul>
         </li>
         {% endif %}

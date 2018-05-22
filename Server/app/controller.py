@@ -40,6 +40,19 @@ def prezzarioEdile():
                                         lavorazioni=lavorazioni,
                                         sockUrl=app.appUrl, prezzario=True,)
 
+@server.route('/prezzarioProdotti')
+@login_required
+def prezzarioProdotti():
+    dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
+    settori = SettoreLavorazione.query.all()
+    return render_template('prezzarioProdotti.html', dipendente=dip, settori=settori, prezzario=True, sockUrl=app.appUrl )
+
+@server.route('/schedaFornitori')
+@login_required
+def schedaFornitori():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    settori = SettoreLavorazione.query.all()
+    return render_template("schedaFornitori.html", dipendente=dip, settori=settori, prezzario=True, schedaFornitori=True, sockUrl=app.appUrl)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required

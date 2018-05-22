@@ -7,8 +7,8 @@
     z-index: 5;
 }
 
-
-#divIntestazione {
+/*##########################Intestazione prezzario #################################*/
+div#divIntestazione {
     display: block;
     position: relative;
     height: 30%;
@@ -16,39 +16,20 @@
     margin-left: 0;
     margin-right: 0;
 
-
-}
-
-#tabellaContainer {
-    //background-color: white;
-    display: block;
-    position: fixed;
-    height: 70%;
-    width: 1000px;
-    margin-left: 0;
-    margin-right: 0;
-    overflow-x: scroll;
-    border-radius: 13px;
-    z-index: 100000;
-
-
 }
 
 .divFormContainer{
     width: 100%;
 }
 
-#buttonsSettori {
-  //  background-color: white;
+#buttonsSelect {
     height: 100px;
     width: 100px;
     margin-left: 5%;
 
 }
 
-
-
-#buttonsSettori a{
+#buttonsSelect a{
     padding-top: 10%;
     padding-left: 3%;
     font-size: 5em;
@@ -56,11 +37,11 @@
     color: #e6e6e6;
 }
 
-a#addSettore:hover{
+#buttonsSelect a:hover{
     color: #ffc107;
 }
 
-.fieldSettoreLav {
+.fieldSelect {
     background-color: white;
     margin-bottom: 0;
     margin-top: 10px;
@@ -80,11 +61,169 @@ a#addSettore:hover{
     left: 0 !important;
 }
 
+
+#dropDownSettori span{
+  //  background-color: green;
+    width: 100%;
+   // z-index: 0;
+}
+
+.resizedResults {
+    display: inline-block;
+    width: 95% !important;
+}
+
+.delModResults{
+    display: inline-block;
+    width: 5% !important;
+}
+.dropDownEffettivo{
+    display: block;
+    overflow-y: scroll !important;
+    max-height: 300px;
+}
+
+.dropDownEffettivo::-webkit-scrollbar {
+    width: 12px;
+
+}
+
+/* Track */
+.dropDownEffettivo::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+.dropDownEffettivo::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,101,0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.dropDownEffettivo::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0,0,101,0.4);
+}
+
+.controlSelectUl{
+    max-height: 200px;
+    font-size: 14px;
+    color: #555555;
+    line-height: 1.2;
+}
+
+.controlSelectFirstLi{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 24px;
+  //  padding: 6px;
+}
+
+
+
+.controlSelectLi{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 24px;
+    font-size: 1.6em;
+    color: black;
+    cursor: pointer;
+}
+
+.controlSelectLi a{
+      cursor: pointer;
+}
+
+a.leftIcon{
+    margin-left: 20%;
+}
+
+.togliOverflowUlSelect{
+    overflow-y: unset !important;
+}
+
+.togliOverflowUlSelect li{
+    font-size: 1.6em;
+}
+
+.intestazioneBlu {
+    background-color: blue !important;
+}
+
+.intestazioneRosso {
+    background-color: red !important;
+}
+
+.intestazioneArancio {
+    background-color: orange !important;
+}
+
+.intestazioneVerde{
+    background-color: green !important;
+}
+
+.intestazioneOliva{
+    background-color: #808000 !important;
+}
+
+.intestazioneNocciola{
+    background-color: #A13F00 !important;
+}
+
+.intestazionePino{
+    background-color: #37605E !important;
+}
+
+/*####################### tabella###########################################*/
+
+div#tabellaContainer {
+    //background-color: white;
+    display: block;
+    position: relative;
+    height: 65%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    overflow-x: scroll;
+    border-radius: 13px;
+
+
+}
+
+
+#tabellaContainer::-webkit-scrollbar {
+    width: 12px;
+    height: 50px;
+}
+
+/* Track */
+#tabellaContainer::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/* Handle */
+#tabellaContainer::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,101,0.8);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+#tabellaContainer::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(0,0,101,0.4);
+}
+
+
+
 #prezzario {
+    display: block;
     border-collapse: collapse;
-    //width: 100%;
-    height: 90%;
-    //position: absolute;
+    height: 100%;
+    position: relative;
 
 
 }
@@ -94,18 +233,27 @@ table#prezzario th, td {
 }
 
 
-
 table#prezzario th {
     width: 300px;
-    min-width: 155px;
+    min-width: 300px;
     text-align: center;
     //padding-left: 5px;
     font-weight: bold;
     font-size: 1.3em;
 }
 
+table#prezzario td {
+    width: 300px;
+    min-width: 300px;
+    text-align: center;
+    //padding-left: 5px;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+
 .tableIntestazione {
-    height: 70px;
+    height: 20%;
     background-color: black;
     color: white;
     text-transform: uppercase;
@@ -115,6 +263,17 @@ table#prezzario th {
 
 .firstCol {
     width: 600px !important;
+    min-width: 600px !important;
+}
+
+.numColSmall {
+    width: 100px !important;
+    min-width: 100px !important;
+}
+
+.numColMedium {
+    width: 200px !important;
+    min-width: 200px !important;
 }
 
 .toLower{
@@ -122,14 +281,17 @@ table#prezzario th {
 }
 
 .tableForm {
-    height: 70px;
+   // height: 20%;
 }
 
+
+
+/*
 th.doubleCol {
     width: 200px;
 }
 
-
+*/
 
 #trIntestazione a{
   //  position: absolute;
@@ -143,6 +305,7 @@ th.doubleCol {
 #trForm{
     background-color: black;
     color: black;
+    height: 70px;
 
 }
 
@@ -156,7 +319,8 @@ th.doubleCol {
 }
 
 .buttonPrezzario {
-  width: 150px;
+  width: 50%;
+  height: 50px;
   display: inline-block;
   padding: 15px 25px;
   font-size: 100%;
@@ -180,11 +344,11 @@ th.doubleCol {
 }
 
 #bodyPrezzario {
-    position: absolute;
-    display: block;
+ //   position: absolute;
+    display: inline-block;
     background-color: white;
-    width: 100%;
-    height: 550px;
+   // width: 100%;
+    height: 88%;
     overflow-y: scroll;
     color: black
 }
@@ -192,6 +356,7 @@ th.doubleCol {
 
 #bodyPrezzario::-webkit-scrollbar {
     width: 12px;
+
 }
 
 /* Track */
@@ -218,7 +383,7 @@ th.doubleCol {
 }
 
 #bodyPrezzario td{
-    width: 100px;
+    width: 155px;
     min-width: 155px;
     text-align: center;
     font-weight: bold;
@@ -239,6 +404,10 @@ td.controlCol {
     width: 250px !important;
 }
 
+td.noteColumn {
+   min-width: 600px !important;
+}
+
 .iconsDiv{
     width: 100%;
     font-size: 2em;
@@ -251,6 +420,27 @@ td.controlCol {
 .iconsDiv a{
   //  padding-left: 20px;
     cursor: pointer;
+    margin-left: 10%;
+    color: rgba(0,0,101,0.6);
+
+}
+.iconsDiv a:hover{
+    color: black;
+
+}
+
+.iconContainer {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    width: 15%;
+}
+
+.firstIconContainer {
+    margin-left: 30%;
+}
+
+.modLavorazione {
+    padding-top: 3%;
 }
 
 
@@ -260,50 +450,32 @@ td.controlCol {
   color: #fff;
 }
 
+#bodyPrezzario td:hover {
+  color: black;
+}
+
 .daVerificare {
     background-color: #FFE118 !important;
+    color: red;
 }
 
-#######################################################################
-.delSettore {
-    font-size: 1.5em;
-    padding-right: 0;
-    margin-right: 0;
-    margin-left: 0;
-    padding-right: 0;
-    padding-left: 0;
-    z-index: 1000;
 
+.daVerificare:hover{
+    color: red !important;
 }
 
-.delSettore a{
-    color: black;
-    z-index: 1000;
+.daVerificare td:hover{
+    color: black !important;
 }
 
-.delSettore a:hover{
+#showForm {
+    color: #e6e6e6;
+}
+
+#showForm:hover {
     color: #ffc107;
 }
 
-.delSettore a.downEdit{
-
-    padding-top: 10%;
-
-
-}
-
-.divDelModSelect {
-    position: absolute;
-    width: 60%;
-    margin-right: 0;
-    margin-left: 0;
-    padding-right: 0%;
-    padding-left: 0;
-    right: 0;
-    z-index: 1000;
-
-}
-
-.optionSettori{
-    width: 100%;
+#hideForm {
+    font-size: 2em;
 }
