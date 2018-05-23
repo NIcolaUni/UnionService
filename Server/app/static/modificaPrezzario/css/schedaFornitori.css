@@ -5,3 +5,21 @@ div#divIntestazione {
 div#tabellaContainer{
     height: 80% !important;
 }
+
+.whiteBorder {
+    border-color: white !important;
+}
+
+.numberInput {
+    width: 40% !important;
+}
+
+.colMedium {
+    width: 120px !important;
+    min-width: 120px !important;
+}
+
+.colBigMedium {
+    width: 150px !important;
+    min-width: 150px !important;
+}
