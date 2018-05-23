@@ -258,39 +258,9 @@
 				<!-- One -->
 					<section id="one" class="wrapper style2 spotlights">
 						<div class="inner">
-							<h2>Preventivo</h2>
-							<div id="divFattura" class="features row">
-								<div class="col-md-4">
-									<span>Settore di Lavorazione</span></br>
-									<div>
-										<select class="js-select2" name="service">
-									        {% for settore in settori %}
-												<option>{{settore.nome}}</option>
-											{% endfor %}
-										</select>
-										<div class="dropDownSelect2"></div>
-									</div>
-								</div>
-								<div  id="divElementFattura" class="features col-md-8">
-									<ul id="listaElementFattura">
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-										<li><button class="elementFattura">Elemento</button></li>
-									</ul>
 
-								</div>
+							<h2>Preventivo <a id="preventivoFullPage" class="fa fa-expand expandPreventivoIcon"></a></h2>
 
-
-							</div>
 							<div class="features">
 								<div id="tabFattura" class="table-wrapper">
 										<table class="alt">
@@ -309,8 +279,8 @@
 											<tbody>
 												<tr>
 													<td>Ante turpis integer aliquet porttitor.</td>
-													<td><input class="preventivo" type="number" value="1" onClick="this.select();"></td>
-													<td><input class="preventivo" type="number" value="2" onClick="this.select();"></td>
+													<td><1</td>
+													<td>1</td>
 													<td>1</td>
 													<td>8</td>
 													<td>m<sup>3</sup></td>
@@ -493,7 +463,9 @@
 			<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
 
 			<script>
-				console.log('bella');
+
+				$('#preventivoFullPage').attr('href', "{{url_for('preventivoFull')}}" );
+
 				$('#header > a').css('border-bottom', 'None' );
 			</script>
 

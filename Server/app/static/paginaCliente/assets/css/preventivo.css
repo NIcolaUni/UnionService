@@ -1,0 +1,43 @@
+.innerPreventivo {
+    width: unset !important;
+    max-width: unset !important;
+}
+
+div#wrapper {
+    width: 100%;
+}
+
+.titleInCentro {
+    text-align: center;
+}
+
+#tabContainer {
+    display: block;
+    width: 100%;
+    overflow-x: scroll;
+}
+
+#tabFattura {
+    //width: 100% !important;
+    margin-left: 0 !important;
+}
+
+.thPreventivo {
+    width: 300px !important;
+    color: black;
+}
+
+.tdPreventivo {
+    width: 300px !important;
+    color: black;
+
+}
+
+.trHead{
+    display: inline-block;
+}
+
+.trBody{
+    display: inline-block;
+
+}

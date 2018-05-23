@@ -34,25 +34,25 @@ def prezzarioEdile():
         #server.logger.info("\n\nchiamato {} {} {}\n\n".format(settori, categorie, pertinenze))
         return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, settoreToSel=app.prezzarioEdileSettoreCorrente,
                                         lavorazioni=lavorazioni,
-                                        sockUrl=app.appUrl, prezzario=True,)
+                                        sockUrl=app.appUrl, prezzario=True, prezzarioEdileCss=True)
     else:
         return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, settoreToSel=None,
                                         lavorazioni=lavorazioni,
-                                        sockUrl=app.appUrl, prezzario=True,)
+                                        sockUrl=app.appUrl, prezzario=True, prezzarioEdileCss=True)
 
 @server.route('/prezzarioProdotti')
 @login_required
 def prezzarioProdotti():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
     settori = SettoreLavorazione.query.all()
-    return render_template('prezzarioProdotti.html', dipendente=dip, settori=settori, prezzario=True, sockUrl=app.appUrl )
+    return render_template('prezzarioProdotti.html', dipendente=dip, settori=settori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
 
 @server.route('/schedaFornitori')
 @login_required
 def schedaFornitori():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     settori = SettoreLavorazione.query.all()
-    return render_template("schedaFornitori.html", dipendente=dip, settori=settori, prezzario=True, schedaFornitori=True, sockUrl=app.appUrl)
+    return render_template("schedaFornitori.html", dipendente=dip, settori=settori, prezzario=True, schedaFornitoriCss=True, sockUrl=app.appUrl)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -71,27 +71,16 @@ def gestioneDip():
 @server.route('/paginaProfilo')
 @login_required
 def paginaProfilo():
-    return render_template('paginaProfilo.html')
+    dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
+    return render_template('paginaProfilo.html', dipendente=dip)
 
-'''
-@server.route('/apriPaginaClienteAccoglienza/<nome>/<cognome>')
+
+@server.route('/preventivoFull')
 @login_required
-def apriPaginaClienteAccoglienza(nome, cognome):
-    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    server.logger.info("\n\n\nStampa dipendente {}\n\n\n".format(dip))
-    cliente = ClienteAccolto.query.filter_by(nome=nome, cognome=cognome, commerciale=current_user.get_id()).first()
-
-    ufficioCommerciale = Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
-    ufficioTecnico = Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
-    ufficioCapicantiere = Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
+def preventivoFull():
     settori = SettoreLavorazione.query.all()
-    server.logger.info("\n\n\nStampa cliente {}\n\n\n".format(cliente))
-
-    return render_template('paginaCliente.html', dip=dip, cliente=cliente, ufficioCommerciale=ufficioCommerciale,
-                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
-'''
-
-
+    prezzarioEdile = PrezzarioEdile.query.all()
+    return render_template('preventivo.html', settori=settori, preventivoFullPage=True, cliente=app.clienteSelezionato, prezzarioEdile=prezzarioEdile)
 
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required
@@ -101,15 +90,30 @@ def apriPaginaCliente():
     scelta = app.formCercaCliente.nome_cognome_indirizzo.data
     (cognomeCliente, nomeCliente, indirizzoCliente) = scelta.split(" . ")
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    cliente = ClienteAccolto.query.filter_by(nome=nomeCliente, cognome=cognomeCliente, indirizzo=indirizzoCliente, commerciale=current_user.get_id()).first()
-    ufficioCommerciale = Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
-    ufficioTecnico = Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
-    ufficioCapicantiere = Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
-    settori = SettoreLavorazione.query.all()
+    app.clienteSelezionato = ClienteAccolto.query.filter_by(nome=nomeCliente, cognome=cognomeCliente, indirizzo=indirizzoCliente).first()
 
-    return render_template('paginaCliente.html', dip=dip, cliente=cliente, ufficioCommerciale=ufficioCommerciale,
+    if app.clienteSelezionato is None:
+        return redirect('/homepage')
+
+    ufficioCommerciale = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
+    ufficioTecnico = []#Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
+    ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
+    settori = SettoreLavorazione.query.all()
+    return render_template('paginaCliente.html', dip=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
                                     ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
 
+@server.route('/clientBack')
+@login_required
+def clientBack():
+
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+
+    ufficioCommerciale = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
+    ufficioTecnico = []#Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
+    ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
+    settori = SettoreLavorazione.query.all()
+    return render_template('paginaCliente.html', dip=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
+                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
 @login_required

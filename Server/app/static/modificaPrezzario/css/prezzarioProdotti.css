@@ -1,0 +1,25 @@
+
+.colFornitore {
+    width: 120px !important;
+    min-width: 120px !important;
+}
+
+.numberInput {
+    width: 20% !important;
+}
+
+
+
+#fornitoreSelect{
+    width: 100%;
+}
+
+
+
+.colorWhite {
+    color: white;
+}
+
+.colorBlack {
+    color: black;
+}

@@ -1,32 +1,222 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it" data-ng-app="materialAdmin" data-ng-controller="materialadminCtrl as mactrl">
+	<head>
+		<title>Dipendente {{dipendente.nome}} {{dipendente.cognome}}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<div class="row wrap-contact100" id="container-profiloDip">
-		<span class="contact100-form-title">
-			Profilo Mario Rossi
-		</span>
+<!--==================================================================================================-->
+    <!-- Vendor CSS -->
+    <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/animate.css/animate.min.css') }}" rel="stylesheet">
+    <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css') }}" rel="stylesheet">
+    <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-loading-bar/src/loading-bar.css') }}" rel="stylesheet">
 
-  <div class="col-md-5 col-sm-5 profiloDip-divFoto">
 
-			<img src="static/images/1.jpg">
-			<button class="spin circle" id="modificaProfiloButton" href="#" > Modifica  </button>
+    <!-- CSS -->
+    <link href="{{url_for('static', filename='headerAndForm/css/app.css') }}" rel="stylesheet">
+    <link href="{{url_for('static', filename='headerAndForm/css/demo.css') }}" rel="stylesheet">
 
-  </div>
 
-  <div class="col-md-7 col-sm-7 profiloDip-divDescrizione">
-			Codice Fiscale: <span class="label-grassetto">Mario</span><br/><br/>
-			Sesso:<span class="label-grassetto"> Maschio</span><br/><br/>
-			Data di nascita: <span class="label-grassetto">12/03/1978</span><br/><br/>
-			Indirizzo: <span class="label-grassetto"> via moie 7, 37135, Verona</span> <br/><br/>
-			Telefono: <span class="label-grassetto">335670988</span> <br/><br/>
-			Email: <span class="label-grassetto"> mario.rossi@gmail.com</span> <br/><br/>
-			IBAN: <span class="label-grassetto"> 24hi3bi32b4523543j2b234n32ni23442jhb42 </span> <br/><br/>
-			Tipo dipendente:  <span class="label-grassetto"> Tecnico </span> Costo: <span class="label-grassetto"> 15 euro/h</span> <br/><br/>
-			Tipo contratto:  <span class="label-grassetto"> Full-Time </span> <br/><br/>
-			Data scadenza contratto:  <span class="label-grassetto"> 01/01/2040 </span> <br/><br/>
-			Disponibilità settimanale: </br>
-			<span class="label-grassetto"> Lunedì, Martedì, Giovedì, Venerdì </span> <br/><br/>
+<!--=================================================================================================-->
 
-	  </div>
+    <link href="{{url_for('static', filename='bootstrap/css/normalize.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
-</div>
+<!--==================== css form registrazione e profilo =============================================-->
 
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/fonts/iconic/css/material-design-iconic-font.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animate/animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/css-hamburgers/hamburgers.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/animsition/css/animsition.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/vendor/noui/nouislider.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/util.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/main.css') }}">
+<!--===============================================================================================-->
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/profiloDip.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/button-modificaProfilo.css') }}">
+
+<!--==================== css calendario e agenda====== =============================================-->
+    <link href="{{url_for('static', filename='calendario/fullcalendar.min.css') }}" rel='stylesheet' />
+    <link href="{{url_for('static', filename='calendario/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
+
+    <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
+
+    <script src="{{url_for('static', filename='calendario/lib/moment.min.js') }}"></script>
+    <script src="{{url_for('static', filename='calendario/fullcalendar.min.js') }}"></script>
+    <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
+<!--===============================================================================================-->
+
+    <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css') }}" rel='stylesheet' />
+    <script src="{{url_for('static', filename='js/vendor/sweet-alert2.min.js') }}"></script>
+
+<!--===============================favicons =========================================================-->
+
+
+    <link rel="apple-touch-icon" sizes="57x57" href="{{url_for('static', filename='favicon/apple-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{url_for('static', filename='favicon/apple-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{url_for('static', filename='favicon/apple-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{url_for('static', filename='favicon/apple-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{url_for('static', filename='favicon/apple-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{url_for('static', filename='favicon/apple-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{url_for('static', filename='favicon/apple-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{url_for('static', filename='favicon/apple-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{url_for('static', filename='favicon/apple-icon-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{url_for('static', filename='favicon/android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{url_for('static', filename='favicon/favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{url_for('static', filename='favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{url_for('static', filename='favicon/manifest.json') }}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{url_for('static', filename='favicon/ms-icon-144x144.png') }}">
+    <meta name="theme-color" content="#ffffff">
+
+<!--===================================socket io====================================================-->
+    <script src="{{url_for('static', filename='js/vendor/socket.io.js') }}"></script>
+    <!--===========================================================================================================-->
+
+        <!-- Angular -->
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular/angular.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-animate/angular-animate.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-resource/angular-resource.min.js') }}"></script>
+
+        <!-- Angular Modules -->
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-ui-router/release/angular-ui-router.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-loading-bar/src/loading-bar.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/oclazyload/dist/ocLazyLoad.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js') }}"></script>
+
+        <!-- Common Vendors -->
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/jquery.nicescroll/jquery.nicescroll.min.js') }}"></script>
+
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/Waves/dist/waves.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bootstrap-growl/bootstrap-growl.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/ng-table/dist/ng-table.min.js') }}"></script>
+
+
+
+        <!-- Using below vendors in order to avoid misloading on resolve -->
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.curvedlines/curvedLines.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.resize.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/moment/min/moment.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot-orderBars/js/jquery.flot.orderBars.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.pie.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/angular-nouislider/src/nouislider.min.js') }}"></script>
+
+        <!-- App level -->
+        <script src="{{url_for('static', filename='headerAndForm/js/app.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/config.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/controllers/main.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/services.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/templates.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/controllers/ui-bootstrap.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/controllers/table.js') }}"></script>
+
+
+        <!-- Template Modules -->
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/template.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/ui.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/charts/flot.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/charts/other-charts.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/form.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/media.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/components.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/calendar.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/js/modules/demo.js') }}"></script>
+
+<!--===========================================================================================================-->
+
+
+
+
+		<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/html5shiv.js') }}"></script><![endif]-->
+		<link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/main.css') }}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie9.css') }}" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie8.css') }}" /><![endif]-->
+
+
+	</head>
+	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
+
+
+	<header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+	<aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+
+	<div class="row">
+
+
+		<!-- Sidebar -->
+			<div class="col-md-3">
+			<section id="sidebar-client">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a class="menuBar local" href="#intro">Profilo personale</a></li>
+
+
+					</nav>
+				</div>
+			</section>
+			</div>
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="col-md-9">
+
+				<!-- Intro -->
+					<section id="intro" class="wrapper style1 fullscreen fade-up">
+						<div class="inner">
+							<h1>{{dipendente.nome}} {{dipendente.cognome}}</h1>
+
+							
+
+
+						</div>
+					</section>
+
+
+			</div>
+
+		<!-- Scripts -->
+		<!--================================= JS Form =================================================================-->
+		<script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
+		<script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
+		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+		<script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
+		<!--===========================================================================================================-->
+		<!--
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.min.js') }}"></script> -->
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrolly.min.js') }}"></script>
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/skel.min.js') }}"></script>
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/util.js') }}"></script>
+		<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/respond.min.js') }}"></script><![endif]-->
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
+
+		<script>
+
+			$('#header > a').css('border-bottom', 'None' );
+		</script>
+
+	</div>
+	</body>
+</html>

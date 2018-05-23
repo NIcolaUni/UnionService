@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html lang="it" data-ng-app="materialAdmin" data-ng-controller="materialadminCtrl as mactrl">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Gestionale Aziendale UnionService</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+		<title>Cliente {{cliente.nome}} {{cliente.cognome}}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 <!--==================================================================================================-->
@@ -24,7 +27,7 @@
 
     <link href="{{url_for('static', filename='bootstrap/css/normalize.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
 <!--==================== css form registrazione e profilo =============================================-->
@@ -41,7 +44,9 @@
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='form/css/main.css') }}">
 <!--===============================================================================================-->
 
-
+    <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/profiloDip.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/button-modificaProfilo.css') }}">
 
@@ -56,10 +61,9 @@
     <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
 <!--===============================================================================================-->
 
-    {% if not prezzario %}
     <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css') }}" rel='stylesheet' />
     <script src="{{url_for('static', filename='js/vendor/sweet-alert2.min.js') }}"></script>
-    {% endif %}
+
 <!--===============================favicons =========================================================-->
 
 
@@ -140,60 +144,52 @@
 <!--===========================================================================================================-->
 
 
-    <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/impegni.css') }}">
 
 
-    {% if prezzario %}
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/util.css') }}">
-	<!--<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/css/main.css') }}">-->
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/prezzario.css') }}">
+		<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/html5shiv.js') }}"></script><![endif]-->
+		<link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/main.css') }}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie9.css') }}" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie8.css') }}" /><![endif]-->
 
-    {% if prezzarioEdileCss %}
-     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/prezzarioEdile.css') }}">
-    {% elif prezzarioProdottiCss %}
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/prezzarioProdotti.css') }}">
-    {% elif schedaFornitoriCss %}
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/schedaFornitori.css') }}">
-    {% endif %}
-<!--===============================================================================================-->
-     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
-     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
-    <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
-    <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
+		{%if preventivoFullPage %}
+		<link href="{{url_for('static', filename='paginaCliente/assets/css/preventivo.css') }}" rel="stylesheet">
+		{% endif %}
+	</head>
+	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
-    {% endif %}
 
-</head>
+	<header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
-    {% if fittizio %}
-        <body>
-    {% else %}
-        <body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
-    {% endif %}
+	<aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-        <div class="site-bg"></div>
-        <div class="site-bg-overlay"></div>
 
-       {% block content %}
+	<div class="row">
+		<!-- Wrapper -->
+
+		{% block content %}
        {% endblock %}
+		<!-- Scripts -->
+		<!--================================= JS Form =================================================================-->
+		<script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
+		<script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
+		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+		<script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
+		<!--===========================================================================================================-->
+		<!--
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.min.js') }}"></script> -->
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrollex.min.js') }}"></script>
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrolly.min.js') }}"></script>
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/skel.min.js') }}"></script>
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/util.js') }}"></script>
+		<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/respond.min.js') }}"></script><![endif]-->
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
 
+		<script>
 
-<!--================================= JS Form =================================================================-->
-       <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
-       <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
-       <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-       <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
-<!--===========================================================================================================-->
+			$('#header > a').css('border-bottom', 'None' );
+		</script>
 
-
-
-        <script src="{{url_for('static', filename='js/main.js') }}"></script>
-
-    </body>
+	</div>
+	</body>
 </html>

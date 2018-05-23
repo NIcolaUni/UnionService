@@ -60,7 +60,7 @@
                             <th  class="tableIntestazione "  data-column="column2"></th>
                             <th  class="tableIntestazione " data-column="column3"></th>
                             <th  class="tableIntestazione numColMedium" data-column="column4"></th>
-                            <th  class="tableIntestazione " data-column="column5"></th>
+                            <th  class="tableIntestazione colFornitore" data-column="column5"></th>
                             <th  class="tableIntestazione numColSmall" data-column="column6"> </th>
                             <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column7"> </th>
                             <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column8">  </th>
@@ -75,9 +75,9 @@
                             <th  class="tableIntestazione "  data-column="column2">Nome prodotto</th>
                             <th  class="tableIntestazione " data-column="column3">Marchio</th>
                             <th  class="tableIntestazione numColMedium" data-column="column4">Codice</th>
-                            <th  class="tableIntestazione " data-column="column5">Fornitore</th>
+                            <th  class="tableIntestazione colFornitore" data-column="column5">Fornitore</th>
                             <th  class="tableIntestazione numColSmall" data-column="column6"> &euro; Listino</th>
-                            <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column7"> (+50%) </th>
+                            <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column7"> &euro; netto <br/> (+%) </th>
                             <th  class="tableIntestazione numColMedium intestazioneRosso" data-column="column8"> Trasporto </th>
                             <th  class="tableIntestazione numColMedium intestazioneRosso" data-column="column9"> Montaggio </th>
                             <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column10"> Sconto </th>
@@ -86,7 +86,7 @@
                             <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column13">ex.3</th>
                             <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column14">Imballo</th>
                             <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column15">Trasporto</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column16">&euro;US</th>
+                            <th  class="tableIntestazione numColSmall" data-column="column16">&euro; netto <br/> </br>US</th>
                             <th  class="tableIntestazione numColSmall" data-column="column17">Rincaro</th>
                             <th  class="tableIntestazione numColMedium" data-column="column18">Totale cliente</th>
                         </tr>
@@ -96,7 +96,7 @@
                             <th  class="tableForm" data-column="column3"><input id="marchioInput" type="text" name="marchio" placeholder="Inserire il marchio"> </th>
                             <th  class="tableForm numColMedium" data-column="column4"><input id="codiceInput" type="text" name="codice" placeholder="Inserire il codice"> </th>
 
-                            <th  class="tableForm " data-column="column5">
+                            <th  class="tableForm colFornitore" data-column="column5">
 
                                 <select id="fornitoreSelect" name="fornitore">
                                     <option>cad</option>
@@ -106,7 +106,7 @@
                                 </select>
 
                             </th>
-                            <th  class="tableForm numColSmall" data-column="column6"><input id="listinoInput" type="number" name="listino" placeholder="listino" value=0></th>
+                            <th  class="tableForm numColSmall colorWhite" data-column="column6"><input id="listinoInput" class="numberInput colorBlack" type="number" name="listino" placeholder="listino" value=0> &euro; </th>
                             <th  class="tableForm numColSmall intestazioneRosso" data-column="column7"><input id="piucinquantaInput" type="number" name="piucinquanta" placeholder="" value=0></th>
                             <th  class="tableForm numColMedium intestazioneRosso" data-column="column8"><input id="trasportoInput" type="number" name="trasporto" placeholder="trasporto" value=0></th>
                             <th  class="tableForm numColMedium intestazioneRosso" data-column="column9"><input id="montaggioInput" type="number" name="montaggio" placeholder="montaggio" value=0></th>

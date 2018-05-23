@@ -1,0 +1,117 @@
+{% extends "paginaClienteBase.html" %}
+
+{% block content %}
+
+<div id="wrapper" class="col-md-8">
+    <section id="one" class="wrapper style2 spotlights">
+        <div class="inner innerPreventivo">
+            <h2 class="titleInCentro">Preventivo <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a></h2>
+            <div id="divFattura" class="features row">
+                <div class="col-md-4">
+                    <span>Settore di Lavorazione</span></br>
+                    <div>
+                        <select id="selectSettore" class="js-select2" name="service">
+                            {% for settore in settori %}
+                                <option>{{settore.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+                </div>
+                <div  id="divElementFattura" class="features col-md-8">
+                    <ul id="listaElementFattura">
+
+                    </ul>
+
+                </div>
+
+
+            </div>
+            <div id="tabContainer" class="features">
+                <div id="tabFattura" class="table-wrapper">
+                        <table class="alt">
+                            <thead>
+                                <tr class="trHead">
+                                    <th class="thPreventivo">Settore di lavorazione</th>
+                                    <th class="thPreventivo">L</th>
+                                    <th class="thPreventivo">P</th>
+                                    <th class="thPreventivo">H</th>
+                                    <th class="thPreventivo">Quantità</th>
+                                    <th class="thPreventivo">Unità</th>
+                                    <th class="thPreventivo">Prezzo unitario</th>
+                                    <th class="thPreventivo">Totale</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyPreventivo">
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <td>100.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+
+        function aggiungiRiga($this){
+                 {% for prezzario in prezzarioEdile %}
+                    if( "{{prezzario.tipologia_lavorazione}}" ==  $this.text() ){
+                        $('#bodyPreventivo').append(
+
+                            '<tr class="trBody">'+
+
+                                '<td class="tdPreventivo"><input type="text" name="settore" placeholder="settore" value={{prezzario.settore}}></td>'+
+                                '<td class="tdPreventivo"><input type="number" name="L" placeholder="L" value=0></td>'+
+                                '<td class="tdPreventivo"><input type="number" name="P" placeholder="P" value=0></td>'+
+                                '<td class="tdPreventivo"><input type="number" name="H" placeholder="H" value=0></td>'+
+                                '<td class="tdPreventivo"><input type="number" name="quantita" placeholder="quantita" value=1></td>'+
+                                '<td class="tdPreventivo">{{prezzario.costo}}</td>'+
+
+                            '</tr>'
+                        );
+                    }
+                {% endfor %}
+        }
+
+       {% for elemento in prezzarioEdile %}
+          if( "{{elemento.settore}}" == $('#selectSettore').val() ){
+            $('#listaElementFattura').append(
+
+                 '<li><button onclick="aggiungiRiga($(this))" class="elementFattura">{{elemento.tipologia_lavorazione}}</button></li>'
+            );
+          }
+       {% endfor %}
+
+       $('#selectSettore').change(function(){
+            console.log("chiamato");
+            $('#listaElementFattura').html("");
+            {% for elemento in prezzarioEdile %}
+              if( "{{elemento.settore}}" == $('#selectSettore').val() ){
+                $('#listaElementFattura').append(
+
+                     '<li><button onclick="printa()" class="elementFattura">{{elemento.tipologia_lavorazione}}</button></li>'
+                );
+              }
+           {% endfor %}
+
+            $('.elementFattura').click(function(){
+console.log("almeo queoi");
+                {% for prezzario in prezzarioEdile %}
+                    console.log("{{prezzario.tipologia_lavorazione}}" );
+                    if( "{{prezzario.tipologia_lavorazione}}" ==  $(this).text() ){
+                        console.log("almeo queoi");
+                    }
+                {% endfor %}
+            });
+       });
+</script>
+
+{% endblock %}

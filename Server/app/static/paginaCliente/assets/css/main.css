@@ -3961,3 +3961,11 @@ button.elementFattura {
     margin-left: 8%;
     margin-top: 30px;
   }
+
+  .expandPreventivoIcon {
+    cursor: pointer;
+  }
+
+  .expandPreventivoIcon:hover{
+    color: #ffc107;
+  }
