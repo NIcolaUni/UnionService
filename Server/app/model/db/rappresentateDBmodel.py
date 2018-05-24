@@ -6,7 +6,7 @@ class RappresentanteDBmodel(database.Model):
     __tablename__ = "rappresentante"
     __table_args__ = (
             PrimaryKeyConstraint('nome', 'azienda'),
-            ForeignKeyConstraint(['azienda'], ['fornitore.primo_gruppo'],
+            ForeignKeyConstraint(['azienda'], ['fornitore.nome_gruppo'],
                                  onupdate="CASCADE", ondelete="CASCADE"),
                     )
 
@@ -17,10 +17,13 @@ class RappresentanteDBmodel(database.Model):
     stato = Column(String(100))
 
 
-    def commitSettore(newRow):
+    def commitRappresentante(newRow):
         database.session.add(newRow)
         database.session.commit()
 
-    def commitEliminaSettore(oldRow):
+    def commitEliminaRappresentante(oldRow):
         database.session.delete(oldRow)
         database.session.commit()
+
+    def rollback():
+        database.session.rollback()

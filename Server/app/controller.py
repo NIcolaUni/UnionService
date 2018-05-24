@@ -9,6 +9,10 @@ from .model.settoreLavorazione import SettoreLavorazione
 from .model.prezzarioEdile import PrezzarioEdile
 from .model.clienteAccolto import ClienteAccolto
 from .model.impegni import Impegni
+from .model.fornitore import Fornitore
+from .model.sottoGruppoFornitori import SottoGruppoFornitori
+from .model.rappresentate import Rappresentante
+from .model.eccezioni.righaPresenteException import RigaPresenteException
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import app
@@ -435,8 +439,68 @@ def handle_registraImpegno(message):
 
 
 
+@socketio.on('registra_fornitore', namespace="/fornitore")
+def handle_registra_fornitore(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    try:
+        Fornitore.registraFornitore(nome_gruppo=message['nome'])
+    except RigaPresenteException as e:
+        server.logger.info("\n\n\n\n {} ".format(e))
+        emit('rigaPresente', {"who": "Fornitore1"}, namespace='/fornitore', room=dip.session_id)
 
 
+@socketio.on('registra_gruppoFornitore', namespace="/fornitore")
+def handle_registra_gruppoFornitore(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    try:
+        SottoGruppoFornitori.registraSottoGruppoFornitori(nome=message['nome'], gruppo_azienda=message['gruppo_azienda'],
+                                    settoreMerceologico=message['settore_merceologico'], tempiDiConsegna=message['tempi_consegna'],
+                                    prezziNetti = message['prezziNetti'],
+                                    scontoStandard =  message['scontoStandard'],
+                                    scontoExtra1 =  message['scontoExtra1'],
+                                    scontroExtra2 =  message['scontroExtra2'],
+                                    trasporto =  message['trasporto'],
+                                    trasportoUnitaMisura =  message['trasportoUnitaMisura'],
+                                    giorniPagamenti =  message['giorniPagamenti'],
+                                    modalitaPagamenti =  message['modalitaPagamenti'],
+                                    tipologiaPagamenti =  message['tipologiaPagamenti'],
+                                    provincia =  message['provincia'],
+                                    indirizzo =  message['indirizzo'],
+                                    telefono =  message['telefono'],
+                                    sito =  message['sito'])
+
+    except RigaPresenteException as e:
+        server.logger.info("\n\n\n\n {} ".format(e))
+
+        if message['rappresentante']:
+            emit('regRappresentante',  namespace='/fornitore', room=dip.session_id)
+            return
+        else:
+            emit('rigaPresente',  {"who": "Fornitore"},   namespace='/fornitore', room=dip.session_id)
+            return
+
+    if message['rappresentante']:
+        emit('regRappresentante', namespace='/fornitore', room=dip.session_id)
+        return
+
+
+    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
+
+@socketio.on('registra_referente', namespace="/fornitore")
+def handle_registra_rappresentante(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    try:
+        Rappresentante.registraRappresentante(nome=message['nome'], azienda=message['azienda'], telefono=message['telefono'],
+                                                    email=message['email'], stato=message['stato'])
+    except RigaPresenteException as e:
+        server.logger.info("\n\n\n\n {} ".format(e))
+        emit('rigaPresente', {"who": "Rappresentante"}, namespace='/fornitore', room=dip.session_id)
+        return
+
+    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
 
 
 @socketio.on_error('/impegni')
@@ -453,5 +517,9 @@ def error_handler_notifica(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/prezzario')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
+@socketio.on_error('/fornitore')
 def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))

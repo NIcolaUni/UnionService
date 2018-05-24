@@ -37,6 +37,8 @@ formCercaCliente =None
 appUrl="http://debtux:80"
 prezzarioEdileSettoreCorrente = None
 clienteSelezionato=None
+rigaPresente = False
+tabellaRigaPresente = None
 
 import app.controller
 

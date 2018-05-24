@@ -1,6 +1,6 @@
 from .db.impegniDBmodel import ImpegniDBmodel
 from sqlalchemy import desc
-from app import server
+
 
 class Impegni(ImpegniDBmodel):
 

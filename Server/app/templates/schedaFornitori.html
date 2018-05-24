@@ -20,7 +20,6 @@
 
         <div id="tabellaContainer" class="row">
 
-
                 <table id="prezzario">
                     <thead id="headPrezzario">
 
@@ -90,11 +89,11 @@
                             <th  class="tableIntestazione intestazioneOliva" data-column="column21"></th>
                         </tr>
                         <tr id="trForm">
-                            <th  class="tableForm intestazionePino" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  onclick="registraFornitore()" class="buttonPrezzario" type="button">Inserisci</button></th>
-                            <th  class="tableForm whiteBorder"  data-column="column2"><input id="primoGruppoInput" type="text" name="primoGruppo" placeholder="primo gruppo"></th>
-                            <th  class="tableForm whiteBorder" data-column="column3"><input id="sottoGruppoInput" type="text" name="sottoGruppo" placeholder="sotto gruppo"> </th>
-                            <th  class="tableForm whiteBorder" data-column="column4"><input id="settoreMerceInput" type="text" name="settoreMerce" placeholder="settore"> </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column5"><input id="referenteInput" type="text" name="referente" placeholder="referente"> </th>
+                            <th  class="tableForm intestazionePino" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  id="registraFornitore" class="buttonPrezzario" type="button">Inserisci</button></th>
+                            <th  class="tableForm whiteBorder"  data-column="column2"><input id="primoGruppoInput" type="text" name="primoGruppo" placeholder="primo gruppo" value=""> </th>
+                            <th  class="tableForm whiteBorder" data-column="column3"><input id="sottoGruppoInput" type="text" name="sottoGruppo" placeholder="sotto gruppo" value=""> </th>
+                            <th  class="tableForm whiteBorder" data-column="column4"><input id="settoreMerceInput" type="text" name="settoreMerce" placeholder="settore" value=""> </th>
+                            <th  class="tableForm intestazioneOliva" data-column="column5"><input id="referenteInput" type="text" name="referente" placeholder="referente" value=""> </th>
                             <th  class="tableForm intestazioneOliva" data-column="column6"><input id="telReferenteInput" type="tel" name="telReferente" placeholder="telefono referente"> </th>
                             <th  class="tableForm intestazioneOliva" data-column="column7"><input id="emailReferenteInput" type="email" name="emailReferente" placeholder="email referente"> </th>
                             <th  class="tableForm intestazioneOliva colBigMedium" data-column="column8">
@@ -184,7 +183,6 @@
 
 
                 </table>
-
         </div>
 
     </div>
@@ -266,187 +264,79 @@
                 }
             {% endfor %}
 
-           /*Codice per aggiungere il cancella e il modifica alle opzioni del select #settoriDisponibili */
-
-          var firstTime = true;
-
-
-          $('#selectSettori').click(function(){
-
-               if($('#dropDownSettori').children().length > 0) {
-                    if( firstTime )
-                    {
-                        firstTime = false;
-                        $('.select2-results').addClass('resizedResults');
-
-                        $('.select2-dropdown').addClass('dropDownEffettivo');
-
-
-                        $('.select2-dropdown').append(
-                            '<span class="delModResults"><ul class="controlSelectUl"></ul></span>'
-                        );
-
-                        $('ul.select2-results__options').addClass('togliOverflowUlSelect');
-
-                        $('.select2-results li').each(function(){
-
-
-                                $('.delModResults ul').append(
-
-                                    '<li val="'+$(this).text() +'" class="controlSelectLi"><a class="fa fa-trash delSettore" ></a><a class="fa fa-edit leftIcon modSettore" ></a></li>'
-                                );
-
-
-                        });
-
-
-                        $('.modSettore').click(function() {
-
-                              var oldNome=$(this).parent().attr('val');
-
-                              swal.withForm({
-                                title: 'Modifica nome settore',
-                                text: 'Inserire il nome modificato: ',
-                                showCancelButton: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'annulla',
-                                closeOnConfirm: true,
-                                formFields: [
-
-                                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore', value: oldNome }
-
-
-                                ]
-                              }, function (isConfirm) {
-
-                                      if (isConfirm) {
-                                            var form=this.swalForm
-                                            socketPrezzario.emit("registra_settore",
-                                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });
-
-                                      }
-
-                              })
-
-                        });
-
-                        $('.delSettore').click(function() {
-
-                                 var settoreSelezionato = $(this).parent().attr('val') //$('#settoriDisponibili').val();
-
-                                  swal({
-                                    title: 'Eliminazione settore '+ settoreSelezionato,
-                                    text: 'sicuro di voler procedere?',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#DD6B55',
-                                    confirmButtonText: 'Ok',
-                                    cancelButtonText: 'annulla',
-                                    closeOnConfirm: true,
-
-                                  }, function (isConfirm) {
-
-                                          if (isConfirm) {
-
-                                               socketPrezzario.emit("elimina_settore", {'dip': '{{dipendente.username}}', 'settore': settoreSelezionato});
-
-                                          }
-
-                                  })
-
-
-                            });
-
-
-                    }
-                }
-
-
-
-
-           });
-
    </script>
 
-   <script>
-
-            var socketHome = io.connect("{{sockUrl}}"+'/home');
-
-
-            socketHome.on('connect', function() {
-                console.log('connected listino');
-
-
-                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-            });
-
-
-   </script>
 
     <script>
 
-        //variabili globale per il meccanismo di modifica delle lavorazioni
-        var modificaAttiva=false;
-        var oldTipologia="";
+        var rappresentanteDaRegistrare = false;
 
-        var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
+        var socketHome = io.connect("{{sockUrl}}"+'/home');
 
 
-        socketPrezzario.on('aggiornaPagina', function() {
+        socketHome.on('connect', function() {
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
+
+        var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
+
+
+        socketFornitore.on('aggiornaPagina', function() {
             location.reload();
 
         });
 
-        socketPrezzario.on('abortAggiorna', function(message) {
-                swal({
-                      title: message["what"] + " già presente",
-                      type: 'error',
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: "Ok",
+        socketFornitore.on('rigaPresente', function(message) {
 
-                 });
-        });
-
-        $('#settoriDisponibili').change( function() {
-
-          socketPrezzario.emit('cambia_settore_prezzario', {"dip": "{{dipendente.username}}", "settore": $(this).val() })
-
-        });
-
-        $('#addSettore').click(function() {
-
-              swal.withForm({
-                title: 'Aggiungi un nuovo settore',
-                showCancelButton: true,
+              swal({
+                title: message['who'] + ' inserito è già presente',
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-                formFields: [
-
-                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore' }
-
-
-                ]
-              }, function (isConfirm) {
-
-                      if (isConfirm) {
-                            var form=this.swalForm
-                            socketPrezzario.emit("registra_settore",
-                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });
-
-                      }
+                closeOnConfirm: true
 
               })
 
+
         });
 
+        socketFornitore.on('regRappresentante', function() {
+            console.log("dai ci siamo");
+            if( rappresentanteDaRegistrare ){
+
+                var inputOfFornitori =  [];
+                var selectOfFornitori = [];
 
 
 
-       function registraLavorazione() {
+                $("#trForm input").each(function(index){
+                    inputOfFornitori.push($(this).val());
 
-            var titleTxt="";
+                });
+
+                $("#trForm select").each(function(index){
+                    selectOfFornitori.push($(this).val());
+
+                });
+
+                rappresentanteDaRegistrare = false;
+                 socketFornitore.emit("registra_referente", { "dip": "{{dipendente.username}}",
+                                                   "nome": inputOfFornitori[3], "azienda": inputOfFornitori[0],
+                                                   "telefono": inputOfFornitori[4], "email": inputOfFornitori[5], "stato": selectOfFornitori[0],} );
+
+            }
+        });
+
+        //variabili globale per il meccanismo di modifica delle lavorazioni
+        var modificaAttiva=false;
+        var oldFornitore_PrimoG ="";
+        var oldFornitore_SottoG="";
+
+
+        /*funzione lanciata all'evento click del pulsante "inserisci fornitore"*/
+
+       $('#registraFornitore').click( function() {
+
 
             if(modificaAttiva)
             {
@@ -467,7 +357,6 @@
 
                   if (isConfirm) {
 
-
                         var inputOfFornitori =  [];
                         var selectOfFornitori = [];
 
@@ -483,147 +372,58 @@
 
                         });
 
-                         //se non è stato impostato il tipo di lavorazione non fare nulla
-                        if( textareaOfLavorazione[0] == "" )
-                            return;
+                         //se non è stato impostato il referente
+                         if( inputOfFornitori[3] == "" )
+                            rappresentanteDaRegistrare=false;
+                         else
+                            rappresentanteDaRegistrare=true;
 
-                        // se forniture e posa vengono specificate setta costo come la loro somma
-                        if( inputOfLavorazione[0] != 0 || inputOfLavorazione[1] != 0 )
-                            inputOfLavorazione[2] = parseInt(inputOfLavorazione[0]) + parseInt(inputOfLavorazione[1]);
+
+                         //se non è stato impostato il gruppo del fornitore non fare nulla
+                        if( inputOfFornitori[0] == "" )
+                            return;
+                        else
+                            socketFornitore.emit("registra_fornitore", { "dip": "{{dipendente.username}}", "nome":  inputOfFornitori[0] })
 
                         if(!modificaAttiva){
 
-                            socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),
-                                                                           "tipologia" : textareaOfLavorazione[0],
-                                                                            "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
-                                                                            "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
-                                                                             "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
-                                                                             "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
-                                                                              "note": textareaOfLavorazione[1]});
+
+
+                            socketFornitore.emit("registra_gruppoFornitore", { "dip": "{{dipendente.username}}",
+                                                                            "rappresentante": rappresentanteDaRegistrare,
+                                                                           "gruppo_azienda": inputOfFornitori[0], "nome": inputOfFornitori[1],
+                                                                           "settore_merceologico" : inputOfFornitori[2],
+                                                                            "tempi_consegna": selectOfFornitori[1], "prezziNetti": selectOfFornitori[2],
+                                                                            "scontoStandard": inputOfFornitori[6], "scontoExtra1": inputOfFornitori[7],
+                                                                             "scontroExtra2": inputOfFornitori[8], "trasporto" : inputOfFornitori[9],
+                                                                             "trasportoUnitaMisura": selectOfFornitori[3], "giorniPagamenti": selectOfFornitori[4],
+                                                                              "modalitaPagamenti": selectOfFornitori[5], "tipologiaPagamenti": selectOfFornitori[6],
+                                                                              "provincia": inputOfFornitori[10], "indirizzo": inputOfFornitori[11], "telefono": inputOfFornitori[12],
+                                                                              "sito": inputOfFornitori[13] });
+
+
                         }
                         else{
-                             socketPrezzario.emit("modifica_lavorazione", { "dip": "{{dipendente.username}}", "oldTipologia": oldTipologia,
-                                                                                "settore": $("#settoriDisponibili").val(),
-                                                                               "tipologia" : textareaOfLavorazione[0],
-                                                                                "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
-                                                                                "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
-                                                                                 "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
-                                                                                 "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
-                                                                                  "note": textareaOfLavorazione[1]});
-                             modificaAttiva=false;
+                             socketFornitore.emit("modifica_fornitore", { "dip": "{{dipendente.username}}", "oldFornitore" : oldFornitore, "oldFornitore_SottoG" : oldFornitore_SottoG,
+                                                                           "primo_gruppo": inputOfFornitori[0], "sotto_gruppo": inputOfFornitori[1],
+                                                                           "settore_merceologico" : inputOfFornitori[2],
+                                                                            "tempi_consegna": selectOfFornitori[1], "prezziNetti": selectOfFornitori[2],
+                                                                            "scontoStandard": inputOfFornitori[6], "scontoExtra1": inputOfFornitori[7],
+                                                                             "scontroExtra2": inputOfFornitori[8], "trasporto" : inputOfFornitori[9],
+                                                                             "trasportoUnitaMisura": selectOfFornitori[3], "giorniPagamenti": selectOfFornitori[4],
+                                                                              "modalitaPagamenti": selectOfFornitori[5], "tipologiaPagamenti": selectOfFornitori[6],
+                                                                              "provincia": inputOfFornitori[10], "indirizzo": inputOfFornitori[11], "telefono": inputOfFornitori[12],
+                                                                              "sito": inputOfFornitori[13] });
 
 
                         }
+
                   }
 
 
 
           })
-       }
-
-
-        $(".delLavorazione").click(function() {
-            var setDisp = $('#settoriDisponibili').val();
-            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
-            swal({
-                title: 'Eliminazione lavorazione '+ lavSel,
-                text: 'sicuro di voler procedere?',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-
-            }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                         socketPrezzario.emit('elimina_lavorazione', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                   'tipologia': lavSel });
-
-                  }
-
-            })
-
-
-        });
-
-        $(".segnalaLavorazione").click(function() {
-            var setDisp = $('#settoriDisponibili').val();
-            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
-
-
-            if(!$(this).closest('tr').hasClass('daVerificare') ){
-
-                var setDisp = $('#settoriDisponibili').val();
-                console.log("sono checkkato " + setDisp);
-                socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                           'tipologia': lavSel,'valore': true});
-            }
-            else {
-              var setDisp = $('#settoriDisponibili').val();
-              socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                       'tipologia': lavSel,'valore': false});
-
-            }
-
-        });
-
-
-
-        $(".modLavorazione").click(function() {
-
-           if( modificaAttiva ){
-                $('.inModifica').removeClass('inModifica');
-
-
-           }
-            else {
-
-                modificaAttiva=true;
-                $('#trForm').show();
-                $('#showForm').removeClass('fa');
-                $('#showForm').removeClass('fa-plus');
-                /*$('#bodyPrezzario').css('height', '81%');*/
-           }
-
-
-           $(this).closest('tr').addClass("inModifica");
-
-
-
-
-
-            var datiLavorazione=[]
-            $(".inModifica td").each(function(index){
-                datiLavorazione.push($(this).text());
-
-            });
-
-            console.log(datiLavorazione);
-
-            oldTipologia = datiLavorazione[1];
-            $("#tipologiaTextarea").val( datiLavorazione[1]);
-            $("#pertinenzaSelect").val(datiLavorazione[2]);
-            $("#unitaSelect").val(datiLavorazione[3]);
-
-
-
-            $( "#fornituraInput", parseInt(datiLavorazione[4].substring(1, datiLavorazione[4].length)) );
-
-
-            $( "#posaInput", parseInt(datiLavorazione[5].substring(1, datiLavorazione[5].length)));
-            $( "#costoInput",  parseInt(datiLavorazione[6].substring(1, datiLavorazione[6].length)));
-            $( "#pMinInput",  parseInt(datiLavorazione[7].substring(1, datiLavorazione[7].length)));
-            $( "#pMaxInput",  parseInt(datiLavorazione[8].substring(1, datiLavorazione[8].length)));
-            $( "#dimensioneInput",  datiLavorazione[9]);
-            $( "#noteTextarea",   datiLavorazione[10]);
-
-            $(this).closest('tr').removeClass("inModifica");
-
-
-
-        });
+       });
 
     </script>
 
