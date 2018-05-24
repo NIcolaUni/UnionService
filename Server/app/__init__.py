@@ -39,6 +39,7 @@ prezzarioEdileSettoreCorrente = None
 clienteSelezionato=None
 rigaPresente = False
 tabellaRigaPresente = None
+prezzarioProdottiTipoCorrente = None
 
 import app.controller
 

@@ -1,6 +1,7 @@
 from .db.prodottoPrezzarioDBmodel import ProdottoPrezzarioDBmodel
 from sqlalchemy import exc
 from .eccezioni.righaPresenteException import RigaPresenteException
+from app import server
 
 class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
 
@@ -63,7 +64,7 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                     rincaroTrasporto2 = None,
                     rincaroCliente = None ):
 
-        newProdotto = ProdottoPrezzario(tipologia=tipologia, marchio=marchio, codice=codice,
+        newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, marchio=marchio, codice=codice,
                                          fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
                                          prezzoNettoListino=prezzoNettoListino, prezzoListino=prezzoListino, rincaroNettoListino=rincaroNettoListino,
                                           rincaroListino=rincaroListino, nettoUs=nettoUs, rincaroTrasporto=rincaroTrasporto,
@@ -71,4 +72,9 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                                           scontoImballo=scontoImballo, rincaroTrasporto2=rincaroTrasporto2, rincaroCliente=rincaroCliente)
 
 
-        ProdottoPrezzarioDBmodel.commitProdotto(newProdotto)
+        try:
+            ProdottoPrezzarioDBmodel.commitProdotto(newProdotto)
+        except exc.SQLAlchemyError as e:
+            server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
+            ProdottoPrezzarioDBmodel.rollback()
+            raise RigaPresenteException("Il prodotto inserito è già presente")

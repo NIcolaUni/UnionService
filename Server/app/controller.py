@@ -12,6 +12,8 @@ from .model.impegni import Impegni
 from .model.fornitore import Fornitore
 from .model.sottoGruppoFornitori import SottoGruppoFornitori
 from .model.rappresentate import Rappresentante
+from .model.tipologiaProdotto import TipologiaProdotto
+from .model.prodottoPrezzario import ProdottoPrezzario
 from .model.eccezioni.righaPresenteException import RigaPresenteException
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
@@ -48,8 +50,28 @@ def prezzarioEdile():
 @login_required
 def prezzarioProdotti():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-    settori = SettoreLavorazione.query.all()
-    return render_template('prezzarioProdotti.html', dipendente=dip, settori=settori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
+    tipoProdotto = TipologiaProdotto.query.all()
+    fornitori = SottoGruppoFornitori.query.all()
+
+    if app.prezzarioProdottiTipoCorrente is None:
+        if len(tipoProdotto) != 0:
+            app.prezzarioProdottiTipoCorrente = tipoProdotto[0].nome
+
+    allerta = False
+
+    if app.rigaPresente:
+        allerta = True
+        app.rigaPresente = False
+
+    if app.prezzarioEdileSettoreCorrente is not None:
+
+        return render_template('prezzarioProdotti.html', dipendente=dip, rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente,
+                               tipoProdotto=tipoProdotto, tipoToSel=app.prezzarioProdottiTipoCorrente,
+                                fornitori=fornitori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
+    else:
+        return render_template('prezzarioProdotti.html', dipendente=dip, rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente,
+                                tipoProdotto=tipoProdotto, tipoToSel=None,
+                                fornitori=fornitori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
 
 @server.route('/schedaFornitori')
 @login_required
@@ -503,6 +525,27 @@ def handle_registra_rappresentante(message):
     emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
 
 
+@socketio.on('registra_tipologiaProdotto', namespace="/prezzarioProdotti")
+def handle_registra_tipologiaProdotto(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    try:
+        TipologiaProdotto.registraTipologiaProdotto(nome=message['nomeTipo'])
+    except RigaPresenteException as e:
+        server.logger.info("\n\n\n\n {} ".format(e))
+        app.rigaPresente=True
+        app.tabellaRigaPresente="Tipologia prodotto"
+     #   emit('waitForSwallClose', {"who": "Tipologia prodotto"}, namespace='/prezzarioProdotti', room=dip.session_id)
+
+
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+@socketio.on('cambia_tipologia_prezzario', namespace='/prezzarioProdotti')
+def handle_cambia_settore_prezzario(message):
+    app.prezzarioProdottiTipoCorrente = message['tipologia']
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
 @socketio.on_error('/impegni')
 def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
@@ -521,5 +564,9 @@ def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/fornitore')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
+@socketio.on_error('/prezzarioProdotti')
 def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))

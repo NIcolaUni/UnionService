@@ -1,7 +1,7 @@
 from .db.rappresentateDBmodel import RappresentanteDBmodel
 from sqlalchemy import exc
 from .eccezioni.righaPresenteException import RigaPresenteException
-
+from app import server
 
 class Rappresentante(RappresentanteDBmodel):
 
@@ -19,6 +19,7 @@ class Rappresentante(RappresentanteDBmodel):
         try:
             RappresentanteDBmodel.commitRappresentante(newRap)
         except exc.SQLAlchemyError as e:
+            server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
             RappresentanteDBmodel.rollback()
             raise RigaPresenteException("Il rappresentante inserito è già presente")
 

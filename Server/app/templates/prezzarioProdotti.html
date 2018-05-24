@@ -22,19 +22,19 @@
 
                 <div class="row divFormContainer">
                     <div id="buttonsSelect" class="col-md-2 ">
-                        <a id="addSettore" class="fa fa-plus"></a>
+                        <a id="addTipologiaProdotto" class="fa fa-plus"></a>
                     </div>
 
-                    <div id="selectSettori" class="wrap-form input100-select bg1 fieldSelect col-md-10">
+                    <div id="divTipologia" class="wrap-form input100-select bg1 fieldSelect col-md-10">
                         <span class="label-input100">Tipologia Prodotti</span>
                         <div>
-                            <select id="settoriDisponibili" class="js-select2" name="settoriDisponibili">
-                                {% for settore in settori %}
+                            <select id="selectTipologia" class="js-select2" name="settoriDisponibili">
+                                {% for tipo in tipoProdotto %}
 
-                                    {% if settore.nome == settoreToSel %}
-                                        <option selected="selected">{{settore.nome}}</option>
+                                    {% if tipo.nome == tipoToSel %}
+                                        <option selected="selected">{{tipo.nome}}</option>
                                     {% else %}
-                                <option>{{settore.nome}}</option>
+                                <option>{{tipo.nome}}</option>
                                     {% endif %}
                                 {% endfor %}
 
@@ -93,7 +93,7 @@
                             <th  class="tableIntestazione numColMedium" data-column="column19">Totale cliente</th>
                         </tr>
                         <tr id="trForm">
-                            <th  class="tableForm" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
+                            <th  class="tableForm" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  id="registraProdotto" class="buttonPrezzario" type="button">Inserisci</button></th>
                             <th  class="tableForm"  data-column="column2"><input id="nomeProdottoInput" type="text" name="nomeProdotto" placeholder="Inserire il nome del prodotto"></th>
                             <th  class="tableForm numColMedium" data-column="column3"><input id="marchioInput" type="text" name="marchio" placeholder="Inserire il marchio"> </th>
                             <th  class="tableForm numColMedium" data-column="column4"><input id="codiceInput" type="text" name="codice" placeholder="Inserire il codice"> </th>
@@ -101,10 +101,10 @@
                             <th  class="tableForm colMedium" data-column="column5">
 
                                 <select id="fornitoreSelect" name="fornitore">
-                                    <option>cad</option>
-                                    <option>ml</option>
-                                    <option>mq</option>
-                                    <option>mc</option>
+                                    {% for fornitore in fornitori %}
+                                         <option>"{{fornitore.gruppo_azienda}} - {{fornitore.nome}}"</option>
+
+                                    {% endfor %}
                                 </select>
 
                             </th>
@@ -141,7 +141,6 @@
         </div>
 
     </div>
-
    <script>
            /* console.log("il settore selezionato è: {{settoreToSel}}");*/
 
@@ -219,7 +218,7 @@
                 }
             {% endfor %}
 
-           /*Codice per aggiungere il cancella e il modifica alle opzioni del select #settoriDisponibili */
+      /*Codice per aggiungere il cancella e il modifica alle opzioni del select #settoriDisponibili */
 
           var firstTime = true;
 
@@ -318,58 +317,68 @@
 
 
            });
-
    </script>
 
-   <script>
-
-            var socketHome = io.connect("{{sockUrl}}"+'/home');
-
-
-            socketHome.on('connect', function() {
-                console.log('connected listino');
-
-
-                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-            });
-
-
-   </script>
 
     <script>
 
-        //variabili globale per il meccanismo di modifica delle lavorazioni
-        var modificaAttiva=false;
-        var oldTipologia="";
+        var rappresentanteDaRegistrare = false;
 
-        var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
+        var socketHome = io.connect("{{sockUrl}}"+'/home');
 
 
-        socketPrezzario.on('aggiornaPagina', function() {
+        socketHome.on('connect', function() {
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
+
+        var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
+
+
+        socketProdotto.on('aggiornaPagina', function() {
             location.reload();
 
-        });
-
-        socketPrezzario.on('abortAggiorna', function(message) {
-                swal({
-                      title: message["what"] + " già presente",
-                      type: 'error',
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: "Ok",
-
-                 });
-        });
-
-        $('#settoriDisponibili').change( function() {
-
-          socketPrezzario.emit('cambia_settore_prezzario', {"dip": "{{dipendente.username}}", "settore": $(this).val() })
 
         });
 
-        $('#addSettore').click(function() {
 
-              swal.withForm({
-                title: 'Aggiungi un nuovo settore',
+        //Seguono due metodi diversi per stampare l'alert "prodotto già inserito"
+        {% if rigaPresente %}
+              swal({
+                title: "{{tabellaRigaPresente}}" + ' inserito è già presente',
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                closeOnConfirm: true
+
+              });
+
+        {% endif %}
+
+        socketProdotto.on('rigaPresente', function(message) {
+
+              console.log("allora");
+              swal({
+                title: message['who'] + ' inserito è già presente',
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                closeOnConfirm: true
+
+              });
+
+
+        });
+
+        $('#selectTipologia').change( function() {
+
+          socketProdotto.emit('cambia_tipologia_prezzario', {"dip": "{{dipendente.username}}", "tipologia": $(this).val() })
+
+        });
+
+
+        $('#addTipologiaProdotto').click(function(){
+
+               swal.withForm({
+                title: 'Aggiungi una nuova tipologia di prodotto',
                 showCancelButton: true,
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Ok',
@@ -377,35 +386,39 @@
                 closeOnConfirm: true,
                 formFields: [
 
-                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore' }
+                  { id: 'newTipologia', placeholder: 'Inserire il nome della nuova tipologia' }
 
 
                 ]
               }, function (isConfirm) {
 
                       if (isConfirm) {
-                            var form=this.swalForm
-                            socketPrezzario.emit("registra_settore",
-                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });
+                            var form=this.swalForm;
+                            socketProdotto.emit("registra_tipologiaProdotto",
+                               { 'dip': '{{dipendente.username}}', 'nomeTipo': form['newTipologia'] });
+
 
                       }
 
               })
-
         });
 
 
+        //variabili globale per il meccanismo di modifica dei prodotti
+        var modificaAttiva=false;
+        var oldProdotto ="";
 
 
-       function registraLavorazione() {
+        /*funzione lanciata all'evento click del pulsante "inserisci fornitore"*/
 
-            var titleTxt="";
+       $('#registraProdotto').click( function() {
+
 
             if(modificaAttiva)
             {
-                titleTxt="Si sta per modificare una lavorazione già presente";
+                titleTxt="Si sta per modificare una voce prodotto già presente";
             }else
-                titleTxt='Si sta per aggiungere una nuova lavorazione';
+                titleTxt='Si sta per aggiungere un nuovo prodotto';
 
           swal({
             title: titleTxt,
@@ -420,167 +433,65 @@
 
                   if (isConfirm) {
 
-                        var textareaOfLavorazione = [];
-                        var inputOfLavorazione =  [];
-                        var selectOfLavorazione = [];
+                        var inputOfProdotti =  [];
+                        var selectOfProdotti = [];
 
-                         $("#trForm textarea").each(function(index){
-                            textareaOfLavorazione.push($(this).val());
-
-                        });
 
 
                         $("#trForm input").each(function(index){
-                            inputOfLavorazione.push($(this).val());
+                            inputOfProdotti.push($(this).val());
 
                         });
 
                         $("#trForm select").each(function(index){
-                            selectOfLavorazione.push($(this).val());
+
+                            selectOfProdotti=$(this).val().split('-');
 
                         });
 
-                         //se non è stato impostato il tipo di lavorazione non fare nulla
-                        if( textareaOfLavorazione[0] == "" )
-                            return;
 
-                        // se forniture e posa vengono specificate setta costo come la loro somma
-                        if( inputOfLavorazione[0] != 0 || inputOfLavorazione[1] != 0 )
-                            inputOfLavorazione[2] = parseInt(inputOfLavorazione[0]) + parseInt(inputOfLavorazione[1]);
+                         //se non è stato impostato il nome o tipo del prodotto non fare nulla
+                        if( inputOfProdotti[0] == "" )
+                            return;
 
                         if(!modificaAttiva){
 
-                            socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),
-                                                                           "tipologia" : textareaOfLavorazione[0],
-                                                                            "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
-                                                                            "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
-                                                                             "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
-                                                                             "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
-                                                                              "note": textareaOfLavorazione[1]});
+
+
+                            socketProdotto.emit("registra_prodotto", { "dip": "{{dipendente.username}}",
+                                                                           "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
+                                                                           "codice" : inputOfProdotti[2],
+                                                                            "fornitore_primo_gruppo": selectOfProdotti[0], "fornitore_sotto_gruppo": selectOfProdotti[1],
+                                                                            "prezzoListino": inputOfProdotti[3], "prezzoNettoListino": inputOfProdotti[4],
+                                                                             "rincaroNettoListino": inputOfProdotti[5], "rincaroListino" : inputOfProdotti[6],
+                                                                             "nettoUs": inputOfProdotti[7], "rincaroTrasporto": inputOfProdotti[8],
+                                                                              "rincaroMontaggio": inputOfProdotti[9], "scontoEx1": inputOfProdotti[10],
+                                                                              "scontoEx2": inputOfProdotti[11], "scontoImballo": inputOfProdotti[12], "rincaroTrasporto2": inputOfProdotti[13],
+                                                                              "rincaroCliente": inputOfProdotti[14] });
+
+
                         }
                         else{
-                             socketPrezzario.emit("modifica_lavorazione", { "dip": "{{dipendente.username}}", "oldTipologia": oldTipologia,
-                                                                                "settore": $("#settoriDisponibili").val(),
-                                                                               "tipologia" : textareaOfLavorazione[0],
-                                                                                "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
-                                                                                "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
-                                                                                 "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
-                                                                                 "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
-                                                                                  "note": textareaOfLavorazione[1]});
-                             modificaAttiva=false;
+                             socketProdotto.emit("modifica_prodotto", { "dip": "{{dipendente.username}}",
+                                                                           "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
+                                                                           "codice" : inputOfProdotti[2],
+                                                                            "fornitore_primo_gruppo": selectOfProdotti[0], "fornitore_sotto_gruppo": selectOfProdotti[1],
+                                                                            "prezzoListino": inputOfProdotti[3], "prezzoNettoListino": inputOfProdotti[4],
+                                                                             "rincaroNettoListino": inputOfProdotti[5], "rincaroListino" : inputOfProdotti[6],
+                                                                             "nettoUs": inputOfProdotti[7], "rincaroTrasporto": inputOfProdotti[8],
+                                                                              "rincaroMontaggio": inputOfProdotti[9], "scontoEx1": inputOfProdotti[10],
+                                                                              "scontoEx2": inputOfProdotti[11], "scontoImballo": inputOfProdotti[12], "rincaroTrasporto2": inputOfProdotti[13],
+                                                                              "rincaroCliente": inputOfProdotti[14] });
 
 
                         }
+
                   }
 
 
 
           })
-       }
-
-
-        $(".delLavorazione").click(function() {
-            var setDisp = $('#settoriDisponibili').val();
-            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
-            swal({
-                title: 'Eliminazione lavorazione '+ lavSel,
-                text: 'sicuro di voler procedere?',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-
-            }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                         socketPrezzario.emit('elimina_lavorazione', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                   'tipologia': lavSel });
-
-                  }
-
-            })
-
-
-        });
-
-        $(".segnalaLavorazione").click(function() {
-            var setDisp = $('#settoriDisponibili').val();
-            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
-
-
-            if(!$(this).closest('tr').hasClass('daVerificare') ){
-
-                var setDisp = $('#settoriDisponibili').val();
-                console.log("sono checkkato " + setDisp);
-                socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                           'tipologia': lavSel,'valore': true});
-            }
-            else {
-              var setDisp = $('#settoriDisponibili').val();
-              socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                       'tipologia': lavSel,'valore': false});
-
-            }
-
-        });
-
-
-
-        $(".modLavorazione").click(function() {
-
-           if( modificaAttiva ){
-                $('.inModifica').removeClass('inModifica');
-
-
-           }
-            else {
-
-                modificaAttiva=true;
-                $('#trForm').show();
-                $('#showForm').removeClass('fa');
-                $('#showForm').removeClass('fa-plus');
-                /*$('#bodyPrezzario').css('height', '81%');*/
-           }
-
-
-           $(this).closest('tr').addClass("inModifica");
-
-
-
-
-
-            var datiLavorazione=[]
-            $(".inModifica td").each(function(index){
-                datiLavorazione.push($(this).text());
-
-            });
-
-            console.log(datiLavorazione);
-
-            oldTipologia = datiLavorazione[1];
-            $("#tipologiaTextarea").val( datiLavorazione[1]);
-            $("#pertinenzaSelect").val(datiLavorazione[2]);
-            $("#unitaSelect").val(datiLavorazione[3]);
-
-
-
-            $( "#fornituraInput", parseInt(datiLavorazione[4].substring(1, datiLavorazione[4].length)) );
-
-
-            $( "#posaInput", parseInt(datiLavorazione[5].substring(1, datiLavorazione[5].length)));
-            $( "#costoInput",  parseInt(datiLavorazione[6].substring(1, datiLavorazione[6].length)));
-            $( "#pMinInput",  parseInt(datiLavorazione[7].substring(1, datiLavorazione[7].length)));
-            $( "#pMaxInput",  parseInt(datiLavorazione[8].substring(1, datiLavorazione[8].length)));
-            $( "#dimensioneInput",  datiLavorazione[9]);
-            $( "#noteTextarea",   datiLavorazione[10]);
-
-            $(this).closest('tr').removeClass("inModifica");
-
-
-
-        });
+       });
 
     </script>
 

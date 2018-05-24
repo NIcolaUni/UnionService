@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
 from app import database
 
-class tipologiaProdottoDBmodel(database.Model):
+class TipologiaProdottoDBmodel(database.Model):
 
     __tablename__ = "tipologia_prodotto_prezzario"
 
