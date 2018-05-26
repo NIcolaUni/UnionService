@@ -52,6 +52,7 @@ def prezzarioProdotti():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
     tipoProdotto = TipologiaProdotto.query.all()
     fornitori = SottoGruppoFornitori.query.all()
+    prodotti =ProdottoPrezzario.query.all()
 
     if app.prezzarioProdottiTipoCorrente is None:
         if len(tipoProdotto) != 0:
@@ -67,18 +68,22 @@ def prezzarioProdotti():
 
         return render_template('prezzarioProdotti.html', dipendente=dip, rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente,
                                tipoProdotto=tipoProdotto, tipoToSel=app.prezzarioProdottiTipoCorrente,
-                                fornitori=fornitori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
+                                fornitori=fornitori, prodotti=prodotti, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
     else:
         return render_template('prezzarioProdotti.html', dipendente=dip, rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente,
-                                tipoProdotto=tipoProdotto, tipoToSel=None,
+                                tipoProdotto=tipoProdotto, tipoToSel=None, prodotti=prodotti,
                                 fornitori=fornitori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
 
 @server.route('/schedaFornitori')
 @login_required
 def schedaFornitori():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    settori = SettoreLavorazione.query.all()
-    return render_template("schedaFornitori.html", dipendente=dip, settori=settori, prezzario=True, schedaFornitoriCss=True, sockUrl=app.appUrl)
+    fornitori_primo_gruppo = Fornitore.query.all().order_by(Fornitore.nome_gruppo)
+    fornitori_sotto_gruppo = SottoGruppoFornitori.query.all().order_by(SottoGruppoFornitori.nome)
+    listaRappresentanti = Rappresentante.query.all().order_by(Rappresentante.nome)
+    return render_template("schedaFornitori.html", dipendente=dip, listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
+                           listaFornitoriSottoGruppo=fornitori_sotto_gruppo, prezzario=True, schedaFornitoriCss=True,
+                           listaRappresentanti= ,sockUrl=app.appUrl)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -543,6 +548,80 @@ def handle_registra_tipologiaProdotto(message):
 @socketio.on('cambia_tipologia_prezzario', namespace='/prezzarioProdotti')
 def handle_cambia_settore_prezzario(message):
     app.prezzarioProdottiTipoCorrente = message['tipologia']
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+
+@socketio.on('registra_prodotto', namespace='/prezzarioProdotti')
+def handle_registra_prodotto(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    try:
+        ProdottoPrezzario.registraProdotto( nome=message['nome'], tipologia=message['tipologia'], marchio=message['marchio'],
+                                            codice=message['codice'], fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
+                                            fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'], prezzoListino=message['prezzoListino'],
+                                            prezzoNettoListino=message['prezzoNettoListino'],
+                                            rincaroListino=message['rincaroListino'], nettoUs=message['nettoUs'],
+                                            rincaroTrasporto=message['rincaroTrasporto'], rincaroMontaggio=message['rincaroMontaggio'],
+                                            scontoUs = message['scontoUs'], scontoEx1=message['scontoEx1'],
+                                            scontoEx2=message['scontoEx2'], scontoImballo=message['scontoImballo'],
+                                            rincaroTrasporto2=message['rincaroTrasporto2'], rincaroCliente=message['rincaroCliente'])
+
+    except  RigaPresenteException as e:
+        server.logger.info("\n\n\n\n {} ".format(e))
+        app.rigaPresente = True
+        app.tabellaRigaPresente = "Prodotto"
+
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+@socketio.on('elimina_prodotto', namespace='/prezzarioProdotti')
+def handle_elimina_prodotto(message):
+    ProdottoPrezzario.eliminaProdotto(nome=message['prodotto'], tipologia=message['tipologia'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+@socketio.on('modifica_prodotto', namespace='/prezzarioProdotti')
+def handle_modifica_prodotto(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    ProdottoPrezzario.modificaProdotto(oldNome=message['oldNome'], nome=message['nome'], tipologia=message['tipologia'],
+                                       marchio=message['marchio'], codice=message['codice'],
+                                       fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
+                                       fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
+                                       prezzoListino=message['prezzoListino'],
+                                       prezzoNettoListino=message['prezzoNettoListino'],
+                                       rincaroListino=message['rincaroListino'], nettoUs=message['nettoUs'],
+                                       rincaroTrasporto=message['rincaroTrasporto'],
+                                       rincaroMontaggio=message['rincaroMontaggio'],
+                                       scontoUs=message['scontoUs'], scontoEx1=message['scontoEx1'],
+                                       scontoEx2=message['scontoEx2'], scontoImballo=message['scontoImballo'],
+                                       rincaroTrasporto2=message['rincaroTrasporto2'],
+                                       rincaroCliente=message['rincaroCliente'])
+
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+
+@socketio.on('settaProdottoDaVerificare', namespace='/prezzarioProdotti')
+def handle_settaProdottoDaVerificare(message):
+    ProdottoPrezzario.setDaVerificare(tipo=message['tipo'], prodotto=message['prodotto'], valore=message['valore'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+@socketio.on('modifica_tipologia_prodotto', namespace='/prezzarioProdotti')
+def handle_modifica_tipologia_prodotto(message):
+    TipologiaProdotto.modificaTipologiaProdotto(nome=message['tipologia'], oldNome=message['oldTipologia'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+@socketio.on('elimina_tipologia_prodotto', namespace='/prezzarioProdotti')
+def handle_elimina_tipologia_prodotto(message):
+    TipologiaProdotto.eliminaTipologiaProdotto(message['tipologia'])
+
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 

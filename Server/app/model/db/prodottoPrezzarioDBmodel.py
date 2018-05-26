@@ -9,10 +9,10 @@ class ProdottoPrezzarioDBmodel(database.Model):
                                  ['sotto_gruppo_fornitori.gruppo_azienda', 'sotto_gruppo_fornitori.nome'],
                                  onupdate="CASCADE", ondelete="CASCADE"),
             ForeignKeyConstraint(['tipologia'], ['tipologia_prodotto_prezzario.nome'],
-                                 onupdate="CASCADE", ondelete="SET NULL"),
+                                 onupdate="CASCADE", ondelete="CASCADE"),
              )
 
-    nome = Column(String(100), primary_key=True)
+    nome = Column(String(100))
     tipologia = Column(String(100))
     marchio = Column(String(100))
     codice = Column(String(100))
@@ -20,17 +20,17 @@ class ProdottoPrezzarioDBmodel(database.Model):
     fornitore_sotto_gruppo = Column(String(150))
     prezzoListino = Column(Integer())
     prezzoNettoListino = Column(Integer())
-    rincaroNettoListino = Column(Integer())
     rincaroListino = Column(Integer())
     nettoUs = Column(Integer())
     rincaroTrasporto = Column(Integer())
     rincaroMontaggio = Column(Integer())
+    scontoUs = Column(Integer())
     scontoEx1 = Column(Integer())
     scontoEx2 = Column(Integer())
     scontoImballo = Column(Integer())
     rincaroTrasporto2 = Column(Integer())
     rincaroCliente = Column(Integer())
-
+    daVerificare = Column(Boolean(), default=False)
 
     def commitProdotto(prodotto):
         database.session.add(prodotto)
@@ -42,3 +42,6 @@ class ProdottoPrezzarioDBmodel(database.Model):
 
     def rollback():
         database.session.rollback()
+
+    def commit():
+        database.session.commit()

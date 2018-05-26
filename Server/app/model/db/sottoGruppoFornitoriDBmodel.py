@@ -27,6 +27,7 @@ class SottoGruppoFornitoriDBmodel(database.Model):
     indirizzo = Column(String(150))
     telefono = Column(String(30))
     sito = Column(String(100))
+    daVerificare = Column(Boolean(), default=False)
 
     def commitSottoGruppo(newRow):
         database.session.add(newRow)

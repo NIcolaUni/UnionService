@@ -19,3 +19,19 @@ class TipologiaProdotto(TipologiaProdottoDBmodel):
             server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
             TipologiaProdottoDBmodel.rollback()
             raise RigaPresenteException("Tipologia prodotto già presente")
+
+    def modificaTipologiaProdotto(nome, oldNome):
+
+        TipologiaProdotto.query.filter_by(nome=oldNome).update(
+
+            {
+                'nome': nome,
+             }
+        );
+
+        TipologiaProdotto.commit()
+
+    def eliminaTipologiaProdotto(nome):
+        toDel = TipologiaProdotto.query.filter_by(nome=nome).first()
+
+        TipologiaProdottoDBmodel.commitEliminaTipoProdotto(toDel)

@@ -190,9 +190,6 @@
    <script>
            /* console.log("il settore selezionato è: {{settoreToSel}}");*/
 
-           //Script necessario per renderizzare corretamente il tag select di "settore"
-            $.getScript("{{url_for('static', filename='form/js/main.js')}}");
-
             /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
             $('#trForm').hide();
 
@@ -212,56 +209,134 @@
 
             });
 
-            //codice per riempire il #bodyPrezzario
-            {% for lavorazione in lavorazioni %}
-                console.log("{{lavorazione.tipologia_lavorazione}}");
-                if( "{{lavorazione.settore}}" == $("#settoriDisponibili").val()) {
 
-                    {% if lavorazione.daVerificare %}
+            //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
+            function stampaValore(valore, colonna, unita,   classValues){
+
+                 var where="column"+colonna
+
+                 if( valore == 0 )
+                    return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
+                 else
+                    if( unita == "%" )
+                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
+                    else
+                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
+
+
+            }
+
+
+            //codice per riempire il #bodyPrezzario
+            {% for fornitorePrimoGruppo in listaFornitoriPrimoGruppo %}
+
+                    {% if fornitore.daVerificare %}
                         var classiTr="rowBodyTab daVerificare" ;
                         var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
                     {% else %}
                         var classiTr="rowBodyTab";
                         var inputToVer='<input class="toVerify" type="checkbox" >';
-
                     {% endif %}
 
-                    $("#bodyPrezzario").append(
-                          '<tr class="'+ classiTr +'">'+
-                                '<td class="controlCol" data-column="column1">'+
+                    {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
 
-                                      '<div class="iconsDiv row">'+
-                                          '<div class="col-md-4 iconContainer firstIconContainer" >'+
-                                            '<a class="fa fa-trash iconsTab delLavorazione"></a>'+
-                                          '</div>'+
-                                          '<div class="col-md-4 iconContainer">'+
-                                            '<a  class="fa fa-edit iconsTab modLavorazione"></a>'+
-                                          '</div>'+
-                                          '<div class="col-md-4 iconContainer">'+
-                                            '<a  class="fa fa-warning iconsTab segnalaLavorazione"></a>'+
-                                          '</div>'+
-                                      '</div>'+
+                        {% if fornitoreSottoGruppo.gruppo_azienda == fornitorePrimoGruppo.nome_gruppo %}
 
-                                '</td>'+
-                                '<td class="doubleCol firstCol tipologia tdToLeft" colspan="2" data-column="column2">{{lavorazione.tipologia_lavorazione}}</td>'+
+                            {% for rappresentante in listaRappresentanti %}
 
-                                '<td  data-column="column4">{{lavorazione.pertinenza}}</td>'+
-                                '<td class="numColSmall" data-column="column5">{{lavorazione.unitaMisura}}</td>'+
-                                '<td class="numColSmall" data-column="column6">&euro; {{lavorazione.fornitura}} </td>'+
-                                '<td class="numColSmall" data-column="column7">&euro; {{lavorazione.posa}}  </td>'+
-                                '<td  class="numColMedium" data-column="column8">&euro; {{lavorazione.costo}} </td>'+
-                                '<td  class="numColSmall" data-column="column9">&euro; {{lavorazione.prezzoMin}} </td>'+
-                                '<td  class="numColSmall" data-column="column10">&euro; {{lavorazione.prezzoMax}} </td>'+
-                                '<td  data-column="column11">{{lavorazione.dimensione}}</td>'+
-                                '<td  class="noteColumn"  colspan="2" data-column="column12"> {{lavorazione.note}}</td>'+
-                               /* '<td  class="controlCol" data-column="column13">'+*/
+                            {% endfor %}
+
+                            $("#bodyPrezzario").append(
+                                  '<tr class="'+ classiTr +'">'+
+                                    '<td class="controlCol" data-column="column1"></td>'+
+                                    '<td  colspan="21" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
+                                  '</tr>'+
+                                  '<tr class="'+ classiTr +'">'+
+                                        '<td class="controlCol" data-column="column1">'+
+
+                                              '<div class="iconsDiv row">'+
+                                                  '<div class="col-md-4 iconContainer firstIconContainer" >'+
+                                                    '<a class="fa fa-trash iconsTab delLavorazione"></a>'+
+                                                  '</div>'+
+                                                  '<div class="col-md-4 iconContainer">'+
+                                                    '<a  class="fa fa-edit iconsTab modLavorazione"></a>'+
+                                                  '</div>'+
+                                                  '<div class="col-md-4 iconContainer">'+
+                                                    '<a  class="fa fa-warning iconsTab segnalaLavorazione"></a>'+
+                                                  '</div>'+
+                                              '</div>'+
+
+                                        '</td>'+
+
+                                        '<td  data-column="column2"></td>'+
+                                        '<td  data-column="column3">{{fornitoreSottoGruppo.nome}}</td>'+
+                                        '<td  data-column="column4">{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
+                                        '<td  data-column="column5">{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
+                                        '<td  data-column="column6">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
+                                        '<td  data-column="column7">{{fornitoreSottoGruppo.scontoStandard}}</td>'+
+                                        '<td  data-column="column8">{{fornitoreSottoGruppo.scontoExtra1}}</td>'+
+                                        '<td  data-column="column9">{{fornitoreSottoGruppo.scontroExtra2}}</td>'+
+                                        '<td  class="colBigMedium" data-column="column10">{{fornitoreSottoGruppo.trasporto}}</td>'+
+                                        '<td  class="colBigMedium" data-column="column11">{{fornitoreSottoGruppo.trasportoUnitaMisura}}</td>'+
+                                        '<td  class="colBigMedium" data-column="column12">{{fornitoreSottoGruppo.giorniPagamenti}}</td>'+
+                                        '<td  class="colMedium" data-column="column13">{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
+                                        '<td  class="colMedium" data-column="column14">{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
+                                        '<td  class="colMedium" data-column="column15">{{fornitoreSottoGruppo.provincia}}</td>'+
+
+                                        '<td  class="colMedium" data-column="column16">{{fornitoreSottoGruppo.indirizzo}}</td>'+
+                                        '<td  class="colMedium" data-column="column17">{{fornitoreSottoGruppo.telefono}}</td>'+
+                                        '<td  class="colBigMedium" data-column="column18">{{fornitoreSottoGruppo.sito}}</td>'+
+                                        '<td  class="colBigMedium" data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
 
 
-                               '</td>'+
 
-                           '</tr>'
-                    );
-                }
+
+                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
+                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
+
+
+
+                                        '<td class="doubleCol firstCol tipologia tdToLeft" colspan="2" data-column="column2">{{lavorazione.tipologia_lavorazione}}</td>'+
+
+                                        '<td  data-column="column4">{{lavorazione.pertinenza}}</td>'+
+                                        '<td class="numColSmall" data-column="column5">{{lavorazione.unitaMisura}}</td>'+
+                                        '<td class="numColSmall" data-column="column6">&euro; {{lavorazione.fornitura}} </td>'+
+                                        '<td class="numColSmall" data-column="column7">&euro; {{lavorazione.posa}}  </td>'+
+                                        '<td  class="numColMedium" data-column="column8">&euro; {{lavorazione.costo}} </td>'+
+                                        '<td  class="numColSmall" data-column="column9">&euro; {{lavorazione.prezzoMin}} </td>'+
+                                        '<td  class="numColSmall" data-column="column10">&euro; {{lavorazione.prezzoMax}} </td>'+
+                                        '<td  data-column="column11">{{lavorazione.dimensione}}</td>'+
+                                        '<td  class="noteColumn"  colspan="2" data-column="column12"> {{lavorazione.note}}</td>'+
+                                       /* '<td  class="controlCol" data-column="column13">'+*/
+
+
+                                       '</td>'+
+
+                                   '</tr>'
+                            );
+
+                        {% endif %}
+
+                    {% endfor %}
+
             {% endfor %}
 
    </script>

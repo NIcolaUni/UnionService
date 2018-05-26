@@ -21,7 +21,8 @@ class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
                     provincia = None,
                     indirizzo = None,
                     telefono = None,
-                    sito = None):
+                    sito = None,
+                    daVerificare = False):
 
         self.nome=nome
         self.gruppo_azienda=gruppo_azienda

@@ -18,3 +18,6 @@ class TipologiaProdottoDBmodel(database.Model):
 
     def rollback():
         database.session.rollback()
+
+    def commit():
+        database.session.commit()

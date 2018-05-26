@@ -1,3 +1,9 @@
+#dropDownTipologia span{
+  //  background-color: green;
+    width: 100%;
+   // z-index: 0;
+}
+
 
 .colMedium {
     width: 120px !important;
