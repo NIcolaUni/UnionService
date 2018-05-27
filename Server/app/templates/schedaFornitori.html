@@ -229,22 +229,30 @@
 
             //codice per riempire il #bodyPrezzario
             {% for fornitorePrimoGruppo in listaFornitoriPrimoGruppo %}
-
-                    {% if fornitore.daVerificare %}
-                        var classiTr="rowBodyTab daVerificare" ;
-                        var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
-                    {% else %}
-                        var classiTr="rowBodyTab";
-                        var inputToVer='<input class="toVerify" type="checkbox" >';
-                    {% endif %}
+                    var rappresentantiStr="";
 
                     {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
-
                         {% if fornitoreSottoGruppo.gruppo_azienda == fornitorePrimoGruppo.nome_gruppo %}
 
-                            {% for rappresentante in listaRappresentanti %}
 
+                            {% for rappresentante in listaRappresentanti %}
+                                {% if rappresentante.azienda == fornitorePrimoGruppo %}
+                                    rappresentantiStr = '<td  data-column="column5">{{rappresentante.nome}}</td>'+
+                                                        '<td  data-column="column6">{{rappresentante.telefono}}</td>'+
+                                                        '<td  data-column="column7">{{rappresentante.email}}</td>'+
+                                                        '<td  data-column="column8">{{rappresentante.stato}}</td>';
+
+                                {% endif %}
                             {% endfor %}
+
+
+                            {% if fornitoreSottoGruppo.daVerificare %}
+                                var classiTr="rowBodyTab daVerificare" ;
+                                var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
+                            {% else %}
+                                var classiTr="rowBodyTab";
+                                var inputToVer='<input class="toVerify" type="checkbox" >';
+                            {% endif %}
 
                             $("#bodyPrezzario").append(
                                   '<tr class="'+ classiTr +'">'+
@@ -271,11 +279,14 @@
                                         '<td  data-column="column2"></td>'+
                                         '<td  data-column="column3">{{fornitoreSottoGruppo.nome}}</td>'+
                                         '<td  data-column="column4">{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
-                                        '<td  data-column="column5">{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
-                                        '<td  data-column="column6">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
-                                        '<td  data-column="column7">{{fornitoreSottoGruppo.scontoStandard}}</td>'+
-                                        '<td  data-column="column8">{{fornitoreSottoGruppo.scontoExtra1}}</td>'+
-                                        '<td  data-column="column9">{{fornitoreSottoGruppo.scontroExtra2}}</td>'+
+
+                                        rappresentantiStr +
+
+                                        '<td  data-column="column9">{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
+                                        '<td  data-column="column10">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
+                                        '<td  data-column="column11">{{fornitoreSottoGruppo.scontoStandard}}</td>'+
+                                        '<td  data-column="column12">{{fornitoreSottoGruppo.scontoExtra1}}</td>'+
+                                        '<td  data-column="column13">{{fornitoreSottoGruppo.scontroExtra2}}</td>'+
                                         '<td  class="colBigMedium" data-column="column10">{{fornitoreSottoGruppo.trasporto}}</td>'+
                                         '<td  class="colBigMedium" data-column="column11">{{fornitoreSottoGruppo.trasportoUnitaMisura}}</td>'+
                                         '<td  class="colBigMedium" data-column="column12">{{fornitoreSottoGruppo.giorniPagamenti}}</td>'+
@@ -286,51 +297,8 @@
                                         '<td  class="colMedium" data-column="column16">{{fornitoreSottoGruppo.indirizzo}}</td>'+
                                         '<td  class="colMedium" data-column="column17">{{fornitoreSottoGruppo.telefono}}</td>'+
                                         '<td  class="colBigMedium" data-column="column18">{{fornitoreSottoGruppo.sito}}</td>'+
-                                        '<td  class="colBigMedium" data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
 
-
-
-
-                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column19">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column20">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column21">{{fornitoreSottoGruppo.}}</td>'+
-                                        '<td  data-column="column22">{{fornitoreSottoGruppo.}}</td>'+
-
-
-
-                                        '<td class="doubleCol firstCol tipologia tdToLeft" colspan="2" data-column="column2">{{lavorazione.tipologia_lavorazione}}</td>'+
-
-                                        '<td  data-column="column4">{{lavorazione.pertinenza}}</td>'+
-                                        '<td class="numColSmall" data-column="column5">{{lavorazione.unitaMisura}}</td>'+
-                                        '<td class="numColSmall" data-column="column6">&euro; {{lavorazione.fornitura}} </td>'+
-                                        '<td class="numColSmall" data-column="column7">&euro; {{lavorazione.posa}}  </td>'+
-                                        '<td  class="numColMedium" data-column="column8">&euro; {{lavorazione.costo}} </td>'+
-                                        '<td  class="numColSmall" data-column="column9">&euro; {{lavorazione.prezzoMin}} </td>'+
-                                        '<td  class="numColSmall" data-column="column10">&euro; {{lavorazione.prezzoMax}} </td>'+
-                                        '<td  data-column="column11">{{lavorazione.dimensione}}</td>'+
-                                        '<td  class="noteColumn"  colspan="2" data-column="column12"> {{lavorazione.note}}</td>'+
-                                       /* '<td  class="controlCol" data-column="column13">'+*/
-
-
-                                       '</td>'+
-
-                                   '</tr>'
+                                  '</tr>'
                             );
 
                         {% endif %}

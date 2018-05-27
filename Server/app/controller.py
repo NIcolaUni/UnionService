@@ -78,12 +78,12 @@ def prezzarioProdotti():
 @login_required
 def schedaFornitori():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    fornitori_primo_gruppo = Fornitore.query.all().order_by(Fornitore.nome_gruppo)
-    fornitori_sotto_gruppo = SottoGruppoFornitori.query.all().order_by(SottoGruppoFornitori.nome)
-    listaRappresentanti = Rappresentante.query.all().order_by(Rappresentante.nome)
+    fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
+    fornitori_sotto_gruppo = SottoGruppoFornitori.query.order_by(SottoGruppoFornitori.nome).all()
+    listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
     return render_template("schedaFornitori.html", dipendente=dip, listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
                            listaFornitoriSottoGruppo=fornitori_sotto_gruppo, prezzario=True, schedaFornitoriCss=True,
-                           listaRappresentanti= ,sockUrl=app.appUrl)
+                           listaRappresentanti = listaRappresentanti,sockUrl=app.appUrl)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
