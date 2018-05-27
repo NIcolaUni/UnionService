@@ -188,7 +188,6 @@
     </div>
 
    <script>
-           /* console.log("il settore selezionato è: {{settoreToSel}}");*/
 
             /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
             $('#trForm').hide();
@@ -212,11 +211,16 @@
 
             //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
             function stampaValore(valore, colonna, unita,   classValues){
-
+                console.log("almeno qua " + unita);
                  var where="column"+colonna
 
                  if( valore == 0 )
                     return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
+                 else if( unita == "cad" ){
+                     console.log("entrato!");
+                     return '<td  class="'+ classValues +'" data-column="'+where+'"> &euro; '+ valore +' cad </td>';
+
+                 }
                  else
                     if( unita == "%" )
                      return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
@@ -240,7 +244,12 @@
                                     rappresentantiStr = '<td  data-column="column5">{{rappresentante.nome}}</td>'+
                                                         '<td  data-column="column6">{{rappresentante.telefono}}</td>'+
                                                         '<td  data-column="column7">{{rappresentante.email}}</td>'+
-                                                        '<td  data-column="column8">{{rappresentante.stato}}</td>';
+                                                        '<td  class="colBigMedium" data-column="column8">{{rappresentante.stato}}</td>';
+                                {% else %}
+                                    rappresentantiStr = '<td  data-column="column5"></td>'+
+                                        '<td  data-column="column6"></td>'+
+                                        '<td  data-column="column7"></td>'+
+                                        '<td  class="colBigMedium" data-column="column8"></td>';
 
                                 {% endif %}
                             {% endfor %}
@@ -257,20 +266,22 @@
                             $("#bodyPrezzario").append(
                                   '<tr class="'+ classiTr +'">'+
                                     '<td class="controlCol" data-column="column1"></td>'+
-                                    '<td  colspan="21" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
+                                    '<td  class="rowPrimoGruppo" colspan="3" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
+                                    rappresentantiStr +
+                                    '<td colspan="13" data-column="column9"></td>'+
                                   '</tr>'+
                                   '<tr class="'+ classiTr +'">'+
                                         '<td class="controlCol" data-column="column1">'+
 
                                               '<div class="iconsDiv row">'+
                                                   '<div class="col-md-4 iconContainer firstIconContainer" >'+
-                                                    '<a class="fa fa-trash iconsTab delLavorazione"></a>'+
+                                                    '<a class="fa fa-trash iconsTab delFornitore"></a>'+
                                                   '</div>'+
                                                   '<div class="col-md-4 iconContainer">'+
-                                                    '<a  class="fa fa-edit iconsTab modLavorazione"></a>'+
+                                                    '<a  class="fa fa-edit iconsTab modFornitore"></a>'+
                                                   '</div>'+
                                                   '<div class="col-md-4 iconContainer">'+
-                                                    '<a  class="fa fa-warning iconsTab segnalaLavorazione"></a>'+
+                                                    '<a  class="fa fa-warning iconsTab segnalaFornitore"></a>'+
                                                   '</div>'+
                                               '</div>'+
 
@@ -279,24 +290,26 @@
                                         '<td  data-column="column2"></td>'+
                                         '<td  data-column="column3">{{fornitoreSottoGruppo.nome}}</td>'+
                                         '<td  data-column="column4">{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
+                                        '<td  data-column="column5"></td>'+
+                                        '<td  data-column="column6"></td>'+
+                                        '<td  data-column="column7"></td>'+
+                                        '<td   class="colBigMedium" data-column="column8"></td>'+
+                                        '<td   class="colBigMedium" data-column="column9">{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
+                                        '<td   class="colBigMedium" data-column="column10">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
+                                        '<td   class="colMedium"    data-column="column11">{{fornitoreSottoGruppo.scontoStandard}} %</td>'+
+                                        '<td   class="colMedium"    data-column="column12">{{fornitoreSottoGruppo.scontoExtra1}} %</td>'+
+                                        '<td   class="colMedium"    data-column="column13">{{fornitoreSottoGruppo.scontroExtra2}} %</td>'+
 
-                                        rappresentantiStr +
+                                        stampaValore("{{fornitoreSottoGruppo.trasporto}}", 14,
+                                                         "{{fornitoreSottoGruppo.trasportoUnitaMisura}}", "colMedium" ) +
+                                        '<td  class="colMedium" data-column="column15">{{fornitoreSottoGruppo.giorniPagamenti}} gg</td>'+
+                                        '<td  class="colBigMedium" data-column="column16">{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
+                                        '<td  class="colBigMedium" data-column="column17">{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
+                                        '<td   data-column="column18">{{fornitoreSottoGruppo.provincia}}</td>'+
 
-                                        '<td  data-column="column9">{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
-                                        '<td  data-column="column10">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
-                                        '<td  data-column="column11">{{fornitoreSottoGruppo.scontoStandard}}</td>'+
-                                        '<td  data-column="column12">{{fornitoreSottoGruppo.scontoExtra1}}</td>'+
-                                        '<td  data-column="column13">{{fornitoreSottoGruppo.scontroExtra2}}</td>'+
-                                        '<td  class="colBigMedium" data-column="column10">{{fornitoreSottoGruppo.trasporto}}</td>'+
-                                        '<td  class="colBigMedium" data-column="column11">{{fornitoreSottoGruppo.trasportoUnitaMisura}}</td>'+
-                                        '<td  class="colBigMedium" data-column="column12">{{fornitoreSottoGruppo.giorniPagamenti}}</td>'+
-                                        '<td  class="colMedium" data-column="column13">{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
-                                        '<td  class="colMedium" data-column="column14">{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
-                                        '<td  class="colMedium" data-column="column15">{{fornitoreSottoGruppo.provincia}}</td>'+
-
-                                        '<td  class="colMedium" data-column="column16">{{fornitoreSottoGruppo.indirizzo}}</td>'+
-                                        '<td  class="colMedium" data-column="column17">{{fornitoreSottoGruppo.telefono}}</td>'+
-                                        '<td  class="colBigMedium" data-column="column18">{{fornitoreSottoGruppo.sito}}</td>'+
+                                        '<td   data-column="column19">{{fornitoreSottoGruppo.indirizzo}}</td>'+
+                                        '<td   data-column="column20">{{fornitoreSottoGruppo.telefono}}</td>'+
+                                        '<td   data-column="column21">{{fornitoreSottoGruppo.sito}}</td>'+
 
                                   '</tr>'
                             );
