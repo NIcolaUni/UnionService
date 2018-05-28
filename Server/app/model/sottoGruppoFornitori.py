@@ -1,6 +1,8 @@
 from .db.sottoGruppoFornitoriDBmodel import SottoGruppoFornitoriDBmodel
 from .eccezioni.righaPresenteException import RigaPresenteException
-from sqlalchemy import exc
+from sqlalchemy import exc, func
+from .fornitore import Fornitore
+import app
 
 class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
 
@@ -69,7 +71,25 @@ class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
                                          telefono=telefono, sito=sito)
 
         try:
-            SottoGruppoFornitoriDBmodel.commitSottoGruppo(nuovoFornitore)
+            SottoGruppoFornitoriDBmodel.addRow(nuovoFornitore)
         except exc.SQLAlchemyError as e:
             SottoGruppoFornitoriDBmodel.rollback()
             raise RigaPresenteException("Sottogruppo fornitore già presente")
+
+    def eliminaSottoGruppoFornitori(nome, gruppo_azienda):
+
+        app.server.logger.info("Sono quaaaa {} {}".format(nome, gruppo_azienda))
+        toDel = SottoGruppoFornitori.query.filter_by(nome=nome, gruppo_azienda=gruppo_azienda).first()
+        SottoGruppoFornitoriDBmodel.delRow(toDel)
+        numSottoGruppi = SottoGruppoFornitori.countSottoGruppo(gruppo_azienda=gruppo_azienda)
+
+        if numSottoGruppi == 0:
+            Fornitore.setHas_sottoGruppi(gruppo_azienda, False)
+
+
+
+    def countSottoGruppo(gruppo_azienda):
+        q = SottoGruppoFornitori.query.filter_by(gruppo_azienda=gruppo_azienda)
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count = q.session.execute(count_q).scalar()
+        return count

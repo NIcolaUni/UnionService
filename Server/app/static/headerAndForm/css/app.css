@@ -15814,3 +15814,7 @@ hr.fc-divider {
 #top-search-wrap {
     background: #FFBF18;
 }
+
+input#nome_cognome_indirizzo::placeholder {
+    color: #C0C0C0 !important;
+}

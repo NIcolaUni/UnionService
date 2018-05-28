@@ -97,23 +97,23 @@
                             <th  class="tableForm intestazioneOliva" data-column="column6"><input id="telReferenteInput" type="tel" name="telReferente" placeholder="telefono referente"> </th>
                             <th  class="tableForm intestazioneOliva" data-column="column7"><input id="emailReferenteInput" type="email" name="emailReferente" placeholder="email referente"> </th>
                             <th  class="tableForm intestazioneOliva colBigMedium" data-column="column8">
-                                 <select id="selectTempiConsegna">
-                                    <option> Collabora </option>
-                                    <option> Potenziale </option>
+                                 <select id="selectStatoRappresentante">
+                                    <option>Collabora</option>
+                                    <option>Potenziale</option>
                                 </select>
 
                             </th>
                             <th  class="tableForm intestazioneArancio colBigMedium" data-column="column9">
-                                <select id="selectStatoRappresentante">
-                                    <option> 30 </option>
-                                    <option> 30/60 </option>
-                                    <option> 30/60/90 </option>
-                                    <option> 60 </option>
-                                    <option> 60/90 </option>
-                                    <option> 60/90/120 </option>
-                                    <option> 90 </option>
-                                    <option> 90/120 </option>
-                                    <option> 120 </option>
+                                <select id="selectTempiConsegna">
+                                    <option>30</option>
+                                    <option>30/60</option>
+                                    <option>30/60/90</option>
+                                    <option>60</option>
+                                    <option>60/90</option>
+                                    <option>60/90/120</option>
+                                    <option>90 </option>
+                                    <option>90/120 </option>
+                                    <option>120</option>
                                 </select> gg
                             </th>
                             <th  class="tableForm intestazioneArancio colBigMedium" data-column="column10">
@@ -135,24 +135,24 @@
                             </th>
                             <th  class="tableForm intestazioneBlu colMedium" data-column="column15">
                                <select id="selectGiorniPagamento">
-                                    <option> 30 </option>
-                                    <option> 30/60 </option>
-                                    <option> 30/60/90 </option>
-                                    <option> 60 </option>
-                                    <option> 60/90 </option>
-                                    <option> 60/90/120 </option>
-                                    <option> 90 </option>
-                                    <option> 90/120 </option>
-                                    <option> 120 </option>
+                                    <option>30</option>
+                                    <option>30/60</option>
+                                    <option>30/60/90</option>
+                                    <option>60</option>
+                                    <option>60/90</option>
+                                    <option>60/90/120</option>
+                                    <option>90</option>
+                                    <option>90/120</option>
+                                    <option>120</option>
                                 </select>
                             </th>
                             <th  class="tableForm intestazioneBlu colBigMedium" data-column="column16">
 
                                 <select id="selectModalitaPagamento">
-                                    <option> RIBA DF </option>
-                                    <option> RIBA FM </option>
-                                    <option> RD titoli allo scarico </option>
-                                    <option> RD DF </option>
+                                    <option>RIBA DF</option>
+                                    <option>RIBA FM</option>
+                                    <option>RD titoli allo scarico</option>
+                                    <option>RD DF</option>
                                 </select>
                             </th>
 
@@ -160,9 +160,9 @@
 
 
                                 <select id="selectTipologiaPagamenti">
-                                    <option> DISTRIBUTORE </option>
-                                    <option> RIVENDITORE </option>
-                                    <option> PRODUTTORE </option>
+                                    <option>DISTRIBUTORE</option>
+                                    <option>RIVENDITORE</option>
+                                    <option>PRODUTTORE</option>
                                 </select>
                             </th>
                             <th  class="tableForm intestazioneOliva" data-column="column18"><input id="doveProvinciaInput" type="text" name="doveProvincia" placeholder="provincia"> </th>
@@ -197,6 +197,7 @@
                 $(showForm).addClass('fa');
                 $(showForm).addClass('fa-plus');
                 $('#bodyPrezzario').css('height', '88%');
+                modificaAttiva=false
 
             });
 
@@ -225,7 +226,7 @@
                     if( unita == "%" )
                      return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
                     else
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
+                     return '<td  class="'+ clnomeassValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
 
 
             }
@@ -233,91 +234,147 @@
 
             //codice per riempire il #bodyPrezzario
             {% for fornitorePrimoGruppo in listaFornitoriPrimoGruppo %}
-                    var rappresentantiStr="";
 
-                    {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
-                        {% if fornitoreSottoGruppo.gruppo_azienda == fornitorePrimoGruppo.nome_gruppo %}
+                    {% if not fornitorePrimoGruppo.has_sottoGruppo %}
 
-
-                            {% for rappresentante in listaRappresentanti %}
-                                {% if rappresentante.azienda == fornitorePrimoGruppo %}
-                                    rappresentantiStr = '<td  data-column="column5">{{rappresentante.nome}}</td>'+
-                                                        '<td  data-column="column6">{{rappresentante.telefono}}</td>'+
-                                                        '<td  data-column="column7">{{rappresentante.email}}</td>'+
-                                                        '<td  class="colBigMedium" data-column="column8">{{rappresentante.stato}}</td>';
-                                {% else %}
-                                    rappresentantiStr = '<td  data-column="column5"></td>'+
-                                        '<td  data-column="column6"></td>'+
-                                        '<td  data-column="column7"></td>'+
-                                        '<td  class="colBigMedium" data-column="column8"></td>';
-
-                                {% endif %}
-                            {% endfor %}
-
-
-                            {% if fornitoreSottoGruppo.daVerificare %}
-                                var classiTr="rowBodyTab daVerificare" ;
-                                var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
+                            var rappresentantiStr="";
+                         {% for rappresentante in listaRappresentanti %}
+                            {% if rappresentante.azienda == fornitorePrimoGruppo.nome_gruppo %}
+                                rappresentantiStr = '<td  data-column="column5">{{rappresentante.nome}}</td>'+
+                                                    '<td  data-column="column6">{{rappresentante.telefono}}</td>'+
+                                                    '<td  data-column="column7">{{rappresentante.email}}</td>'+
+                                                    '<td  class="colBigMedium" data-column="column8">{{rappresentante.stato}}</td>';
                             {% else %}
-                                var classiTr="rowBodyTab";
-                                var inputToVer='<input class="toVerify" type="checkbox" >';
+                                rappresentantiStr = '<td  data-column="column5"></td>'+
+                                    '<td  data-column="column6"></td>'+
+                                    '<td  data-column="column7"></td>'+
+                                    '<td  class="colBigMedium" data-column="column8"></td>';
+
                             {% endif %}
+                        {% endfor %}
 
-                            $("#bodyPrezzario").append(
-                                  '<tr class="'+ classiTr +'">'+
-                                    '<td class="controlCol" data-column="column1"></td>'+
-                                    '<td  class="rowPrimoGruppo" colspan="3" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
-                                    rappresentantiStr +
-                                    '<td colspan="13" data-column="column9"></td>'+
-                                  '</tr>'+
-                                  '<tr class="'+ classiTr +'">'+
-                                        '<td class="controlCol" data-column="column1">'+
 
-                                              '<div class="iconsDiv row">'+
-                                                  '<div class="col-md-4 iconContainer firstIconContainer" >'+
-                                                    '<a class="fa fa-trash iconsTab delFornitore"></a>'+
-                                                  '</div>'+
-                                                  '<div class="col-md-4 iconContainer">'+
-                                                    '<a  class="fa fa-edit iconsTab modFornitore"></a>'+
-                                                  '</div>'+
-                                                  '<div class="col-md-4 iconContainer">'+
-                                                    '<a  class="fa fa-warning iconsTab segnalaFornitore"></a>'+
-                                                  '</div>'+
-                                              '</div>'+
-
-                                        '</td>'+
-
-                                        '<td  data-column="column2"></td>'+
-                                        '<td  data-column="column3">{{fornitoreSottoGruppo.nome}}</td>'+
-                                        '<td  data-column="column4">{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
-                                        '<td  data-column="column5"></td>'+
-                                        '<td  data-column="column6"></td>'+
-                                        '<td  data-column="column7"></td>'+
-                                        '<td   class="colBigMedium" data-column="column8"></td>'+
-                                        '<td   class="colBigMedium" data-column="column9">{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
-                                        '<td   class="colBigMedium" data-column="column10">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
-                                        '<td   class="colMedium"    data-column="column11">{{fornitoreSottoGruppo.scontoStandard}} %</td>'+
-                                        '<td   class="colMedium"    data-column="column12">{{fornitoreSottoGruppo.scontoExtra1}} %</td>'+
-                                        '<td   class="colMedium"    data-column="column13">{{fornitoreSottoGruppo.scontroExtra2}} %</td>'+
-
-                                        stampaValore("{{fornitoreSottoGruppo.trasporto}}", 14,
-                                                         "{{fornitoreSottoGruppo.trasportoUnitaMisura}}", "colMedium" ) +
-                                        '<td  class="colMedium" data-column="column15">{{fornitoreSottoGruppo.giorniPagamenti}} gg</td>'+
-                                        '<td  class="colBigMedium" data-column="column16">{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
-                                        '<td  class="colBigMedium" data-column="column17">{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
-                                        '<td   data-column="column18">{{fornitoreSottoGruppo.provincia}}</td>'+
-
-                                        '<td   data-column="column19">{{fornitoreSottoGruppo.indirizzo}}</td>'+
-                                        '<td   data-column="column20">{{fornitoreSottoGruppo.telefono}}</td>'+
-                                        '<td   data-column="column21">{{fornitoreSottoGruppo.sito}}</td>'+
-
-                                  '</tr>'
-                            );
-
+                        {% if fornitorePrimoGruppo.daVerificare %}
+                            var classiTr="rowBodyTab daVerificare" ;
+                            var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
+                        {% else %}
+                            var classiTr="rowBodyTab";
+                            var inputToVer='<input class="toVerify" type="checkbox" >';
                         {% endif %}
 
-                    {% endfor %}
+                        $("#bodyPrezzario").append(
+                              '<tr bgcolor="#E1E1E1" class="'+ classiTr +'">'+
+                                  '<td class="controlCol" data-column="column1">'+
 
+                                          '<div class="iconsDiv row">'+
+                                              '<div class="col-md-4 iconContainer firstIconContainer" >'+
+                                                '<a class="fa fa-trash iconsTab delFornitore"></a>'+
+                                              '</div>'+
+                                              '<div class="col-md-4 iconContainer">'+
+                                                '<a  class="fa fa-edit iconsTab modFornitore"></a>'+
+                                              '</div>'+
+                                              '<div class="col-md-4 iconContainer">'+
+                                                '<a  class="fa fa-warning iconsTab segnalaFornitore"></a>'+
+                                              '</div>'+
+                                          '</div>'+
+
+                                    '</td>'+
+                                '<td id="{{fornitorePrimoGruppo.nome_gruppo}}" class="rowPrimoGruppo  fornitoreRow" colspan="3" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
+                                rappresentantiStr +
+                                '<td colspan="13" data-column="column9"></td>'+
+                              '</tr>'
+                        );
+
+
+
+                    {% else %}
+
+                        var rappresentantiStr="";
+
+                        {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
+                            {% if fornitoreSottoGruppo.gruppo_azienda == fornitorePrimoGruppo.nome_gruppo %}
+
+
+                                {% for rappresentante in listaRappresentanti %}
+                                    {% if rappresentante.azienda == fornitorePrimoGruppo.nome_gruppo %}
+                                        rappresentantiStr = '<td  data-column="column5">{{rappresentante.nome}}</td>'+
+                                                            '<td  data-column="column6">{{rappresentante.telefono}}</td>'+
+                                                            '<td  data-column="column7">{{rappresentante.email}}</td>'+
+                                                            '<td  class="colBigMedium" data-column="column8">{{rappresentante.stato}}</td>';
+                                    {% else %}
+                                        rappresentantiStr = '<td  data-column="column5"></td>'+
+                                            '<td  data-column="column6"></td>'+
+                                            '<td  data-column="column7"></td>'+
+                                            '<td  class="colBigMedium" data-column="column8"></td>';
+
+                                    {% endif %}
+                                {% endfor %}
+
+
+                                {% if fornitoreSottoGruppo.daVerificare %}
+                                    var classiTr="rowBodyTab daVerificare" ;
+                                    var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
+                                {% else %}
+                                    var classiTr="rowBodyTab";
+                                    var inputToVer='<input class="toVerify" type="checkbox" >';
+                                {% endif %}
+
+                                $("#bodyPrezzario").append(
+                                      '<tr bgcolor="#E1E1E1" class="'+ classiTr +'">'+
+                                        '<td class="controlCol" data-column="column1"></td>'+
+                                        '<td id="{{fornitorePrimoGruppo.nome_gruppo}}" class="rowPrimoGruppo fornitoreRow" colspan="3" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
+                                        rappresentantiStr +
+                                        '<td colspan="13" data-column="column9"></td>'+
+                                      '</tr>'+
+                                      '<tr class="'+ classiTr +'">'+
+                                            '<td class="controlCol" data-column="column1">'+
+
+                                                  '<div class="iconsDiv row">'+
+                                                      '<div class="col-md-4 iconContainer firstIconContainer" >'+
+                                                        '<a class="fa fa-trash iconsTab delSottoGruppo"></a>'+
+                                                      '</div>'+
+                                                      '<div class="col-md-4 iconContainer">'+
+                                                        '<a  class="fa fa-edit iconsTab modSottoGruppo"></a>'+
+                                                      '</div>'+
+                                                      '<div class="col-md-4 iconContainer">'+
+                                                        '<a  class="fa fa-warning iconsTab segnalaSottoGruppo"></a>'+
+                                                      '</div>'+
+                                                  '</div>'+
+
+                                            '</td>'+
+
+                                            '<td  data-column="column2"></td>'+
+                                            '<td class="nome_sottogruppo" data-column="column3">{{fornitoreSottoGruppo.nome}}</td>'+
+                                            '<td  data-column="column4">{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
+                                            '<td  data-column="column5"></td>'+
+                                            '<td  data-column="column6"></td>'+
+                                            '<td  data-column="column7"></td>'+
+                                            '<td   class="colBigMedium" data-column="column8"></td>'+
+                                            '<td   class="colBigMedium" data-column="column9">{{fornitoreSottoGruppo.tempiDiConsegna}} gg</td>'+
+                                            '<td   class="colBigMedium" data-column="column10">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
+
+                                            stampaValore("{{fornitoreSottoGruppo.scontoStandard}}", 11, "%", "colMedium" ) +
+                                            stampaValore("{{fornitoreSottoGruppo.scontoExtra1}}", 12, "%", "colMedium" ) +
+                                            stampaValore("{{fornitoreSottoGruppo.scontroExtra2}}", 13, "%", "colMedium" ) +
+                                            stampaValore("{{fornitoreSottoGruppo.trasporto}}", 14,
+                                                             "{{fornitoreSottoGruppo.trasportoUnitaMisura}}", "colMedium" ) +
+
+                                            '<td  class="colMedium" data-column="column15">{{fornitoreSottoGruppo.giorniPagamenti}} gg</td>'+
+                                            '<td  class="colBigMedium" data-column="column16">{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
+                                            '<td  class="colBigMedium" data-column="column17">{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
+                                            '<td   data-column="column18">{{fornitoreSottoGruppo.provincia}}</td>'+
+
+                                            '<td   data-column="column19">{{fornitoreSottoGruppo.indirizzo}}</td>'+
+                                            '<td   data-column="column20">{{fornitoreSottoGruppo.telefono}}</td>'+
+                                            '<td   data-column="column21">{{fornitoreSottoGruppo.sito}}</td>'+
+
+                                      '</tr>'
+                                );
+
+                            {% endif %}
+
+                        {% endfor %}
+                    {% endif %}
             {% endfor %}
 
    </script>
@@ -439,7 +496,7 @@
                         if( inputOfFornitori[0] == "" )
                             return;
                         else
-                            socketFornitore.emit("registra_fornitore", { "dip": "{{dipendente.username}}", "nome":  inputOfFornitori[0] })
+                            socketFornitore.emit("registra_fornitore", { "dip": "{{dipendente.username}}", "nome":  inputOfFornitori[0], "has_sottoGruppo": true })
 
                         if(!modificaAttiva){
 
@@ -480,6 +537,177 @@
 
           })
        });
+
+       $('.delFornitore').click(function(){
+
+
+
+            var fornitore=$(this).closest('.rowBodyTab').children('.fornitoreRow').text();
+
+
+            swal({
+                title: "Eliminazione fornitore " + fornitore,
+                text: 'sicuro di voler procedere?',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+
+            }, function (isConfirm) {
+
+                  if (isConfirm) {
+
+                        socketFornitore.emit('elimina_fornitore', {'dip': '{{dipendente.username}}', 'fornitore': fornitore });
+
+                  }
+
+            })
+
+       });
+
+
+       $('.delSottoGruppo').click(function(){
+
+            var fornitore=""
+
+            var sotto_gruppo=$(this).closest('.rowBodyTab').children('.nome_sottogruppo').text();
+            var fornitore=""
+            {% for sottoGruppo in listaFornitoriSottoGruppo %}
+                if( "{{sottoGruppo.nome}}" == sotto_gruppo ){
+
+                    fornitore=$('#{{sottoGruppo.gruppo_azienda}}').text()
+                    console.log("wei sono " +fornitore);
+                }
+
+            {% endfor %}
+
+
+            swal({
+                title: "Eliminazione sotto gruppo " + sotto_gruppo,
+                text: 'sicuro di voler procedere?',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+
+            }, function (isConfirm) {
+
+                  if (isConfirm) {
+
+                        socketFornitore.emit('elimina_sotto_gruppo_fornitore', {'dip': '{{dipendente.username}}', 'fornitore': fornitore,
+                                               'sotto_gruppo': sotto_gruppo });
+
+                  }
+
+            })
+
+       });
+
+       $('.modSottoGruppo').click(function(){
+
+           //se qualche altro fornitore e' gia' stato selezionato per la modifica deselezionalo
+           if( modificaAttiva ){
+                $('.inModifica').removeClass('inModifica');
+
+
+           }
+            else {
+
+                modificaAttiva=true;
+                $('#trForm').show();
+                $('#showForm').removeClass('fa');
+                $('#showForm').removeClass('fa-plus');
+                /*$('#bodyPrezzario').css('height', '81%');*/
+           }
+
+
+           $(this).closest('tr').addClass("inModifica");
+
+           var datiSottoGruppo=[];
+
+           $(".inModifica td").each(function(index){
+
+                datiSottoGruppo.push($(this).text());
+
+           });
+
+            console.log(datiSottoGruppo);
+
+            oldNome = datiSottoGruppo[2];
+            var datiFornitore = "";
+
+
+            {% for sotto_gruppo in listaFornitoriSottoGruppo %}
+
+                if("{{sotto_gruppo.nome}}" == oldNome )
+                    datiFornitore = "{{sotto_gruppo.gruppo_azienda}}";
+
+                    $("#primoGruppoInput").val( "{{sotto_gruppo.gruppo_azienda}}");
+                    $("#sottoGruppoInput").val("{{sotto_gruppo.nome}}");
+                    $("#settoreMerceInput").val("{{sotto_gruppo.settoreMerceologico}}");
+                    $("#selectTempiConsegna").val("{{sotto_gruppo.tempiDiConsegna}}");
+
+                    console.log("prezzi netti:" + "{{sotto_gruppo.prezziNetti}}".substring(1, "{{sotto_gruppo.prezziNetti}}".length) );
+                    $("#selectPrezziNetti").val("{{sotto_gruppo.prezziNetti}}".substring(1, "{{sotto_gruppo.prezziNetti}}".length));
+                    $("#scontoStandardInput").val("{{sotto_gruppo.scontoStandard}}");
+                    $("#extra1Input").val("{{sotto_gruppo.scontoExtra1}}");
+                    $("#extra2Input").val("{{sotto_gruppo.scontoExtra2}}");
+                    $("#trasportoUnitaInput").val("{{sotto_gruppo.trasporto}}");
+                    $("#selectUnitaMisuraTrasporto").val("{{sotto_gruppo.trasportoUnitaMisura}}");
+                    $("#selectGiorniPagamento").val("{{sotto_gruppo.giorniPagamenti}}");
+                    $("#selectModalitaPagamento").val("{{sotto_gruppo.modalitaPagamenti}}");
+                    $("#selectTipologiaPagamenti").val("{{sotto_gruppo.tipologiaPagamenti}}");
+                    $("#doveProvinciaInput").val("{{sotto_gruppo.provincia}}");
+                    $("#doveIndirizzoInput").val("{{sotto_gruppo.indirizzo}}");
+                    $("#doveTelInput").val("{{sotto_gruppo.telefono}}");
+                    $("#doveSitoInput").val("{{sotto_gruppo.sito}}");
+
+            {% endfor %}
+
+            {% for rappresentante in listaRappresentanti %}
+
+                if( "{{rappresentante.azienda}}" == datiFornitore )
+
+                    $("#referenteInput").val("{{rappresentante.nome}}");
+                    $("#telReferenteInput").val("{{rappresentante.telefono}}");
+                    $("#emailReferenteInput").val("{{rappresentante.email}}");
+                    $("#selectStatoRappresentante").val("{{rappresentante.stato}}");
+
+            {% endfor %}
+
+
+
+
+
+
+
+            $(this).closest('tr').removeClass("inModifica");
+
+       });
+
+
+       $('.segnalaProdotto').click(function(){
+
+            var tipo = $('#selectTipologia').val();
+            var prodotto = $(this).closest('.rowBodyTab').children('.nome_prodotto').text();
+
+
+            if(!$(this).closest('tr').hasClass('daVerificare') ){
+
+
+                socketFornitore.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
+                                                           'prodotto': prodotto, 'valore': true});
+            }
+            else {
+                socketFornitore.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
+                                                       'prodotto': prodotto, 'valore': false});
+
+            }
+
+       });
+
 
     </script>
 

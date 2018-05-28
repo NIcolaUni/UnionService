@@ -17,11 +17,13 @@ class Rappresentante(RappresentanteDBmodel):
         newRap = Rappresentante(nome=nome, azienda=azienda, telefono=telefono, email=email, stato=stato)
 
         try:
-            RappresentanteDBmodel.commitRappresentante(newRap)
+            RappresentanteDBmodel.addRow(newRap)
         except exc.SQLAlchemyError as e:
             server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
             RappresentanteDBmodel.rollback()
             raise RigaPresenteException("Il rappresentante inserito è già presente")
 
 
-
+    def eliminaRappresentante(nome, azienda):
+        toDel = Rappresentante.query.filter_by(nome=nome, azienda=azienda).first()
+        RappresentanteDBmodel.delRow(toDel)

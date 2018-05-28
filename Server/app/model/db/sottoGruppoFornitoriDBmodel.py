@@ -1,8 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
-from app import database
+from .dbUSinterface import DbUSinterface
 
-
-class SottoGruppoFornitoriDBmodel(database.Model):
+class SottoGruppoFornitoriDBmodel(DbUSinterface, DbUSinterface.db.Model ):
     __tablename__ = "sotto_gruppo_fornitori"
     __table_args__ = (
         PrimaryKeyConstraint('nome', 'gruppo_azienda' ),
@@ -29,12 +28,3 @@ class SottoGruppoFornitoriDBmodel(database.Model):
     sito = Column(String(100))
     daVerificare = Column(Boolean(), default=False)
 
-    def commitSottoGruppo(newRow):
-        database.session.add(newRow)
-        database.session.commit()
-
-    def commitEliminaSottoGruppo(newRow):
-        database.session.delete(newRow)
-
-    def rollback():
-        database.session.rollback()

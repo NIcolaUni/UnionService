@@ -30,27 +30,11 @@
             <div id="tabContainer" class="features">
                 <div id="tabFattura" class="table-wrapper">
                         <table class="alt">
-                            <thead>
-                                <tr class="trHead">
-                                    <th class="thPreventivo">Settore di lavorazione</th>
-                                    <th class="thPreventivo">L</th>
-                                    <th class="thPreventivo">P</th>
-                                    <th class="thPreventivo">H</th>
-                                    <th class="thPreventivo">Quantità</th>
-                                    <th class="thPreventivo">Unità</th>
-                                    <th class="thPreventivo">Prezzo unitario</th>
-                                    <th class="thPreventivo">Totale</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bodyPreventivo">
-
+                           <tbody id="bodyPreventivo">
 
                             </tbody>
                             <tfoot>
-                                <tr>
-                                    <td colspan="7"></td>
-                                    <td>100.00</td>
-                                </tr>
+
                             </tfoot>
                         </table>
                     </div>
@@ -64,16 +48,58 @@
         function aggiungiRiga($this){
                  {% for prezzario in prezzarioEdile %}
                     if( "{{prezzario.tipologia_lavorazione}}" ==  $this.text() ){
-                        $('#bodyPreventivo').append(
+
+                        var sezioneSettore =  $('#bodyPreventivo').children('.{{prezzario.settore}}');
+
+                        if( !sezioneSettore.length ){
+
+                            $('#bodyPreventivo').append(
+
+                                '<tr class="trBody {{prezzario.settore}}">'+
+                                    '<td  colspan="9"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
+                                '</tr>'+
+                                '<tr class="trHead {{prezzario.settore}}_head">'+
+                                    '<th class="thPreventivo"></th>'+
+                                    '<th class="thPreventivo numColSmall">N</th>'+
+                                    '<th class="thPreventivo numColSmall">L</th>'+
+                                    '<th class="thPreventivo numColSmall">H</th>'+
+                                    '<th class="thPreventivo numColSmall">P</th>'+
+                                    '<th class="thPreventivo numColSmall">Quantità</th>'+
+                                    '<th class="thPreventivo numColSmall">Unità</th>'+
+                                    '<th class="thPreventivo">Prezzo unitario</th>'+
+                                    '<th class="thPreventivo">Totale</th>'+
+                                '</tr>'
+                            );
+                        }
+
+                        $('.{{prezzario.settore}}_head').after(
 
                             '<tr class="trBody">'+
 
-                                '<td class="tdPreventivo"><input type="text" name="settore" placeholder="settore" value={{prezzario.settore}}></td>'+
-                                '<td class="tdPreventivo"><input type="number" name="L" placeholder="L" value=0></td>'+
-                                '<td class="tdPreventivo"><input type="number" name="P" placeholder="P" value=0></td>'+
-                                '<td class="tdPreventivo"><input type="number" name="H" placeholder="H" value=0></td>'+
-                                '<td class="tdPreventivo"><input type="number" name="quantita" placeholder="quantita" value=1></td>'+
-                                '<td class="tdPreventivo">{{prezzario.costo}}</td>'+
+                                '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
+                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="N" placeholder="N" value=1></td>'+
+                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="L" placeholder="L" value=0></td>'+
+                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="H" placeholder="H" value=0></td>'+
+                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="P" placeholder="P" value=0></td>'+
+
+
+                                '<td class="tdPreventivo numColSmall"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'+
+                                '<td class="tdPreventivo numColSmall">'+
+                                    '<select>'+
+                                        '<option> mL </option>'+
+                                        '<option> mQ </option>'+
+                                        '<option> mC </option>'+
+                                        '<option> cad </option>'+
+                                    '</select>'+
+                                '</td>'+
+                                '<td class="tdPreventivo"></td>'+
+                                '<td></td>'+
+
+                            '</tr>'+
+                            '<tr class="trFoot">'+
+                                '<td colspan="7"></td>'+
+                                '<td>{{prezzario.prezzoMax}}</td>'+
+                                '<td></td>'+
 
                             '</tr>'
                         );
@@ -81,25 +107,31 @@
                 {% endfor %}
         }
 
+        var counter=0;
+
        {% for elemento in prezzarioEdile %}
           if( "{{elemento.settore}}" == $('#selectSettore').val() ){
             $('#listaElementFattura').append(
 
-                 '<li><button onclick="aggiungiRiga($(this))" class="elementFattura">{{elemento.tipologia_lavorazione}}</button></li>'
+                 '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
             );
+            counter+=1;
           }
        {% endfor %}
 
        $('#selectSettore').change(function(){
-            console.log("chiamato");
+
+            counter=0;
             $('#listaElementFattura').html("");
             {% for elemento in prezzarioEdile %}
               if( "{{elemento.settore}}" == $('#selectSettore').val() ){
                 $('#listaElementFattura').append(
 
-                     '<li><button onclick="printa()" class="elementFattura">{{elemento.tipologia_lavorazione}}</button></li>'
+                     '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
                 );
+                counter+=1;
               }
+
            {% endfor %}
 
             $('.elementFattura').click(function(){

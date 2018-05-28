@@ -95,11 +95,11 @@
                                 </select>
 
                             </th>
-                            <th  class="tableForm numColSmall" data-column="column6"><input id="fornituraInput" type="number" name="fornitura" placeholder="fornitura" value=0></th>
-                            <th  class="tableForm numColSmall" data-column="column7"><input id="posaInput" type="number" name="posa" placeholder="posa" value=0></th>
-                            <th  class="tableForm numColMedium" data-column="column8"><input id="costoInput" type="number" name="costo" placeholder="costo" value=0></th>
-                            <th  class="tableForm numColSmall" data-column="column9"><input id="pMinInput" type="number" name="prezzoMin" placeholder="prezzo min" value=0></th>
-                            <th  class="tableForm numColSmall" data-column="column10"><input id="pMaxInput" type="number" name="prezzoMax" placeholder="prezzo max" value=0></th>
+                            <th  class="tableForm numColSmall" data-column="column6">&euro; <input id="fornituraInput" class="numberInput" type="number" step="0.01" name="fornitura" placeholder="fornitura" value=0.00></th>
+                            <th  class="tableForm numColSmall" data-column="column7">&euro; <input id="posaInput" class="numberInput" type="number" step="0.01" name="posa" placeholder="posa" value=0.00></th>
+                            <th  class="tableForm numColMedium" data-column="column8">&euro; <input id="costoInput" class="numberInput" type="number" step="0.01" name="costo" placeholder="costo" value=0.00></th>
+                            <th  class="tableForm numColSmall" data-column="column9">&euro; <input id="pMinInput" class="numberInput" type="number" step="0.01" name="prezzoMin" placeholder="prezzo min" value=0.00></th>
+                            <th  class="tableForm numColSmall" data-column="column10">&euro; <input id="pMaxInput" class="numberInput" type="number" step="0.01" name="prezzoMax" placeholder="prezzo max" value=0.00></th>
                             <th  class="tableForm" data-column="column11"><input id="dimensioneInput" type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
                             <th  class="tableForm" data-column="column12"><textarea maxlength="500" id="noteTextarea"></textarea></th>
                             <th  class="tableForm" colspan="2" data-column="column13"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
@@ -135,6 +135,7 @@
                 $(showForm).addClass('fa');
                 $(showForm).addClass('fa-plus');
                 $('#bodyPrezzario').css('height', '88%');
+                modificaAttiva=false;
 
             });
 
@@ -145,6 +146,23 @@
                 $('#bodyPrezzario').css('height', '81%');
 
             });
+
+
+            //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
+            function stampaValore(valore, colonna, unita,   classValues){
+
+                 var where="column"+colonna
+
+                 if( valore == 0 )
+                    return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
+                 else
+                    if( unita == "%" )
+                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
+                    else
+                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
+
+
+            }
 
             //codice per riempire il #bodyPrezzario
             {% for lavorazione in lavorazioni %}
@@ -179,11 +197,15 @@
 
                                 '<td  data-column="column4">{{lavorazione.pertinenza}}</td>'+
                                 '<td class="numColSmall" data-column="column5">{{lavorazione.unitaMisura}}</td>'+
-                                '<td class="numColSmall" data-column="column6">&euro; {{lavorazione.fornitura}} </td>'+
-                                '<td class="numColSmall" data-column="column7">&euro; {{lavorazione.posa}}  </td>'+
-                                '<td  class="numColMedium" data-column="column8">&euro; {{lavorazione.costo}} </td>'+
-                                '<td  class="numColSmall" data-column="column9">&euro; {{lavorazione.prezzoMin}} </td>'+
-                                '<td  class="numColSmall" data-column="column10">&euro; {{lavorazione.prezzoMax}} </td>'+
+
+                                stampaValore("{{lavorazione.fornitura}}", 6, "&euro;", "numColSmall")+
+                                stampaValore("{{lavorazione.posa}}", 7, "&euro;", "numColSmall")+
+                                stampaValore("{{lavorazione.costo}}", 8, "&euro;", "numColMedium")+
+                                stampaValore("{{lavorazione.prezzoMin}}", 9, "&euro;", "numColSmall")+
+                                stampaValore("{{lavorazione.prezzoMax}}", 10, "&euro;", "numColSmall")+
+
+
+
                                 '<td  data-column="column11">{{lavorazione.dimensione}}</td>'+
                                 '<td  class="noteColumn"  colspan="2" data-column="column12"> {{lavorazione.note}}</td>'+
                                /* '<td  class="controlCol" data-column="column13">'+*/
@@ -537,21 +559,30 @@
             console.log(datiLavorazione);
 
             oldTipologia = datiLavorazione[1];
-            $("#tipologiaTextarea").val( datiLavorazione[1]);
-            $("#pertinenzaSelect").val(datiLavorazione[2]);
-            $("#unitaSelect").val(datiLavorazione[3]);
+
+
+            {% for lavorazione in lavorazioni %}
+                if( "{{lavorazione.tipologia_lavorazione}}" == oldTipologia ){
+                    $("#tipologiaTextarea").val("{{lavorazione.tipologia_lavorazione}}"  );
+                    $("#pertinenzaSelect").val("{{lavorazione.pertinenza}}" );
+                    $("#unitaSelect").val("{{lavorazione.unitaMisura}}" );
 
 
 
-            $( "#fornituraInput", parseInt(datiLavorazione[4].substring(1, datiLavorazione[4].length)) );
+                    $( "#fornituraInput").val( parseFloat("{{lavorazione.fornitura}}" ) );
 
 
-            $( "#posaInput", parseInt(datiLavorazione[5].substring(1, datiLavorazione[5].length)));
-            $( "#costoInput",  parseInt(datiLavorazione[6].substring(1, datiLavorazione[6].length)));
-            $( "#pMinInput",  parseInt(datiLavorazione[7].substring(1, datiLavorazione[7].length)));
-            $( "#pMaxInput",  parseInt(datiLavorazione[8].substring(1, datiLavorazione[8].length)));
-            $( "#dimensioneInput",  datiLavorazione[9]);
-            $( "#noteTextarea",   datiLavorazione[10]);
+                    $( "#posaInput").val( parseFloat("{{lavorazione.posa}}"));
+                    $( "#costoInput").val(  parseFloat("{{lavorazione.costo}}"));
+                    $( "#pMinInput").val(  parseFloat("{{lavorazione.prezzoMin}}"));
+                    $( "#pMaxInput").val(  parseFloat("{{lavorazione.prezzoMax}}"));
+                    $( "#dimensioneInput").val( "{{lavorazione.dimensione}}");
+                    $( "#noteTextarea").val(  "{{lavorazione.note}}");
+
+                }
+            {% endfor %}
+
+
 
             $(this).closest('tr').removeClass("inModifica");
 

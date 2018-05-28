@@ -83,7 +83,7 @@ def schedaFornitori():
     listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
     return render_template("schedaFornitori.html", dipendente=dip, listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
                            listaFornitoriSottoGruppo=fornitori_sotto_gruppo, prezzario=True, schedaFornitoriCss=True,
-                           listaRappresentanti = listaRappresentanti,sockUrl=app.appUrl)
+                           listaRappresentanti = listaRappresentanti, sockUrl=app.appUrl)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -320,7 +320,9 @@ def getImpegni():
     returnList = '{"todo": "sono un impegno difficile", "dirigente": "gianni"},'
     return '{ "list":[' +returnList[:-1]+'] }'
 
-################################## SOCKETIO HANDLER ##########################################################
+###########################################################################################################################################
+########################################### SOCKETIO HANDLER ##############################################################################
+###########################################################################################################################################
 
 @socketio.on('my_event', namespace="/test")
 def handle_my_event(message):
@@ -345,42 +347,6 @@ def handle_registrazione_effetuata(message):
     emit('aggiornaNotifiche', {'titolo': "Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
                                'contenuto': "Ricorda di completare la sua registrazione."},
                                 namespace='/notifica', room=responsabile.session_id)
-
-
-@socketio.on('registra_categoria', namespace='/prezzario')
-def handle_registra_categoria(message):
-    # verifico che il settore non sia gia presente
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    if Categoria.query.filter_by(nome=message['categoria']).first() is None:
-        Categoria.registraCategoria(nome=message['categoria'])
-        emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
-    else:
-        emit('abortAggiorna', {'what': 'categoria'},namespace='/listino', room=dip.session_id)
-
-@socketio.on('elimina_categoria', namespace="/prezzario")
-def handle_elimina_settore(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    Categoria.eliminaCategoria(nome=message['categoria'])
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
-
-
-@socketio.on('registra_pertinenza', namespace='/prezzario')
-def handle_registra_pertinenza(message):
-    # verifico che il settore non sia gia presente
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    if Pertinenza.query.filter_by(nome=message['pertinenza']).first() is None:
-        Pertinenza.registraPertinenza(nome=message['pertinenza'])
-        emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
-    else:
-        emit('abortAggiorna', {'what': 'Pertinenza'},namespace='/listino', room=dip.session_id)
-
-@socketio.on('elimina_pertinenza', namespace="/prezzario")
-def handle_elimina_settore(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    Pertinenza.eliminaPertinenza(nome=message['pertinenza'])
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
 
 
 @socketio.on('registra_settore', namespace="/prezzario")
@@ -470,11 +436,17 @@ def handle_registraImpegno(message):
 def handle_registra_fornitore(message):
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    try:
-        Fornitore.registraFornitore(nome_gruppo=message['nome'])
-    except RigaPresenteException as e:
-        server.logger.info("\n\n\n\n {} ".format(e))
-        emit('rigaPresente', {"who": "Fornitore1"}, namespace='/fornitore', room=dip.session_id)
+
+    fornitore = Fornitore.query.filter_by(nome_gruppo=message['nome']).first()
+
+    if fornitore is not None:
+        if not fornitore.has_sottoGruppo:
+            Fornitore.setHas_sottoGruppi(fornitore=message['nome'], value=True)
+    else:
+        try:
+            Fornitore.registraFornitore(nome_gruppo=message['nome'], has_sottoGruppo=message['has_sottoGruppo'])
+        except RigaPresenteException as e:
+            server.logger.info("\n\n\n\n {} ".format(e))
 
 
 @socketio.on('registra_gruppoFornitore', namespace="/fornitore")
@@ -513,6 +485,21 @@ def handle_registra_gruppoFornitore(message):
         return
 
 
+    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
+
+
+@socketio.on('elimina_fornitore', namespace="/fornitore")
+def handle_elimina_fornitore(message):
+    Fornitore.eliminaFornitore(message['fornitore'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
+
+@socketio.on('elimina_sotto_gruppo_fornitore', namespace="/fornitore")
+def handle_elimina_sotto_gruppo_fornitore(message):
+    SottoGruppoFornitori.eliminaSottoGruppoFornitori(nome=message["sotto_gruppo"], gruppo_azienda=message["fornitore"])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
 
 @socketio.on('registra_referente', namespace="/fornitore")

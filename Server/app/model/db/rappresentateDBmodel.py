@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
-from app import database
+from .dbUSinterface import DbUSinterface
 
 
-class RappresentanteDBmodel(database.Model):
+class RappresentanteDBmodel(DbUSinterface, DbUSinterface.db.Model):
     __tablename__ = "rappresentante"
     __table_args__ = (
             PrimaryKeyConstraint('nome', 'azienda'),
@@ -16,14 +16,3 @@ class RappresentanteDBmodel(database.Model):
     email = Column(String(200))
     stato = Column(String(100))
 
-
-    def commitRappresentante(newRow):
-        database.session.add(newRow)
-        database.session.commit()
-
-    def commitEliminaRappresentante(oldRow):
-        database.session.delete(oldRow)
-        database.session.commit()
-
-    def rollback():
-        database.session.rollback()
