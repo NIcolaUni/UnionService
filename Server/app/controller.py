@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, url_for, session, request
 from app import server, socketio, accoglienzaForm
-from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, ClienteAccoltoForm, ApriPaginaClienteForm
+from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, ClienteAccoltoForm, ApriPaginaClienteForm, AggiungiFornitoreForm
 from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
 from .model.dipendente import Dipendente
@@ -14,6 +14,9 @@ from .model.sottoGruppoFornitori import SottoGruppoFornitori
 from .model.rappresentate import Rappresentante
 from .model.tipologiaProdotto import TipologiaProdotto
 from .model.prodottoPrezzario import ProdottoPrezzario
+from .model.giorniPagamentoFornitore import GiorniPagamentoFornitore
+from .model.modalitaPagamentoFornitore import ModalitaPagamentoFornitore
+from .model.tipologiaPagamentoFornitore import TipologiaPagamentoFornitore
 from .model.eccezioni.righaPresenteException import RigaPresenteException
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
@@ -74,6 +77,129 @@ def prezzarioProdotti():
                                 tipoProdotto=tipoProdotto, tipoToSel=None, prodotti=prodotti,
                                 fornitori=fornitori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
 
+@server.route('/schedaFornitori', methods=['GET', 'POST'])
+@login_required
+def schedaFornitori():
+
+    form = AggiungiFornitoreForm(request.form)
+    errorVar = False
+    errorMessage = ""
+
+    if request.method == 'POST':
+    #registrazione nuovo fornitore
+        server.logger.info("\n\nEntrato in Post {}\n\n".format(form.gruppo_azienda.data))
+
+        #se non viene inserito nemmeno il nome del primo gruppo
+        #la registrazione abortisce
+        if form.gruppo_azienda.data == '':
+            dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+            fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
+            fornitori_sotto_gruppo = SottoGruppoFornitori.query.order_by(SottoGruppoFornitori.nome).all()
+            listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
+            giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
+            modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
+            tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
+
+
+            return render_template("schedaFornitori-rifatta.html", dipendente=dip,
+                                   schedaFornitoriCss=True,
+                                   giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
+                                   listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
+                                   listaFornitoriSottoGruppo=fornitori_sotto_gruppo,
+                                   listaRappresentanti=listaRappresentanti,
+                                   tipologiaPagamento=tipologiaPagamento, form=form, sockUrl=app.appUrl, error=True, errorMessage="Inserire almeno il nome del primo gruppo")
+
+        fornitore = Fornitore.query.filter_by(nome_gruppo=form.gruppo_azienda.data).first()
+
+        #registro fornitore ovvero primo gruppo solo se non e' gia registrato
+        if fornitore is not None:
+            if not fornitore.has_sottoGruppo:
+                Fornitore.setHas_sottoGruppi(fornitore=form.gruppo_azienda.data, value=True)
+        else:
+            try:
+                Fornitore.registraFornitore(nome_gruppo=form.gruppo_azienda.data, has_sottoGruppo=True)
+            except RigaPresenteException as e:
+                server.logger.info("\n\n\n\n {} ".format(e))
+
+        GiorniPagamentoFornitore.registraGiorniPagamento(nome=form.giorniPagamenti.data)
+        ModalitaPagamentoFornitore.registraModalitaPagamento(nome=form.modalitaPagamenti.data)
+        TipologiaPagamentoFornitore.registraTipologiaPagamento(nome=form.tipologiaPagamenti.data)
+
+        #registro sottogruppo
+        try:
+            SottoGruppoFornitori.registraSottoGruppoFornitori(nome=form.nomeFornitore.data,
+                                                              gruppo_azienda=form.gruppo_azienda.data,
+                                                              settoreMerceologico=form.settoreMerceologico.data,
+                                                              stato=form.stato.data,
+                                                              tempiDiConsegna=form.tempiDiConsegna.data,
+                                                              prezziNetti=form.prezziNetti.data,
+                                                              scontoStandard=form.scontoStandard.data,
+                                                              scontoExtra1=form.scontoExtra1.data,
+                                                              scontroExtra2=form.scontroExtra2.data,
+                                                              trasporto=form.trasporto.data,
+                                                              trasportoUnitaMisura=form.trasportoUnitaMisura.data,
+                                                              giorniPagamenti=form.giorniPagamenti.data,
+                                                              modalitaPagamenti=form.modalitaPagamenti.data,
+                                                              tipologiaPagamenti=form.tipologiaPagamenti.data,
+                                                              provincia=form.provincia.data,
+                                                              indirizzo=form.indirizzo.data,
+                                                              telefono=form.telefono.data,
+                                                              sito=form.sito.data)
+
+        except RigaPresenteException as e:
+            server.logger.info("\n\n\n\n {} ".format(e))
+            app.rigaPresente=True
+            app.tabellaRigaPresente="Sottogruppo fornitori"
+
+        #se e' stato specificato un rappresentate, lo registro.
+        if form.nomeRappresentante.data != '' and form.nomeRappresentante.data != ' ':
+            try:
+                Rappresentante.registraRappresentante(nome=form.nomeRappresentante.data, azienda=form.gruppo_azienda.data,
+                                                      telefono=form.telefonoRappresentante.data,
+                                                      email=form.emailRappresentante.data)
+            except RigaPresenteException as e:
+                server.logger.info("\n\n\n\n {} ".format(e))
+                errorVar =True
+                errorMessage = "Fornitore già registrato"
+
+
+
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
+    fornitori_sotto_gruppo = SottoGruppoFornitori.query.order_by(SottoGruppoFornitori.nome).all()
+    listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
+    giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
+    modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
+    tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
+
+    allerta = False
+
+    if app.rigaPresente:
+        allerta = True
+        app.rigaPresente = False
+
+    return render_template("schedaFornitori-rifatta.html", dipendente=dip,
+                           rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente, schedaFornitoriCss=True,
+                           giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
+                           listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
+                           listaFornitoriSottoGruppo=fornitori_sotto_gruppo, listaRappresentanti = listaRappresentanti,
+                           tipologiaPagamento=tipologiaPagamento, form=form, error=errorVar, errorMessage=errorMessage, sockUrl=app.appUrl)
+
+
+@server.route('/cancellaFornitore/<nomeFornitore>/<primoGruppo>')
+@login_required
+def cancellaFornitore(nomeFornitore, primoGruppo):
+
+    if nomeFornitore == 'spazio':
+        nomeFornitore = ''
+
+
+    SottoGruppoFornitori.eliminaSottoGruppoFornitori(nome=nomeFornitore, gruppo_azienda=primoGruppo)
+    return redirect("/schedaFornitori")
+
+
+
+'''
 @server.route('/schedaFornitori')
 @login_required
 def schedaFornitori():
@@ -84,6 +210,7 @@ def schedaFornitori():
     return render_template("schedaFornitori.html", dipendente=dip, listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
                            listaFornitoriSottoGruppo=fornitori_sotto_gruppo, prezzario=True, schedaFornitoriCss=True,
                            listaRappresentanti = listaRappresentanti, sockUrl=app.appUrl)
+'''
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -171,10 +298,8 @@ def accoglienza(error):
     if request.method == 'POST':
 
         server.logger.info("\n\nEntrato in Post {}\n\n".format(app.accoglienzaForm))
-        server.logger.info("\n\nEntrato in Post222 {}\n\n".format(app.accoglienzaForm.nome))
 
         if app.accoglienzaForm.validate_on_submit():
-            server.logger.info("\n\n\nSono entrato nel validate!!!!\n\n\n")
 
             ClienteAccolto.registraCliente(nome=app.accoglienzaForm.nome.data, cognome=app.accoglienzaForm.cognome.data, indirizzo=app.app.accoglienzaForm.indirizzo.data,
                                            telefono=app.accoglienzaForm.telefono.data, email=app.accoglienzaForm.email.data, difficolta=app.accoglienzaForm.difficolta.data,
@@ -432,61 +557,6 @@ def handle_registraImpegno(message):
 
 
 
-@socketio.on('registra_fornitore', namespace="/fornitore")
-def handle_registra_fornitore(message):
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-
-    fornitore = Fornitore.query.filter_by(nome_gruppo=message['nome']).first()
-
-    if fornitore is not None:
-        if not fornitore.has_sottoGruppo:
-            Fornitore.setHas_sottoGruppi(fornitore=message['nome'], value=True)
-    else:
-        try:
-            Fornitore.registraFornitore(nome_gruppo=message['nome'], has_sottoGruppo=message['has_sottoGruppo'])
-        except RigaPresenteException as e:
-            server.logger.info("\n\n\n\n {} ".format(e))
-
-
-@socketio.on('registra_gruppoFornitore', namespace="/fornitore")
-def handle_registra_gruppoFornitore(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-
-    try:
-        SottoGruppoFornitori.registraSottoGruppoFornitori(nome=message['nome'], gruppo_azienda=message['gruppo_azienda'],
-                                    settoreMerceologico=message['settore_merceologico'], tempiDiConsegna=message['tempi_consegna'],
-                                    prezziNetti = message['prezziNetti'],
-                                    scontoStandard =  message['scontoStandard'],
-                                    scontoExtra1 =  message['scontoExtra1'],
-                                    scontroExtra2 =  message['scontroExtra2'],
-                                    trasporto =  message['trasporto'],
-                                    trasportoUnitaMisura =  message['trasportoUnitaMisura'],
-                                    giorniPagamenti =  message['giorniPagamenti'],
-                                    modalitaPagamenti =  message['modalitaPagamenti'],
-                                    tipologiaPagamenti =  message['tipologiaPagamenti'],
-                                    provincia =  message['provincia'],
-                                    indirizzo =  message['indirizzo'],
-                                    telefono =  message['telefono'],
-                                    sito =  message['sito'])
-
-    except RigaPresenteException as e:
-        server.logger.info("\n\n\n\n {} ".format(e))
-
-        if message['rappresentante']:
-            emit('regRappresentante',  namespace='/fornitore', room=dip.session_id)
-            return
-        else:
-            emit('rigaPresente',  {"who": "Fornitore"},   namespace='/fornitore', room=dip.session_id)
-            return
-
-    if message['rappresentante']:
-        emit('regRappresentante', namespace='/fornitore', room=dip.session_id)
-        return
-
-
-    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
-
 
 @socketio.on('elimina_fornitore', namespace="/fornitore")
 def handle_elimina_fornitore(message):
@@ -500,20 +570,6 @@ def handle_elimina_sotto_gruppo_fornitore(message):
     SottoGruppoFornitori.eliminaSottoGruppoFornitori(nome=message["sotto_gruppo"], gruppo_azienda=message["fornitore"])
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
-
-@socketio.on('registra_referente', namespace="/fornitore")
-def handle_registra_rappresentante(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-
-    try:
-        Rappresentante.registraRappresentante(nome=message['nome'], azienda=message['azienda'], telefono=message['telefono'],
-                                                    email=message['email'], stato=message['stato'])
-    except RigaPresenteException as e:
-        server.logger.info("\n\n\n\n {} ".format(e))
-        emit('rigaPresente', {"who": "Rappresentante"}, namespace='/fornitore', room=dip.session_id)
-        return
-
     emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
 
 

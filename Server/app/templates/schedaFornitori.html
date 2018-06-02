@@ -15,7 +15,14 @@
             <span class="contact100-form-title">
                Scheda Fornitori
             </span>
-
+            <form id="searchFornitore">
+              <input list="listFornitori" name="q" type="text" size="40" placeholder="Search..." />
+              <datalist id="listFornitori">
+                  {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
+                  <option>{{fornitoreSottoGruppo.gruppo_azienda}} - {{fornitoreSottoGruppo.nome}} </option>
+                  {% endfor %}
+              </datalist>
+            </form>
         </div>
 
         <div id="tabellaContainer" class="row">

@@ -1,0 +1,9 @@
+.fc-toolbar {
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+}
+
+div#calendar {
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+}

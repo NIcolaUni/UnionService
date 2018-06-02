@@ -7,13 +7,20 @@ class SottoGruppoFornitoriDBmodel(DbUSinterface, DbUSinterface.db.Model ):
         PrimaryKeyConstraint('nome', 'gruppo_azienda' ),
         ForeignKeyConstraint(['gruppo_azienda'], ['fornitore.nome_gruppo'],
                              onupdate="CASCADE", ondelete="CASCADE"),
+        ForeignKeyConstraint(['giorniPagamenti'], ['giorni_pagamento_fornitore.nome'],
+                             onupdate="CASCADE", ondelete="CASCADE"),
+        ForeignKeyConstraint(['modalitaPagamenti'], ['modalita_pagamento_fornitore.nome'],
+                             onupdate="CASCADE", ondelete="CASCADE"),
+        ForeignKeyConstraint(['tipologiaPagamenti'], ['tipologia_pagamento_fornitore.nome'],
+                             onupdate="CASCADE", ondelete="CASCADE"),
     )
 
     nome = Column(String(150))
     gruppo_azienda = Column(String(150))
     settoreMerceologico = Column(String(150))
+    stato = Column(String(100))
     tempiDiConsegna = Column(String(20))
-    prezziNetti = Column(String(3))
+    prezziNetti = Column(Boolean())
     scontoStandard = Column(Integer())
     scontoExtra1 = Column(Integer())
     scontroExtra2 = Column(Integer())

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, DateField, BooleanField, PasswordField, SelectField, SubmitField, RadioField, TextAreaField
+from wtforms import IntegerField, StringField, DateField, BooleanField, PasswordField, SelectField, SubmitField, RadioField, TextAreaField, FloatField
 from wtforms.validators import DataRequired, Length
+from wtforms.widgets.html5 import NumberInput
 import random
 import datetime
 import string
@@ -55,3 +56,28 @@ class ClienteAccoltoForm(FlaskForm):
 
 class ApriPaginaClienteForm(FlaskForm):
     nome_cognome_indirizzo = StringField("Nome cognome indirizzo")
+
+
+class AggiungiFornitoreForm(FlaskForm):
+    nomeFornitore = StringField("Sottogruppo fornitore")
+    gruppo_azienda = StringField("Primo gruppo")
+    settoreMerceologico = StringField("Settore merceologico")
+    stato = SelectField("Stato fornitore", choices=[("collabora", "Collabora"), ("potenziale", "Potenziale")] )
+    tempiDiConsegna = StringField("Tempi di consegna")
+    prezziNetti = RadioField("Unità misura costo trasporto", choices=[(True,"Sì"), (False, "No")] )
+    scontoStandard = IntegerField(widget=NumberInput())
+    scontoExtra1 = IntegerField(widget=NumberInput())
+    scontroExtra2 = IntegerField(widget=NumberInput())
+    trasporto = FloatField(widget=NumberInput())
+    trasportoUnitaMisura = SelectField("Unità misura costo trasporto", choices=[("euro", "\u20ac"), ("percentuale", "%")] )
+    giorniPagamenti = StringField("Giorni pagamenti")
+    modalitaPagamenti = StringField("Modalità pagamento")
+    tipologiaPagamenti = StringField("Tipologia pagamento")
+    provincia = StringField("Provincia fornitore")
+    indirizzo = StringField("Via, civico, cap, città")
+    telefono = StringField(widget=NumberInput())
+    sito = StringField("Sito")
+    nomeRappresentante =  StringField("Nome e cognome rappresentante")
+    telefonoRappresentante =  StringField(widget=NumberInput())
+    emailRappresentante =  StringField("Email rappresentante")
+

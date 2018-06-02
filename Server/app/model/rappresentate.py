@@ -5,16 +5,15 @@ from app import server
 
 class Rappresentante(RappresentanteDBmodel):
 
-    def __init__(self, nome, azienda, telefono, email, stato):
+    def __init__(self, nome, azienda, telefono, email):
         self.nome=nome
         self.azienda=azienda
         self.telefono=telefono
         self.email=email
-        self.stato=stato
 
 
     def registraRappresentante(nome, azienda, telefono=None, email=None, stato=None):
-        newRap = Rappresentante(nome=nome, azienda=azienda, telefono=telefono, email=email, stato=stato)
+        newRap = Rappresentante(nome=nome, azienda=azienda, telefono=telefono, email=email)
 
         try:
             RappresentanteDBmodel.addRow(newRap)

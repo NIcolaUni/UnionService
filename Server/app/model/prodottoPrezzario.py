@@ -130,7 +130,7 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                 'rincaroTrasporto2': rincaroTrasporto2,
                 'rincaroCliente': rincaroCliente
              }
-        );
+        )
 
         ProdottoPrezzarioDBmodel.commit()
 

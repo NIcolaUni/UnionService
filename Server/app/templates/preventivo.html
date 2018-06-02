@@ -39,11 +39,76 @@
                         </table>
                     </div>
             </div>
+            <div id="divSalvaPreventivo" class="features">
+                <a id="saveButton">Salva</a>
+            </div>
         </div>
     </section>
 </div>
 
 <script>
+
+        var count=1;
+
+        function righeDimensioniAdded(unita, prezzoBase, numElement){
+
+            if( unita == "cad" ){
+
+                return  '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+            }
+            else if ( unita == "ml" ){
+                return  '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+            }
+            else if ( unita == "mq" ){
+                return  '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+            }
+            else if( unita == "mc" ){
+                return  '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="P" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+
+            }
+        }
+
+        function righeDimensioni(unita, prezzoBase){
+
+            if( unita == "cad" ){
+
+                return  '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+            }
+            else if ( unita == "ml" ){
+                return  '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+            }
+            else if ( unita == "mq" ){
+                return  '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+            }
+            else if( unita == "mc" ){
+                return  '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="P" value=0.00></td>'+
+                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+
+            }
+        }
 
         function aggiungiRiga($this){
                  {% for prezzario in prezzarioEdile %}
@@ -55,10 +120,11 @@
 
                             $('#bodyPreventivo').append(
 
-                                '<tr class="trBody {{prezzario.settore}}">'+
-                                    '<td  colspan="9"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
+                                '<tr class="trHead {{prezzario.settore}}">'+
+                                    '<td  colspan="10"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
                                 '</tr>'+
                                 '<tr class="trHead {{prezzario.settore}}_head">'+
+                                    '<th class="thPreventivo"></th>'+
                                     '<th class="thPreventivo"></th>'+
                                     '<th class="thPreventivo numColSmall">N</th>'+
                                     '<th class="thPreventivo numColSmall">L</th>'+
@@ -69,40 +135,212 @@
                                     '<th class="thPreventivo">Prezzo unitario</th>'+
                                     '<th class="thPreventivo">Totale</th>'+
                                 '</tr>'
+
                             );
                         }
 
-                        $('.{{prezzario.settore}}_head').after(
+                        /*Questo if e' un modo creativo per vedere se un elemento appartenente ad
+                            una data classe esiste */
+                        if($('.{{prezzario.settore}}_trFoot').hasClass('{{prezzario.settore}}_trFoot') ){
 
-                            '<tr class="trBody">'+
+                            $('.{{prezzario.settore}}_trFoot').last().after(
 
-                                '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
-                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="N" placeholder="N" value=1></td>'+
-                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="L" placeholder="L" value=0></td>'+
-                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="H" placeholder="H" value=0></td>'+
-                                '<td class="tdPreventivo numColSmall"><input class="numInput" type="number" name="P" placeholder="P" value=0></td>'+
+                                '<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody">'+
+                                    '<td class="firstCol'+count+' firstCol"></td>'+
+                                    '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
+                                    '<td class="tdPreventivo numColSmall"><a class="add-'+count+' ctrButton addSameElement fa fa-plus"> </a></td>'+
+                                    righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
+                                    '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
+                                    '<td class="tdPreventivo"></td>'+
+                                    '<td class="{{prezzario.settore}}_colTot'+count+'"> &euro; {{prezzario.prezzoMax}}</td>'+
+
+                                '</tr>'+
+                                '<tr class="trFoot'+count+' trFoot {{prezzario.settore}}_trFoot">'+
+                                    '<td colspan="8"></td>'+
+                                    '<td> &euro; {{prezzario.prezzoMax}}</td>'+
+                                    '<td class="footTot"> &euro;<span>{{prezzario.prezzoMax}}</span></td>'+
+
+                                '</tr>'
+                            );
+                        }
+                        else{
 
 
-                                '<td class="tdPreventivo numColSmall"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'+
-                                '<td class="tdPreventivo numColSmall">'+
-                                    '<select>'+
-                                        '<option> mL </option>'+
-                                        '<option> mQ </option>'+
-                                        '<option> mC </option>'+
-                                        '<option> cad </option>'+
-                                    '</select>'+
-                                '</td>'+
-                                '<td class="tdPreventivo"></td>'+
-                                '<td></td>'+
+                            $('.{{prezzario.settore}}_head').after(
 
-                            '</tr>'+
-                            '<tr class="trFoot">'+
-                                '<td colspan="7"></td>'+
-                                '<td>{{prezzario.prezzoMax}}</td>'+
-                                '<td></td>'+
+                                '<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody">'+
+                                    '<td class="firstCol'+count+' firstCol"></td>'+
+                                    '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
+                                    '<td class="tdPreventivo numColSmall"><a class="add-'+count+' ctrButton addSameElement fa fa-plus"> </a></td>'+
+                                    righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
+                                    '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
+                                    '<td class="tdPreventivo"></td>'+
+                                    '<td class="{{prezzario.settore}}_colTot'+count+'"> &euro; {{prezzario.prezzoMax}}</td>'+
 
-                            '</tr>'
-                        );
+                                '</tr>'+
+                                '<tr class="trFoot'+count+' trFoot {{prezzario.settore}}_trFoot">'+
+                                    '<td colspan="8"></td>'+
+                                    '<td> &euro; {{prezzario.prezzoMax}}</td>'+
+                                    '<td class="footTot"> &euro;<span>{{prezzario.prezzoMax}}</span></td>'+
+
+                                '</tr>'
+                            );
+
+
+                        }
+
+                        /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
+                        var aux=1;
+
+                        $('.trBody').each(function(){
+
+                            $(this).children('td.firstCol').html(aux + '<br/><a class="fa fa-trash"></a>' );
+                            aux+=1;
+
+                        });
+
+                        $('.add-'+count).on( 'click', function(){
+
+                            var numElement = $(this).attr('class').split(' ')[0].split('-')[1];
+
+
+                            $('.trFoot'+numElement).before(
+                                '<tr class="{{prezzario.settore}}_trAdded-'+numElement+'">'+
+                                    '<td colspan="3"><a class="fa fa-trash"></a></td>'+
+                                    righeDimensioniAdded("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}", numElement)+
+                                   '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
+                                    '<td class="tdPreventivo"></td>'+
+                                    '<td class="addedTotal"> &euro; {{prezzario.prezzoMax}}</td>'+
+                                '</tr>'
+
+                            );
+
+
+                            var aux=0;
+
+                            $('.{{prezzario.settore}}_trAdded-'+numElement).each(function(){
+
+
+                                $(this).addClass('addedNum'+aux);
+
+                                aux+=1;
+                            });
+
+
+                            var total=parseFloat($('#{{prezzario.settore}}_trBody-'+numElement).children('.{{prezzario.settore}}_colTot'+numElement).text().split(' ')[2]);
+
+                            //console.log("il totale è "+total);
+                            $('#{{prezzario.settore}}_trBody-'+numElement).nextUntil('.trFoot').each(function(){
+
+
+                                total+=parseFloat($(this).children('.addedTotal').html().split(' ')[2]);
+
+                             });
+
+                            $('.trFoot'+numElement).children('.footTot').html("&euro; "+total);
+
+
+
+                            $('.inputPrevAdded-'+numElement).on('input', function(){
+
+                                  var numEl=$(this).attr('class').split(' ')[1].split('-')[1];
+
+                                  var total=parseFloat($(this).parent().attr('class').split(' ')[2].split('-')[1]);
+
+
+                                  $(this).parent().parent().children('.inputPrevAdded').each(function(){
+
+                                     total=total*parseFloat($(this).children('input').val());
+                                  });
+
+                                 $(this).parent().parent().children('.addedTotal').html('&euro; '+total);
+
+                                 total=parseFloat($('#{{prezzario.settore}}_trBody-'+numEl).children('.{{prezzario.settore}}_colTot'+numEl).text().split(' ')[1]);
+
+                                 $('#{{prezzario.settore}}_trBody-'+numEl).nextUntil('.trFoot').each(function(){
+
+
+                                    total+=parseFloat($(this).children('.addedTotal').html().split(' ')[1]);
+
+                                 });
+
+                                $('.trFoot'+numEl).children('.footTot').html("&euro; "+total);
+
+
+                            });
+
+                        });
+
+                        $('.inputPrev-'+count).on('input', function(){
+                            //ricavo il numero dell'elemento
+                            var numEl= $(this).attr('class').split(' ')[2].split('-')[1];
+
+                            var total=parseFloat($(this).attr('class').split(' ')[3].split('-')[1]);
+
+
+
+                            $('.inputPrev-'+numEl).each(function(){
+                               // console.log("bella li :" + );
+                                total=total*parseFloat($(this).children('input').val());
+
+                            });
+
+
+                            $(".{{prezzario.settore}}_colTot"+numEl).html( "&euro; " + total);
+
+
+                            total=parseFloat($('#{{prezzario.settore}}_trBody-'+numEl).children('.{{prezzario.settore}}_colTot'+numEl).text().split(' ')[1]);
+
+                            //console.log("il totale è "+total);
+                            $('#{{prezzario.settore}}_trBody-'+numEl).nextUntil('.trFoot').each(function(){
+
+
+                                total+=parseFloat($(this).children('.addedTotal').html().split(' ')[2]);
+
+                             });
+
+                            $('.trFoot'+numEl).children('.footTot').html("&euro; "+total);
+
+
+                        });
+
+
+
+                        count+=1;
+
+
+
+
+
+
+                        $('.delSameElement').on( 'click', function(){
+
+
+                            console.log("SOno ad: " );
+
+
+                        });
+
+
+                        if( "{{prezzario.unitaMisura}}" == "cad" ){
+
+                            $('.numInput').on('input', function(){
+
+                                console.log(" weiii " + $(this).val() );
+                            });
+
+                        }
+                      /*  else if( "{{prezzario.unitaMisura}}" == "ml" ){
+
+                        }
+                        else if( "{{prezzario.unitaMisura}}" == "mq"  ){
+
+                        }
+                        else if( "{{prezzario.unitaMisura}}" == "mc" ){
+
+                        }*/
+
+
                     }
                 {% endfor %}
         }
@@ -130,20 +368,21 @@
                      '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
                 );
                 counter+=1;
+
               }
 
            {% endfor %}
 
             $('.elementFattura').click(function(){
-console.log("almeo queoi");
                 {% for prezzario in prezzarioEdile %}
-                    console.log("{{prezzario.tipologia_lavorazione}}" );
                     if( "{{prezzario.tipologia_lavorazione}}" ==  $(this).text() ){
                         console.log("almeo queoi");
                     }
                 {% endfor %}
             });
        });
+
+
 </script>
 
 {% endblock %}

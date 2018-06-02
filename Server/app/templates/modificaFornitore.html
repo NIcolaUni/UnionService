@@ -1,0 +1,216 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+    <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+
+
+    <div id="paginaFornitori">
+
+        <div id="divIntestazione" >
+            <span class="contact100-form-title">
+               Scheda Fornitori
+            </span>
+            <form id="searchFornitore">
+              <div id="searchContainer">
+                 <span id="spanAddFornitore"><a id="addFornitore" class="fa fa-plus"></a></span>
+                  <input list="listFornitori" id="cercaFornitore" name="q" type="text" size="300" placeholder="Cerca fornitore..." />
+                  <datalist id="listFornitori">
+                      {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
+                      <option value="{{fornitoreSottoGruppo.gruppo_azienda}} - {{fornitoreSottoGruppo.nome}}"></option>
+                      {% endfor %}
+                  </datalist>
+              </div>
+            </form>
+
+        </div>
+
+        <div id="tableSection" >
+            <div class="tabContainer">
+                <form id="formFornitore" method="post" action="schedaFornitori">
+                    '{{form.hidden_tag()}}'+
+
+                    <table class="tableFornitore">
+                        <thead class="headFornitore">
+
+                            <tr>
+                                <th class="centerText" colspan="4">Dati Fornitore</th>
+                            </tr>
+
+                            <tr>
+                                <th>Primo gruppo</th>
+                                <th>Sotto gruppo</th>
+                                <th>Settore merceologico</th>
+                                <th>Stato</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="bodyFornitore">
+                            <tr>
+                                <td>{{form.gruppo_azienda(placeholder="primo gruppo", list="listaFornitori")}}</td>
+                                  <datalist id="listaFornitori">
+                                          {% for fornitore in listaFornitoriPrimoGruppo %}
+                                          <option value="{{fornitore.nome_gruppo}}"></option>
+                                          {% endfor %}
+                                      </datalist>
+                                <td >{{form.nomeFornitore(placeholder="sotto gruppo")}}</td>
+                                <td >{{form.settoreMerceologico( placeholder="settore")}}</td>
+                                <td>{{form.stato}}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    <table class="tableFornitore">
+                        <thead class="headFornitore">
+
+                            <tr>
+                                <th class="intestazionePino" colspan="4">Recapito azienda</th>
+                            </tr>
+
+                            <tr>
+                                <th class="intestazionePino">Indirizzo</th>
+                                <th class="intestazionePino">Provincia</th>
+                                <th class="intestazionePino">Telefono</th>
+                                <th class="intestazionePino">Sito</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="bodyFornitore">
+                            <tr>
+                                <td>{{form.indirizzo(placeholder="indirizzo")}}</td>
+                                <td>{{form.provincia(placeholder="provincia")}}</td>
+                                <td>{{form.telefono(placeholder="telefono")}}</td>
+                                <td>{{form.sito(placeholder="sito")}}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    <table class="tableFornitore">
+                        <thead class="headFornitore">
+
+                            <tr>
+                                <th class="intestazioneOliva" colspan="3">Rappresentante</th>
+                            </tr>
+
+                            <tr>
+                                <th class="intestazioneOliva" >Nominativo</th>
+                                <th class="intestazioneOliva" >Telefono</th>
+                                <th class="intestazioneOliva" >Email</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="bodyFornitore">
+                            <tr>
+                                <td>{{form.nomeRappresentante(placeholder="referente")}}</td>
+                                <td>{{form.telefonoRappresentante(placeholder="telefono referente")}}</td>
+                                <td>{{form.emailRappresentante(placeholder="email referente")}}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <table class="tableFornitore">
+                        <thead class="headFornitore">
+
+                            <tr>
+                                <th class="intestazioneNocciola" colspan="3">Sconti</th>
+                            </tr>
+
+                            <tr>
+                                <th class="intestazioneNocciola">Standard</th>
+                                <th class="intestazioneNocciola">Extra 1</th>
+                                <th class="intestazioneNocciola">Extra 2</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="bodyFornitore">
+                            <tr>
+                                <td>{{form.scontoStandard(placeholder="standard")}} %</td>
+                                <td>{{form.scontoExtra1(placeholder="extra 1")}} %</td>
+                                <td>{{form.scontroExtra2(placeholder="extra 2")}} %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="tableFornitore">
+                        <thead class="headFornitore">
+
+                            <tr>
+                                <th  class="intestazioneBlu" colspan="3">Pagamenti</th>
+                            </tr>
+
+                            <tr>
+                                <th class="intestazioneBlu">Giorni</th>
+                                <th class="intestazioneBlu">Modalità</th>
+                                <th class="intestazioneBlu">Tipologia</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="bodyFornitore">
+                            <tr>
+                                <td>
+                                    <a class="modificaPagamenti fa fa-edit"></a>
+                                    '{{form.giorniPagamenti(placeholder="giorni pagamento", list="listaGiorniPagamento")}}'+
+                                      <datalist id="listaGiorniPagamento">
+                                          {% for giorno in giorniPagamento %}
+                                          <option value="{{giorno.nome}}"></option>
+                                          {% endfor %}
+                                      </datalist>
+                                </td>
+                                <td>
+                                    <a class="modificaPagamenti fa fa-edit"></a>
+                                    '{{form.modalitaPagamenti( placeholder="modalita pagamento", list="listaModalitaPagamento")}}'+
+                                        <datalist id="listaModalitaPagamento">
+                                              {% for modalita in modalitaPagamento %}
+                                              <option value="{{modalita.nome}}"></option>
+                                              {% endfor %}
+                                        </datalist>
+                                </td>
+                                <td>
+                                    <a class="modificaPagamenti fa fa-edit"></a>
+                                    '{{form.tipologiaPagamenti(placeholder="tipologia pagamento", list="listaTipologiaPagamento")}}'+
+                                       <datalist id="listaTipologiaPagamento">
+                                              {% for tipologia in tipologiaPagamento %}
+                                              <option value="{{tipologia.nome}}"></option>
+                                              {% endfor %}
+                                       </datalist>
+                                 </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <table class="tableFornitore">
+                        <thead class="headFornitore">
+
+                            <tr>
+                                <th class="intestazioneRosso" >Tempi di consegna</th>
+                                <th class="intestazioneRosso">Prezzi netti</th>
+                                <th class="intestazioneRosso">Trasporto</th>
+                            </tr>
+
+                        </thead>
+                        <tbody class="bodyFornitore">
+                            <tr>
+                                <td>{{form.tempiDiConsegna(placeholder="tempi di consegna")}}</td>
+                                <td>{{form.prezziNetti}}</td>
+                                <td>{{form.trasporto(placeholder="costo di trasporto")}} {{form.trasportoUnitaMisura}}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+
+    </script>
+
+{% endblock %}

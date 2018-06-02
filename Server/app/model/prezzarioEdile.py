@@ -42,7 +42,7 @@ class PrezzarioEdile(PrezzarioEdileDBmodel):
             'fornitura': fornitura,
             'posa': posa,
             'note': note }
-        );
+        )
 
         PrezzarioEdileDBmodel.commit()
 

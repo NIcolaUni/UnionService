@@ -14,5 +14,5 @@ class RappresentanteDBmodel(DbUSinterface, DbUSinterface.db.Model):
     azienda = Column(String(150))
     telefono = Column(String(30))
     email = Column(String(200))
-    stato = Column(String(100))
+
 

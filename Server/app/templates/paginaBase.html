@@ -139,7 +139,7 @@
 
 <!--===========================================================================================================-->
 
-
+    <link rel="stylesheet" href="{{url_for('static', filename='css/agenda.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
@@ -166,6 +166,14 @@
      <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
     <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
     <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
+
+    {% endif %}
+    {% if schedaFornitoriCss %}
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/schedaFornitori2.css') }}">
+        <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
+        <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
+        <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
+        <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
 
     {% endif %}
 

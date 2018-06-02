@@ -19,7 +19,7 @@ div#wrapper {
 }
 
 .numInput {
-    width: 60%;
+    width: 80%;
 
 }
 
@@ -94,4 +94,45 @@ section#one::-webkit-scrollbar-thumb:window-inactive {
 .wrapper > .inner {
     padding: 2em 5em 3em 5em;
 
+}
+
+#divSalvaPreventivo{
+    height: 80px;
+}
+
+#saveButton {
+    display:inline-block;
+    padding:0.5em 3em;
+    border:0.16em solid #a9a9ef;
+    margin:0 0.3em 0.3em 45%;
+    box-sizing: border-box;
+    text-decoration:none;
+    text-transform:uppercase;
+    font-family:'Roboto',sans-serif;
+    font-weight:400;
+    color:#a9a9ef;
+    text-align:center;
+    transition: all 0.15s;
+    cursor: pointer;
+}
+
+#saveButton:hover{
+    color: #DDDDDD;
+    border-color:#DDDDDD;
+}
+
+.ctrButton{
+    cursor: pointer;
+    margin-left: 35%;
+
+    color: indigo;
+}
+
+.ctrButton:hover{
+    color: #DDDDDD;
+    border-color:#DDDDDD;
+}
+
+tr.trFoot {
+    background-color: blueviolet !important;
 }
