@@ -12,7 +12,7 @@ class Rappresentante(RappresentanteDBmodel):
         self.email=email
 
 
-    def registraRappresentante(nome, azienda, telefono=None, email=None, stato=None):
+    def registraRappresentante(nome, azienda, telefono=None, email=None):
         newRap = Rappresentante(nome=nome, azienda=azienda, telefono=telefono, email=email)
 
         try:
@@ -21,6 +21,19 @@ class Rappresentante(RappresentanteDBmodel):
             server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
             RappresentanteDBmodel.rollback()
             raise RigaPresenteException("Il rappresentante inserito è già presente")
+
+
+    def modificaRappresentante(oldNome, nome, azienda, telefono=None, email=None):
+        Rappresentante.query.filter_by(nome=oldNome, azienda=azienda).update(
+            {
+                'nome': nome,
+                'azienda': azienda,
+                'telefono': telefono,
+                'email': email,
+            })
+
+        RappresentanteDBmodel.commit()
+
 
 
     def eliminaRappresentante(nome, azienda):

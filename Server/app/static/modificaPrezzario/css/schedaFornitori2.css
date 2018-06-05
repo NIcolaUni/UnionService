@@ -363,5 +363,9 @@
 }
 
 .sweet-alert {
-    left: 50%;
+    left: 37% !important;
+}
+
+div.swal-form label{
+    margin-right: 5%;
 }

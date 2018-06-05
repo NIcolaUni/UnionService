@@ -136,3 +136,16 @@ section#one::-webkit-scrollbar-thumb:window-inactive {
 tr.trFoot {
     background-color: blueviolet !important;
 }
+
+.delElement{
+    cursor: pointer;
+}
+
+.delSameElement{
+    cursor: pointer;
+}
+
+/*
+#memoriaLavorazioniAggiunte{
+    visibility: hidden;
+}*/

@@ -56,7 +56,7 @@
     <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
 <!--===============================================================================================-->
 
-    {% if not prezzario %}
+    {% if not prezzario and not schedaFornitoriCss %}
     <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css') }}" rel='stylesheet' />
     <script src="{{url_for('static', filename='js/vendor/sweet-alert2.min.js') }}"></script>
     {% endif %}

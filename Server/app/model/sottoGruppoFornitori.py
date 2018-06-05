@@ -85,6 +85,51 @@ class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
             app.server.logger.info('\n\n\n{}\n\n\n'.format(e))
             raise RigaPresenteException("Sottogruppo fornitore già presente")
 
+    def modificaSottoGruppoFornitori(  oldNome, oldPrimoGruppo, nome,
+                                        gruppo_azienda = "",
+                                        settoreMerceologico = None,
+                                        stato=None,
+                                        tempiDiConsegna = None,
+                                        prezziNetti = None,
+                                        scontoStandard = None,
+                                        scontoExtra1 = None,
+                                        scontroExtra2 = None,
+                                        trasporto = None,
+                                        trasportoUnitaMisura = None,
+                                        giorniPagamenti = None,
+                                        modalitaPagamenti = None,
+                                        tipologiaPagamenti = None,
+                                        provincia = None,
+                                        indirizzo = None,
+                                        telefono = None,
+                                        sito = None):
+
+
+        SottoGruppoFornitori.query.filter_by(nome=oldNome, gruppo_azienda=oldPrimoGruppo).update(
+            {
+                'nome': nome,
+                'gruppo_azienda': gruppo_azienda,
+                'settoreMerceologico': settoreMerceologico,
+                'stato': stato,
+                'tempiDiConsegna': tempiDiConsegna,
+                'prezziNetti': prezziNetti,
+                'scontoStandard': scontoStandard,
+                'scontoExtra1': scontoExtra1,
+                'scontroExtra2': scontroExtra2,
+                'trasporto': trasporto,
+                'trasportoUnitaMisura': trasportoUnitaMisura,
+                'giorniPagamenti': giorniPagamenti,
+                'modalitaPagamenti': modalitaPagamenti,
+                'tipologiaPagamenti': tipologiaPagamenti,
+                'provincia': provincia,
+                'indirizzo': indirizzo,
+                'telefono': telefono,
+                'sito': sito
+            })
+
+        SottoGruppoFornitoriDBmodel.commit()
+
+
     def eliminaSottoGruppoFornitori(nome, gruppo_azienda):
 
         app.server.logger.info("Sono quaaaa {} {}".format(nome, gruppo_azienda))

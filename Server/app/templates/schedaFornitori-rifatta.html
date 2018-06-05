@@ -18,7 +18,7 @@
             <form id="searchFornitore">
               <div id="searchContainer">
                  <span id="spanAddFornitore"><a id="addFornitore" class="fa fa-plus"></a></span>
-                  <input list="listFornitori" id="cercaFornitore" name="q" type="text" size="300" placeholder="Cerca fornitore..." />
+                  <input list="listFornitori" id="cercaFornitore" autocomplete="off" name="q" type="text" size="300" placeholder="Cerca fornitore..." />
                   <datalist id="listFornitori">
                       {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
                       <option value="{{fornitoreSottoGruppo.gruppo_azienda}} - {{fornitoreSottoGruppo.nome}}"></option>
@@ -39,6 +39,48 @@
     </div>
 
     <script>
+
+
+        var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+
+        socketHome.on('connect', function() {
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
+
+        var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
+
+       socketFornitore.on('aggiornaGiorniPagamento', function(message){
+            $('#listaGiorniPagamento').children().remove();
+            for( i=0; i<parseInt(message['length']); i++){
+                $('#listaGiorniPagamento').append(
+                     '<option value="'+message[i.toString()]+'"></option>'
+                );
+            }
+
+       });
+
+       socketFornitore.on('aggiornaModalitaPagamento', function(message){
+            $('#listaModalitaPagamento').children().remove();
+            for( i=0; i<parseInt(message['length']); i++){
+                $('#listaModalitaPagamento').append(
+                     '<option value="'+message[i.toString()]+'"></option>'
+                );
+            }
+
+       });
+
+       socketFornitore.on('aggiornaTipologiaPagamento', function(message){
+            $('#listaTipologiaPagamento').children().remove();
+            for( i=0; i<parseInt(message['length']); i++){
+                $('#listaTipologiaPagamento').append(
+                     '<option value="'+message[i.toString()]+'"></option>'
+                );
+            }
+
+       });
+
 
         //Seguono due metodi diversi per stampare l'alert "sottogruppo presente"
         {% if rigaPresente %}
@@ -62,24 +104,37 @@
                     var strCancellaFornitore="";
                     var strModificaFornitore="";
 
-                    if( "{{fornitoreSottoGruppo.nome}}" == "" ){
-                      strCancellaFornitore='<a href="'+
-                                             '{{url_for("cancellaFornitore", nomeFornitore="spazio", primoGruppo=fornitoreSottoGruppo.gruppo_azienda)}}'+
-                                             '" class="ctrlBtn fa fa-trash"></a>';
-                    }
-                    else{
-                      strCancellaFornitore='<a href="'+
-                                             '{{url_for("cancellaFornitore", nomeFornitore=fornitoreSottoGruppo.nome, primoGruppo=fornitoreSottoGruppo.gruppo_azienda)}}'+
-                                             '" class="ctrlBtn fa fa-trash"></a>';
+                    var nomeFornitoreToSend = "{{fornitoreSottoGruppo.nome}}";
+                    var nomeRappresentanteToSend = "";
 
-                    }
+                    {% for rappresentante in listaRappresentanti %}
+                        {% if fornitoreSottoGruppo.gruppo_azienda == rappresentante.azienda %}
+                            nomeRappresentanteToSend = "{{rappresentante.nome}}";
+                        {% endif %}
+                    {% endfor %}
+
+                    if( "{{fornitoreSottoGruppo.nome}}" == "" )
+                        nomeFornitoreToSend = "spazio";
+
+
+
+                    nomeRappresentanteToSend= "cci";
+
+
+                   strCancellaFornitore='<a href="'+
+                                         '{{url_for("cancellaFornitore", nomeFornitore=nomeFornitoreToSend, primoGruppo=fornitoreSottoGruppo.gruppo_azienda)}}" class="ctrlBtn fa fa-trash"></a>';
+
+                   strModificaFornitore='<a href="modificaFornitore/'+nomeFornitoreToSend+'/{{fornitoreSottoGruppo.gruppo_azienda}}/'+nomeRappresentanteToSend+'" class="ctrlBtn fa fa-edit"></a>';
+
 
                     $('.tabContainer').html(
 
                         '<div id="ctrlBtnContainer">'+
                             '<span class="firstCtrlBtn">'+
                                strCancellaFornitore +
+                               strModificaFornitore +
                             '</span>'+
+
                         '</div>'+
 
                         '<table class="tableFornitore">'+
@@ -276,7 +331,7 @@
                         '</thead>'+
                         '<tbody class="bodyFornitore">'+
                             '<tr>'+
-                                '<td>{{form.gruppo_azienda(placeholder="primo gruppo", list="listaFornitori")}}</td>'+
+                                '<td>{{form.gruppo_azienda(placeholder="primo gruppo", list="listaFornitori", autocomplete="nope")}}</td>'+
                                   '<datalist id="listaFornitori">'+
                                           {% for fornitore in listaFornitoriPrimoGruppo %}
                                           '<option value="{{fornitore.nome_gruppo}}"></option>'+
@@ -379,16 +434,16 @@
                             '<tr>'+
                                 '<td>'+
                                     '<a id="giorniPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
-                                    '{{form.giorniPagamenti(placeholder="giorni pagamento", list="listaGiorniPagamento")}}'+
-                                      '<datalist id="listaGiorniPagamento">'+
-                                          {% for giorno in giorniPagamento %}
-                                          '<option value="{{giorno.nome}}"></option>'+
-                                          {% endfor %}
-                                      '</datalist>'+
+                                    '{{form.giorniPagamenti(placeholder="giorni pagamento", list="listaGiorniPagamento", autocomplete="nope")}}'+
+                                    '<datalist id="listaGiorniPagamento">'+
+                                    {% for giorno in giorniPagamento %}
+                                    '<option value="{{giorno.nome}}"></option>'+
+                                    {% endfor %}
+                                    '</datalist>'+
                                 '</td>'+
                                 '<td>'+
                                     '<a id="modalitaPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
-                                    '{{form.modalitaPagamenti( placeholder="modalita pagamento", list="listaModalitaPagamento")}}'+
+                                    '{{form.modalitaPagamenti( placeholder="modalita pagamento", list="listaModalitaPagamento", autocomplete="nope")}}'+
                                         '<datalist id="listaModalitaPagamento">'+
                                               {% for modalita in modalitaPagamento %}
                                               '<option value="{{modalita.nome}}"></option>'+
@@ -397,7 +452,7 @@
                                 '</td>'+
                                 '<td>'+
                                     '<a id="tipologiaPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
-                                    '{{form.tipologiaPagamenti(placeholder="tipologia pagamento", list="listaTipologiaPagamento")}}'+
+                                    '{{form.tipologiaPagamenti(placeholder="tipologia pagamento", list="listaTipologiaPagamento", autocomplete="nope")}}'+
                                        '<datalist id="listaTipologiaPagamento">'+
                                               {% for tipologia in tipologiaPagamento %}
                                               '<option value="{{tipologia.nome}}"></option>'+
@@ -436,50 +491,235 @@
             });
 
             $('#giorniPagamentiBtn').click(function(){
-                 swal.withForm({
-                title: 'Modifica/elimina nome giorno pagamento',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-                formFields: [
 
-                  {
-                    id: 'select',
-                    type: 'select',
-                    options: [
-                    {%for giorno in giorniPagamento %}
-                        {value: '{{giorno.nome}}', text: '{{giorno.nome}}'},
-                    {% endfor %}
+                 var giorniPagamentoOptions=[];
+                 $('#listaGiorniPagamento').children().each(function(){
+                    giorniPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
+                 });
+
+
+
+                 swal.withFormAsync({
+                    title: 'Modifica/elimina <br/> giorno pagamento',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: false,
+                    formFields: [
+
+                      {
+                        id: 'select',
+                        type: 'select',
+                        options: giorniPagamentoOptions
+
+                      },
+
+                     { name: 'modDel', value: 'modifica', type: 'radio' },
+                     { name: 'modDel', value: 'elimina', type: 'radio' },
+
 
                     ]
-                  },
+                 }).then(function (context) {
 
-                 { name: 'modDel', value: 'modifica', type: 'radio' },
-                 { name: 'modDel', value: 'elimina', type: 'radio' },
+                    var giornoSelected=context.swalForm['select'];
 
+                    if(context._isConfirm){
 
-                ]
-              }, function (isConfirm) {
+                        if( context.swalForm['modDel'] == 'modifica' ){
+                            swal.withFormAsync({
+                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
 
-                      if (isConfirm) {
-                            var form=this.swalForm;
-
-                            if( form['modDel'] == 'modifica' ){
-
-
-                            }
-                            else if( form['modDel'] == 'elimina' ){
-
-
-                            }
-                            console.log("I fatti sono questi: " + form['select']+ "\n" +form['modDel']+ "\n" );
+                                 { name: 'toMod', value: giornoSelected, placeholder: 'Modifica campo: ' + giornoSelected },
 
 
-                      }
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+                                    socketFornitore.emit("modifica_giornoPagamento", { "dip": "{{dipendente.username}}",
+                                                   "oldNome": giornoSelected, "newNome": context.swalForm['toMod'] } );
 
-              })
+                                }
+                            });
+                        }
+                        else if( context.swalForm['modDel'] == 'elimina' ) {
+                             socketFornitore.emit("elimina_giornoPagamento", { "dip": "{{dipendente.username}}",
+                                                   "nome": giornoSelected } );
+                             swal({
+                                title: 'Campo eliminato',
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: true
+                             });
+
+                        }
+
+
+                    }
+
+                 });
+
+            });
+
+
+
+            $('#modalitaPagamentiBtn').click(function(){
+
+                 var modalitaPagamentoOptions=[];
+                 $('#listaModalitaPagamento').children().each(function(){
+                    modalitaPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
+                 });
+
+
+
+                 swal.withFormAsync({
+                    title: 'Modifica/elimina <br/> modalità pagamento',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: false,
+                    formFields: [
+
+                      {
+                        id: 'select',
+                        type: 'select',
+                        options: modalitaPagamentoOptions
+
+                      },
+
+                     { name: 'modDel', value: 'modifica', type: 'radio' },
+                     { name: 'modDel', value: 'elimina', type: 'radio' },
+
+
+                    ]
+                 }).then(function (context) {
+
+                    var modalitaSelected=context.swalForm['select'];
+
+                    if(context._isConfirm){
+
+                        if( context.swalForm['modDel'] == 'modifica' ){
+                            swal.withFormAsync({
+                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                 { name: 'toMod', value: modalitaSelected, placeholder: 'Modifica campo: ' + modalitaSelected },
+
+
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+                                    socketFornitore.emit("modifica_modalitaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "oldNome": modalitaSelected, "newNome": context.swalForm['toMod'] } );
+
+                                }
+                            });
+                        }
+                        else if( context.swalForm['modDel'] == 'elimina' ) {
+                             socketFornitore.emit("elimina_modalitaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "nome": modalitaSelected } );
+                             swal({
+                                title: 'Campo eliminato',
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: true
+                             });
+
+                        }
+
+
+                    }
+
+                 });
+
+            });
+
+            $('#tipologiaPagamentiBtn').click(function(){
+
+                 var tipologiaPagamentoOptions=[];
+                 $('#listaTipologiaPagamento').children().each(function(){
+                    tipologiaPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
+                 });
+
+
+
+                 swal.withFormAsync({
+                    title: 'Modifica/elimina <br/> tipologia pagamento',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: false,
+                    formFields: [
+
+                      {
+                        id: 'select',
+                        type: 'select',
+                        options: tipologiaPagamentoOptions
+
+                      },
+
+                     { name: 'modDel', value: 'modifica', type: 'radio' },
+                     { name: 'modDel', value: 'elimina', type: 'radio' },
+
+
+                    ]
+                 }).then(function (context) {
+
+                    var tipologiaSelected=context.swalForm['select'];
+
+                    if(context._isConfirm){
+
+                        if( context.swalForm['modDel'] == 'modifica' ){
+                            swal.withFormAsync({
+                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                 { name: 'toMod', value: tipologiaSelected, placeholder: 'Modifica campo: ' + tipologiaSelected },
+
+
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+                                    socketFornitore.emit("modifica_tipologiaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "oldNome": tipologiaSelected, "newNome": context.swalForm['toMod'] } );
+
+                                }
+                            });
+                        }
+                        else if( context.swalForm['modDel'] == 'elimina' ) {
+                             socketFornitore.emit("elimina_tipologiaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "nome": tipologiaSelected } );
+                             swal({
+                                title: 'Campo eliminato',
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: true
+                             });
+
+                        }
+
+
+                    }
+
+                 });
 
             });
 

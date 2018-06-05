@@ -17,6 +17,22 @@
                         </select>
                         <div class="dropDownSelect2"></div>
                     </div>
+                    <!-- Serve un metodo per ricordare le classi aggiunte dinamicamente ai bottoni
+                       del "dropDownSelect2"; per far cio' creo un div perennemente invisibile
+                        in cui memorizzo di dati che voglio -->
+                    <div id="memoriaLavorazioniAggiunte">
+                        {% for settore in settori %}
+                            <div id="memoriaLavorazioniAggiunte-{{settore.nome}}">
+                            <!--
+                                Esempio struttura di #memoriaLavorazioniAggiunte
+
+                                '<div class="<id-del-bottone>">'+
+                                    '<span class="classeToAdd">aggiunto-'+count+'</span>'+
+                                '</div>'
+                             -->
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div  id="divElementFattura" class="features col-md-8">
                     <ul id="listaElementFattura">
@@ -50,6 +66,134 @@
 
         var count=1;
 
+
+        function rienumeraPagina(){
+            var counter = 1;
+            var oldNum="";
+
+            //rinomino tutti gli id degli elementi per non rischiare di
+            //averne due uguali nella renumerazione.
+            $('.trBody').each(function(){
+                var idThisFirstPart = $(this).attr('id').split('-')[0];
+                var settore=idThisFirstPart.split('_')[0];
+
+                oldNum = $(this).attr('id').split('-')[1]
+                $(this).attr('id', idThisFirstPart+'-old'+oldNum);
+
+                $('.'+settore+'_trAdded-'+oldNum).addClass(settore+'_trAdded-old'+oldNum);
+                $('.'+settore+'_trAdded-'+oldNum).removeClass(settore+'_trAdded-'+oldNum);
+
+                $(this).next('.trFoot'+oldNum).addClass('trFoot-old'+oldNum);
+                $(this).next('.trFoot'+oldNum).removeClass('trFoot'+oldNum);
+
+                /* nel caso vi siano righe aggiunte il next non recupera il "trFoor" specifico;
+                  con questo comando si previene questa eventualita' */
+                $("."+settore+"_trFoot").each(function(){
+                    if($(this).hasClass('trFoot'+oldNum)){
+                        $(this).addClass('trFoot-old'+oldNum);
+                        $(this).removeClass('trFoot'+oldNum);
+
+                    }
+                });
+
+
+                $(this).children('.firstCol'+oldNum).addClass('firstCol-old'+oldNum);
+                $(this).children('.firstCol'+oldNum).removeClass('firstCol'+oldNum);
+                $(this).children('.firstCol-old'+oldNum).children('.add-'+oldNum).addClass('add-old'+oldNum);
+                $(this).children('.firstCol-old'+oldNum).children('.add-'+oldNum).removeClass('add-'+oldNum);
+
+                /*modifico i pulsanti "aggiungi elemento" degli elementi presenti*/
+                $('.aggiunto-'+oldNum).addClass('aggiunto-old'+oldNum);
+                $('.aggiunto-'+oldNum).removeClass('aggiunto-'+oldNum);
+            });
+
+
+            $('.trBody').each(function(){
+                var idThisFirstPart = $(this).attr('id').split('-')[0];
+                var settore=idThisFirstPart.split('_')[0];
+                oldNum =  $(this).attr('id').split('-old')[1];
+
+                $('.aggiunto-old'+oldNum).addClass('aggiunto-'+counter);
+                $('.aggiunto-old'+oldNum).removeClass('aggiunto-old'+oldNum);
+
+                $(this).attr('id', idThisFirstPart+'-'+counter);
+
+                $(this).children('.firstCol-old'+oldNum).addClass('firstCol'+counter);
+                $(this).children('.firstCol-old'+oldNum).removeClass('firstCol-old'+oldNum);
+
+                $(this).children('.firstCol'+counter).children('label').text(counter);
+                $(this).children('.firstCol'+counter).children('.add-old'+oldNum).addClass('add-'+counter);
+                $(this).children('.firstCol'+counter).children('.add-old'+oldNum).removeClass('add-old'+oldNum);
+
+                $(this).children('.inputField').children('.inputPrev-'+oldNum).removeClass('inputPrev-'+oldNum);
+                $(this).children('.inputField').children('.numInput').addClass('inputPrev-'+counter);
+
+                $oldAddedRows=$('.'+settore+'_trAdded-old'+oldNum);
+
+                $oldAddedRows.children('.inputField').children('.numInput').removeClass('inputPrevAdded-'+oldNum);
+                $oldAddedRows.children('.inputField').children('.numInput').addClass('inputPrevAdded-'+counter);
+
+                $oldAddedRows.each(function(){
+                    $(this).removeClass(settore+'_trAdded-old'+oldNum);
+                    var oldAddedRowClasses=$(this).attr('class');
+                    $(this).removeClass(oldAddedRowClasses);
+                    $(this).addClass(settore+'_trAdded-'+counter);
+                    $(this).addClass(oldAddedRowClasses);
+                });
+
+                $(this).next('.trFoot-old'+oldNum).addClass('trFoot'+counter);
+                $(this).next('.trFoot-old'+oldNum).removeClass('trFoot-old'+oldNum);
+
+                /* nel caso vi siano righe aggiunte il next non recupera il "trFoor" specifico;
+                  con questo comando si previene questa eventualita' */
+                $("."+settore+"_trFoot").each(function(){
+                    if($(this).hasClass('trFoot-old'+oldNum)){
+                        $(this).addClass('trFoot'+counter);
+                        $(this).removeClass('trFoot-old'+oldNum);
+
+                    }
+                });
+
+                counter+=1;
+            });
+
+        }
+
+        function calcolaTotaleRiga(idElemento, prezzoBase){
+
+            $('#'+idElemento).each(function(){
+
+                var totale=prezzoBase;
+                $(this).children('td.inputField').each(function(){
+                   totale=parseFloat(totale)*parseFloat($(this).children('input').val());
+
+
+                });
+
+                $(this).children('td.addedTotal').html( "&euro; " + totale );
+
+            });
+        }
+
+        function calcolaTotaleRigaAdded(classeElemento, numRigaAdded, prezzoBase){
+
+            $('.'+classeElemento).each(function(){
+
+
+                if($(this).hasClass(numRigaAdded)){
+                    var totale=prezzoBase;
+                    $(this).children('td.inputField').each(function(){
+                       totale=parseFloat(totale)*parseFloat($(this).children('input').val());
+
+
+                    });
+
+                    $(this).children('td.addedTotal').html( "&euro; " + totale );
+                }
+            });
+        }
+
+
         function righeDimensioniAdded(unita, prezzoBase, numElement){
 
             if( unita == "cad" ){
@@ -57,25 +201,25 @@
                 return  '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                        '<td class="tdPreventivo  inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
             }
             else if ( unita == "ml" ){
-                return  '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
             }
             else if ( unita == "mq" ){
-                return  '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
             }
             else if( unita == "mc" ){
-                return  '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="P" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input  class="numInput inputPrevAdded-'+numElement+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
 
             }
         }
@@ -87,262 +231,264 @@
                 return  '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input  class="numInput inputPrev-'+count+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
             }
             else if ( unita == "ml" ){
-                return  '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input  class="numInput inputPrev-'+count+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
             }
             else if ( unita == "mq" ){
-                return  '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input  class="numInput inputPrev-'+count+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
             }
             else if( unita == "mc" ){
-                return  '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="L" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="H" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input class="numInput" type="number" step="0.01" name="L" placeholder="P" value=0.00></td>'+
-                        '<td class="tdPreventivo numColSmall inputPrev-'+count+' basePrezzo-'+prezzoBase+'"><input  class="numInput" type="number" name="quantita" placeholder="quantita" value=1></td>'
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input  class="numInput inputPrev-'+count+'" type="number" name="quantita" placeholder="quantita" value=1></td>'
 
             }
         }
 
         function aggiungiRiga($this){
-                 {% for prezzario in prezzarioEdile %}
-                    if( "{{prezzario.tipologia_lavorazione}}" ==  $this.text() ){
+                 if( $this.hasClass('aggiunto') ){
+                    console.log( "Devo prendere: " + $this.attr('class').split(" ")[1] + " riga num: " + $this.attr('class').split(" ")[3].split("-")[1] );
+                 }else{
+                     {% for prezzario in prezzarioEdile %}
+                        if( "{{prezzario.tipologia_lavorazione}}" ==  $this.text() ){
+                            $this.addClass("aggiunto-"+count);
+                            $this.addClass("aggiunto");
 
-                        var sezioneSettore =  $('#bodyPreventivo').children('.{{prezzario.settore}}');
-
-                        if( !sezioneSettore.length ){
-
-                            $('#bodyPreventivo').append(
-
-                                '<tr class="trHead {{prezzario.settore}}">'+
-                                    '<td  colspan="10"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
-                                '</tr>'+
-                                '<tr class="trHead {{prezzario.settore}}_head">'+
-                                    '<th class="thPreventivo"></th>'+
-                                    '<th class="thPreventivo"></th>'+
-                                    '<th class="thPreventivo numColSmall">N</th>'+
-                                    '<th class="thPreventivo numColSmall">L</th>'+
-                                    '<th class="thPreventivo numColSmall">H</th>'+
-                                    '<th class="thPreventivo numColSmall">P</th>'+
-                                    '<th class="thPreventivo numColSmall">Quantità</th>'+
-                                    '<th class="thPreventivo numColSmall">Unità</th>'+
-                                    '<th class="thPreventivo">Prezzo unitario</th>'+
-                                    '<th class="thPreventivo">Totale</th>'+
-                                '</tr>'
-
-                            );
-                        }
-
-                        /*Questo if e' un modo creativo per vedere se un elemento appartenente ad
-                            una data classe esiste */
-                        if($('.{{prezzario.settore}}_trFoot').hasClass('{{prezzario.settore}}_trFoot') ){
-
-                            $('.{{prezzario.settore}}_trFoot').last().after(
-
-                                '<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody">'+
-                                    '<td class="firstCol'+count+' firstCol"></td>'+
-                                    '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
-                                    '<td class="tdPreventivo numColSmall"><a class="add-'+count+' ctrButton addSameElement fa fa-plus"> </a></td>'+
-                                    righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
-                                    '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
-                                    '<td class="tdPreventivo"></td>'+
-                                    '<td class="{{prezzario.settore}}_colTot'+count+'"> &euro; {{prezzario.prezzoMax}}</td>'+
-
-                                '</tr>'+
-                                '<tr class="trFoot'+count+' trFoot {{prezzario.settore}}_trFoot">'+
-                                    '<td colspan="8"></td>'+
-                                    '<td> &euro; {{prezzario.prezzoMax}}</td>'+
-                                    '<td class="footTot"> &euro;<span>{{prezzario.prezzoMax}}</span></td>'+
-
-                                '</tr>'
-                            );
-                        }
-                        else{
-
-
-                            $('.{{prezzario.settore}}_head').after(
-
-                                '<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody">'+
-                                    '<td class="firstCol'+count+' firstCol"></td>'+
-                                    '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
-                                    '<td class="tdPreventivo numColSmall"><a class="add-'+count+' ctrButton addSameElement fa fa-plus"> </a></td>'+
-                                    righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
-                                    '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
-                                    '<td class="tdPreventivo"></td>'+
-                                    '<td class="{{prezzario.settore}}_colTot'+count+'"> &euro; {{prezzario.prezzoMax}}</td>'+
-
-                                '</tr>'+
-                                '<tr class="trFoot'+count+' trFoot {{prezzario.settore}}_trFoot">'+
-                                    '<td colspan="8"></td>'+
-                                    '<td> &euro; {{prezzario.prezzoMax}}</td>'+
-                                    '<td class="footTot"> &euro;<span>{{prezzario.prezzoMax}}</span></td>'+
-
-                                '</tr>'
-                            );
-
-
-                        }
-
-                        /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
-                        var aux=1;
-
-                        $('.trBody').each(function(){
-
-                            $(this).children('td.firstCol').html(aux + '<br/><a class="fa fa-trash"></a>' );
-                            aux+=1;
-
-                        });
-
-                        $('.add-'+count).on( 'click', function(){
-
-                            var numElement = $(this).attr('class').split(' ')[0].split('-')[1];
-
-
-                            $('.trFoot'+numElement).before(
-                                '<tr class="{{prezzario.settore}}_trAdded-'+numElement+'">'+
-                                    '<td colspan="3"><a class="fa fa-trash"></a></td>'+
-                                    righeDimensioniAdded("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}", numElement)+
-                                   '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
-                                    '<td class="tdPreventivo"></td>'+
-                                    '<td class="addedTotal"> &euro; {{prezzario.prezzoMax}}</td>'+
-                                '</tr>'
+                            /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+count al bottone*/
+                            $("#memoriaLavorazioniAggiunte-{{prezzario.settore}}").append(
+                                '<div class="'+$this.attr('id')+'">'+
+                                    '<span class="classeToAdd">aggiunto-'+count+'</span>'+
+                                '</div>'
 
                             );
 
 
-                            var aux=0;
 
-                            $('.{{prezzario.settore}}_trAdded-'+numElement).each(function(){
+                            var sezioneSettore =  $('#bodyPreventivo').children('.{{prezzario.settore}}');
+
+                            if( !sezioneSettore.length ){
+
+                                $('#bodyPreventivo').append(
+
+                                    '<tr class="trHead {{prezzario.settore}}">'+
+                                        '<td  colspan="10"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
+                                    '</tr>'+
+                                    '<tr class="trHead {{prezzario.settore}}_head">'+
+                                        '<th class="thPreventivo"></th>'+
+                                        '<th class="thPreventivo"></th>'+
+                                        '<th class="thPreventivo numColSmall">N</th>'+
+                                        '<th class="thPreventivo numColSmall">L</th>'+
+                                        '<th class="thPreventivo numColSmall">H</th>'+
+                                        '<th class="thPreventivo numColSmall">P</th>'+
+                                        '<th class="thPreventivo numColSmall">Quantità</th>'+
+                                        '<th class="thPreventivo numColSmall">Unità</th>'+
+                                        '<th class="thPreventivo">Prezzo unitario</th>'+
+                                        '<th class="thPreventivo">Totale</th>'+
+                                    '</tr>'
+
+                                );
+                            }
+
+                            var rowsToAdd='<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody">'+
+                                        '<td class="firstCol'+count+' firstCol"></td>'+
+                                        '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
+                                        '<td class="tdPreventivo numColSmall"></td>'+
+                                        righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
+                                        '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
+                                        '<td class="tdPreventivo"></td>'+
+                                        '<td class="addedTotal"></td>'+
+                                    '</tr>'+
+                                    '<tr class="trFoot'+count+' trFoot {{prezzario.settore}}_trFoot unitaMisura-{{prezzario.unitaMisura}}">'+
+                                        '<td colspan="8"></td>'+
+                                        '<td class="prezzoUnitario">&euro; {{prezzario.prezzoMax}}</td>'+
+                                        '<td class="footTot"> &euro;<span>{{prezzario.prezzoMax}}</span></td>'+
+                                    '</tr>'
+
+                            /*Questo if e' un modo creativo per vedere se un elemento appartenente ad
+                                una data classe esiste */
+                            if($('.{{prezzario.settore}}_trFoot').hasClass('{{prezzario.settore}}_trFoot') ){
+
+                                $('.{{prezzario.settore}}_trFoot').last().after( rowsToAdd );
+                            }
+                            else{
+
+                                $('.{{prezzario.settore}}_head').after( rowsToAdd  );
+                            }
+
+                            calcolaTotaleRiga('{{prezzario.settore}}_trBody-'+count, parseFloat('{{prezzario.prezzoMax}}') );
+
+                            $('.inputPrev-'+count).on('input', function(){
+                                 //   calcolaTotaleRiga($(this).parent().parent().attr('id'), parseFloat($(this).attr('class').split(' ')[3].split('-')[1]) );
+                                      console.log("il prezzo base è: " + $(this).parent().attr('class').split(' ')[3].split('-')[1] );
+                                });
+
+                            $('tr.trBody').draggable({ helper: "clone"});
+
+                            /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
+                            rienumeraPagina()
+
+                            $('.trBody').each(function(){
+
+                                var numEl = $(this).attr('id').split('-')[1];
+                                $(this).children('td.firstCol').html( '<label>'+ numEl + '</label><br/><a class="delElement fa fa-trash"></a><a class="ctrButton addSameElement fa fa-plus add-'+numEl+'">' );
+
+                                $(this).children('td.firstCol').children('a.delElement').click(function(){
+                                    var idElementToDel=$(this).parent().parent().attr('id');
+                                    var numEl = idElementToDel.split('-')[1];
+                                    var settore =idElementToDel.split('_')[0];
+
+                                    $('#'+idElementToDel).remove();
+                                    $('.'+settore+'_trAdded-'+numEl).remove();
+                                    $('.trFoot'+numEl).remove();
+
+                                    $('#memoriaLavorazioniAggiunte-'+settore).children( '.'+$('.aggiunto-'+numEl).attr('id') ).remove();
 
 
-                                $(this).addClass('addedNum'+aux);
+                                    $('.aggiunto-'+numEl).removeClass('aggiunto');
+                                    $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
 
-                                aux+=1;
+                                    rienumeraPagina()
+                                });
+
+                                $(this).children('td.firstCol').children('a.add-'+numEl).click( function(){
+
+                                    console.log("entrato in add");
+                                    var settore= $(this).parent().parent().attr('id').split('_')[0];
+                                    console.log("Stampo settore "+ settore);
+                                    var numElement = $(this).attr('class').split(' ')[4].split('-')[1];
+                                    console.log("Stampo settore " + numElement);
+
+                                    var unitaMisura = $('.trFoot'+numElement).attr('class').split(' ')[2].split('-')[1];
+
+                                    var prezzoUnitarioWithEuro = $('.trFoot'+numElement).children('.prezzoUnitario').text();
+                                    var prezzoUnitario = $('.trFoot'+numElement).children('.prezzoUnitario').text().split(' ')[1];
+
+
+                                    //Aggiungo una nuova riga prima del totale parziale ( rappresentato dalla classe trFoot )
+                                    $('.trFoot'+numElement).before(
+                                        '<tr class="'+settore+'_trAdded-'+numElement+'">'+
+                                            '<td colspan="3"><a class="delSameElement fa fa-trash"></a></td>'+
+                                            righeDimensioniAdded( unitaMisura, prezzoUnitario, numElement)+
+                                           '<td class="tdPreventivo numColSmall">'+unitaMisura+'</td>'+
+                                            '<td class="tdPreventivo"></td>'+
+                                            '<td class="addedTotal"></td>'+
+                                        '</tr>'
+
+                                    );
+
+
+                                    $('.delSameElement').on( 'click', function(){
+
+                                        var addedElementCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
+                                        $(this).parent().parent().remove();
+
+                                        var aux=0;
+                                        $('.'+addedElementCommonClass).each(function(){
+                                            $(this).removeClass();
+                                            $(this).addClass(addedElementCommonClass);
+                                            $(this).addClass('addedNum'+aux);
+                                            aux+=1;
+                                        });
+
+                                    });
+
+
+                                    //numero ogni "sottoriga aggiunta" e calcolo il totale della riga
+                                    var aux=0;
+                                    var prezzoBase=$('.trFoot'+numElement).children('.prezzoUnitario').text().split(' ')[1];
+
+                                    $('.'+settore+'_trAdded-'+numElement).each(function(){
+
+                                        $(this).addClass('addedNum'+aux);
+                                        calcolaTotaleRigaAdded( settore+'_trAdded-'+numElement, 'addedNum'+aux ,parseFloat(prezzoBase));
+                                        aux+=1;
+                                    });
+
+
+
+
+
+                                   /*
+
+                                    $('.inputPrev-'+numElement).on('input', function(){
+
+                                          var numEl=$(this).attr('class').split(' ')[1].split('-')[1];
+
+                                          var total=parseFloat($(this).parent().attr('class').split(' ')[2].split('-')[1]);
+
+
+                                          $(this).parent().parent().children('.inputPrevAdded').each(function(){
+
+                                             total=total*parseFloat($(this).children('input').val());
+                                          });
+
+                                         $(this).parent().parent().children('.addedTotal').html('&euro; '+total);
+
+                                         total=parseFloat($('#{{prezzario.settore}}_trBody-'+numEl).children('.{{prezzario.settore}}_colTot'+numEl).text().split(' ')[1]);
+
+                                         $('#{{prezzario.settore}}_trBody-'+numEl).nextUntil('.trFoot').each(function(){
+
+
+                                            total+=parseFloat($(this).children('.addedTotal').html().split(' ')[1]);
+
+                                         });
+
+                                        $('.trFoot'+numEl).children('.footTot').html("&euro; "+total);
+
+
+                                    });
+
+                                    $('.inputPrevAdded-'+numElement).on('input', function(){
+
+                                          var numEl=$(this).attr('class').split(' ')[1].split('-')[1];
+
+                                          var total=parseFloat($(this).parent().attr('class').split(' ')[2].split('-')[1]);
+
+
+                                          $(this).parent().parent().children('.inputPrevAdded').each(function(){
+
+                                             total=total*parseFloat($(this).children('input').val());
+                                          });
+
+                                         $(this).parent().parent().children('.addedTotal').html('&euro; '+total);
+
+                                         total=parseFloat($('#{{prezzario.settore}}_trBody-'+numEl).children('.{{prezzario.settore}}_colTot'+numEl).text().split(' ')[1]);
+
+                                         $('#{{prezzario.settore}}_trBody-'+numEl).nextUntil('.trFoot').each(function(){
+
+
+                                            total+=parseFloat($(this).children('.addedTotal').html().split(' ')[1]);
+
+                                         });
+
+                                        $('.trFoot'+numEl).children('.footTot').html("&euro; "+total);
+
+
+                                    });*/
+
+                                });
+
                             });
 
 
-                            var total=parseFloat($('#{{prezzario.settore}}_trBody-'+numElement).children('.{{prezzario.settore}}_colTot'+numElement).text().split(' ')[2]);
-
-                            //console.log("il totale è "+total);
-                            $('#{{prezzario.settore}}_trBody-'+numElement).nextUntil('.trFoot').each(function(){
-
-
-                                total+=parseFloat($(this).children('.addedTotal').html().split(' ')[2]);
-
-                             });
-
-                            $('.trFoot'+numElement).children('.footTot').html("&euro; "+total);
+                            count+=1;
 
 
 
-                            $('.inputPrevAdded-'+numElement).on('input', function(){
-
-                                  var numEl=$(this).attr('class').split(' ')[1].split('-')[1];
-
-                                  var total=parseFloat($(this).parent().attr('class').split(' ')[2].split('-')[1]);
-
-
-                                  $(this).parent().parent().children('.inputPrevAdded').each(function(){
-
-                                     total=total*parseFloat($(this).children('input').val());
-                                  });
-
-                                 $(this).parent().parent().children('.addedTotal').html('&euro; '+total);
-
-                                 total=parseFloat($('#{{prezzario.settore}}_trBody-'+numEl).children('.{{prezzario.settore}}_colTot'+numEl).text().split(' ')[1]);
-
-                                 $('#{{prezzario.settore}}_trBody-'+numEl).nextUntil('.trFoot').each(function(){
-
-
-                                    total+=parseFloat($(this).children('.addedTotal').html().split(' ')[1]);
-
-                                 });
-
-                                $('.trFoot'+numEl).children('.footTot').html("&euro; "+total);
-
-
-                            });
-
-                        });
-
-                        $('.inputPrev-'+count).on('input', function(){
-                            //ricavo il numero dell'elemento
-                            var numEl= $(this).attr('class').split(' ')[2].split('-')[1];
-
-                            var total=parseFloat($(this).attr('class').split(' ')[3].split('-')[1]);
-
-
-
-                            $('.inputPrev-'+numEl).each(function(){
-                               // console.log("bella li :" + );
-                                total=total*parseFloat($(this).children('input').val());
-
-                            });
-
-
-                            $(".{{prezzario.settore}}_colTot"+numEl).html( "&euro; " + total);
-
-
-                            total=parseFloat($('#{{prezzario.settore}}_trBody-'+numEl).children('.{{prezzario.settore}}_colTot'+numEl).text().split(' ')[1]);
-
-                            //console.log("il totale è "+total);
-                            $('#{{prezzario.settore}}_trBody-'+numEl).nextUntil('.trFoot').each(function(){
-
-
-                                total+=parseFloat($(this).children('.addedTotal').html().split(' ')[2]);
-
-                             });
-
-                            $('.trFoot'+numEl).children('.footTot').html("&euro; "+total);
-
-
-                        });
-
-
-
-                        count+=1;
-
-
-
-
-
-
-                        $('.delSameElement').on( 'click', function(){
-
-
-                            console.log("SOno ad: " );
-
-
-                        });
-
-
-                        if( "{{prezzario.unitaMisura}}" == "cad" ){
-
-                            $('.numInput').on('input', function(){
-
-                                console.log(" weiii " + $(this).val() );
-                            });
 
                         }
-                      /*  else if( "{{prezzario.unitaMisura}}" == "ml" ){
+                    {% endfor %}
 
-                        }
-                        else if( "{{prezzario.unitaMisura}}" == "mq"  ){
-
-                        }
-                        else if( "{{prezzario.unitaMisura}}" == "mc" ){
-
-                        }*/
-
-
-                    }
-                {% endfor %}
+                 }
         }
 
         var counter=0;
@@ -351,7 +497,7 @@
           if( "{{elemento.settore}}" == $('#selectSettore').val() ){
             $('#listaElementFattura').append(
 
-                 '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
+                 '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura {{elemento.settore}}"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
             );
             counter+=1;
           }
@@ -365,7 +511,7 @@
               if( "{{elemento.settore}}" == $('#selectSettore').val() ){
                 $('#listaElementFattura').append(
 
-                     '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
+                     '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura {{elemento.settore}}"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
                 );
                 counter+=1;
 
@@ -373,13 +519,12 @@
 
            {% endfor %}
 
-            $('.elementFattura').click(function(){
+          /*  $('.elementFattura').click(function(){
                 {% for prezzario in prezzarioEdile %}
                     if( "{{prezzario.tipologia_lavorazione}}" ==  $(this).text() ){
-                        console.log("almeo queoi");
                     }
                 {% endfor %}
-            });
+            });*/
        });
 
 

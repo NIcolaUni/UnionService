@@ -72,7 +72,7 @@
     <form  method="post" action="apriPaginaCliente">
         {{form.hidden_tag()}}
 
-        {{form.nome_cognome_indirizzo(list='clienti')}}
+        {{form.nome_cognome_indirizzo(list='clienti', autocomplete="off")}}
        <!-- <input type="text"  list="clienti"  placeholder="Cerca qua i tuoi clienti..."> -->
         <i id="top-search-close" data-ng-click="hctrl.closeSearch()">&times;</i>
                  <datalist  id="clienti">

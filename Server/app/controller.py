@@ -186,7 +186,7 @@ def schedaFornitori():
                            tipologiaPagamento=tipologiaPagamento, form=form, error=errorVar, errorMessage=errorMessage, sockUrl=app.appUrl)
 
 
-@server.route('/cancellaFornitore/<nomeFornitore>/<primoGruppo>')
+@server.route('/cancellaFornitore/<nomeFornitore>/<primoGruppo>', methods=['GET', 'POST'])
 @login_required
 def cancellaFornitore(nomeFornitore, primoGruppo):
 
@@ -197,20 +197,125 @@ def cancellaFornitore(nomeFornitore, primoGruppo):
     SottoGruppoFornitori.eliminaSottoGruppoFornitori(nome=nomeFornitore, gruppo_azienda=primoGruppo)
     return redirect("/schedaFornitori")
 
-
-
-'''
-@server.route('/schedaFornitori')
+@server.route('/modificaFornitore/<nomeFornitore>/<primoGruppo>/<nomeRappresentante>')
 @login_required
-def schedaFornitori():
+def modificaFornitore(nomeFornitore, primoGruppo, nomeRappresentante):
+
+    if nomeFornitore == 'spazio':
+        nomeFornitore = ''
+
+    if nomeRappresentante == 'spazio':
+        nomeRappresentante = ''
+
+    form = AggiungiFornitoreForm(request.form)
+    errorVar = False
+    errorMessage = ""
+
+    if request.method == 'POST':
+    #modifica fornitore
+        server.logger.info("\n\nEntrato in Post {}\n\n".format(form.gruppo_azienda.data))
+
+        #se non viene inserito nemmeno il nome del primo gruppo
+        #la registrazione abortisce
+        if form.gruppo_azienda.data == '':
+            dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+            fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
+            fornitori_sotto_gruppo = SottoGruppoFornitori.query.filter_by(nome=nomeFornitore).first()
+            listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
+            giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
+            modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
+            tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
+
+
+            return render_template("modificaFornitore.html", dipendente=dip,
+                                   schedaFornitoriCss=True,
+                                   giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
+                                   listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
+                                   sottoGruppoSelected=fornitori_sotto_gruppo,
+                                   listaRappresentanti=listaRappresentanti,
+                                   tipologiaPagamento=tipologiaPagamento, form=form, sockUrl=app.appUrl, error=True, errorMessage="Non è stato inserito alcun primo gruppo")
+
+        fornitore = Fornitore.query.filter_by(nome_gruppo=form.gruppo_azienda.data).first()
+
+        #registro fornitore ovvero primo gruppo solo se non e' gia registrato
+        if fornitore is not None:
+            if not fornitore.has_sottoGruppo:
+                Fornitore.setHas_sottoGruppi(fornitore=form.gruppo_azienda.data, value=True)
+        #se il fornitore e' cambiato e non esiste ancora
+        else:
+            try:
+                Fornitore.registraFornitore(nome_gruppo=form.gruppo_azienda.data, has_sottoGruppo=True)
+            except RigaPresenteException as e:
+                server.logger.info("\n\n\n\n {} ".format(e))
+
+        GiorniPagamentoFornitore.registraGiorniPagamento(nome=form.giorniPagamenti.data)
+        ModalitaPagamentoFornitore.registraModalitaPagamento(nome=form.modalitaPagamenti.data)
+        TipologiaPagamentoFornitore.registraTipologiaPagamento(nome=form.tipologiaPagamenti.data)
+
+        #modifico sottogruppo
+        try:
+            SottoGruppoFornitori.modificaSottoGruppoFornitori(nome=form.nomeFornitore.data,
+                                                              gruppo_azienda=form.gruppo_azienda.data,
+                                                              settoreMerceologico=form.settoreMerceologico.data,
+                                                              stato=form.stato.data,
+                                                              tempiDiConsegna=form.tempiDiConsegna.data,
+                                                              prezziNetti=form.prezziNetti.data,
+                                                              scontoStandard=form.scontoStandard.data,
+                                                              scontoExtra1=form.scontoExtra1.data,
+                                                              scontroExtra2=form.scontroExtra2.data,
+                                                              trasporto=form.trasporto.data,
+                                                              trasportoUnitaMisura=form.trasportoUnitaMisura.data,
+                                                              giorniPagamenti=form.giorniPagamenti.data,
+                                                              modalitaPagamenti=form.modalitaPagamenti.data,
+                                                              tipologiaPagamenti=form.tipologiaPagamenti.data,
+                                                              provincia=form.provincia.data,
+                                                              indirizzo=form.indirizzo.data,
+                                                              telefono=form.telefono.data,
+                                                              sito=form.sito.data)
+
+        except RigaPresenteException as e:
+            server.logger.info("\n\n\n\n {} ".format(e))
+            app.rigaPresente=True
+            app.tabellaRigaPresente="Sottogruppo fornitori"
+
+        #se e' stato specificato un rappresentate, lo modifico.
+        if form.nomeRappresentante.data != '' and form.nomeRappresentante.data != ' ':
+            try:
+                Rappresentante.modificaRappresentante(oldNome=nomeRappresentante, nome=form.nomeRappresentante.data,
+                                                      azienda=form.gruppo_azienda.data,
+                                                      telefono=form.telefonoRappresentante.data,
+                                                      email=form.emailRappresentante.data)
+            except RigaPresenteException as e:
+                server.logger.info("\n\n\n\n {} ".format(e))
+                errorVar =True
+                errorMessage = "Rappresentante già registrato"
+
+
+
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
-    fornitori_sotto_gruppo = SottoGruppoFornitori.query.order_by(SottoGruppoFornitori.nome).all()
+    fornitori_sotto_gruppo = SottoGruppoFornitori.query.filter_by(nome=nomeFornitore).first()
     listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
-    return render_template("schedaFornitori.html", dipendente=dip, listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
-                           listaFornitoriSottoGruppo=fornitori_sotto_gruppo, prezzario=True, schedaFornitoriCss=True,
-                           listaRappresentanti = listaRappresentanti, sockUrl=app.appUrl)
-'''
+    giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
+    modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
+    tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
+
+    allerta = False
+
+    if app.rigaPresente:
+        allerta = True
+        app.rigaPresente = False
+
+    return render_template("modificaFornitore.html", dipendente=dip,
+                           rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente, schedaFornitoriCss=True,
+                           giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
+                           listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
+                           sottoGruppoSelected=fornitori_sotto_gruppo, listaRappresentanti = listaRappresentanti,
+                           tipologiaPagamento=tipologiaPagamento, form=form, error=errorVar, errorMessage=errorMessage, sockUrl=app.appUrl)
+
+
+
+
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -557,20 +662,102 @@ def handle_registraImpegno(message):
 
 
 
+@socketio.on('modifica_giornoPagamento', namespace="/fornitore")
+def handle_modifica_giornoPagamento(message):
+    GiorniPagamentoFornitore.modificaGiorniPagamento(newNome=message['newNome'], oldNome=message['oldNome'])
 
-@socketio.on('elimina_fornitore', namespace="/fornitore")
-def handle_elimina_fornitore(message):
-    Fornitore.eliminaFornitore(message['fornitore'])
+    listaGiorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
+    newListToSend = dict()
+    counter=0
+    for giorno in listaGiorniPagamento:
+        newListToSend[str(counter)]=giorno.nome
+        counter+=1
+
+    newListToSend['length']=counter
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
+    emit('aggiornaGiorniPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
 
-@socketio.on('elimina_sotto_gruppo_fornitore', namespace="/fornitore")
-def handle_elimina_sotto_gruppo_fornitore(message):
-    SottoGruppoFornitori.eliminaSottoGruppoFornitori(nome=message["sotto_gruppo"], gruppo_azienda=message["fornitore"])
+@socketio.on('elimina_giornoPagamento', namespace="/fornitore")
+def handle_elimina_giornoPagamento(message):
+    GiorniPagamentoFornitore.eliminaGiorniPagamento(message['nome'])
+
+    listaGiorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
+    newListToSend = dict()
+    counter=0
+    for giorno in listaGiorniPagamento:
+        newListToSend[str(counter)]=giorno.nome
+        counter+=1
+
+    newListToSend['length']=counter
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/fornitore', room=dip.session_id)
+    emit('aggiornaGiorniPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
+
+@socketio.on('modifica_modalitaPagamento', namespace="/fornitore")
+def handle_modifica_modalitaPagamento(message):
+    ModalitaPagamentoFornitore.modificaModalitaPagamento(newNome=message['newNome'], oldNome=message['oldNome'])
+
+    listaModalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
+    newListToSend = dict()
+    counter=0
+    for giorno in listaModalitaPagamento:
+        newListToSend[str(counter)]=giorno.nome
+        counter+=1
+
+    newListToSend['length']=counter
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaModalitaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
+
+@socketio.on('elimina_modalitaPagamento', namespace="/fornitore")
+def handle_elimina_modalitaPagamento(message):
+    ModalitaPagamentoFornitore.eliminaModalitaPagamento(message['nome'])
+
+    listaModalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
+    newListToSend = dict()
+    counter=0
+    for giorno in listaModalitaPagamento:
+        newListToSend[str(counter)]=giorno.nome
+        counter+=1
+
+    newListToSend['length']=counter
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaModalitaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
+
+@socketio.on('modifica_tipologiaPagamento', namespace="/fornitore")
+def handle_modifica_tipologiaPagamento(message):
+    TipologiaPagamentoFornitore.modificaTipologiaPagamento(newNome=message['newNome'], oldNome=message['oldNome'])
+
+    listTipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
+    newListToSend = dict()
+    counter=0
+    for giorno in listTipologiaPagamento:
+        newListToSend[str(counter)]=giorno.nome
+        counter+=1
+
+    newListToSend['length']=counter
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaTipologiaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
+
+@socketio.on('elimina_tipologiaPagamento', namespace="/fornitore")
+def handle_elimina_tipologiaPagamento(message):
+    TipologiaPagamentoFornitore.eliminaTipologiaPagamento(message['nome'])
+
+    listTipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
+    newListToSend = dict()
+    counter=0
+    for giorno in listTipologiaPagamento:
+        newListToSend[str(counter)]=giorno.nome
+        counter+=1
+
+    newListToSend['length']=counter
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    emit('aggiornaTipologiaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
+
 
 
 @socketio.on('registra_tipologiaProdotto', namespace="/prezzarioProdotti")
