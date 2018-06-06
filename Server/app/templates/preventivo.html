@@ -55,6 +55,9 @@
                         </table>
                     </div>
             </div>
+            <div id="divTotale" >
+                
+            </div>
             <div id="divSalvaPreventivo" class="features">
                 <a id="saveButton">Salva</a>
             </div>
@@ -172,6 +175,24 @@
 
         }
 
+        function calcolaTotalePreventivo(){
+            var totale = 0;
+
+            $('.trBody').each(function(){
+                if($(this).hasClass('haveFooter')){
+                    var numEl = $(this).attr('id').split('-')[1];
+                    totale+=parseFloat($('.trFoot'+numEl).children('.footTot').text().split(' ')[1]);
+
+                }
+                else
+                {
+                    totale+=parseFloat($(this).children('.addedTotal').text().split(' ')[1]);
+                }
+            });
+
+            $('#divTotale').html('<span><u>Totale:</u> &euro; ' + Math.round(totale*100)/100 + '</span>' );
+        }
+
         function calcolaTotaleParziale(settore, numOfEl){
             if( $('#'+settore+'_trBody-'+numOfEl).hasClass('haveFooter') ){
                 var total = parseFloat($('#'+settore+'_trBody-'+numOfEl).children('.addedTotal').text().split(' ')[1]);
@@ -182,9 +203,11 @@
                     quantita+=parseFloat($(this).children('.totDimensioni').text());
                 });
 
-                $('.trFoot'+numOfEl).children('.footTot').html("&euro; "+total);
+                $('.trFoot'+numOfEl).children('.footTot').html("&euro; "+ Math.round(total*100)/100 );
                 $('.trFoot'+numOfEl).children('.quantita').html(quantita);
             }
+
+            calcolaTotalePreventivo()
         }
 
 
@@ -202,8 +225,8 @@
 
                 totalePrezzo=parseFloat(totalePrezzo)*quantita;
 
-                $(this).children('td.totDimensioni').text( quantita );
-                $(this).children('td.addedTotal').html( "&euro; " + totalePrezzo );
+                $(this).children('td.totDimensioni').text( Math.round(quantita*100)/100 );
+                $(this).children('td.addedTotal').html( "&euro; " + Math.round(totalePrezzo*100)/100 );
 
             });
 
@@ -227,8 +250,8 @@
                     totalePrezzo=parseFloat(totalePrezzo)*quantita;
 
 
-                    $(this).children('td.totDimensioni').text( quantita );
-                    $(this).children('td.addedTotal').html( "&euro; " + totalePrezzo );
+                    $(this).children('td.totDimensioni').text( Math.round(quantita*100)/100 );
+                    $(this).children('td.addedTotal').html( "&euro; " + Math.round(totalePrezzo*100)/100 );
                 }
             });
 
@@ -249,28 +272,28 @@
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "ml" ){
                 return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "mq" ){
                 return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if( unita == "mc" ){
                 return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
 
             }
         }
@@ -283,28 +306,28 @@
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "ml" ){
                 return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input  class="numInput inputPrev-'+count+'" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "mq" ){
                 return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input  class="numInput inputPrev-'+count+'" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if( unita == "mc" ){
                 return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input  class="numInput inputPrev-'+count+'" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+'"><input class="numInput inputPrev-'+count+'" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
-                        '<td class="tdPreventivo totDimensioni"></td>'
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
         }
 
@@ -343,9 +366,9 @@
                                         '<th class="thPreventivo numColSmall">L</th>'+
                                         '<th class="thPreventivo numColSmall">H</th>'+
                                         '<th class="thPreventivo numColSmall">P</th>'+
-                                        '<th class="thPreventivo numColSmall">Quantità</th>'+
+                                        '<th class="thPreventivo colSmall">Quantità</th>'+
                                         '<th class="thPreventivo numColSmall">Unità</th>'+
-                                        '<th class="thPreventivo">Prezzo unitario</th>'+
+                                        '<th class="thPreventivo colSmall">Prezzo unitario</th>'+
                                         '<th class="thPreventivo">Totale</th>'+
                                     '</tr>'
 
@@ -357,7 +380,7 @@
                                         '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
                                         righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
                                         '<td class="tdPreventivo numColSmall unitaMisuraElement">{{prezzario.unitaMisura}}</td>'+
-                                        '<td class="tdPreventivo prezzoBase">&euro; {{prezzario.prezzoMax}}</td>'+
+                                        '<td class="tdPreventivo prezzoBase colSmall">&euro; {{prezzario.prezzoMax}}</td>'+
                                         '<td class="addedTotal"></td>'+
                                     '</tr>';
 
@@ -415,6 +438,8 @@
                                     if( lastEl ){
                                         settaLastElement(settore);
                                     }
+
+                                    calcolaTotalePreventivo();
                                 });
 
                                 $(this).children('td.firstCol').children('a.add-'+numEl).click( function(){
@@ -438,9 +463,9 @@
                                         $('#'+settore+"_trBody-"+numElement).after(
                                                     '<tr class="trFoot'+numElement+' trFoot '+settore+'_trFoot unitaMisura-'+unitMis+'">'+
                                                         '<td colspan="6"></td>'+
-                                                        '<td class="quantita"></td>'+
+                                                        '<td class="quantita colSmall"></td>'+
                                                         '<td>'+ unitMis +'</td>'+
-                                                        '<td class="prezzoUnitario">'+ prezzoBase +'</td>'+
+                                                        '<td class="prezzoUnitario colSmall">'+ prezzoBase +'</td>'+
                                                         '<td class="footTot"> </td>'+
                                                     '</tr>'
                                         );
@@ -457,7 +482,7 @@
                                             '<td colspan="2"><a class="delSameElement fa fa-trash"></a></td>'+
                                             righeDimensioniAdded( unitaMisura, prezzoUnitario, numElement)+
                                            '<td class="tdPreventivo numColSmall">'+unitaMisura+'</td>'+
-                                            '<td class="tdPreventivo"></td>'+
+                                            '<td class="tdPreventivo colSmall"></td>'+
                                             '<td class="addedTotal"></td>'+
                                         '</tr>'
 
@@ -488,7 +513,13 @@
                                            $('#'+sett+'_trBody-'+num).children('.prezzoBase').html( '&euro; ' + $('#'+sett+'_trBody-'+num).children('td.inputField').first().attr('class').split(' ')[3].split('-')[1] );
                                            $('.trFoot'+num).remove();
                                            $('#'+sett+'_trBody-'+num).removeClass('haveFooter');
+                                           calcolaTotalePreventivo();
 
+                                        }
+                                        else{
+                                            var sett=addedElementCommonClass.split('_')[0];
+                                            var num=addedElementCommonClass.split('-')[1];
+                                            calcolaTotaleParziale(sett, num);
                                         }
 
                                     });

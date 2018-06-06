@@ -43,6 +43,12 @@ div#wrapper {
     min-width: 60px !important;
 }
 
+.colSmall {
+    width: 60px !important;
+    min-width: 60px !important;
+    max-width: 80px !important;
+}
+
 
 .noMargin {
     margin: 0;
@@ -99,6 +105,17 @@ section#one::-webkit-scrollbar-thumb:window-inactive {
 #divSalvaPreventivo{
     height: 80px;
 }
+
+#divTotale{
+    height: 40px;
+}
+
+
+#divTotale > span{
+    right: 8%;
+    position: absolute;
+}
+
 
 #saveButton {
     display:inline-block;
