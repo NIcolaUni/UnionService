@@ -172,6 +172,22 @@
 
         }
 
+        function calcolaTotaleParziale(settore, numOfEl){
+            if( $('#'+settore+'_trBody-'+numOfEl).hasClass('haveFooter') ){
+                var total = parseFloat($('#'+settore+'_trBody-'+numOfEl).children('.addedTotal').text().split(' ')[1]);
+                var quantita = parseFloat($('#'+settore+'_trBody-'+numOfEl).children('.totDimensioni').text());
+
+                $('.'+settore+'_trAdded-'+numOfEl).each(function(){
+                    total+=parseFloat($(this).children('.addedTotal').text().split(' ')[1]);
+                    quantita+=parseFloat($(this).children('.totDimensioni').text());
+                });
+
+                $('.trFoot'+numOfEl).children('.footTot').html("&euro; "+total);
+                $('.trFoot'+numOfEl).children('.quantita').html(quantita);
+            }
+        }
+
+
         function calcolaTotaleRiga(idElemento, prezzoBase){
 
             $('#'+idElemento).each(function(){
@@ -190,6 +206,8 @@
                 $(this).children('td.addedTotal').html( "&euro; " + totalePrezzo );
 
             });
+
+            calcolaTotaleParziale(idElemento.split('_')[0], idElemento.split('-')[1]);
         }
 
         function calcolaTotaleRigaAdded(classeElemento, numRigaAdded, prezzoBase){
@@ -213,8 +231,15 @@
                     $(this).children('td.addedTotal').html( "&euro; " + totalePrezzo );
                 }
             });
+
+            calcolaTotaleParziale(classeElemento.split('_')[0], classeElemento.split('-')[1]);
         }
 
+
+        function settaLastElement(settore){
+
+            $('tr[id^='+settore+'_trBody]').last().addClass(settore+'_lastAdded');
+        }
 
         function righeDimensioniAdded(unita, prezzoBase, numElement){
 
@@ -327,28 +352,26 @@
                                 );
                             }
 
-                            var rowsToAdd='<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody">'+
+                            var rowsToAdd='<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody {{prezzario.settore}}_lastAdded">'+
                                         '<td class="firstCol'+count+' firstCol"></td>'+
                                         '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
                                         righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
-                                        '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
-                                        '<td class="tdPreventivo"></td>'+
+                                        '<td class="tdPreventivo numColSmall unitaMisuraElement">{{prezzario.unitaMisura}}</td>'+
+                                        '<td class="tdPreventivo prezzoBase">&euro; {{prezzario.prezzoMax}}</td>'+
                                         '<td class="addedTotal"></td>'+
-                                    '</tr>'+
-                                    '<tr class="trFoot'+count+' trFoot {{prezzario.settore}}_trFoot unitaMisura-{{prezzario.unitaMisura}}">'+
-                                        '<td colspan="8"></td>'+
-                                        '<td class="prezzoUnitario">&euro; {{prezzario.prezzoMax}}</td>'+
-                                        '<td class="footTot"> &euro;<span>{{prezzario.prezzoMax}}</span></td>'+
-                                    '</tr>'
+                                    '</tr>';
 
-                            /*Questo if e' un modo creativo per vedere se un elemento appartenente ad
-                                una data classe esiste */
-                            if($('.{{prezzario.settore}}_trFoot').hasClass('{{prezzario.settore}}_trFoot') ){
-
+                            if($(".{{prezzario.settore}}_lastAdded").hasClass('haveFooter')){
+                                $(".{{prezzario.settore}}_lastAdded").removeClass("{{prezzario.settore}}_lastAdded");
                                 $('.{{prezzario.settore}}_trFoot').last().after( rowsToAdd );
                             }
-                            else{
+                            else if( $(".{{prezzario.settore}}_lastAdded").hasClass("{{prezzario.settore}}_lastAdded") ){
+                                $lastEl=$(".{{prezzario.settore}}_lastAdded");
 
+                                $lastEl.after(rowsToAdd);
+                                $lastEl.removeClass("{{prezzario.settore}}_lastAdded");
+                            }
+                            else{
                                 $('.{{prezzario.settore}}_head').after( rowsToAdd  );
                             }
 
@@ -373,6 +396,7 @@
                                     var idElementToDel=$(this).parent().parent().attr('id');
                                     var numEl = idElementToDel.split('-')[1];
                                     var settore =idElementToDel.split('_')[0];
+                                    var lastEl = $('#'+idElementToDel).hasClass(settore+'_lastAdded'); //variabile booleana
 
                                     $('#'+idElementToDel).remove();
                                     $('.'+settore+'_trAdded-'+numEl).remove();
@@ -387,6 +411,10 @@
                                     $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
 
                                     rienumeraPagina()
+
+                                    if( lastEl ){
+                                        settaLastElement(settore);
+                                    }
                                 });
 
                                 $(this).children('td.firstCol').children('a.add-'+numEl).click( function(){
@@ -394,11 +422,34 @@
                                     var settore= $(this).parent().parent().attr('id').split('_')[0];
                                     var numElement = $(this).attr('class').split(' ')[4].split('-')[1];
 
-                                    var unitaMisura = $('.trFoot'+numElement).attr('class').split(' ')[2].split('-')[1];
+
+
+                                    /* se non sono state gia' aggiunte altre sottorighe inserisci prima
+                                        un foot */
+                                    if( !$('#'+settore+"_trBody-"+numElement).hasClass('haveFooter') ){
+
+                                        var unitMis=$('#'+settore+"_trBody-"+numElement).children('.unitaMisuraElement').text();
+                                        var prezzoBase=$('#'+settore+"_trBody-"+numElement).children('.prezzoBase').text();
+
+                                        $('#'+settore+"_trBody-"+numElement).addClass('haveFooter');
+                                        $('#'+settore+"_trBody-"+numElement).children('.prezzoBase').text('');
+
+
+                                        $('#'+settore+"_trBody-"+numElement).after(
+                                                    '<tr class="trFoot'+numElement+' trFoot '+settore+'_trFoot unitaMisura-'+unitMis+'">'+
+                                                        '<td colspan="6"></td>'+
+                                                        '<td class="quantita"></td>'+
+                                                        '<td>'+ unitMis +'</td>'+
+                                                        '<td class="prezzoUnitario">'+ prezzoBase +'</td>'+
+                                                        '<td class="footTot"> </td>'+
+                                                    '</tr>'
+                                        );
+                                    }
+
+                                    var unitaMisura = $('.trFoot'+numElement).attr('class').split(' ')[3].split('-')[1];
 
                                     var prezzoUnitarioWithEuro = $('.trFoot'+numElement).children('.prezzoUnitario').text();
                                     var prezzoUnitario = $('.trFoot'+numElement).children('.prezzoUnitario').text().split(' ')[1];
-
 
                                     //Aggiungo una nuova riga prima del totale parziale ( rappresentato dalla classe trFoot )
                                     $('.trFoot'+numElement).before(
@@ -412,12 +463,15 @@
 
                                     );
 
+                                    calcolaTotaleParziale(settore, numElement);
 
                                     $('.delSameElement').on( 'click', function(){
 
                                         var addedElementCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
                                         $(this).parent().parent().remove();
 
+
+                                        //rienumero i sottoelementi restanti
                                         var aux=0;
                                         $('.'+addedElementCommonClass).each(function(){
                                             $(this).removeClass();
@@ -425,6 +479,17 @@
                                             $(this).addClass('addedNum'+aux);
                                             aux+=1;
                                         });
+
+                                        // se non ci sono piu' sottoelementi rimuovi il footer
+                                        if( aux == 0  && $('#'+settore+'_trBody-'+numElement).hasClass('haveFooter')){
+
+                                           var sett=addedElementCommonClass.split('_')[0];
+                                           var num=addedElementCommonClass.split('-')[1];
+                                           $('#'+sett+'_trBody-'+num).children('.prezzoBase').html( '&euro; ' + $('#'+sett+'_trBody-'+num).children('td.inputField').first().attr('class').split(' ')[3].split('-')[1] );
+                                           $('.trFoot'+num).remove();
+                                           $('#'+sett+'_trBody-'+num).removeClass('haveFooter');
+
+                                        }
 
                                     });
 
