@@ -1,0 +1,38 @@
+\documentclass[pdftex,11pt,a4paper]{article}
+\usepackage{graphicx}
+\graphicspath{ {./Immagini/} }
+
+\usepackage[legalpaper]{geometry}
+\geometry{
+a4paper,
+left=5mm,
+right=5mm,
+top=10mm,
+}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyfoot[C]{UnionService Srl. Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\
+              Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097 \\\thepage }
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{1pt}
+
+\begin{document}
+\begin{figure}[!t]
+\includegraphics[width=\textwidth]{intestazioneAlta.jpg}
+\end{figure}
+
+\begin{center}
+  \begin{tabular}{| l  l | c  l|}
+    \hline
+      & Cliente & Commessa &  \\ \hline
+    Nominativo: & Nicola Pancheri & Tipologia: & capannone \\ 
+    Indirizzo: &  Via della libert\'a n. 35 - 37135 Cadidavid (VR) &  & \\
+    Telefono: &  3395213283 & &\\
+    \hline
+  \end{tabular}
+\end{center}
+
+
+\end{document}
