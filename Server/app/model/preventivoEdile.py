@@ -213,17 +213,11 @@ class PreventivoEdile(PreventivoEdileDBmodel):
 
     def __settaOrdineNegativo__(lavorazione, queryClass):
 
-        prov = queryClass.filter_by(numero_preventivo=lavorazione.numero_preventivo, data=lavorazione.data, ordine=lavorazione.ordine).first()
-        app.server.logger.info("\n\n\nInizio ordine negativoa {}\n\n\n".format(prov))
-
         newOrdine = int(-lavorazione.ordine)
 
         queryClass.filter_by(numero_preventivo=lavorazione.numero_preventivo, data=lavorazione.data,
                                            ordine=lavorazione.ordine).update({'ordine': newOrdine})
 
-        PreventivoEdileDBmodel.commit()
-
-        app.server.logger.info("\n\n\nfine ordine negativo\n\n\n")
 
     def inziaRiordinoLavorazione(numero_preventivo, data):
         '''
@@ -233,8 +227,6 @@ class PreventivoEdile(PreventivoEdileDBmodel):
            con due voci con lo stesso numero ( situazione d'errore in quanto ordine e' parte della chiave
            di una lavorazione) e, allo stesso tempo, di ricordare il vecchio ordine.
         '''
-
-        app.server.logger.info("\n\n\nInizio riordino \n\n\n")
 
         lavPrev = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).all()
         iniziaNuovoRiordino = True
@@ -247,20 +239,16 @@ class PreventivoEdile(PreventivoEdileDBmodel):
             if lav.ordine < 0 :
                 iniziaNuovoRiordino = False
 
-        app.server.logger.info("\n\n\nIVariabile inizia nuovo riordino e' {}\n\n\n".format(iniziaNuovoRiordino))
         if iniziaNuovoRiordino:
             for lav in lavPrev:
-                app.server.logger.info("\n\n\nl'ordine della lavorazione e' {}\n\n\n".format(lav.ordine))
                 # per ogni lavorazione risetta automaticamente anche le relative sottorelazioni
                 # a causa del vincolo d'integrita'
                 PreventivoEdile.__settaOrdineNegativo__(lav, __LavorazionePreventivo__.query)
 
-
+            PreventivoEdileDBmodel.commit()
 
 
     def modificaOrdineLavorazione( modifica, numero_preventivo, data, ordine):
-        app.server.logger.info("\n\n\nInizio a modificare l'ordine di lavorazione " +str(ordine))
-
 
         __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
                                          ordine=ordine ).update(modifica)
