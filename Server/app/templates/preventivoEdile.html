@@ -67,6 +67,8 @@
 
 <script>
 
+        var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+
         var count=1;
 
         function rienumeraMemoriaLavorazioni(){
@@ -168,8 +170,24 @@
                     }
                 });
 
+                var unitaMisura = $(this).children(".unitaMisuraElement").text();
+                console.log('sono unitaMisura: '+unitaMisura);
+
+                socketPreventivo.emit("modifica_ordine_lavorazione",
+                                {
+                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
+                                    "data" : "{{preventivo.data}}",
+                                    "unitaMisura" : unitaMisura,
+                                    "ordineVecchio": oldNum,
+                                    "ordineNuovo" : counter
+
+                                }
+                      );
                 counter+=1;
             });
+
+
+
 
             rienumeraMemoriaLavorazioni();
 
@@ -375,9 +393,11 @@
                                 );
                             }
 
+
+
                             var rowsToAdd='<tr id="{{prezzario.settore}}_trBody-'+count+'" class="trBody {{prezzario.settore}}_lastAdded">'+
                                         '<td class="firstCol'+count+' firstCol"></td>'+
-                                        '<td class="tdPreventivo"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
+                                        '<td class="tdPreventivo tdLavorazione"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
                                         righeDimensioni("{{prezzario.unitaMisura}}", "{{prezzario.prezzoMax}}")+
                                         '<td class="tdPreventivo numColSmall unitaMisuraElement">{{prezzario.unitaMisura}}</td>'+
                                         '<td class="tdPreventivo prezzoBase colSmall">&euro; {{prezzario.prezzoMax}}</td>'+
@@ -400,6 +420,7 @@
 
                             calcolaTotaleRiga('{{prezzario.settore}}_trBody-'+count, parseFloat('{{prezzario.prezzoMax}}') );
 
+
                             /*Ogni volta che un inputField viene modificato: ricalcola il totale della riga */
                             $('.inputPrev-'+count).on('input', function(){
                                     calcolaTotaleRiga($(this).parent().parent().attr('id'), parseFloat($(this).parent().attr('class').split(' ')[3].split('-')[1]) );
@@ -407,8 +428,35 @@
 
                             $('tr.trBody').draggable({ helper: "clone"});
 
+
+                            /*registro la riga nel database*/
+                            socketPreventivo.emit("add_nuova_lavorazione",
+                                                    {
+                                                        "numero_preventivo" : "{{preventivo.numero_preventivo}}",
+                                                        "data" : "{{preventivo.data}}",
+                                                        "settore" : "{{prezzario.settore}}",
+                                                        "lavorazione" : "{{prezzario.tipologia_lavorazione}}",
+                                                        "unitaMisura" : "{{prezzario.unitaMisura}}",
+                                                        "ordine": count,
+                                                        "prezzoUnitario" : "{{prezzario.prezzoMax}}"
+
+                                                    }
+
+                                                  );
+
                             /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
                             rienumeraPagina()
+
+                           /* var ordineElemento = 0;
+                            $('tr[id^={{prezzario.settore}}_trBody]').each(function(){
+                                if( $(this).children('.tdLavorazione').children('textarea').val() == "{{prezzario.tipologia_lavorazione}}" )
+                                {
+                                    console.log("Ehi ho trovato il mio numero "+ $(this).attr('id').split('-')[1] );
+                                    ordineElemento = parseInt($(this).attr('id').split('-')[1]);
+                                }
+                            });*/
+
+
 
                             $('.trBody').each(function(){
 

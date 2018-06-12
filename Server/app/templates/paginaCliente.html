@@ -223,7 +223,7 @@
 									</ul>
 								</div>
 								<div class="col-md-6">
-									{%if dip.dirigente %}
+									{%if dipendente.dirigente %}
 
 									<ul class="contact">
 										<h2>Dipendenti associati al cliente:</h2>
@@ -259,10 +259,17 @@
 					<section id="one" class="wrapper style2 spotlights">
 						<div class="inner">
 
-							<h2>Preventivo <a id="preventivoFullPage" class="fa fa-expand expandPreventivoIcon"></a></h2>
+							<span>
+								<span><h2>Preventivo </h2></span>
+								<span>
+									<a id="newPreventivo" class="fa fa-plus-circle expandPreventivoIcon"></a>
+									<a id="preventivoFullPage" class="fa fa-edit expandPreventivoIcon"></a>
+									<a class="fa fa-trash expandPreventivoIcon"></a>
+								</span>
+							</span>
 
 							<div class="features">
-								<div id="tabFattura" class="table-wrapper">
+							<!--	<div id="tabFattura" class="table-wrapper">
 										<table class="alt">
 											<thead>
 												<tr>
@@ -326,7 +333,7 @@
 											</tfoot>
 										</table>
 									</div>
-							</div>
+							</div>-->
 						</div>
 					</section>
 
@@ -464,7 +471,33 @@
 
 			<script>
 
-				$('#preventivoFullPage').attr('href', "{{url_for('preventivoFull')}}" );
+			    var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+
+                socketHome.on('connect', function() {
+                    console.log('connected listino');
+
+
+                    socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+                });
+
+
+				var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+
+				$('#newPreventivo').click(function(){
+                    console.log("bella");
+					socketPreventivo.emit('registra_nuovo_preventivo', { 'dip': '{{dipendente.username}}','nome_cliente' : '{{cliente.nome}}',
+																		'cognome_cliente' : '{{cliente.cognome}}',
+																	    'indirizzo_cliente' : '{{cliente.indirizzo}}'});
+				});
+
+
+                socketPreventivo.on('confermaRegistrazionePreventivo', function(){
+
+
+                    window.location = "{{url_for('newPreventivoEdile')}}";
+
+                });
 
 				$('#header > a').css('border-bottom', 'None' );
 			</script>

@@ -3,7 +3,7 @@ from app import database
 
 
 class ClienteAccoltoDBmodel(database.Model):
-    __tablename__ = "clienteAccolto"
+    __tablename__ = "cliente_accolto"
     __table_args__ = (
             PrimaryKeyConstraint('nome', 'cognome', 'indirizzo'),
             )

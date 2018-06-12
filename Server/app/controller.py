@@ -17,10 +17,12 @@ from .model.prodottoPrezzario import ProdottoPrezzario
 from .model.giorniPagamentoFornitore import GiorniPagamentoFornitore
 from .model.modalitaPagamentoFornitore import ModalitaPagamentoFornitore
 from .model.tipologiaPagamentoFornitore import TipologiaPagamentoFornitore
+from .model.preventivoEdile import PreventivoEdile
 from .model.eccezioni.righaPresenteException import RigaPresenteException
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import app
+
 
 ####################################### ROUTE HANDLER #################################################
 
@@ -338,12 +340,15 @@ def paginaProfilo():
     return render_template('paginaProfilo.html', dipendente=dip)
 
 
-@server.route('/preventivoFull')
+@server.route('/newPreventivoEdile')
 @login_required
-def preventivoFull():
+def newPreventivoEdile():
     settori = SettoreLavorazione.query.all()
     prezzarioEdile = PrezzarioEdile.query.all()
-    return render_template('preventivo.html', settori=settori, preventivoFullPage=True, cliente=app.clienteSelezionato, prezzarioEdile=prezzarioEdile)
+    preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
+    cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
+
+    return render_template('preventivoEdile.html', settori=settori, preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile, preventivo=preventivo)
 
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required
@@ -361,9 +366,13 @@ def apriPaginaCliente():
     ufficioCommerciale = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
     ufficioTecnico = []#Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
     ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
-    settori = SettoreLavorazione.query.all()
-    return render_template('paginaCliente.html', dip=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
-                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
+    #settori = SettoreLavorazione.query.all()
+
+    preventivi = PreventivoEdile.query.filter_by(nome_cliente=nomeCliente, cognome_cliente=cognomeCliente,
+                                                    indirizzo_cliente=indirizzoCliente )
+
+    return render_template('paginaCliente.html', dipendente=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
+                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, preventivi=preventivi )
 
 @server.route('/clientBack')
 @login_required
@@ -375,7 +384,7 @@ def clientBack():
     ufficioTecnico = []#Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
     ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
     settori = SettoreLavorazione.query.all()
-    return render_template('paginaCliente.html', dip=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
+    return render_template('paginaCliente.html', dipendente=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
                                     ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
@@ -855,6 +864,34 @@ def handle_elimina_tipologia_prodotto(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
+@socketio.on('registra_nuovo_preventivo', namespace='/preventivoEdile')
+def handle_registra_nuovo_preventivo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    idPreventivo = PreventivoEdile.registraPreventivo(nome_cliente=message['nome_cliente'],
+                                       cognome_cliente=message['cognome_cliente'], indirizzo_cliente=message['indirizzo_cliente'])
+
+    app.preventivoEdileSelezionato=idPreventivo
+    emit('confermaRegistrazionePreventivo', namespace='/preventivoEdile', room=dip.session_id)
+
+@socketio.on('add_nuova_lavorazione', namespace='/preventivoEdile')
+def handle_add_nuova_lavorazione(message):
+
+    PreventivoEdile.registraLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                         ordine=message['ordine'], settore=message['settore'], tipologia_lavorazione=message['lavorazione'],
+                                        numero=1, larghezza=1, altezza=1, profondita=1, unitaMisura=message['unitaMisura'],
+                                        prezzoUnitario=message['prezzoUnitario'])
+
+
+@socketio.on('modifica_ordine_lavorazione', namespace='/preventivoEdile')
+def handle_modifica_ordine_lavorazione(message):
+
+    PreventivoEdile.inziaRiordinoLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'])
+
+    app.server.logger.info("\n\n\nFInito riordino ")
+    PreventivoEdile.modificaOrdineLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                            ordine=int('-'+message['ordineVecchio']), modifica={'ordine' : message['ordineNuovo']})
+
+
 @socketio.on_error('/impegni')
 def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
@@ -877,5 +914,9 @@ def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/prezzarioProdotti')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
+@socketio.on_error('/preventivoEdile')
 def error_handler(e):
     server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))

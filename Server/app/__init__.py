@@ -37,6 +37,7 @@ formCercaCliente =None
 appUrl="http://debtux:80"
 prezzarioEdileSettoreCorrente = None
 clienteSelezionato=None
+preventivoEdileSelezionato=None
 rigaPresente = False
 tabellaRigaPresente = None
 prezzarioProdottiTipoCorrente = None
