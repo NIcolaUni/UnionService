@@ -887,10 +887,13 @@ def handle_modifica_ordine_lavorazione(message):
 
     PreventivoEdile.inziaRiordinoLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'])
 
-    app.server.logger.info("\n\n\nFInito riordino ")
     PreventivoEdile.modificaOrdineLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
                                             ordine=int('-'+message['ordineVecchio']), modifica={'ordine' : message['ordineNuovo']})
 
+@socketio.on('add_nuova_sottolavorazione', namespace='/preventivoEdile')
+def handle_add_nuova_sottolavorazione(message):
+    PreventivoEdile.nuovaSottolavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                           ordine=message['ordine'])
 
 @socketio.on_error('/impegni')
 def error_handler(e):

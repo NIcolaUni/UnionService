@@ -139,6 +139,44 @@ class PreventivoEdile(PreventivoEdileDBmodel):
         PreventivoEdileDBmodel.addRow(lavorazione)
 
 
+    def nuovaSottolavorazione(numero_preventivo, data, ordine):
+
+        unitaMisura = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first().unitaMisura
+
+
+        if unitaMisura == 'cad':
+            last_sottolav_cad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
+                                                                                  data=data, ordine=ordine).order_by( desc(__SottolavorazioneCadPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+                                                             ordine=ordine, ordine_sottolavorazione=last_sottolav_cad+1, numero=1 )
+        elif unitaMisura == 'ml':
+            last_sottolav_ml = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
+                                                                                data=data, ordine=ordine).order_by( desc(__SottolavorazioneMlPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+                                                         ordine=ordine, ordine_sottolavorazione=last_sottolav_ml+1,
+                                                         numero=1, larghezza=1)
+
+        elif unitaMisura == 'mq':
+            last_sottolav_mq = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
+                                                                                data=data, ordine=ordine).order_by( desc(__SottolavorazioneMqPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+                                                         ordine=ordine, ordine_sottolavorazione=last_sottolav_mq+1,
+                                                         numero=1, larghezza=1, altezza=1)
+
+
+        elif unitaMisura == 'mc':
+            last_sottolav_mc = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
+                                                                                data=data, ordine=ordine).order_by( desc(__SottolavorazioneMcPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+                                                         ordine=ordine, ordine_sottolavorazione=last_sottolav_mc+1,
+                                                         numero=1, larghezza=1, altezza=1, profondita=1)
+
+
+
     def registraLavorazione( numero_preventivo, data, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario,
                              numero, larghezza=None, altezza=None, profondita=None ):
 

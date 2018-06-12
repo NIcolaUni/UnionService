@@ -593,6 +593,16 @@
 
                                    });
 
+                                   socketPreventivo.emit("add_nuova_sottolavorazione",
+                                        {
+                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
+                                            "data" : "{{preventivo.data}}",
+                                            "ordine": numElement
+
+                                        }
+
+                                      );
+
                                 });
 
                             });
