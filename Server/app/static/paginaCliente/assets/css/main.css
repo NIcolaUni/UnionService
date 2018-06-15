@@ -3959,7 +3959,9 @@ button.elementFattura {
   #tabFattura {
     display: block;
     margin-left: 8%;
+    margin-right: 8%;
     margin-top: 30px;
+    width: 100%;
   }
 
   .expandPreventivoIcon {
@@ -3969,3 +3971,43 @@ button.elementFattura {
   .expandPreventivoIcon:hover{
     color: #ffc107;
   }
+
+  .sweet-alert{
+    margin-left: 6%;
+  }
+
+
+
+    .sweet-alert button {
+        font-size: 50% !important;
+        border-radius: 10% !important;
+        padding: 0 10% 0 10% !important;
+    }
+
+  #preventivoSelect{
+    width: 40%;
+    display: inline-block;
+    margin-left: 20%;
+  }
+
+  #dataSelect{
+    width: 12%;
+    display: inline-block;
+
+  }
+
+    #ctrlSpanPreventivo {
+        height: 50%;
+        display: inline-block;
+        width: 100%;
+    }
+
+    span#titlePreventivoSpan {
+        height: 100%;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .aCtrlPreventivo{
+
+    }

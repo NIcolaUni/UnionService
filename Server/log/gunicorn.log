@@ -1,393 +1,2053 @@
-[2018-06-12 14:00:51 +0200] [10358] [DEBUG] Current configuration:
-  worker_abort: <function WorkerAbort.worker_abort at 0x7f2b765e1a60>
-  child_exit: <function ChildExit.child_exit at 0x7f2b765e60d0>
-  keepalive: 2
-  worker_exit: <function WorkerExit.worker_exit at 0x7f2b765e6268>
-  preload_app: False
-  pidfile: /var/run/gunicorn.pid
-  worker_tmp_dir: None
-  initgroups: False
-  reload: False
-  workers: 1
-  threads: 1
-  proxy_protocol: False
-  pre_fork: <function Prefork.pre_fork at 0x7f2b765e1400>
-  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f2b765e1730>
-  post_request: <function PostRequest.post_request at 0x7f2b765e1ea0>
-  ca_certs: None
-  suppress_ragged_eofs: True
-  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f2b765e6400>
+[2018-06-14 10:10:23 +0200] [8671] [DEBUG] Current configuration:
+  do_handshake_on_connect: False
+  when_ready: <function WhenReady.when_ready at 0x7f6dcfae0268>
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
   accesslog: None
-  loglevel: debug
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  timeout: 30
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f6dcfae0a60>
+  statsd_prefix: 
+  limit_request_field_size: 8190
+  child_exit: <function ChildExit.child_exit at 0x7f6dcfae50d0>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f6dcfae5268>
+  capture_output: False
+  syslog_addr: udp://localhost:514
+  on_starting: <function OnStarting.on_starting at 0x7f6dcfad1ea0>
+  raw_paste_global_conf: []
+  limit_request_line: 4094
+  keyfile: None
+  graceful_timeout: 30
+  sendfile: None
+  ciphers: TLSv1
+  pythonpath: None
+  workers: 1
+  backlog: 2048
+  config: None
+  enable_stdio_inheritance: False
+  reload: False
+  on_reload: <function OnReload.on_reload at 0x7f6dcfae00d0>
+  post_fork: <function Postfork.post_fork at 0x7f6dcfae0598>
+  on_exit: <function OnExit.on_exit at 0x7f6dcfae5598>
+  tmp_upload_dir: None
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f6dcfae0730>
+  statsd_host: None
+  preload_app: False
+  daemon: False
+  worker_tmp_dir: None
+  group: 0
+  umask: 0
+  forwarded_allow_ips: ['127.0.0.1']
+  max_requests_jitter: 0
+  keepalive: 2
+  post_request: <function PostRequest.post_request at 0x7f6dcfae0ea0>
+  certfile: None
+  bind: ['127.0.0.1:3000']
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
   logger_class: gunicorn.glogging.Logger
   logconfig: None
-  syslog_addr: udp://localhost:514
-  limit_request_line: 4094
-  worker_int: <function WorkerInt.worker_int at 0x7f2b765e18c8>
+  syslog_facility: user
+  ssl_version: 2
+  cert_reqs: 0
+  suppress_ragged_eofs: True
+  worker_class: eventlet
+  max_requests: 0
+  ca_certs: None
+  spew: False
+  raw_env: []
+  initgroups: False
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on'}
+  paste: None
+  proxy_allow_ips: ['127.0.0.1']
+  check_config: False
+  proc_name: None
+  default_proc_name: Server:application
+  pre_fork: <function Prefork.pre_fork at 0x7f6dcfae0400>
+  pre_exec: <function PreExec.pre_exec at 0x7f6dcfae0bf8>
+  pre_request: <function PreRequest.pre_request at 0x7f6dcfae0d90>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f6dcfae5400>
+  threads: 1
+  worker_connections: 1000
+  limit_request_fields: 100
+  user: 0
+  worker_int: <function WorkerInt.worker_int at 0x7f6dcfae08c8>
+  reload_engine: auto
+  pidfile: /var/run/gunicorn.pid
+  proxy_protocol: False
+  loglevel: debug
   syslog: False
+  syslog_prefix: None
+[2018-06-14 10:10:23 +0200] [8671] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:10:24 +0200] [8767] [DEBUG] Current configuration:
+  accesslog: None
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f200519ba60>
+  child_exit: <function ChildExit.child_exit at 0x7f20051a00d0>
+  initgroups: False
+  post_request: <function PostRequest.post_request at 0x7f200519bea0>
+  worker_tmp_dir: None
+  proxy_allow_ips: ['127.0.0.1']
+  pre_exec: <function PreExec.pre_exec at 0x7f200519bbf8>
+  backlog: 2048
+  spew: False
+  certfile: None
+  enable_stdio_inheritance: False
+  reload: False
+  capture_output: False
+  reload_engine: auto
+  syslog_facility: user
+  worker_int: <function WorkerInt.worker_int at 0x7f200519b8c8>
+  workers: 1
+  graceful_timeout: 30
+  tmp_upload_dir: None
+  on_starting: <function OnStarting.on_starting at 0x7f200518cea0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f20051a0400>
+  sendfile: None
+  daemon: False
+  limit_request_fields: 100
+  pre_request: <function PreRequest.pre_request at 0x7f200519bd90>
+  worker_class: eventlet
+  config: None
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  loglevel: debug
+  pythonpath: None
+  logger_class: gunicorn.glogging.Logger
+  worker_connections: 1000
+  user: 0
+  max_requests: 0
+  limit_request_line: 4094
+  cert_reqs: 0
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  suppress_ragged_eofs: True
+  syslog: False
+  timeout: 30
+  syslog_addr: udp://localhost:514
+  on_reload: <function OnReload.on_reload at 0x7f200519b0d0>
+  default_proc_name: Server:application
+  bind: ['127.0.0.1:3000']
+  ciphers: TLSv1
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f200519b730>
+  preload_app: False
+  statsd_host: None
+  do_handshake_on_connect: False
+  proc_name: None
+  keepalive: 2
+  post_fork: <function Postfork.post_fork at 0x7f200519b598>
+  ca_certs: None
   chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  raw_env: []
+  pidfile: /var/run/gunicorn.pid
+  keyfile: None
+  check_config: False
+  max_requests_jitter: 0
+  limit_request_field_size: 8190
+  statsd_prefix: 
+  ssl_version: 2
+  worker_exit: <function WorkerExit.worker_exit at 0x7f20051a0268>
+  umask: 0
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https'}
+  when_ready: <function WhenReady.when_ready at 0x7f200519b268>
+  group: 0
+  paste: None
+  on_exit: <function OnExit.on_exit at 0x7f20051a0598>
+  forwarded_allow_ips: ['127.0.0.1']
+  raw_paste_global_conf: []
+  logconfig: None
+  syslog_prefix: None
+  threads: 1
+  pre_fork: <function Prefork.pre_fork at 0x7f200519b400>
+  proxy_protocol: False
+[2018-06-14 10:10:24 +0200] [8767] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:10:25 +0200] [8863] [DEBUG] Current configuration:
+  forwarded_allow_ips: ['127.0.0.1']
+  worker_connections: 1000
+  bind: ['127.0.0.1:3000']
+  threads: 1
+  ciphers: TLSv1
+  pidfile: /var/run/gunicorn.pid
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fec19609400>
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  reload: False
+  daemon: False
   raw_env: []
   raw_paste_global_conf: []
-  ssl_version: 2
-  on_exit: <function OnExit.on_exit at 0x7f2b765e6598>
-  config: None
-  max_requests: 0
-  pre_request: <function PreRequest.pre_request at 0x7f2b765e1d90>
-  enable_stdio_inheritance: False
-  user: 0
-  pythonpath: None
-  do_handshake_on_connect: False
-  statsd_prefix: 
-  group: 0
-  limit_request_fields: 100
-  proc_name: None
-  reload_engine: auto
-  timeout: 30
-  default_proc_name: Server:application
-  when_ready: <function WhenReady.when_ready at 0x7f2b765e1268>
-  daemon: False
-  tmp_upload_dir: None
-  proxy_allow_ips: ['127.0.0.1']
-  on_reload: <function OnReload.on_reload at 0x7f2b765e10d0>
-  umask: 0
-  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on'}
-  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
-  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
-  capture_output: False
-  statsd_host: None
-  spew: False
-  paste: None
-  worker_connections: 1000
-  cert_reqs: 0
-  sendfile: None
-  worker_class: eventlet
   max_requests_jitter: 0
-  graceful_timeout: 30
-  syslog_prefix: None
-  syslog_facility: user
+  reload_engine: auto
+  proc_name: None
+  post_request: <function PostRequest.post_request at 0x7fec19604ea0>
+  child_exit: <function ChildExit.child_exit at 0x7fec196090d0>
+  statsd_host: None
+  cert_reqs: 0
+  ca_certs: None
+  worker_tmp_dir: None
+  group: 0
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  timeout: 30
+  limit_request_line: 4094
+  on_reload: <function OnReload.on_reload at 0x7fec196040d0>
+  logconfig: None
+  on_starting: <function OnStarting.on_starting at 0x7fec195f5ea0>
+  pre_fork: <function Prefork.pre_fork at 0x7fec19604400>
+  worker_int: <function WorkerInt.worker_int at 0x7fec196048c8>
+  worker_exit: <function WorkerExit.worker_exit at 0x7fec19609268>
+  loglevel: debug
+  capture_output: False
+  limit_request_fields: 100
+  spew: False
+  certfile: None
+  ssl_version: 2
+  do_handshake_on_connect: False
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  umask: 0
   backlog: 2048
+  accesslog: None
+  logger_class: gunicorn.glogging.Logger
+  proxy_allow_ips: ['127.0.0.1']
+  max_requests: 0
+  keepalive: 2
+  check_config: False
+  preload_app: False
+  syslog_prefix: None
+  when_ready: <function WhenReady.when_ready at 0x7fec19604268>
+  on_exit: <function OnExit.on_exit at 0x7fec19609598>
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  sendfile: None
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  syslog_addr: udp://localhost:514
+  statsd_prefix: 
+  initgroups: False
+  post_fork: <function Postfork.post_fork at 0x7fec19604598>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fec19604a60>
+  user: 0
+  pre_request: <function PreRequest.pre_request at 0x7fec19604d90>
   limit_request_field_size: 8190
-  on_starting: <function OnStarting.on_starting at 0x7f2b765d2ea0>
+  keyfile: None
+  suppress_ragged_eofs: True
+  workers: 1
+  tmp_upload_dir: None
+  proxy_protocol: False
+  pre_exec: <function PreExec.pre_exec at 0x7fec19604bf8>
+  syslog: False
+  graceful_timeout: 30
+  pythonpath: None
+  paste: None
+  default_proc_name: Server:application
+  config: None
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fec19604730>
+  worker_class: eventlet
+[2018-06-14 10:10:25 +0200] [8863] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:10:49 +0200] [8986] [DEBUG] Current configuration:
+  syslog_addr: udp://localhost:514
+  worker_tmp_dir: None
+  ca_certs: None
+  preload_app: False
+  logconfig: None
+  pre_exec: <function PreExec.pre_exec at 0x7ff92e80abf8>
+  check_config: False
+  proc_name: None
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  initgroups: False
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https'}
+  paste: None
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1']
+  post_request: <function PostRequest.post_request at 0x7ff92e80aea0>
+  worker_exit: <function WorkerExit.worker_exit at 0x7ff92e80f268>
+  cert_reqs: 0
+  logger_class: gunicorn.glogging.Logger
   certfile: None
   ciphers: TLSv1
-  forwarded_allow_ips: ['127.0.0.1']
-  post_fork: <function Postfork.post_fork at 0x7f2b765e1598>
-  bind: ['127.0.0.1:3000']
-  check_config: False
-  pre_exec: <function PreExec.pre_exec at 0x7f2b765e1bf8>
-  keyfile: None
-[2018-06-12 14:00:51 +0200] [10358] [INFO] Starting gunicorn 19.7.1
-[2018-06-12 14:00:51 +0200] [10454] [DEBUG] Current configuration:
-  raw_env: []
-  group: 0
-  on_starting: <function OnStarting.on_starting at 0x7fc677dedea0>
-  on_reload: <function OnReload.on_reload at 0x7fc677dfc0d0>
-  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fc677e01400>
-  timeout: 30
-  graceful_timeout: 30
-  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fc677dfc730>
-  paste: None
-  ca_certs: None
-  pre_fork: <function Prefork.pre_fork at 0x7fc677dfc400>
-  post_fork: <function Postfork.post_fork at 0x7fc677dfc598>
-  on_exit: <function OnExit.on_exit at 0x7fc677e01598>
-  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
-  syslog_facility: user
-  worker_abort: <function WorkerAbort.worker_abort at 0x7fc677dfca60>
-  pre_request: <function PreRequest.pre_request at 0x7fc677dfcd90>
-  keyfile: None
-  accesslog: None
+  limit_request_field_size: 8190
+  on_reload: <function OnReload.on_reload at 0x7ff92e80a0d0>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7ff92e80a730>
+  do_handshake_on_connect: False
   syslog: False
-  bind: ['127.0.0.1:3000']
-  backlog: 2048
-  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
-  ssl_version: 2
-  loglevel: debug
-  syslog_addr: udp://localhost:514
-  enable_stdio_inheritance: False
   statsd_host: None
-  worker_int: <function WorkerInt.worker_int at 0x7fc677dfc8c8>
-  limit_request_fields: 100
-  cert_reqs: 0
-  preload_app: False
-  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
-  statsd_prefix: 
   config: None
+  bind: ['127.0.0.1:3000']
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7ff92e80f400>
+  worker_class: eventlet
+  max_requests_jitter: 0
+  syslog_prefix: None
+  keepalive: 2
+  pre_fork: <function Prefork.pre_fork at 0x7ff92e80a400>
+  raw_env: []
+  user: 0
+  pythonpath: None
+  loglevel: debug
+  backlog: 2048
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  suppress_ragged_eofs: True
+  default_proc_name: Server:application
+  reload: False
+  sendfile: None
+  on_starting: <function OnStarting.on_starting at 0x7ff92e7fbea0>
+  post_fork: <function Postfork.post_fork at 0x7ff92e80a598>
+  child_exit: <function ChildExit.child_exit at 0x7ff92e80f0d0>
+  capture_output: False
+  threads: 1
   worker_connections: 1000
-  pre_exec: <function PreExec.pre_exec at 0x7fc677dfcbf8>
+  group: 0
+  pre_request: <function PreRequest.pre_request at 0x7ff92e80ad90>
+  statsd_prefix: 
+  max_requests: 0
+  timeout: 30
+  spew: False
+  daemon: False
+  pidfile: /var/run/gunicorn.pid
+  reload_engine: auto
+  ssl_version: 2
+  when_ready: <function WhenReady.when_ready at 0x7ff92e80a268>
+  graceful_timeout: 30
+  enable_stdio_inheritance: False
+  umask: 0
+  forwarded_allow_ips: ['127.0.0.1']
+  raw_paste_global_conf: []
   workers: 1
+  accesslog: None
+  syslog_facility: user
+  keyfile: None
+  worker_int: <function WorkerInt.worker_int at 0x7ff92e80a8c8>
+  limit_request_line: 4094
+  worker_abort: <function WorkerAbort.worker_abort at 0x7ff92e80aa60>
+  limit_request_fields: 100
+  on_exit: <function OnExit.on_exit at 0x7ff92e80f598>
+[2018-06-14 10:10:49 +0200] [8986] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:10:49 +0200] [8986] [DEBUG] Arbiter booted
+[2018-06-14 10:10:49 +0200] [8986] [INFO] Listening at: http://127.0.0.1:3000 (8986)
+[2018-06-14 10:10:49 +0200] [8986] [INFO] Using worker: eventlet
+[2018-06-14 10:10:49 +0200] [8990] [INFO] Booting worker with pid: 8990
+[2018-06-14 10:10:49 +0200] [8986] [DEBUG] 1 workers
+[2018-06-14 10:10:51 +0200] [8990] [DEBUG] GET /
+[2018-06-14 10:10:51 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:51 +0200] [8990] [DEBUG] GET /homepage
+[2018-06-14 10:10:51 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] GET /listImpegni
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] GET /getNotifiche
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] GET /getImpegni
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] GET /header
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:52 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] POST /socket.io/
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] GET /popper.js.map
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] POST /socket.io/
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] GET /homepage
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] POST /socket.io/
+[2018-06-14 10:10:53 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:02 +0200] [8990] [DEBUG] POST /apriPaginaCliente
+[2018-06-14 10:11:02 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:02 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] GET /getNotifiche
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] GET /header
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] POST /socket.io/
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:03 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] GET /popper.js.map
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] POST /socket.io/
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] GET /socket.io/
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] GET /homepage
+[2018-06-14 10:11:04 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:14:08 +0200] [9133] [DEBUG] Current configuration:
+  proxy_allow_ips: ['127.0.0.1']
+  keyfile: None
+  limit_request_fields: 100
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  worker_connections: 1000
+  limit_request_field_size: 8190
+  certfile: None
+  pythonpath: None
+  ca_certs: None
+  pidfile: /var/run/gunicorn.pid
+  umask: 0
+  limit_request_line: 4094
+  timeout: 30
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  user: 0
+  accesslog: None
+  on_starting: <function OnStarting.on_starting at 0x7f9a01ad6ea0>
+  pre_fork: <function Prefork.pre_fork at 0x7f9a01ae5400>
+  pre_request: <function PreRequest.pre_request at 0x7f9a01ae5d90>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f9a01aea400>
+  on_exit: <function OnExit.on_exit at 0x7f9a01aea598>
+  cert_reqs: 0
+  suppress_ragged_eofs: True
+  logconfig: None
+  syslog: False
+  max_requests: 0
+  spew: False
+  do_handshake_on_connect: False
+  config: None
+  post_fork: <function Postfork.post_fork at 0x7f9a01ae5598>
   keepalive: 2
   reload_engine: auto
-  worker_exit: <function WorkerExit.worker_exit at 0x7fc677e01268>
-  worker_class: eventlet
-  limit_request_field_size: 8190
-  threads: 1
-  logconfig: None
-  post_request: <function PostRequest.post_request at 0x7fc677dfcea0>
-  suppress_ragged_eofs: True
-  check_config: False
-  sendfile: None
-  daemon: False
-  user: 0
-  umask: 0
-  raw_paste_global_conf: []
-  max_requests_jitter: 0
-  capture_output: False
-  spew: False
-  max_requests: 0
-  worker_tmp_dir: None
-  tmp_upload_dir: None
-  when_ready: <function WhenReady.when_ready at 0x7fc677dfc268>
-  proc_name: None
-  certfile: None
-  ciphers: TLSv1
-  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on'}
-  forwarded_allow_ips: ['127.0.0.1']
-  pythonpath: None
-  do_handshake_on_connect: False
+  when_ready: <function WhenReady.when_ready at 0x7f9a01ae5268>
+  worker_int: <function WorkerInt.worker_int at 0x7f9a01ae58c8>
+  enable_stdio_inheritance: False
+  raw_env: []
   proxy_protocol: False
-  reload: False
-  limit_request_line: 4094
-  pidfile: /var/run/gunicorn.pid
-  initgroups: False
-  proxy_allow_ips: ['127.0.0.1']
-  default_proc_name: Server:application
-  child_exit: <function ChildExit.child_exit at 0x7fc677e010d0>
-  logger_class: gunicorn.glogging.Logger
-  syslog_prefix: None
-[2018-06-12 14:00:51 +0200] [10454] [INFO] Starting gunicorn 19.7.1
-[2018-06-12 14:00:52 +0200] [10550] [DEBUG] Current configuration:
-  capture_output: False
-  logconfig: None
-  syslog_addr: udp://localhost:514
-  syslog_prefix: None
-  limit_request_line: 4094
-  syslog_facility: user
-  default_proc_name: Server:application
+  statsd_prefix: 
   threads: 1
-  limit_request_field_size: 8190
-  on_starting: <function OnStarting.on_starting at 0x7f5b64d80ea0>
-  pre_request: <function PreRequest.pre_request at 0x7f5b64d8fd90>
-  keyfile: None
+  ssl_version: 2
   sendfile: None
-  daemon: False
+  logger_class: gunicorn.glogging.Logger
+  graceful_timeout: 30
+  backlog: 2048
+  ciphers: TLSv1
   group: 0
   forwarded_allow_ips: ['127.0.0.1']
-  raw_paste_global_conf: []
-  worker_abort: <function WorkerAbort.worker_abort at 0x7f5b64d8fa60>
+  default_proc_name: Server:application
   loglevel: debug
-  syslog: False
-  worker_connections: 1000
-  enable_stdio_inheritance: False
-  child_exit: <function ChildExit.child_exit at 0x7f5b64d940d0>
+  syslog_addr: udp://localhost:514
+  syslog_prefix: None
   reload: False
+  pre_exec: <function PreExec.pre_exec at 0x7f9a01ae5bf8>
+  workers: 1
+  max_requests_jitter: 0
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f9a01ae5730>
+  post_request: <function PostRequest.post_request at 0x7f9a01ae5ea0>
+  bind: ['127.0.0.1:3000']
+  child_exit: <function ChildExit.child_exit at 0x7f9a01aea0d0>
+  proc_name: None
   preload_app: False
+  paste: None
+  check_config: False
+  capture_output: False
+  syslog_facility: user
+  on_reload: <function OnReload.on_reload at 0x7f9a01ae50d0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f9a01ae5a60>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f9a01aea268>
+  daemon: False
+  worker_tmp_dir: None
+  tmp_upload_dir: None
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  initgroups: False
+  statsd_host: None
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https'}
+  raw_paste_global_conf: []
+  worker_class: eventlet
+[2018-06-14 10:14:08 +0200] [9133] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:14:09 +0200] [8986] [INFO] Handling signal: term
+[2018-06-14 10:14:09 +0200] [9229] [DEBUG] Current configuration:
+  pre_fork: <function Prefork.pre_fork at 0x7f023591b400>
+  ssl_version: 2
+  umask: 0
+  on_starting: <function OnStarting.on_starting at 0x7f023590cea0>
+  child_exit: <function ChildExit.child_exit at 0x7f02359200d0>
+  timeout: 30
+  sendfile: None
+  initgroups: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  syslog_addr: udp://localhost:514
+  syslog: False
+  statsd_host: None
+  keyfile: None
+  suppress_ragged_eofs: True
+  pidfile: /var/run/gunicorn.pid
+  tmp_upload_dir: None
+  proxy_allow_ips: ['127.0.0.1']
+  on_reload: <function OnReload.on_reload at 0x7f023591b0d0>
+  pre_request: <function PreRequest.pre_request at 0x7f023591bd90>
+  logconfig: None
+  worker_connections: 1000
+  graceful_timeout: 30
+  config: None
+  do_handshake_on_connect: False
+  default_proc_name: Server:application
+  post_fork: <function Postfork.post_fork at 0x7f023591b598>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f0235920400>
+  loglevel: debug
+  daemon: False
+  proxy_protocol: False
+  pre_exec: <function PreExec.pre_exec at 0x7f023591bbf8>
+  limit_request_fields: 100
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  worker_class: eventlet
+  certfile: None
+  cert_reqs: 0
+  raw_paste_global_conf: []
+  on_exit: <function OnExit.on_exit at 0x7f0235920598>
+  max_requests: 0
+  backlog: 2048
+  syslog_prefix: None
+  raw_env: []
+  max_requests_jitter: 0
+  forwarded_allow_ips: ['127.0.0.1']
+  reload_engine: auto
+  preload_app: False
+  syslog_facility: user
+  user: 0
+  when_ready: <function WhenReady.when_ready at 0x7f023591b268>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f023591b730>
+  post_request: <function PostRequest.post_request at 0x7f023591bea0>
+  pythonpath: None
+  logger_class: gunicorn.glogging.Logger
+  limit_request_field_size: 8190
+  group: 0
+  paste: None
+  worker_int: <function WorkerInt.worker_int at 0x7f023591b8c8>
+  reload: False
+  keepalive: 2
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  worker_tmp_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  ca_certs: None
+  workers: 1
+  threads: 1
+  ciphers: TLSv1
+  accesslog: None
+  capture_output: False
+  enable_stdio_inheritance: False
+  statsd_prefix: 
+  worker_exit: <function WorkerExit.worker_exit at 0x7f0235920268>
+  spew: False
+  proc_name: None
+  check_config: False
+  limit_request_line: 4094
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f023591ba60>
+  bind: ['127.0.0.1:3000']
+[2018-06-14 10:14:09 +0200] [9229] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:14:10 +0200] [9325] [DEBUG] Current configuration:
+  do_handshake_on_connect: False
+  backlog: 2048
+  raw_paste_global_conf: []
+  limit_request_line: 4094
+  accesslog: None
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  statsd_prefix: 
+  graceful_timeout: 30
+  bind: ['127.0.0.1:3000']
+  pre_request: <function PreRequest.pre_request at 0x7f9413b8bd90>
+  daemon: False
+  umask: 0
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on'}
+  keyfile: None
+  limit_request_fields: 100
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f9413b8b730>
+  worker_int: <function WorkerInt.worker_int at 0x7f9413b8b8c8>
+  preload_app: False
+  raw_env: []
+  tmp_upload_dir: None
+  pythonpath: None
+  certfile: None
+  suppress_ragged_eofs: True
+  on_starting: <function OnStarting.on_starting at 0x7f9413b7cea0>
+  on_reload: <function OnReload.on_reload at 0x7f9413b8b0d0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f9413b90400>
+  reload_engine: auto
+  threads: 1
+  logger_class: gunicorn.glogging.Logger
+  initgroups: False
+  max_requests: 0
+  cert_reqs: 0
+  worker_class: eventlet
+  loglevel: debug
+  enable_stdio_inheritance: False
+  default_proc_name: Server:application
+  pre_fork: <function Prefork.pre_fork at 0x7f9413b8b400>
+  ssl_version: 2
+  reload: False
+  ciphers: TLSv1
+  spew: False
+  post_request: <function PostRequest.post_request at 0x7f9413b8bea0>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f9413b90268>
+  worker_tmp_dir: None
+  paste: None
+  proxy_allow_ips: ['127.0.0.1']
+  max_requests_jitter: 0
+  timeout: 30
+  proc_name: None
+  ca_certs: None
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  capture_output: False
+  logconfig: None
+  statsd_host: None
+  check_config: False
+  config: None
+  sendfile: None
+  when_ready: <function WhenReady.when_ready at 0x7f9413b8b268>
+  pre_exec: <function PreExec.pre_exec at 0x7f9413b8bbf8>
+  on_exit: <function OnExit.on_exit at 0x7f9413b90598>
+  proxy_protocol: False
+  syslog_prefix: None
+  workers: 1
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  pidfile: /var/run/gunicorn.pid
+  forwarded_allow_ips: ['127.0.0.1']
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f9413b8ba60>
+  syslog_addr: udp://localhost:514
+  syslog_facility: user
+  worker_connections: 1000
+  user: 0
+  group: 0
+  post_fork: <function Postfork.post_fork at 0x7f9413b8b598>
+  child_exit: <function ChildExit.child_exit at 0x7f9413b900d0>
+  limit_request_field_size: 8190
+  keepalive: 2
+  syslog: False
+[2018-06-14 10:14:10 +0200] [9325] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:14:12 +0200] [8990] [DEBUG] Closing connection. 
+[2018-06-14 10:14:12 +0200] [8990] [INFO] Worker exiting (pid: 8990)
+[2018-06-14 10:14:12 +0200] [8986] [INFO] Shutting down: Master
+[2018-06-14 10:14:14 +0200] [9435] [DEBUG] Current configuration:
+  raw_env: []
+  forwarded_allow_ips: ['127.0.0.1']
+  pre_exec: <function PreExec.pre_exec at 0x7f968d314bf8>
+  pre_request: <function PreRequest.pre_request at 0x7f968d314d90>
+  max_requests: 0
+  loglevel: debug
+  capture_output: False
+  workers: 1
+  worker_tmp_dir: None
+  proc_name: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  syslog_facility: user
+  default_proc_name: Server:application
+  worker_class: eventlet
+  worker_connections: 1000
+  daemon: False
+  spew: False
+  logconfig: None
+  on_reload: <function OnReload.on_reload at 0x7f968d3140d0>
+  pre_fork: <function Prefork.pre_fork at 0x7f968d314400>
+  post_fork: <function Postfork.post_fork at 0x7f968d314598>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f968d314730>
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  max_requests_jitter: 0
+  statsd_host: None
+  umask: 0
+  accesslog: None
+  ssl_version: 2
+  reload_engine: auto
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  limit_request_line: 4094
+  limit_request_field_size: 8190
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  certfile: None
+  cert_reqs: 0
+  post_request: <function PostRequest.post_request at 0x7f968d314ea0>
+  syslog_prefix: None
+  preload_app: False
+  sendfile: None
+  group: 0
+  initgroups: False
+  pythonpath: None
+  ca_certs: None
+  threads: 1
+  when_ready: <function WhenReady.when_ready at 0x7f968d314268>
+  worker_int: <function WorkerInt.worker_int at 0x7f968d3148c8>
+  on_exit: <function OnExit.on_exit at 0x7f968d319598>
+  user: 0
+  tmp_upload_dir: None
+  paste: None
+  reload: False
+  on_starting: <function OnStarting.on_starting at 0x7f968d305ea0>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  raw_paste_global_conf: []
+  check_config: False
+  keyfile: None
+  timeout: 30
+  syslog: False
+  statsd_prefix: 
+  limit_request_fields: 100
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f968d314a60>
+  config: None
+  syslog_addr: udp://localhost:514
+  child_exit: <function ChildExit.child_exit at 0x7f968d3190d0>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f968d319268>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f968d319400>
+  ciphers: TLSv1
+  graceful_timeout: 30
+  backlog: 2048
+  logger_class: gunicorn.glogging.Logger
+  enable_stdio_inheritance: False
+  pidfile: /var/run/gunicorn.pid
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1']
+  bind: ['127.0.0.1:3000']
+  keepalive: 2
+[2018-06-14 10:14:14 +0200] [9435] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:14:14 +0200] [9435] [DEBUG] Arbiter booted
+[2018-06-14 10:14:14 +0200] [9435] [INFO] Listening at: http://127.0.0.1:3000 (9435)
+[2018-06-14 10:14:14 +0200] [9435] [INFO] Using worker: eventlet
+[2018-06-14 10:14:14 +0200] [9438] [INFO] Booting worker with pid: 9438
+[2018-06-14 10:14:14 +0200] [9435] [DEBUG] 1 workers
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] GET /
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] GET /homepage
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] GET /listImpegni
+[2018-06-14 10:14:16 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /getNotifiche
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /getImpegni
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /header
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] POST /socket.io/
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] POST /socket.io/
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] GET /homepage
+[2018-06-14 10:14:17 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:21 +0200] [9438] [DEBUG] POST /apriPaginaCliente
+[2018-06-14 10:14:21 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:21 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /getNotifiche
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /header
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] POST /socket.io/
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] POST /socket.io/
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /socket.io/
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] GET /homepage
+[2018-06-14 10:14:22 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:14:29 +0200] [9438] [DEBUG] GET /popper.js.map
+[2018-06-14 10:14:29 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:15:05 +0200] [9593] [DEBUG] Current configuration:
+  ca_certs: None
+  pythonpath: None
+  reload_engine: auto
+  on_reload: <function OnReload.on_reload at 0x7f307b9700d0>
+  keepalive: 2
+  syslog_facility: user
+  tmp_upload_dir: None
+  max_requests: 0
+  capture_output: False
+  workers: 1
+  bind: ['127.0.0.1:3000']
+  pre_fork: <function Prefork.pre_fork at 0x7f307b970400>
+  proc_name: None
+  ssl_version: 2
+  logconfig: None
+  child_exit: <function ChildExit.child_exit at 0x7f307b9750d0>
+  worker_connections: 1000
+  user: 0
+  default_proc_name: Server:application
+  pre_request: <function PreRequest.pre_request at 0x7f307b970d90>
+  statsd_prefix: 
+  on_exit: <function OnExit.on_exit at 0x7f307b975598>
+  worker_class: eventlet
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  sendfile: None
+  raw_paste_global_conf: []
+  cert_reqs: 0
+  post_request: <function PostRequest.post_request at 0x7f307b970ea0>
+  daemon: False
+  on_starting: <function OnStarting.on_starting at 0x7f307b961ea0>
+  accesslog: None
+  loglevel: debug
+  backlog: 2048
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f307b970a60>
+  ciphers: TLSv1
+  forwarded_allow_ips: ['127.0.0.1']
+  syslog: False
+  check_config: False
+  post_fork: <function Postfork.post_fork at 0x7f307b970598>
+  limit_request_field_size: 8190
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f307b970730>
+  limit_request_line: 4094
+  proxy_protocol: False
+  proxy_allow_ips: ['127.0.0.1']
+  logger_class: gunicorn.glogging.Logger
+  syslog_addr: udp://localhost:514
+  syslog_prefix: None
+  do_handshake_on_connect: False
+  timeout: 30
   chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
   pidfile: /var/run/gunicorn.pid
   worker_tmp_dir: None
   secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl'}
-  post_fork: <function Postfork.post_fork at 0x7f5b64d8f598>
-  pre_exec: <function PreExec.pre_exec at 0x7f5b64d8fbf8>
-  ca_certs: None
-  worker_exit: <function WorkerExit.worker_exit at 0x7f5b64d94268>
-  limit_request_fields: 100
-  statsd_prefix: 
-  ciphers: TLSv1
-  paste: None
-  reload_engine: auto
-  on_reload: <function OnReload.on_reload at 0x7f5b64d8f0d0>
-  spew: False
-  when_ready: <function WhenReady.when_ready at 0x7f5b64d8f268>
-  cert_reqs: 0
-  user: 0
-  pythonpath: None
-  bind: ['127.0.0.1:3000']
-  backlog: 2048
-  check_config: False
-  suppress_ragged_eofs: True
-  workers: 1
-  worker_class: eventlet
   max_requests_jitter: 0
-  graceful_timeout: 30
-  keepalive: 2
-  umask: 0
-  pre_fork: <function Prefork.pre_fork at 0x7f5b64d8f400>
-  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f5b64d8f730>
-  worker_int: <function WorkerInt.worker_int at 0x7f5b64d8f8c8>
-  post_request: <function PostRequest.post_request at 0x7f5b64d8fea0>
-  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f5b64d94400>
-  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
-  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
-  raw_env: []
-  max_requests: 0
-  accesslog: None
-  proxy_allow_ips: ['127.0.0.1']
-  certfile: None
-  ssl_version: 2
-  initgroups: False
-  do_handshake_on_connect: False
-  config: None
-  statsd_host: None
-  on_exit: <function OnExit.on_exit at 0x7f5b64d94598>
-  logger_class: gunicorn.glogging.Logger
-  proxy_protocol: False
-  proc_name: None
-  timeout: 30
-  tmp_upload_dir: None
-[2018-06-12 14:00:52 +0200] [10550] [INFO] Starting gunicorn 19.7.1
-[2018-06-12 14:00:55 +0200] [10673] [DEBUG] Current configuration:
-  statsd_host: None
-  on_starting: <function OnStarting.on_starting at 0x7fea0422cea0>
-  worker_tmp_dir: None
   spew: False
-  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https'}
-  workers: 1
-  default_proc_name: Server:application
-  keyfile: None
-  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fea04240400>
-  logger_class: gunicorn.glogging.Logger
-  bind: ['127.0.0.1:3000']
-  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
-  on_reload: <function OnReload.on_reload at 0x7fea0423b0d0>
-  proxy_protocol: False
-  post_request: <function PostRequest.post_request at 0x7fea0423bea0>
-  graceful_timeout: 30
-  on_exit: <function OnExit.on_exit at 0x7fea04240598>
-  max_requests_jitter: 0
-  limit_request_fields: 100
-  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fea0423b730>
-  do_handshake_on_connect: False
-  max_requests: 0
-  loglevel: debug
-  post_fork: <function Postfork.post_fork at 0x7fea0423b598>
-  capture_output: False
-  statsd_prefix: 
-  raw_paste_global_conf: []
-  reload_engine: auto
-  user: 0
   config: None
-  proxy_allow_ips: ['127.0.0.1']
-  child_exit: <function ChildExit.child_exit at 0x7fea042400d0>
-  ca_certs: None
-  worker_connections: 1000
-  when_ready: <function WhenReady.when_ready at 0x7fea0423b268>
-  worker_class: eventlet
-  sendfile: None
-  pre_request: <function PreRequest.pre_request at 0x7fea0423bd90>
-  tmp_upload_dir: None
-  timeout: 30
-  accesslog: None
-  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
-  worker_int: <function WorkerInt.worker_int at 0x7fea0423b8c8>
-  pythonpath: None
-  syslog_addr: udp://localhost:514
-  preload_app: False
-  suppress_ragged_eofs: True
-  logconfig: None
-  certfile: None
-  syslog: False
-  group: 0
   threads: 1
-  ciphers: TLSv1
-  syslog_prefix: None
-  worker_abort: <function WorkerAbort.worker_abort at 0x7fea0423ba60>
-  proc_name: None
-  pidfile: /var/run/gunicorn.pid
-  worker_exit: <function WorkerExit.worker_exit at 0x7fea04240268>
-  keepalive: 2
-  pre_fork: <function Prefork.pre_fork at 0x7fea0423b400>
-  syslog_facility: user
-  backlog: 2048
+  certfile: None
+  preload_app: False
+  when_ready: <function WhenReady.when_ready at 0x7f307b970268>
+  worker_int: <function WorkerInt.worker_int at 0x7f307b9708c8>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f307b975268>
+  group: 0
+  graceful_timeout: 30
+  keyfile: None
+  suppress_ragged_eofs: True
+  reload: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  pre_exec: <function PreExec.pre_exec at 0x7f307b970bf8>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f307b975400>
+  enable_stdio_inheritance: False
   raw_env: []
-  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
   umask: 0
-  limit_request_field_size: 8190
+  initgroups: False
+  paste: None
+  statsd_host: None
+  limit_request_fields: 100
+[2018-06-14 10:15:05 +0200] [9593] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:21:24 +0200] [9435] [INFO] Handling signal: term
+[2018-06-14 10:21:25 +0200] [9848] [DEBUG] Current configuration:
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  raw_env: []
+  umask: 0
+  tmp_upload_dir: None
+  forwarded_allow_ips: ['127.0.0.1']
+  raw_paste_global_conf: []
+  bind: ['127.0.0.1:3000']
+  worker_class: eventlet
+  proxy_protocol: False
+  suppress_ragged_eofs: True
+  ciphers: TLSv1
+  statsd_host: None
+  worker_tmp_dir: None
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  capture_output: False
+  threads: 1
+  keepalive: 2
+  on_reload: <function OnReload.on_reload at 0x7f3a3a7ec0d0>
+  limit_request_line: 4094
   enable_stdio_inheritance: False
   reload: False
-  ssl_version: 2
   initgroups: False
-  check_config: False
-  limit_request_line: 4094
-  daemon: False
-  forwarded_allow_ips: ['127.0.0.1']
+  accesslog: None
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  spew: False
+  default_proc_name: Server:application
+  syslog: False
+  proxy_allow_ips: ['127.0.0.1']
+  when_ready: <function WhenReady.when_ready at 0x7f3a3a7ec268>
+  sendfile: None
+  backlog: 2048
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f3a3a7ec730>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f3a3a7f1400>
+  logger_class: gunicorn.glogging.Logger
+  config: None
+  limit_request_field_size: 8190
+  loglevel: debug
+  post_request: <function PostRequest.post_request at 0x7f3a3a7ecea0>
+  max_requests_jitter: 0
+  keyfile: None
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  pre_fork: <function Prefork.pre_fork at 0x7f3a3a7ec400>
+  syslog_addr: udp://localhost:514
+  pidfile: /var/run/gunicorn.pid
   paste: None
-  pre_exec: <function PreExec.pre_exec at 0x7fea0423bbf8>
+  workers: 1
+  post_fork: <function Postfork.post_fork at 0x7f3a3a7ec598>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f3a3a7f1268>
+  limit_request_fields: 100
+  worker_int: <function WorkerInt.worker_int at 0x7f3a3a7ec8c8>
+  do_handshake_on_connect: False
+  daemon: False
+  user: 0
+  group: 0
+  worker_connections: 1000
+  pre_request: <function PreRequest.pre_request at 0x7f3a3a7ecd90>
+  statsd_prefix: 
+  timeout: 30
+  logconfig: None
+  certfile: None
+  ssl_version: 2
+  ca_certs: None
+  preload_app: False
+  graceful_timeout: 30
+  reload_engine: auto
+  on_starting: <function OnStarting.on_starting at 0x7f3a3a7ddea0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f3a3a7eca60>
+  pre_exec: <function PreExec.pre_exec at 0x7f3a3a7ecbf8>
+  child_exit: <function ChildExit.child_exit at 0x7f3a3a7f10d0>
+  proc_name: None
+  max_requests: 0
+  syslog_prefix: None
+  syslog_facility: user
+  on_exit: <function OnExit.on_exit at 0x7f3a3a7f1598>
+  check_config: False
   cert_reqs: 0
-[2018-06-12 14:00:55 +0200] [10673] [INFO] Starting gunicorn 19.7.1
-[2018-06-12 14:00:55 +0200] [10673] [DEBUG] Arbiter booted
-[2018-06-12 14:00:55 +0200] [10673] [INFO] Listening at: http://127.0.0.1:3000 (10673)
-[2018-06-12 14:00:55 +0200] [10673] [INFO] Using worker: eventlet
-[2018-06-12 14:00:55 +0200] [10677] [INFO] Booting worker with pid: 10677
-[2018-06-12 14:00:55 +0200] [10673] [DEBUG] 1 workers
-[2018-06-12 14:00:59 +0200] [10677] [DEBUG] GET /
-[2018-06-12 14:00:59 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:00:59 +0200] [10677] [DEBUG] GET /homepage
-[2018-06-12 14:00:59 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /listImpegni
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /getNotifiche
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /getImpegni
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /sidebarLeft
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /header
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] POST /socket.io/
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] POST /socket.io/
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:00 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:01 +0200] [10677] [DEBUG] GET /homepage
-[2018-06-12 14:01:01 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:03 +0200] [10677] [DEBUG] POST /apriPaginaCliente
-[2018-06-12 14:01:03 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:03 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /getNotifiche
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /sidebarLeft
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /header
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] POST /socket.io/
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] POST /socket.io/
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:04 +0200] [10677] [DEBUG] GET /homepage
-[2018-06-12 14:01:05 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:07 +0200] [10677] [DEBUG] GET /newPreventivoEdile
-[2018-06-12 14:01:07 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:07 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:07 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:07 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] GET /getNotifiche
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] GET /sidebarLeft
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] GET /header
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] POST /socket.io/
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] POST /socket.io/
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] GET /socket.io/
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] GET /homepage
-[2018-06-12 14:01:08 +0200] [10677] [DEBUG] Closing connection. 
-[2018-06-12 14:04:10 +0200] [10677] [DEBUG] Closing connection. 
+  pythonpath: None
+[2018-06-14 10:21:25 +0200] [9848] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:21:32 +0200] [9968] [DEBUG] Current configuration:
+  syslog_addr: udp://localhost:514
+  when_ready: <function WhenReady.when_ready at 0x7f530cc4e268>
+  preload_app: False
+  sendfile: None
+  forwarded_allow_ips: ['127.0.0.1']
+  on_starting: <function OnStarting.on_starting at 0x7f530cc3fea0>
+  daemon: False
+  pidfile: /var/run/gunicorn.pid
+  group: 0
+  tmp_upload_dir: None
+  proxy_allow_ips: ['127.0.0.1']
+  post_fork: <function Postfork.post_fork at 0x7f530cc4e598>
+  certfile: None
+  pythonpath: None
+  worker_connections: 1000
+  graceful_timeout: 30
+  child_exit: <function ChildExit.child_exit at 0x7f530cc530d0>
+  limit_request_line: 4094
+  accesslog: None
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  logconfig: None
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f530cc53400>
+  threads: 1
+  initgroups: False
+  worker_int: <function WorkerInt.worker_int at 0x7f530cc4e8c8>
+  reload_engine: auto
+  syslog_facility: user
+  timeout: 30
+  limit_request_fields: 100
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  reload: False
+  keyfile: None
+  suppress_ragged_eofs: True
+  syslog_prefix: None
+  max_requests: 0
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f530cc4e730>
+  post_request: <function PostRequest.post_request at 0x7f530cc4eea0>
+  on_exit: <function OnExit.on_exit at 0x7f530cc53598>
+  max_requests_jitter: 0
+  keepalive: 2
+  enable_stdio_inheritance: False
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  config: None
+  limit_request_field_size: 8190
+  pre_request: <function PreRequest.pre_request at 0x7f530cc4ed90>
+  ssl_version: 2
+  ca_certs: None
+  check_config: False
+  loglevel: debug
+  worker_tmp_dir: None
+  umask: 0
+  paste: None
+  proxy_protocol: False
+  on_reload: <function OnReload.on_reload at 0x7f530cc4e0d0>
+  pre_fork: <function Prefork.pre_fork at 0x7f530cc4e400>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  capture_output: False
+  bind: ['127.0.0.1:3000']
+  spew: False
+  pre_exec: <function PreExec.pre_exec at 0x7f530cc4ebf8>
+  do_handshake_on_connect: False
+  logger_class: gunicorn.glogging.Logger
+  syslog: False
+  statsd_host: None
+  backlog: 2048
+  proc_name: None
+  cert_reqs: 0
+  default_proc_name: Server:application
+  worker_exit: <function WorkerExit.worker_exit at 0x7f530cc53268>
+  statsd_prefix: 
+  ciphers: TLSv1
+  raw_paste_global_conf: []
+  workers: 1
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f530cc4ea60>
+  raw_env: []
+  worker_class: eventlet
+  user: 0
+[2018-06-14 10:21:32 +0200] [9968] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:21:33 +0200] [10066] [DEBUG] Current configuration:
+  threads: 1
+  syslog_facility: user
+  umask: 0
+  post_request: <function PostRequest.post_request at 0x7fb5b39feea0>
+  paste: None
+  proxy_protocol: False
+  do_handshake_on_connect: False
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fb5b39fe730>
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  statsd_prefix: 
+  graceful_timeout: 30
+  pre_request: <function PreRequest.pre_request at 0x7fb5b39fed90>
+  ciphers: TLSv1
+  max_requests: 0
+  post_fork: <function Postfork.post_fork at 0x7fb5b39fe598>
+  logger_class: gunicorn.glogging.Logger
+  user: 0
+  cert_reqs: 0
+  limit_request_line: 4094
+  worker_int: <function WorkerInt.worker_int at 0x7fb5b39fe8c8>
+  statsd_host: None
+  suppress_ragged_eofs: True
+  worker_class: eventlet
+  proc_name: None
+  proxy_allow_ips: ['127.0.0.1']
+  when_ready: <function WhenReady.when_ready at 0x7fb5b39fe268>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  raw_env: []
+  worker_tmp_dir: None
+  on_reload: <function OnReload.on_reload at 0x7fb5b39fe0d0>
+  pre_fork: <function Prefork.pre_fork at 0x7fb5b39fe400>
+  child_exit: <function ChildExit.child_exit at 0x7fb5b3a030d0>
+  worker_exit: <function WorkerExit.worker_exit at 0x7fb5b3a03268>
+  on_exit: <function OnExit.on_exit at 0x7fb5b3a03598>
+  config: None
+  preload_app: False
+  keepalive: 2
+  check_config: False
+  sendfile: None
+  syslog_addr: udp://localhost:514
+  pidfile: /var/run/gunicorn.pid
+  group: 0
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  forwarded_allow_ips: ['127.0.0.1']
+  pythonpath: None
+  syslog: False
+  syslog_prefix: None
+  enable_stdio_inheritance: False
+  limit_request_field_size: 8190
+  on_starting: <function OnStarting.on_starting at 0x7fb5b39efea0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fb5b39fea60>
+  certfile: None
+  pre_exec: <function PreExec.pre_exec at 0x7fb5b39febf8>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fb5b3a03400>
+  backlog: 2048
+  max_requests_jitter: 0
+  ssl_version: 2
+  spew: False
+  bind: ['127.0.0.1:3000']
+  daemon: False
+  timeout: 30
+  default_proc_name: Server:application
+  reload: False
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  ca_certs: None
+  limit_request_fields: 100
+  keyfile: None
+  accesslog: None
+  loglevel: debug
+  capture_output: False
+  logconfig: None
+  initgroups: False
+  workers: 1
+  reload_engine: auto
+  raw_paste_global_conf: []
+  worker_connections: 1000
+[2018-06-14 10:21:33 +0200] [10066] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:21:34 +0200] [10162] [DEBUG] Current configuration:
+  logger_class: gunicorn.glogging.Logger
+  proxy_protocol: False
+  accesslog: None
+  bind: ['127.0.0.1:3000']
+  pidfile: /var/run/gunicorn.pid
+  suppress_ragged_eofs: True
+  syslog_prefix: None
+  threads: 1
+  forwarded_allow_ips: ['127.0.0.1']
+  child_exit: <function ChildExit.child_exit at 0x7fa1ee7370d0>
+  statsd_prefix: 
+  on_exit: <function OnExit.on_exit at 0x7fa1ee737598>
+  proc_name: None
+  ca_certs: None
+  backlog: 2048
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  loglevel: debug
+  group: 0
+  graceful_timeout: 30
+  sendfile: None
+  pre_request: <function PreRequest.pre_request at 0x7fa1ee732d90>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  limit_request_line: 4094
+  reload: False
+  workers: 1
+  preload_app: False
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fa1ee732a60>
+  enable_stdio_inheritance: False
+  limit_request_field_size: 8190
+  ciphers: TLSv1
+  when_ready: <function WhenReady.when_ready at 0x7fa1ee732268>
+  max_requests: 0
+  initgroups: False
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fa1ee732730>
+  logconfig: None
+  worker_exit: <function WorkerExit.worker_exit at 0x7fa1ee737268>
+  capture_output: False
+  worker_connections: 1000
+  max_requests_jitter: 0
+  pre_fork: <function Prefork.pre_fork at 0x7fa1ee732400>
+  tmp_upload_dir: None
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  pythonpath: None
+  ssl_version: 2
+  worker_int: <function WorkerInt.worker_int at 0x7fa1ee7328c8>
+  reload_engine: auto
+  check_config: False
+  syslog: False
+  daemon: False
+  timeout: 30
+  on_starting: <function OnStarting.on_starting at 0x7fa1ee723ea0>
+  worker_class: eventlet
+  on_reload: <function OnReload.on_reload at 0x7fa1ee7320d0>
+  keepalive: 2
+  certfile: None
+  cert_reqs: 0
+  statsd_host: None
+  user: 0
+  umask: 0
+  spew: False
+  syslog_addr: udp://localhost:514
+  raw_env: []
+  paste: None
+  raw_paste_global_conf: []
+  post_fork: <function Postfork.post_fork at 0x7fa1ee732598>
+  syslog_facility: user
+  limit_request_fields: 100
+  pre_exec: <function PreExec.pre_exec at 0x7fa1ee732bf8>
+  config: None
+  post_request: <function PostRequest.post_request at 0x7fa1ee732ea0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fa1ee737400>
+  proxy_allow_ips: ['127.0.0.1']
+  keyfile: None
+  do_handshake_on_connect: False
+  default_proc_name: Server:application
+  worker_tmp_dir: None
+[2018-06-14 10:21:34 +0200] [10162] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:21:37 +0200] [9438] [DEBUG] Closing connection. 
+[2018-06-14 10:21:37 +0200] [9438] [INFO] Worker exiting (pid: 9438)
+[2018-06-14 10:21:37 +0200] [9435] [INFO] Shutting down: Master
+[2018-06-14 10:21:39 +0200] [10272] [DEBUG] Current configuration:
+  statsd_prefix: 
+  on_reload: <function OnReload.on_reload at 0x7f6b09e360d0>
+  bind: ['127.0.0.1:3000']
+  reload: False
+  certfile: None
+  when_ready: <function WhenReady.when_ready at 0x7f6b09e36268>
+  cert_reqs: 0
+  umask: 0
+  paste: None
+  worker_int: <function WorkerInt.worker_int at 0x7f6b09e368c8>
+  ca_certs: None
+  suppress_ragged_eofs: True
+  ciphers: TLSv1
+  spew: False
+  preload_app: False
+  forwarded_allow_ips: ['127.0.0.1']
+  pre_request: <function PreRequest.pre_request at 0x7f6b09e36d90>
+  limit_request_line: 4094
+  initgroups: False
+  config: None
+  max_requests: 0
+  worker_tmp_dir: None
+  accesslog: None
+  loglevel: debug
+  logger_class: gunicorn.glogging.Logger
+  post_fork: <function Postfork.post_fork at 0x7f6b09e36598>
+  post_request: <function PostRequest.post_request at 0x7f6b09e36ea0>
+  worker_connections: 1000
+  graceful_timeout: 30
+  proxy_allow_ips: ['127.0.0.1']
+  capture_output: False
+  syslog: False
+  child_exit: <function ChildExit.child_exit at 0x7f6b09e3b0d0>
+  threads: 1
+  default_proc_name: Server:application
+  max_requests_jitter: 0
+  timeout: 30
+  pre_fork: <function Prefork.pre_fork at 0x7f6b09e36400>
+  check_config: False
+  proxy_protocol: False
+  on_exit: <function OnExit.on_exit at 0x7f6b09e3b598>
+  logconfig: None
+  sendfile: None
+  statsd_host: None
+  daemon: False
+  worker_exit: <function WorkerExit.worker_exit at 0x7f6b09e3b268>
+  raw_env: []
+  tmp_upload_dir: None
+  limit_request_field_size: 8190
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  syslog_addr: udp://localhost:514
+  user: 0
+  pythonpath: None
+  workers: 1
+  limit_request_fields: 100
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f6b09e36730>
+  worker_class: eventlet
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  syslog_facility: user
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f6b09e36a60>
+  reload_engine: auto
+  group: 0
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  syslog_prefix: None
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  proc_name: None
+  keyfile: None
+  ssl_version: 2
+  enable_stdio_inheritance: False
+  keepalive: 2
+  do_handshake_on_connect: False
+  raw_paste_global_conf: []
+  on_starting: <function OnStarting.on_starting at 0x7f6b09e27ea0>
+  pre_exec: <function PreExec.pre_exec at 0x7f6b09e36bf8>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f6b09e3b400>
+  pidfile: /var/run/gunicorn.pid
+  backlog: 2048
+[2018-06-14 10:21:39 +0200] [10272] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:21:39 +0200] [10272] [DEBUG] Arbiter booted
+[2018-06-14 10:21:39 +0200] [10272] [INFO] Listening at: http://127.0.0.1:3000 (10272)
+[2018-06-14 10:21:39 +0200] [10272] [INFO] Using worker: eventlet
+[2018-06-14 10:21:39 +0200] [10275] [INFO] Booting worker with pid: 10275
+[2018-06-14 10:21:39 +0200] [10272] [DEBUG] 1 workers
+[2018-06-14 10:21:40 +0200] [10275] [DEBUG] GET /
+[2018-06-14 10:21:40 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:40 +0200] [10275] [DEBUG] GET /homepage
+[2018-06-14 10:21:40 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:41 +0200] [10275] [DEBUG] GET /socket.io/
+[2018-06-14 10:21:41 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:41 +0200] [10275] [DEBUG] GET /listImpegni
+[2018-06-14 10:21:41 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] GET /getNotifiche
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] GET /getImpegni
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] GET /header
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] POST /socket.io/
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] GET /socket.io/
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] GET /socket.io/
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] GET /popper.js.map
+[2018-06-14 10:21:42 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:43 +0200] [10275] [DEBUG] GET /homepage
+[2018-06-14 10:21:43 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:51 +0200] [10275] [DEBUG] POST /apriPaginaCliente
+[2018-06-14 10:21:52 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:52 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:52 +0200] [10275] [DEBUG] GET /socket.io/
+[2018-06-14 10:21:52 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] GET /getNotifiche
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] GET /header
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] POST /socket.io/
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] GET /socket.io/
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] GET /socket.io/
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] GET /popper.js.map
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] POST /socket.io/
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] GET /socket.io/
+[2018-06-14 10:21:53 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:21:54 +0200] [10275] [DEBUG] GET /homepage
+[2018-06-14 10:21:54 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:23:37 +0200] [10457] [DEBUG] Current configuration:
+  reload_engine: auto
+  limit_request_line: 4094
+  keepalive: 2
+  keyfile: None
+  paste: None
+  pre_fork: <function Prefork.pre_fork at 0x7f32a02b9400>
+  statsd_prefix: 
+  user: 0
+  spew: False
+  post_fork: <function Postfork.post_fork at 0x7f32a02b9598>
+  limit_request_fields: 100
+  preload_app: False
+  worker_class: eventlet
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https'}
+  on_starting: <function OnStarting.on_starting at 0x7f32a02aaea0>
+  logconfig: None
+  statsd_host: None
+  check_config: False
+  certfile: None
+  workers: 1
+  max_requests_jitter: 0
+  graceful_timeout: 30
+  raw_env: []
+  on_reload: <function OnReload.on_reload at 0x7f32a02b90d0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f32a02be400>
+  tmp_upload_dir: None
+  cert_reqs: 0
+  capture_output: False
+  worker_int: <function WorkerInt.worker_int at 0x7f32a02b98c8>
+  proxy_protocol: False
+  child_exit: <function ChildExit.child_exit at 0x7f32a02be0d0>
+  worker_connections: 1000
+  umask: 0
+  bind: ['127.0.0.1:3000']
+  proc_name: None
+  worker_tmp_dir: None
+  syslog_addr: udp://localhost:514
+  limit_request_field_size: 8190
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f32a02b9a60>
+  pre_exec: <function PreExec.pre_exec at 0x7f32a02b9bf8>
+  daemon: False
+  raw_paste_global_conf: []
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  sendfile: None
+  initgroups: False
+  forwarded_allow_ips: ['127.0.0.1']
+  default_proc_name: Server:application
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f32a02b9730>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  syslog: False
+  enable_stdio_inheritance: False
+  pre_request: <function PreRequest.pre_request at 0x7f32a02b9d90>
+  post_request: <function PostRequest.post_request at 0x7f32a02b9ea0>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f32a02be268>
+  max_requests: 0
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  syslog_facility: user
+  config: None
+  backlog: 2048
+  on_exit: <function OnExit.on_exit at 0x7f32a02be598>
+  reload: False
+  ciphers: TLSv1
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  group: 0
+  accesslog: None
+  loglevel: debug
+  syslog_prefix: None
+  proxy_allow_ips: ['127.0.0.1']
+  ssl_version: 2
+  pidfile: /var/run/gunicorn.pid
+  pythonpath: None
+  threads: 1
+  timeout: 30
+  when_ready: <function WhenReady.when_ready at 0x7f32a02b9268>
+  logger_class: gunicorn.glogging.Logger
+[2018-06-14 10:23:37 +0200] [10457] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:23:37 +0200] [10272] [INFO] Handling signal: term
+[2018-06-14 10:23:38 +0200] [10555] [DEBUG] Current configuration:
+  accesslog: None
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  ciphers: TLSv1
+  when_ready: <function WhenReady.when_ready at 0x7fb462692268>
+  child_exit: <function ChildExit.child_exit at 0x7fb4626970d0>
+  max_requests: 0
+  proxy_allow_ips: ['127.0.0.1']
+  max_requests_jitter: 0
+  keepalive: 2
+  limit_request_field_size: 8190
+  logger_class: gunicorn.glogging.Logger
+  pre_request: <function PreRequest.pre_request at 0x7fb462692d90>
+  certfile: None
+  sendfile: None
+  umask: 0
+  tmp_upload_dir: None
+  post_fork: <function Postfork.post_fork at 0x7fb462692598>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fb462697400>
+  statsd_host: None
+  paste: None
+  pre_exec: <function PreExec.pre_exec at 0x7fb462692bf8>
+  spew: False
+  logconfig: None
+  cert_reqs: 0
+  worker_connections: 1000
+  graceful_timeout: 30
+  enable_stdio_inheritance: False
+  do_handshake_on_connect: False
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  on_starting: <function OnStarting.on_starting at 0x7fb462683ea0>
+  on_reload: <function OnReload.on_reload at 0x7fb4626920d0>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fb462692730>
+  timeout: 30
+  user: 0
+  group: 0
+  initgroups: False
+  bind: ['127.0.0.1:3000']
+  backlog: 2048
+  capture_output: False
+  post_request: <function PostRequest.post_request at 0x7fb462692ea0>
+  reload: False
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fb462692a60>
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  syslog_addr: udp://localhost:514
+  syslog_prefix: None
+  syslog_facility: user
+  ssl_version: 2
+  reload_engine: auto
+  check_config: False
+  worker_class: eventlet
+  daemon: False
+  raw_env: []
+  forwarded_allow_ips: ['127.0.0.1']
+  pythonpath: None
+  proxy_protocol: False
+  keyfile: None
+  limit_request_line: 4094
+  loglevel: debug
+  statsd_prefix: 
+  proc_name: None
+  limit_request_fields: 100
+  preload_app: False
+  pidfile: /var/run/gunicorn.pid
+  raw_paste_global_conf: []
+  default_proc_name: Server:application
+  pre_fork: <function Prefork.pre_fork at 0x7fb462692400>
+  worker_int: <function WorkerInt.worker_int at 0x7fb4626928c8>
+  worker_exit: <function WorkerExit.worker_exit at 0x7fb462697268>
+  config: None
+  ca_certs: None
+  suppress_ragged_eofs: True
+  on_exit: <function OnExit.on_exit at 0x7fb462697598>
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  worker_tmp_dir: None
+  syslog: False
+  workers: 1
+  threads: 1
+[2018-06-14 10:23:38 +0200] [10555] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:23:40 +0200] [10651] [DEBUG] Current configuration:
+  keyfile: None
+  pre_fork: <function Prefork.pre_fork at 0x7f766bd4d400>
+  initgroups: False
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  on_reload: <function OnReload.on_reload at 0x7f766bd4d0d0>
+  child_exit: <function ChildExit.child_exit at 0x7f766bd520d0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f766bd52400>
+  enable_stdio_inheritance: False
+  workers: 1
+  keepalive: 2
+  pre_exec: <function PreExec.pre_exec at 0x7f766bd4dbf8>
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  pythonpath: None
+  graceful_timeout: 30
+  config: None
+  backlog: 2048
+  max_requests_jitter: 0
+  preload_app: False
+  pidfile: /var/run/gunicorn.pid
+  umask: 0
+  raw_paste_global_conf: []
+  capture_output: False
+  logconfig: None
+  syslog: False
+  worker_int: <function WorkerInt.worker_int at 0x7f766bd4d8c8>
+  on_exit: <function OnExit.on_exit at 0x7f766bd52598>
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  proc_name: None
+  statsd_host: None
+  when_ready: <function WhenReady.when_ready at 0x7f766bd4d268>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f766bd4da60>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f766bd52268>
+  check_config: False
+  logger_class: gunicorn.glogging.Logger
+  proxy_allow_ips: ['127.0.0.1']
+  limit_request_line: 4094
+  certfile: None
+  worker_connections: 1000
+  timeout: 30
+  group: 0
+  ssl_version: 2
+  reload: False
+  limit_request_fields: 100
+  worker_tmp_dir: None
+  spew: False
+  pre_request: <function PreRequest.pre_request at 0x7f766bd4dd90>
+  raw_env: []
+  post_request: <function PostRequest.post_request at 0x7f766bd4dea0>
+  sendfile: None
+  user: 0
+  tmp_upload_dir: None
+  accesslog: None
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  statsd_prefix: 
+  cert_reqs: 0
+  ciphers: TLSv1
+  syslog_addr: udp://localhost:514
+  proxy_protocol: False
+  on_starting: <function OnStarting.on_starting at 0x7f766bd3eea0>
+  post_fork: <function Postfork.post_fork at 0x7f766bd4d598>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f766bd4d730>
+  paste: None
+  reload_engine: auto
+  loglevel: debug
+  syslog_prefix: None
+  worker_class: eventlet
+  threads: 1
+  max_requests: 0
+  daemon: False
+  ca_certs: None
+  do_handshake_on_connect: False
+  limit_request_field_size: 8190
+  default_proc_name: Server:application
+  bind: ['127.0.0.1:3000']
+  forwarded_allow_ips: ['127.0.0.1']
+  suppress_ragged_eofs: True
+  syslog_facility: user
+[2018-06-14 10:23:40 +0200] [10651] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:23:44 +0200] [10275] [DEBUG] Closing connection. 
+[2018-06-14 10:23:44 +0200] [10275] [INFO] Worker exiting (pid: 10275)
+[2018-06-14 10:23:44 +0200] [10272] [INFO] Shutting down: Master
+[2018-06-14 10:23:46 +0200] [10757] [DEBUG] Current configuration:
+  worker_connections: 1000
+  on_reload: <function OnReload.on_reload at 0x7fc63385c0d0>
+  raw_env: []
+  forwarded_allow_ips: ['127.0.0.1']
+  proc_name: None
+  paste: None
+  proxy_protocol: False
+  threads: 1
+  graceful_timeout: 30
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fc63385c730>
+  statsd_prefix: 
+  config: None
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fc63385ca60>
+  do_handshake_on_connect: False
+  timeout: 30
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  pidfile: /var/run/gunicorn.pid
+  umask: 0
+  ssl_version: 2
+  capture_output: False
+  reload_engine: auto
+  check_config: False
+  logconfig: None
+  syslog_addr: udp://localhost:514
+  suppress_ragged_eofs: True
+  group: 0
+  keepalive: 2
+  limit_request_line: 4094
+  worker_class: eventlet
+  limit_request_fields: 100
+  limit_request_field_size: 8190
+  when_ready: <function WhenReady.when_ready at 0x7fc63385c268>
+  daemon: False
+  spew: False
+  accesslog: None
+  certfile: None
+  cert_reqs: 0
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fc633861400>
+  proxy_allow_ips: ['127.0.0.1']
+  pre_request: <function PreRequest.pre_request at 0x7fc63385cd90>
+  on_exit: <function OnExit.on_exit at 0x7fc633861598>
+  workers: 1
+  syslog: False
+  syslog_prefix: None
+  user: 0
+  initgroups: False
+  max_requests: 0
+  max_requests_jitter: 0
+  ca_certs: None
+  syslog_facility: user
+  statsd_host: None
+  sendfile: None
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  pythonpath: None
+  ciphers: TLSv1
+  enable_stdio_inheritance: False
+  backlog: 2048
+  on_starting: <function OnStarting.on_starting at 0x7fc63384dea0>
+  pre_fork: <function Prefork.pre_fork at 0x7fc63385c400>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  preload_app: False
+  raw_paste_global_conf: []
+  worker_int: <function WorkerInt.worker_int at 0x7fc63385c8c8>
+  post_request: <function PostRequest.post_request at 0x7fc63385cea0>
+  keyfile: None
+  worker_exit: <function WorkerExit.worker_exit at 0x7fc633861268>
+  tmp_upload_dir: None
+  bind: ['127.0.0.1:3000']
+  default_proc_name: Server:application
+  loglevel: debug
+  post_fork: <function Postfork.post_fork at 0x7fc63385c598>
+  pre_exec: <function PreExec.pre_exec at 0x7fc63385cbf8>
+  child_exit: <function ChildExit.child_exit at 0x7fc6338610d0>
+  logger_class: gunicorn.glogging.Logger
+  reload: False
+  worker_tmp_dir: None
+[2018-06-14 10:23:46 +0200] [10757] [INFO] Starting gunicorn 19.7.1
+[2018-06-14 10:23:46 +0200] [10757] [DEBUG] Arbiter booted
+[2018-06-14 10:23:46 +0200] [10757] [INFO] Listening at: http://127.0.0.1:3000 (10757)
+[2018-06-14 10:23:46 +0200] [10757] [INFO] Using worker: eventlet
+[2018-06-14 10:23:46 +0200] [10760] [INFO] Booting worker with pid: 10760
+[2018-06-14 10:23:46 +0200] [10757] [DEBUG] 1 workers
+[2018-06-14 10:23:48 +0200] [10760] [DEBUG] GET /
+[2018-06-14 10:23:48 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:48 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:23:48 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] GET /listImpegni
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] GET /getNotifiche
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] GET /getImpegni
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:23:49 +0200] [10760] [DEBUG] GET /header
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] GET /popper.js.map
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:23:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:54 +0200] [10760] [DEBUG] POST /apriPaginaCliente
+[2018-06-14 10:23:54 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:54 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] GET /getNotifiche
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] GET /header
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:55 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] GET /popper.js.map
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:23:56 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /listImpegni
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /getNotifiche
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /getImpegni
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] GET /header
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:46 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:25:47 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:34 +0200] [10760] [DEBUG] GET /
+[2018-06-14 10:28:34 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:34 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:28:34 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /listImpegni
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /getNotifiche
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /getImpegni
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /header
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:35 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:28:36 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:28:36 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:36 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:28:36 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:36 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:28:36 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:28:50 +0200] [10760] [DEBUG] GET /gestioneDip
+[2018-06-14 10:28:50 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:32:15 +0200] [10760] [DEBUG] GET /gestioneDip
+[2018-06-14 10:32:15 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] POST /apriPaginaCliente
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] GET /getNotifiche
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] GET /header
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:15 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:38:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:04 +0200] [10760] [DEBUG] GET /accoglienza/0
+[2018-06-14 10:40:04 +0200] [10760] [INFO] 
+
+Alternativa al post ()<app.model.form.ClienteAccoltoForm object at 0x7fc62e0a7080>
+
+
+[2018-06-14 10:40:04 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] POST /apriPaginaCliente
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] GET /getNotifiche
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] GET /sidebarLeft
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] GET /header
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:40:25 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 10:40:26 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:36 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:36 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:36 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:37 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:49:38 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:49:39 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:25 +0200] [10760] [DEBUG] GET /newPreventivoEdile
+[2018-06-14 13:50:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:25 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:26 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:50:26 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] GET /getNotifiche
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] GET /sidebarLeft
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] GET /header
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] GET /popper.js.map
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 13:50:27 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:28 +0200] [10760] [DEBUG] GET /homepage
+[2018-06-14 13:50:28 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 13:50:36 +0200] [10760] [DEBUG] GET /popper.js.map
+[2018-06-14 13:50:36 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:14 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:14 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:14 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 16:17:17 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:01 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:01 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:01 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 17:18:02 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:41 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:41 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:41 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] POST /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] GET /socket.io/
+[2018-06-14 23:30:43 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:38:16 +0200] [10757] [CRITICAL] WORKER TIMEOUT (pid:10760)
+[2018-06-14 23:38:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:38:16 +0200] [10760] [DEBUG] Closing connection. 
+[2018-06-14 23:38:16 +0200] [10760] [INFO] Worker exiting (pid: 10760)
+[2018-06-14 23:38:17 +0200] [19652] [INFO] Booting worker with pid: 19652
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] POST /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] POST /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] POST /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] POST /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] POST /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] POST /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] GET /socket.io/
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-14 23:38:20 +0200] [19652] [DEBUG] Closing connection. 
+[2018-06-15 00:13:26 +0200] [606] [DEBUG] Current configuration:
+  daemon: False
+  worker_tmp_dir: None
+  worker_int: <function WorkerInt.worker_int at 0x7f67563018c8>
+  certfile: None
+  preload_app: False
+  max_requests: 0
+  ciphers: TLSv1
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f6756301730>
+  logconfig: None
+  cert_reqs: 0
+  on_starting: <function OnStarting.on_starting at 0x7f67562f2ea0>
+  check_config: False
+  proxy_protocol: False
+  on_reload: <function OnReload.on_reload at 0x7f67563010d0>
+  syslog_addr: udp://localhost:514
+  worker_exit: <function WorkerExit.worker_exit at 0x7f6756306268>
+  paste: None
+  timeout: 30
+  group: 0
+  limit_request_fields: 100
+  max_requests_jitter: 0
+  suppress_ragged_eofs: True
+  statsd_prefix: 
+  proxy_allow_ips: ['127.0.0.1']
+  worker_connections: 1000
+  when_ready: <function WhenReady.when_ready at 0x7f6756301268>
+  forwarded_allow_ips: ['127.0.0.1']
+  pre_request: <function PreRequest.pre_request at 0x7f6756301d90>
+  proc_name: None
+  enable_stdio_inheritance: False
+  ssl_version: 2
+  tmp_upload_dir: None
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  statsd_host: None
+  graceful_timeout: 30
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f6756306400>
+  reload_engine: auto
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  post_request: <function PostRequest.post_request at 0x7f6756301ea0>
+  user: 0
+  pre_fork: <function Prefork.pre_fork at 0x7f6756301400>
+  workers: 1
+  pythonpath: None
+  keyfile: None
+  backlog: 2048
+  keepalive: 2
+  config: None
+  threads: 1
+  do_handshake_on_connect: False
+  worker_class: eventlet
+  reload: False
+  accesslog: None
+  on_exit: <function OnExit.on_exit at 0x7f6756306598>
+  umask: 0
+  logger_class: gunicorn.glogging.Logger
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f6756301a60>
+  initgroups: False
+  pre_exec: <function PreExec.pre_exec at 0x7f6756301bf8>
+  limit_request_line: 4094
+  pidfile: /var/run/gunicorn.pid
+  child_exit: <function ChildExit.child_exit at 0x7f67563060d0>
+  sendfile: None
+  spew: False
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on'}
+  syslog: False
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  raw_env: []
+  post_fork: <function Postfork.post_fork at 0x7f6756301598>
+  loglevel: debug
+  bind: ['127.0.0.1:3000']
+  capture_output: False
+  syslog_prefix: None
+  syslog_facility: user
+  limit_request_field_size: 8190
+  default_proc_name: Server:application
+  raw_paste_global_conf: []
+  ca_certs: None
+[2018-06-15 00:13:26 +0200] [606] [INFO] Starting gunicorn 19.7.1
+[2018-06-15 00:13:26 +0200] [606] [DEBUG] Arbiter booted
+[2018-06-15 00:13:26 +0200] [606] [INFO] Listening at: http://127.0.0.1:3000 (606)
+[2018-06-15 00:13:26 +0200] [606] [INFO] Using worker: eventlet
+[2018-06-15 00:13:26 +0200] [728] [INFO] Booting worker with pid: 728
+[2018-06-15 00:13:26 +0200] [606] [DEBUG] 1 workers

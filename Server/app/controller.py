@@ -22,6 +22,7 @@ from .model.eccezioni.righaPresenteException import RigaPresenteException
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import app
+import json
 
 
 ####################################### ROUTE HANDLER #################################################
@@ -347,12 +348,37 @@ def newPreventivoEdile():
     prezzarioEdile = PrezzarioEdile.query.all()
     preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
+    codicePreventivo=preventivo.calcolaCodicePreventivo()
 
-    return render_template('preventivoEdile.html', settori=settori, preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile, preventivo=preventivo)
+    return render_template('preventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
+                            preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile, preventivo=preventivo)
+
+
+@server.route('/apriPreventivoEdile')
+@login_required
+def apriPreventivoEdile():
+    settori = SettoreLavorazione.query.all()
+    prezzarioEdile = PrezzarioEdile.query.all()
+    preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
+    infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1])
+    cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
+    codicePreventivo=preventivo.calcolaCodicePreventivo()
+
+    return render_template('modificaPreventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
+                            preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
+                            preventivo=preventivo, infoPreventivo=infoPreventivo)
 
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required
 def apriPaginaCliente():
+    '''
+    Distinzione variabili "preventivi" e "preventivi_distinti" ritornate con la pagina:
+    - preventivi: lista ordinata ( dalla data piu' recente alla piu' vecchia ) di preventivi
+                    associati ad un dato cliente;
+
+    - preventivi_distinti:  lista ordinata ( dalla data piu' recente alla piu' vecchia ) di preventivi
+                                che differiscono soltanto nell'attributo "numero_preventivo";
+    '''
 
     app.formCercaCliente = ApriPaginaClienteForm(request.form)
     scelta = app.formCercaCliente.nome_cognome_indirizzo.data
@@ -368,11 +394,22 @@ def apriPaginaCliente():
     ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
     #settori = SettoreLavorazione.query.all()
 
-    preventivi = PreventivoEdile.query.filter_by(nome_cliente=nomeCliente, cognome_cliente=cognomeCliente,
-                                                    indirizzo_cliente=indirizzoCliente )
+
+    preventivi = PreventivoEdile.returnAllPreventiviCliente(nome_cliente=nomeCliente, cognome_cliente=cognomeCliente,
+                                                        indirizzo_cliente=indirizzoCliente )
+
+    preventivi_distinti = []
+
+    for preventivo in preventivi:
+        if ( preventivo.tipologia_commessa, preventivo.calcolaCodicePreventivo()) not in preventivi_distinti:
+            preventivi_distinti.append(( preventivo.tipologia_commessa, preventivo.calcolaCodicePreventivo(), preventivo.numero_preventivo) )
+
+    lastPrev = PreventivoEdile.returnLastPreventivoCliente(nome_cliente=nomeCliente, cognome_cliente=cognomeCliente,
+                                                        indirizzo_cliente=indirizzoCliente)
 
     return render_template('paginaCliente.html', dipendente=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
-                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, preventivi=preventivi )
+                                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere,
+                                                    preventivi=preventivi, preventivi_distinti=preventivi_distinti, lastPreventivo=lastPrev )
 
 @server.route('/clientBack')
 @login_required
@@ -868,10 +905,20 @@ def handle_elimina_tipologia_prodotto(message):
 def handle_registra_nuovo_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     idPreventivo = PreventivoEdile.registraPreventivo(nome_cliente=message['nome_cliente'],
-                                       cognome_cliente=message['cognome_cliente'], indirizzo_cliente=message['indirizzo_cliente'])
+                                       cognome_cliente=message['cognome_cliente'], indirizzo_cliente=message['indirizzo_cliente'],
+                                        dipendente_generatore=dip.username, tipologia_commessa=message['tipologia_commessa'])
 
     app.preventivoEdileSelezionato=idPreventivo
     emit('confermaRegistrazionePreventivo', namespace='/preventivoEdile', room=dip.session_id)
+
+@socketio.on('modifica_preventivo', namespace='/preventivo_edile')
+def handle_modifica_preventivo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    idPreventivo = PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], dipendente_ultimaModifica=dip)
+    app.preventivoEdileSelezionato=idPreventivo
+    emit('startModificaPreventivo', namespace='/preventivoEdile', room=dip.session_id)
+
 
 @socketio.on('add_nuova_lavorazione', namespace='/preventivoEdile')
 def handle_add_nuova_lavorazione(message):
@@ -881,6 +928,9 @@ def handle_add_nuova_lavorazione(message):
                                         numero=1, larghezza=1, altezza=1, profondita=1, unitaMisura=message['unitaMisura'],
                                         prezzoUnitario=message['prezzoUnitario'])
 
+@socketio.on('elimina_lavorazione', namespace='/preventivoEdile')
+def handle_elimina_lavorazione(message):
+    PreventivoEdile.eliminaLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'], ordine=message['ordine'])
 
 @socketio.on('modifica_ordine_lavorazione', namespace='/preventivoEdile')
 def handle_modifica_ordine_lavorazione(message):
@@ -894,6 +944,30 @@ def handle_modifica_ordine_lavorazione(message):
 def handle_add_nuova_sottolavorazione(message):
     PreventivoEdile.nuovaSottolavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
                                            ordine=message['ordine'])
+
+@socketio.on('elimina_sottolavorazione', namespace='/preventivoEdile')
+def handle_elimina_sottolavorazione(message):
+    PreventivoEdile.eliminaSottolavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                             ordine=message['ordine'], ordine_sottolavorazione=message['ordine_sottolavorazione'])
+
+@socketio.on('modifica_sottolavorazione', namespace='/preventivoEdile')
+def handle_modifica_sottolavorazione(message):
+
+    app.server.logger.info("\n\nEntrato in mod_sottolav: messaggio: {}\n\n".format(message))
+
+    message = json.loads(message)
+
+    numero_preventivo = message.pop("numero_preventivo")
+    data = message.pop("data")
+    ordine = message.pop("ordine")
+    ordine_sottolavorazione = message.pop("ordine_sottolavorazione")
+    unitaMisura = message.pop("unitaMisura")
+
+    PreventivoEdile.modificaSottolavorazione(numero_preventivo=numero_preventivo, data=data,
+                                                 ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione,
+                                                 modifica=message, unitaMisura=unitaMisura)
+
+
 
 @socketio.on_error('/impegni')
 def error_handler(e):

@@ -5,7 +5,7 @@
 <div id="wrapper" class="col-md-8">
     <section id="one" class="wrapper style2 spotlights">
         <div class="inner innerPreventivo">
-            <h2 class="titleInCentro">Preventivo <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a></h2>
+            <h2 class="titleInCentro">Preventivo #{{codicePreventivo}} <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a></h2>
             <div id="divFattura" class="features row">
                 <div class="col-md-4">
                     <span>Settore di Lavorazione</span></br>
@@ -171,7 +171,6 @@
                 });
 
                 var unitaMisura = $(this).children(".unitaMisuraElement").text();
-                console.log('sono unitaMisura: '+unitaMisura);
 
                 socketPreventivo.emit("modifica_ordine_lavorazione",
                                 {
@@ -286,31 +285,31 @@
 
             if( unita == "cad" ){
 
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" name="numero" placeholder="numero" value=1></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "ml" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "mq" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if( unita == "mc" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+'" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrevAdded"><input class="numInput inputPrevAdded-'+numElement+' profondita" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
 
             }
@@ -481,7 +480,17 @@
                                     $('.aggiunto-'+numEl).removeClass('aggiunto');
                                     $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
 
-                                    rienumeraPagina()
+                                    socketPreventivo.emit("elimina_lavorazione",
+                                                    {
+                                                        "numero_preventivo" : "{{preventivo.numero_preventivo}}",
+                                                        "data" : "{{preventivo.data}}",
+                                                        "ordine": numEl,
+
+                                                    }
+
+                                    );
+
+                                    rienumeraPagina();
 
                                     if( lastEl ){
                                         settaLastElement(settore);
@@ -570,6 +579,20 @@
                                             calcolaTotaleParziale(sett, num);
                                         }
 
+                                        var ordineSottordine=$(this).parent().parent().attr('class').split(' ')[1].split('addedNum')[1];
+
+
+                                        socketPreventivo.emit("elimina_sottolavorazione",
+                                            {
+                                                "numero_preventivo" : "{{preventivo.numero_preventivo}}",
+                                                "data" : "{{preventivo.data}}",
+                                                "ordine": numElement,
+                                                "ordine_sottolavorazione": ordineSottordine
+
+                                            }
+
+                                        );
+
                                     });
 
 
@@ -591,6 +614,30 @@
                                         var classesOfRow = $(this).parent().parent().attr('class').split(' ');
                                         calcolaTotaleRigaAdded(classesOfRow[0], classesOfRow[1], prezzoBase);
 
+                                        //recupero le informazioni per registrare la modifica nel db
+
+                                        var ordine = parseInt(classesOfRow[0].split('-')[1]);
+                                        var ordineSottolavorazione = parseInt(classesOfRow[1].split('addedNum')[1])+1;
+
+
+                                        var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[3].split('-')[1];
+
+
+                                        numero =parseFloat($(this).val());
+                                        variabile =$(this).attr('class').split(' ')[2];
+
+                                        messaggio = '{ '+
+                                                        '"numero_preventivo" : "{{preventivo.numero_preventivo}}", '+
+                                                        '"data" : "{{preventivo.data}}", '+
+                                                        '"ordine" : "' + ordine + '", '+
+                                                        '"ordine_sottolavorazione" : "'+  ordineSottolavorazione + '", '+
+                                                        '"unitaMisura" : "'+ unitaMisura+ '", '+
+                                                        '"'+ variabile +'" : "'+ numero+ '"}';
+
+                                        socketPreventivo.emit("modifica_sottolavorazione", messaggio);
+
+
+
                                    });
 
                                    socketPreventivo.emit("add_nuova_sottolavorazione",
@@ -601,7 +648,7 @@
 
                                         }
 
-                                      );
+                                   );
 
                                 });
 

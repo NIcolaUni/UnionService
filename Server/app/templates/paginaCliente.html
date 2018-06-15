@@ -142,7 +142,10 @@
         <script src="{{url_for('static', filename='headerAndForm/js/modules/demo.js') }}"></script>
 
 <!--===========================================================================================================-->
-
+		 <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
+         <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
+         <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
+         <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
 
 
 
@@ -259,16 +262,67 @@
 					<section id="one" class="wrapper style2 spotlights">
 						<div class="inner">
 
-							<span>
-								<span><h2>Preventivo </h2></span>
-								<span>
-									<a id="newPreventivo" class="fa fa-plus-circle expandPreventivoIcon"></a>
-									<a id="preventivoFullPage" class="fa fa-edit expandPreventivoIcon"></a>
-									<a class="fa fa-trash expandPreventivoIcon"></a>
+							<span id="titlePreventivoSpan">
+								<span><h2><a id="newPreventivo" class="fa fa-plus-circle expandPreventivoIcon"></a> Preventivi cliente</h2></span>
+								<span id="ctrlSpanPreventivo">
+									<span class="aCtrlPreventivo">
+
+										<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>
+										<a class="fa fa-trash expandPreventivoIcon"></a>
+									</span>
+									<select id="preventivoSelect" >
+										{% for prev in preventivi_distinti %}
+											{% if prev[2] == lastPreventivo[0].numero_preventivo %}
+												<option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - #{{prev[1]}}</option>
+											{% else %}
+												<option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - #{{prev[1]}}</option>
+											{% endif %}
+										{% endfor %}
+									</select>
+									<select id="dataSelect" >
+									</select>
+
+
 								</span>
 							</span>
 
 							<div class="features">
+								<div id="tabFattura" class="table-wrapper">
+										<table class="alt">
+											<thead>
+												<tr>
+													<th>Lavorazione</th>
+													<th>Quantità</th>
+													<th>Unità</th>
+													<th>Totale</th>
+												</tr>
+											</thead>
+										</table>
+									{% for settore in lastPreventivo[1] %}
+										<table class="alt">
+
+											<tbody>
+
+
+													<tr>
+														<td colspan="4">{{settore}}</td>
+													</tr>
+
+													{% for lavorazione in lastPreventivo[2] %}
+														{% if lavorazione[0].settore == settore %}
+															<tr>
+																<td>{{lavorazione[0].tipologia_lavorazione}}</td>
+																<td>{{lavorazione[1]}}</td>
+																<td>{{lavorazione[0].unitaMisura}}</td>
+																<td>&euro; {{lavorazione[2]}}</td>
+															</tr>
+														{% endif %}
+													{% endfor %}
+											</tbody>
+										</table>
+									{% endfor %}
+								</div>
+
 							<!--	<div id="tabFattura" class="table-wrapper">
 										<table class="alt">
 											<thead>
@@ -471,6 +525,31 @@
 
 			<script>
 
+				$('#header > a').css('border-bottom', 'None' );
+
+				var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
+
+				console.log("Il numero di preventivo selezionatoe': "+ selectedPreventivo);
+				{% for preventivo in preventivi %}
+					if( "{{preventivo.numero_preventivo}}" == selectedPreventivo ){
+						var optionElement = "";
+
+						// di default setto come data quella piu' recente del piu' recente preventivo
+						// generato per questo cliente
+						if( "{{preventivo.numero_preventivo}}" == "{{lastPreventivo[0].numero_preventivo}}" ){
+							if( "{{preventivo.data}}" ==  "{{lastPreventivo[0].data}}" ){
+								optionElement = '<option selected="selected" value="{{preventivo.data}}">{{preventivo.data}}</option>';
+							}
+						}
+						else
+							optionElement = '<option value="{{preventivo.data}}">{{preventivo.data}}</option>';
+
+						$('#dataSelect').append( optionElement );
+
+					}
+				{% endfor %}
+
+
 			    var socketHome = io.connect("{{sockUrl}}"+'/home');
 
 
@@ -485,11 +564,40 @@
 				var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
 
 				$('#newPreventivo').click(function(){
-                    console.log("bella");
-					socketPreventivo.emit('registra_nuovo_preventivo', { 'dip': '{{dipendente.username}}','nome_cliente' : '{{cliente.nome}}',
-																		'cognome_cliente' : '{{cliente.cognome}}',
-																	    'indirizzo_cliente' : '{{cliente.indirizzo}}'});
+
+				    swal.withFormAsync({
+						title: 'Inserire tipologia commessa:',
+						showCancelButton: true,
+						confirmButtonColor: '#DD6B55',
+						confirmButtonText: 'Ok',
+						cancelButtonText: 'annulla',
+						closeOnConfirm: true,
+						formFields: [
+
+						 { name: 'commessa',  placeholder: 'tipologia commessa' },
+
+
+						]
+					}).then(function (context) {
+						if(context._isConfirm){
+
+							socketPreventivo.emit('registra_nuovo_preventivo',
+													{ 'dip': '{{dipendente.username}}',
+													  'nome_cliente' : '{{cliente.nome}}',
+													  'cognome_cliente' : '{{cliente.cognome}}',
+													  'indirizzo_cliente' : '{{cliente.indirizzo}}',
+													  'tipologia_commessa' : context.swalForm['commessa'] }
+												 );
+
+						}
+					});
+
+
+
+
 				});
+
+
 
 
                 socketPreventivo.on('confermaRegistrazionePreventivo', function(){
@@ -499,7 +607,17 @@
 
                 });
 
-				$('#header > a').css('border-bottom', 'None' );
+
+				$('#modificaPreventivo').click(function(){
+					var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
+
+					socketPreventivo.emit('modifica_preventivo', {'numero_preventivo': selectedPreventivo, 'dipendente': '{{dipendente.username}}' });
+				});
+
+				socketPreventivo.on('startModificaPreventivo', function(){
+					window.location = "{{url_for('editPreventivoEdile')}}";
+				});
+
 			</script>
 
 	</div>

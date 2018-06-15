@@ -7,7 +7,12 @@ class PreventivoEdileDBmodel(DbUSinterface, DbUSinterface.db.Model):
     __table_args__ = (
         PrimaryKeyConstraint('numero_preventivo', 'data'),
         ForeignKeyConstraint(['nome_cliente', 'cognome_cliente', 'indirizzo_cliente'],
-                             ['cliente_accolto.nome', 'cliente_accolto.cognome', 'cliente_accolto.indirizzo'])
+                             ['cliente_accolto.nome', 'cliente_accolto.cognome', 'cliente_accolto.indirizzo'],
+                                onupdate='CASCADE', ondelete='CASCADE'),
+        ForeignKeyConstraint(['dipendente_generatore'], ['dipendente.username'],
+                                onupdate='CASCADE', ondelete='SET NULL'),
+        ForeignKeyConstraint(['dipendente_ultimaModifica'], ['dipendente.username'],
+                                onupdate='CASCADE', ondelete='SET NULL')
     )
 
     numero_preventivo = Column(Integer())
@@ -15,3 +20,7 @@ class PreventivoEdileDBmodel(DbUSinterface, DbUSinterface.db.Model):
     nome_cliente = Column(String(30))
     cognome_cliente = Column(String(30))
     indirizzo_cliente = Column(String(120))
+    dipendente_generatore = Column(String(60))
+    dipendente_ultimaModifica = Column(String(60))
+
+    tipologia_commessa = Column(String(130))
