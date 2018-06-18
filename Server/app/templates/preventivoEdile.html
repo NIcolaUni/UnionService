@@ -358,7 +358,7 @@
 
                             /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+count al bottone*/
                             $("#memoriaLavorazioniAggiunte-{{prezzario.settore}}").append(
-                                '<div class="'+$this.attr('id')+'">'+
+                                '<div class="'+$this.attr('id')+'">'+console
                                     '<span class="classeToAdd">aggiunto-'+count+'</span>'+
                                 '</div>'
 
@@ -444,15 +444,6 @@
 
                             /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
                             rienumeraPagina()
-
-                           /* var ordineElemento = 0;
-                            $('tr[id^={{prezzario.settore}}_trBody]').each(function(){
-                                if( $(this).children('.tdLavorazione').children('textarea').val() == "{{prezzario.tipologia_lavorazione}}" )
-                                {
-                                    console.log("Ehi ho trovato il mio numero "+ $(this).attr('id').split('-')[1] );
-                                    ordineElemento = parseInt($(this).attr('id').split('-')[1]);
-                                }
-                            });*/
 
 
 
@@ -549,15 +540,33 @@
                                     $('.delSameElement').on( 'click', function(){
 
                                         var addedElementCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
+                                        var ordineLavorazione=addedElementCommonClass.split('-')[1];
+                                        var unitaMisura=$('.trFoot'+ordineLavorazione).attr('class').split(' ')[2].split('-')[1];
                                         $(this).parent().parent().remove();
 
 
                                         //rienumero i sottoelementi restanti
                                         var aux=0;
                                         $('.'+addedElementCommonClass).each(function(){
+                                            var oldOrder = $(this).attr('class').split(' ')[1].split('-')[1];
+
                                             $(this).removeClass();
                                             $(this).addClass(addedElementCommonClass);
                                             $(this).addClass('addedNum'+aux);
+
+                                            console.log('unitaMisura: '+unitaMisura+ ' ordine: ' + ordineLavorazione);
+                                            socketPreventivo.emit("modifica_ordine_sottolavorazione",
+                                                {
+                                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
+                                                    "data" : "{{preventivo.data}}",
+                                                    "ordine": ordineLavorazione,
+                                                    "oldOrdineSottolav": oldOrder,
+                                                    "newOrdineSottolav": aux,
+                                                    "unitaMisura": unitaMisura
+
+                                                }
+
+                                            );
                                             aux+=1;
                                         });
 

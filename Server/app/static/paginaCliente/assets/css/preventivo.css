@@ -117,7 +117,7 @@ section#one::-webkit-scrollbar-thumb:window-inactive {
 }
 
 
-#saveButton {
+#printButton {
     display:inline-block;
     padding:0.5em 3em;
     border:0.16em solid #a9a9ef;
@@ -133,7 +133,7 @@ section#one::-webkit-scrollbar-thumb:window-inactive {
     cursor: pointer;
 }
 
-#saveButton:hover{
+#printButton:hover{
     color: #DDDDDD;
     border-color:#DDDDDD;
 }

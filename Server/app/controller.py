@@ -935,7 +935,7 @@ def handle_elimina_lavorazione(message):
 @socketio.on('modifica_ordine_lavorazione', namespace='/preventivoEdile')
 def handle_modifica_ordine_lavorazione(message):
 
-    PreventivoEdile.inziaRiordinoLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'])
+    PreventivoEdile.iniziaRiordinoLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'])
 
     PreventivoEdile.modificaOrdineLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
                                             ordine=int('-'+message['ordineVecchio']), modifica={'ordine' : message['ordineNuovo']})
@@ -949,6 +949,41 @@ def handle_add_nuova_sottolavorazione(message):
 def handle_elimina_sottolavorazione(message):
     PreventivoEdile.eliminaSottolavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
                                              ordine=message['ordine'], ordine_sottolavorazione=message['ordine_sottolavorazione'])
+
+@socketio.on('modifica_ordine_sottolavorazione', namespace='/preventivoEdile')
+def handle_modifica_ordine_sottolavorazione(message):
+
+    server.logger.info('\n\n\n numero_preventivo:' +
+                       message['numero_preventivo']+
+                       '\n'+
+                       'data: '+
+                       message['data'] +
+                       '\n' +
+                       'ordine: '+
+                       message['ordine'] +
+                       '\n' +
+                       'unitaMisura: '+
+                       message['unitaMisura'] +
+                       '\n' +
+                       'newOrdineSottolav: {}'.format(
+                       message['newOrdineSottolav'] ) +
+                       '\n' +
+                       'oldOrdineSottolav: {}'.format(
+                       message['oldOrdineSottolav'] )+
+
+
+
+
+                       ' \n\n\n')
+    PreventivoEdile.iniziaRiordinoSottolavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'], ordine=message['ordine'],
+                                                   unitaMisura=message['unitaMisura'])
+
+    PreventivoEdile.modificaOrdineSottolavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                                   ordine=message['ordine'],
+                                                   old_ordine_sottolavorazione=int('-' + message['oldOrdineSottolav']),
+                                                   new_ordine_sottolavorazione=message['newOrdineSottolav'],
+                                                   unitaMisura=message['unitaMisura'])
+
 
 @socketio.on('modifica_sottolavorazione', namespace='/preventivoEdile')
 def handle_modifica_sottolavorazione(message):

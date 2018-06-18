@@ -337,7 +337,7 @@ class PreventivoEdile(PreventivoEdileDBmodel):
                                            ordine=lavorazione.ordine).update({'ordine': newOrdine})
 
 
-    def inziaRiordinoLavorazione(numero_preventivo, data):
+    def iniziaRiordinoLavorazione(numero_preventivo, data):
         '''
            Prima di ogni riordino di voci all'interno del preventivo si prendono tutte le voci
            e si setta il loro campo "ordine" al negativo. Questo previene la situazione
@@ -383,6 +383,82 @@ class PreventivoEdile(PreventivoEdileDBmodel):
 
         PreventivoEdileDBmodel.commit()
 
+    def __settaOrdineSottolavorazioneNegativo__(sottolavorazione, queryClass):
+        app.server.logger.info("sTo siordinando la sottolav nun: {}".format(sottolavorazione.ordine_sottolavorazione) )
+        newOrdine = int(-sottolavorazione.ordine_sottolavorazione)
+
+        queryClass.filter_by(numero_preventivo=sottolavorazione.numero_preventivo, data=sottolavorazione.data,
+                             ordine=sottolavorazione.ordine,
+                             ordine_sottolavorazione=sottolavorazione.ordine_sottolavorazione).update({'ordine_sottolavorazione': newOrdine})
+
+    def iniziaRiordinoSottolavorazione(numero_preventivo, data, ordine, unitaMisura):
+        '''
+        La logica seguita da questa funzione è la stessa di iniziaRiordinoLavorazione()
+        '''
+        queryClassSottolavorazione = None
+
+        if unitaMisura == 'cad':
+            queryClassSottolavorazione = __SottolavorazioneCadPreventivo__.query
+
+        elif unitaMisura == 'ml':
+            queryClassSottolavorazione = __SottolavorazioneMlPreventivo__.query
+
+        elif unitaMisura == 'mq':
+            queryClassSottolavorazione = __SottolavorazioneMqPreventivo__.query
+
+        elif unitaMisura == 'mc':
+            queryClassSottolavorazione = __SottolavorazioneMcPreventivo__.query
+
+        sottolavPrev = queryClassSottolavorazione.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).all()
+        iniziaNuovoRiordino = True
+
+        '''
+        se son gia' presenti dei campi "ordine" negativi, vuol dire che e' gia' in atto un riordino
+        e quindi non va chiamata __settaOrdineSottolavorazioneNegativo__()
+        '''
+        for lav in sottolavPrev:
+            if lav.ordine_sottolavorazione < 0 :
+                iniziaNuovoRiordino = False
+
+        if iniziaNuovoRiordino:
+            app.server.logger.info("\n\nEntrato in Inizio riordino {} {}\n\n".format(ordine, unitaMisura))
+            for lav in sottolavPrev:
+                PreventivoEdile.__settaOrdineSottolavorazioneNegativo__(lav, queryClassSottolavorazione)
+
+            PreventivoEdileDBmodel.commit()
+
+        app.server.logger.info('fine rinumerazione')
+
+
+    def modificaOrdineSottolavorazione(numero_preventivo, data, ordine, old_ordine_sottolavorazione, unitaMisura,
+                                       new_ordine_sottolavorazione):
+
+
+        app.server.logger.info('\n\nInizio modifica ordine {}\n\n'.format(unitaMisura))
+        if unitaMisura == 'cad':
+            __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                              ordine=ordine,
+                                                              ordine_sottolavorazione=old_ordine_sottolavorazione).update(
+                { 'ordine_sottolavorazione': new_ordine_sottolavorazione })
+        elif unitaMisura == 'ml':
+            __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                             ordine=ordine,
+                                                             ordine_sottolavorazione=old_ordine_sottolavorazione).update(
+                {'ordine_sottolavorazione': new_ordine_sottolavorazione})
+
+        elif unitaMisura == 'mq':
+            __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                             ordine=ordine,
+                                                             ordine_sottolavorazione=old_ordine_sottolavorazione).update(
+                {'ordine_sottolavorazione': new_ordine_sottolavorazione})
+
+        elif unitaMisura == 'mc':
+            __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                             ordine=ordine,
+                                                             ordine_sottolavorazione=old_ordine_sottolavorazione).update(
+                {'ordine_sottolavorazione': new_ordine_sottolavorazione})
+
+        PreventivoEdileDBmodel.commit()
     def modificaSottolavorazione(modifica, numero_preventivo, data, ordine, ordine_sottolavorazione, unitaMisura):
 
         if unitaMisura == 'cad':

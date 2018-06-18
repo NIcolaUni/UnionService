@@ -3956,13 +3956,6 @@ button.elementFattura {
     height: 500px;
   }
 
-  #tabFattura {
-    display: block;
-    margin-left: 8%;
-    margin-right: 8%;
-    margin-top: 30px;
-    width: 100%;
-  }
 
   .expandPreventivoIcon {
     cursor: pointer;

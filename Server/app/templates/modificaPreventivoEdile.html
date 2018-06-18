@@ -59,7 +59,7 @@
 
             </div>
             <div id="divSalvaPreventivo" class="features">
-                <a id="saveButton">Salva</a>
+                <a id="printButton">STAMPA</a>
             </div>
         </div>
     </section>
@@ -73,6 +73,15 @@
         function settaLastElement(settore){
 
             $('tr[id^='+settore+'_trBody]').last().addClass(settore+'_lastAdded');
+        }
+
+        function countLavorazioniSettore(settore){
+            var counter=0;
+            $('tr[id^='+settore+'_trBody]').each(function(){
+                counter++;
+            });
+
+            return counter;
         }
 
         function righeDimensioniSottolavorazione(unita, prezzoBase, numElement){
@@ -238,12 +247,8 @@
 
             */
 
-            console.log('Entri in calcolata: ' + classeElemento);
-
 
             $('.'+classeElemento).each(function(){
-                console.log('Per ogni coso qua ');
-
 
                 if($(this).hasClass(ordineSottolav)){
                     var totalePrezzo=prezzoBase;
@@ -482,14 +487,15 @@
                             }
                             else{
 
+                                var countLav = countLavorazioniSettore("{{prezzario.settore}}");
+                                $(".{{prezzario.settore}}").removeClass('counterLavorazioni-'+ parseInt(countLav));
+                                $(".{{prezzario.settore}}").addClass('counterLavorazioni-'+ parseInt(countLav+1));
+
+
                                 $(".{{prezzario.settore}}_lastAdded").removeClass("{{prezzario.settore}}_lastAdded");
 
                                 $('.{{prezzario.settore}}_trFoot').last().after( rowsToAdd );
                             }
-
-
-                           // $('#bodyPreventivo').append(rowsToAdd);
-
 
 
 
@@ -556,6 +562,13 @@
                                         var settore =idElementToDel.split('_')[0];
                                         var lastEl = $('#'+idElementToDel).hasClass(settore+'_lastAdded'); //variabile booleana
 
+                                         //decremento il contatore delle lavorazioni del relativo settore
+                                         var countLav = countLavorazioniSettore("{{prezzario.settore}}");
+                                         $("."+settore).removeClass('counterLavorazioni-'+ parseInt(countLav));
+                                         $("."+settore).addClass('counterLavorazioni-'+ parseInt(countLav-1));
+
+
+
                                         $('#'+idElementToDel).remove();
                                         $('.'+settore+'_trSottolavorazione-'+numEl).remove();
                                         $('.trFoot'+numEl).remove();
@@ -585,6 +598,22 @@
                                         }
 
                                         calcolaTotalePreventivo();
+
+
+                                        // se non ci sono piu' lavorazioni per il relativo settore
+                                        // elimina l'intestazione
+                                        countLav = countLavorazioniSettore("{{prezzario.settore}}");
+
+                                        if( countLav == 0 ){
+
+                                            $('.'+settore).each(function(){
+                                                if($(this).hasClass('trHead'))
+                                                    $(this).remove();
+                                            });
+
+                                            $('.'+settore+'_head').remove();
+
+                                        }
                                   });
 
                                   //aggiungo la funzione 'aggiungiSottolavorazione' al relativo bottone
@@ -656,25 +685,12 @@
 
 
 
-                                        $('.delSottolavorazione').on( 'click', function(){
-
+                                        $('.delSottolavorazione').unbind('click').on( 'click', function(){
+                                            console.log('Fottiti stronzo ');
                                             var sottolavorazioniCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
+                                            var ordineLavorazione=sottolavorazioniCommonClass.split('-')[1];
+                                            var unitaMisura=$('.trFoot'+ordineLavorazione).attr('class').split(' ')[2].split('-')[1];
                                             $(this).parent().parent().remove();
-
-
-                                            //rienumero i sottoelementi restanti
-                                            var aux=0;
-                                            $('.'+sottolavorazioniCommonClass).each(function(){
-                                                $(this).removeClass();
-                                                $(this).addClass(sottolavorazioniCommonClass);
-                                                $(this).addClass('sottolavNum-'+aux);
-                                                aux+=1;
-                                            });
-
-
-                                            var sett=sottolavorazioniCommonClass.split('_')[0];
-                                            var num=sottolavorazioniCommonClass.split('-')[1];
-                                            calcolaTotaleParziale(sett, num);
 
 
                                             var ordine_sottolavorazione=$(this).parent().parent().attr('class').split(' ')[1].split('-')[1];
@@ -690,6 +706,44 @@
                                                 }
 
                                             );
+
+                                            var $sottolavorazioni= $('.'+sottolavorazioniCommonClass);
+
+
+                                            //rienumero i sottoelementi restanti e aggiorna il db
+                                            var aux=0;
+                                            $sottolavorazioni.each(function(){
+
+                                                var oldOrder = $(this).attr('class').split(' ')[1].split('-')[1];
+
+                                                if( !( typeof oldOrder === 'undefined') ){
+                                                    $(this).removeClass();
+                                                    $(this).addClass(sottolavorazioniCommonClass);
+                                                    $(this).addClass('sottolavNum-'+aux);
+
+                                                    socketPreventivo.emit("modifica_ordine_sottolavorazione",
+                                                        {
+                                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
+                                                            "data" : "{{preventivo.data}}",
+                                                            "ordine": ordineLavorazione,
+                                                            "oldOrdineSottolav": oldOrder,
+                                                            "newOrdineSottolav": aux,
+                                                            "unitaMisura": unitaMisura
+
+                                                        }
+
+                                                    );
+
+                                                    aux+=1;
+                                                }
+                                            });
+
+                                            var sett=sottolavorazioniCommonClass.split('_')[0];
+                                            var num=sottolavorazioniCommonClass.split('-')[1];
+                                            calcolaTotaleParziale(sett, num);
+
+
+
 
                                         }); // FINE delSottolavorazione
 
