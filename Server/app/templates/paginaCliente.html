@@ -527,9 +527,17 @@
 
 				$('#header > a').css('border-bottom', 'None' );
 
-				var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
 
-				console.log("Il numero di preventivo selezionatoe': "+ selectedPreventivo);
+					var selectedPreventivo = $('#preventivoSelect option:selected');
+
+					if( !(typeof selectedPreventivo.attr('class') === 'undefined')){
+					//	console.log('entrato ' + selectedPreventivo );
+
+						selectedPreventivo=selectedPreventivo.attr('class').split('-')[1];
+
+					}
+
+				/*console.log("Il numero di preventivo selezionatoe': "+ selectedPreventivo);*/
 				{% for preventivo in preventivi %}
 					if( "{{preventivo.numero_preventivo}}" == selectedPreventivo ){
 						var optionElement = "";
@@ -603,19 +611,20 @@
                 socketPreventivo.on('confermaRegistrazionePreventivo', function(){
 
 
-                    window.location = "{{url_for('newPreventivoEdile')}}";
+                    window.location = "{{url_for('apriPreventivoEdile')}}";
 
                 });
 
-
+/*
 				$('#modificaPreventivo').click(function(){
+
 					var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
 
 					socketPreventivo.emit('modifica_preventivo', {'numero_preventivo': selectedPreventivo, 'dipendente': '{{dipendente.username}}' });
-				});
+				});*/
 
 				socketPreventivo.on('startModificaPreventivo', function(){
-					window.location = "{{url_for('editPreventivoEdile')}}";
+					window.location = "{{url_for('apriPreventivoEdile')}}";
 				});
 
 			</script>

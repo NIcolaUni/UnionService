@@ -80,7 +80,6 @@
                 });
 
             });
-
         }
 
         function rienumeraPagina(){
@@ -172,7 +171,7 @@
 
                 var unitaMisura = $(this).children(".unitaMisuraElement").text();
 
-                socketPreventivo.emit("modifica_ordine_lavorazione",
+           ordineLavorazioni     socketPreventivo.emit("modifica_ordine_lavorazione",
                                 {
                                     "numero_preventivo" : "{{preventivo.numero_preventivo}}",
                                     "data" : "{{preventivo.data}}",
