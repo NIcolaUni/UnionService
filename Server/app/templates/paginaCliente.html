@@ -267,8 +267,6 @@
 								<span id="ctrlSpanPreventivo">
 									<span class="aCtrlPreventivo">
 
-										<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>
-										<a class="fa fa-trash expandPreventivoIcon"></a>
 									</span>
 									<select id="preventivoSelect" >
 										{% for prev in preventivi_distinti %}
@@ -527,15 +525,27 @@
 
 				$('#header > a').css('border-bottom', 'None' );
 
+				var countLavorazioni=0;
 
-					var selectedPreventivo = $('#preventivoSelect option:selected');
+				{% for preventivo in preventivi %}
+					countLavorazioni++;
+				{% endfor %}
 
-					if( !(typeof selectedPreventivo.attr('class') === 'undefined')){
-					//	console.log('entrato ' + selectedPreventivo );
+				if(countLavorazioni){
+					$('.aCtrlPreventivo').html(
+							'<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>'+
+							'<a class="fa fa-trash expandPreventivoIcon"></a>'
+					);
+				}
 
-						selectedPreventivo=selectedPreventivo.attr('class').split('-')[1];
+				var selectedPreventivo = $('#preventivoSelect option:selected');
 
-					}
+				if( !(typeof selectedPreventivo.attr('class') === 'undefined')){
+				//	console.log('entrato ' + selectedPreventivo );
+
+					selectedPreventivo=selectedPreventivo.attr('class').split('-')[1];
+
+				}
 
 				/*console.log("Il numero di preventivo selezionatoe': "+ selectedPreventivo);*/
 				{% for preventivo in preventivi %}

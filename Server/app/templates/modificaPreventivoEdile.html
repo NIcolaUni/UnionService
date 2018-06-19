@@ -220,6 +220,24 @@
             $('#divTotale').html('<span><u>Totale:</u> &euro; ' + Math.round(totale*100)/100 + '</span>' );
         }
 
+        function calcolaTotaleParzialeSettore( settore ){
+            totale = 0;
+
+            $("."+settore+"_trFoot").each(function(){
+                totale += parseFloat($(this).children('.footTot').text().split(' ')[1]);
+
+            });
+
+            $('.'+settore).each(function(){
+                if( $(this).hasClass('trHead') ){
+
+                    $(this).children('.totaleSettore').html(
+                    '&euro; '+totale
+                    );
+                }
+            });
+        }
+
         function calcolaTotaleParziale(settore, numOfEl){
 
                 var total = 0;
@@ -234,10 +252,9 @@
                 $('.trFoot'+numOfEl).children('.footTot').html("&euro; "+ Math.round(total*100)/100 );
                 $('.trFoot'+numOfEl).children('.quantita').html(Math.round(quantita*100)/100);
 
-
-            calcolaTotalePreventivo()
+                calcolaTotaleParzialeSettore( settore );
+                calcolaTotalePreventivo();
         }
-
 
 
         function calcolaTotaleRigaSottolavorazione(classeElemento, ordineSottolav, prezzoBase){
@@ -466,7 +483,8 @@
                                 $('#bodyPreventivo').append(
 
                                     '<tr class="trHead {{prezzario.settore}}">'+
-                                        '<td  colspan="10"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
+                                        '<td  colspan="9"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
+                                        '<td class="titleSettoreTd totaleSettore"></td>'+
                                     '</tr>'+
                                     '<tr class="trHead {{prezzario.settore}}_head">'+
                                         '<th class="thPreventivo"></th>'+
@@ -686,7 +704,6 @@
 
 
                                         $('.delSottolavorazione').unbind('click').on( 'click', function(){
-                                            console.log('Fottiti stronzo ');
                                             var sottolavorazioniCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
                                             var ordineLavorazione=sottolavorazioniCommonClass.split('-')[1];
                                             var unitaMisura=$('.trFoot'+ordineLavorazione).attr('class').split(' ')[2].split('-')[1];

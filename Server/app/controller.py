@@ -420,9 +420,22 @@ def clientBack():
     ufficioCommerciale = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.commerciale )
     ufficioTecnico = []#Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
     ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
-    settori = SettoreLavorazione.query.all()
+
+    preventivi = PreventivoEdile.returnAllPreventiviCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
+                                                        indirizzo_cliente=app.clienteSelezionato.indirizzo )
+
+    preventivi_distinti = []
+
+    for preventivo in preventivi:
+        if ( preventivo.tipologia_commessa, preventivo.calcolaCodicePreventivo()) not in preventivi_distinti:
+            preventivi_distinti.append(( preventivo.tipologia_commessa, preventivo.calcolaCodicePreventivo(), preventivo.numero_preventivo) )
+
+    lastPrev = PreventivoEdile.returnLastPreventivoCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
+                                                        indirizzo_cliente=app.clienteSelezionato.indirizzo )
+
     return render_template('paginaCliente.html', dipendente=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
-                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere, settori=settori )
+                            ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere,
+                            preventivi=preventivi, preventivi_distinti=preventivi_distinti, lastPreventivo=lastPrev)
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
 @login_required
