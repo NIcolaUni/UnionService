@@ -266,7 +266,6 @@
 								<span><h2><a id="newPreventivo" class="fa fa-plus-circle expandPreventivoIcon"></a> Preventivi cliente</h2></span>
 								<span id="ctrlSpanPreventivo">
 									<span class="aCtrlPreventivo">
-
 									</span>
 									<select id="preventivoSelect" >
 										{% for prev in preventivi_distinti %}
@@ -525,6 +524,20 @@
 
 				$('#header > a').css('border-bottom', 'None' );
 
+   				var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+
+                socketHome.on('connect', function() {
+                    console.log('connected listino');
+
+
+                    socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+                });
+
+
+				var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+
+
 				var countLavorazioni=0;
 
 				{% for preventivo in preventivi %}
@@ -536,6 +549,13 @@
 							'<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>'+
 							'<a class="fa fa-trash expandPreventivoIcon"></a>'
 					);
+
+					$('#modificaPreventivo').click(function(){
+					    var selPrev = $('#preventivoSelect option:selected');
+
+						socketPreventivo.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
+																	  'numero_preventivo': selPrev});
+					});
 				}
 
 				var selectedPreventivo = $('#preventivoSelect option:selected');
@@ -568,18 +588,6 @@
 				{% endfor %}
 
 
-			    var socketHome = io.connect("{{sockUrl}}"+'/home');
-
-
-                socketHome.on('connect', function() {
-                    console.log('connected listino');
-
-
-                    socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-                });
-
-
-				var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
 
 				$('#newPreventivo').click(function(){
 

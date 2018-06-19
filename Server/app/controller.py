@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, session, request
+from flask import render_template, redirect, request, url_for, session, request, send_from_directory
 from app import server, socketio, accoglienzaForm
 from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, ClienteAccoltoForm, ApriPaginaClienteForm, AggiungiFornitoreForm
 from .model.dipendenteFittizio import DipendenteFittizio
@@ -357,6 +357,7 @@ def newPreventivoEdile():
 @server.route('/apriPreventivoEdile')
 @login_required
 def apriPreventivoEdile():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     settori = SettoreLavorazione.query.all()
     prezzarioEdile = PrezzarioEdile.query.all()
     preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
@@ -366,7 +367,12 @@ def apriPreventivoEdile():
 
     return render_template('modificaPreventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
                             preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
-                            preventivo=preventivo, infoPreventivo=infoPreventivo)
+                            preventivo=preventivo, infoPreventivo=infoPreventivo, dipendente=dip)
+
+@server.route('/downloadPreventivoEdile')
+@login_required
+def downloadPreventivoEdile():
+    return send_from_directory(directory='/preventiviLatexDir', filename='preventivo.pdf')
 
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required
@@ -1016,6 +1022,13 @@ def handle_modifica_sottolavorazione(message):
                                                  modifica=message, unitaMisura=unitaMisura)
 
 
+@socketio.on('stampa_preventivo', namespace='/preventivoEdile')
+def handle_stampa_preventivo(message):
+    app.server.logger.info('\n\nEntrato in stampa\n\n')
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PreventivoEdile.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'])
+    emit('procediADownload', namespace='/preventivoEdile', room=dip.session_id)
 
 @socketio.on_error('/impegni')
 def error_handler(e):

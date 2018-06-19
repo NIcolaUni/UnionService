@@ -66,8 +66,30 @@
 </div>
 
 <script>
+      var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+
+        socketHome.on('connect', function() {
+            console.log('connected listino');
+
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
+
 
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+
+        socketPreventivo.on( 'procediADownload', function(){
+            console.log('procedo a down')
+            window.location = '{{url_for("downloadPreventivoEdile")}}';
+        });
+
+        $('#printButton').click(function(){
+            socketPreventivo.emit('stampa_preventivo', {
+                                                        'dip': '{{dipendente.username}}',
+                                                        'numero_preventivo': '{{preventivo.numero_preventivo}}',
+                                                        'data': '{{preventivo.data}}'});
+        });
 
 
         function settaLastElement(settore){
