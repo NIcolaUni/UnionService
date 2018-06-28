@@ -165,7 +165,7 @@
     height: 100%;
     border-collapse: collapse;
     text-align: center;
-    font-size: 16px;
+    font-size: 13px;
 
 }
 
@@ -369,3 +369,16 @@
 div.swal-form label{
     margin-right: 5%;
 }
+
+input#trasporto {
+    width: 20%;
+}
+
+input#imballo {
+    width: 20%;
+}
+
+input#montaggio {
+    width: 20%;
+}
+

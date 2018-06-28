@@ -17,7 +17,11 @@ class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
                     scontoExtra1 = None,
                     scontroExtra2 = None,
                     trasporto = None,
-                    trasportoUnitaMisura = None,
+                    imballo = None,
+                    montaggio = None,
+                    trasportoUnitaMisura=None,
+                    imballoUnitaMisura = None,
+                    montaggioUnitaMisura = None,
                     giorniPagamenti = None,
                     modalitaPagamenti = None,
                     tipologiaPagamenti = None,
@@ -37,7 +41,11 @@ class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
         self.scontoExtra1=scontoExtra1
         self.scontroExtra2=scontroExtra2
         self.trasporto=trasporto
+        self.imballo = imballo
+        self.montaggio = montaggio
         self.trasportoUnitaMisura=trasportoUnitaMisura
+        self.imballoUnitaMisura=imballoUnitaMisura
+        self.montaggioUnitaMisura=montaggioUnitaMisura
         self.giorniPagamenti=giorniPagamenti
         self.modalitaPagamenti=modalitaPagamenti
         self.tipologiaPagamenti=tipologiaPagamenti
@@ -55,8 +63,12 @@ class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
                             scontoStandard = None,
                             scontoExtra1 = None,
                             scontroExtra2 = None,
-                            trasporto = None,
-                            trasportoUnitaMisura = None,
+                            trasporto=None,
+                            imballo=None,
+                            montaggio=None,
+                            trasportoUnitaMisura=None,
+                            imballoUnitaMisura=None,
+                            montaggioUnitaMisura=None,
                             giorniPagamenti = None,
                             modalitaPagamenti = None,
                             tipologiaPagamenti = None,
@@ -71,12 +83,14 @@ class SottoGruppoFornitori(SottoGruppoFornitoriDBmodel):
             prezziNetti=False
 
         nuovoFornitore=SottoGruppoFornitori( nome=nome, gruppo_azienda=gruppo_azienda,settoreMerceologico=settoreMerceologico,
-                                     stato=stato, tempiDiConsegna=tempiDiConsegna,
-                                    prezziNetti=prezziNetti, scontoStandard=scontoStandard, scontoExtra1=scontoExtra1,
-                                   scontroExtra2=scontroExtra2, trasporto=trasporto, trasportoUnitaMisura=trasportoUnitaMisura,
-                                      giorniPagamenti=giorniPagamenti, modalitaPagamenti=modalitaPagamenti,
-                                       tipologiaPagamenti=tipologiaPagamenti, provincia=provincia, indirizzo=indirizzo,
-                                         telefono=telefono, sito=sito)
+                                             stato=stato, tempiDiConsegna=tempiDiConsegna,
+                                             prezziNetti=prezziNetti, scontoStandard=scontoStandard, scontoExtra1=scontoExtra1,
+                                             scontroExtra2=scontroExtra2, trasporto=trasporto, imballo=imballo,
+                                             montaggio=montaggio, trasportoUnitaMisura=trasportoUnitaMisura,
+                                             imballoUnitaMisura=imballoUnitaMisura, montaggioUnitaMisura=montaggioUnitaMisura,
+                                             giorniPagamenti=giorniPagamenti, modalitaPagamenti=modalitaPagamenti,
+                                             tipologiaPagamenti=tipologiaPagamenti, provincia=provincia, indirizzo=indirizzo,
+                                             telefono=telefono, sito=sito)
 
         try:
             SottoGruppoFornitoriDBmodel.addRow(nuovoFornitore)

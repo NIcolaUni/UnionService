@@ -137,74 +137,76 @@
 
                         '</div>'+
 
-                        '<table class="tableFornitore">'+
-                            '<thead class="headFornitore">'+
-
-                                '<tr>'+
-                                    '<th class="centerText" colspan="4">Dati Fornitore</th>'+
-                                '</tr>'+
-
-                                '<tr>'+
-                                    '<th>Primo gruppo</th>'+
-                                    '<th>Sotto gruppo</th>'+
-                                    '<th>Settore merceologico</th>'+
-                                    '<th>Stato</th>'+
-                                '</tr>'+
-
-                            '</thead>'+
-                            '<tbody class="bodyFornitore">'+
-                                '<tr>'+
-                                    '<td >{{fornitoreSottoGruppo.gruppo_azienda}}</td>'+
-                                    '<td >{{fornitoreSottoGruppo.nome}}</td>'+
-                                    '<td >{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.stato}}</td>'+
-                                '</tr>'+
-                            '</tbody>'+
-
-                        '</table>'+
 
                         '<table class="tableFornitore">'+
-                            '<thead class="headFornitore">'+
+                        '<thead class="headFornitore">'+
 
-                                '<tr>'+
-                                    '<th class="intestazionePino" colspan="4">Recapito azienda</th>'+
-                                '</tr>'+
+                            '<tr>'+
+                                '<th class="centerText" colspan="4">Dati Fornitore</th>'+
+                            '</tr>'+
 
-                                '<tr>'+
-                                    '<th class="intestazionePino">Indirizzo</th>'+
-                                    '<th class="intestazionePino">Provincia</th>'+
-                                    '<th class="intestazionePino">Telefono</th>'+
-                                    '<th class="intestazionePino">Sito</th>'+
-                                '</tr>'+
+                            '<tr>'+
+                                '<th>Primo gruppo</th>'+
+                                '<th>Sotto gruppo</th>'+
+                                '<th>Settore merceologico</th>'+
+                                '<th>Stato</th>'+
+                            '</tr>'+
 
-                            '</thead>'+
-                            '<tbody class="bodyFornitore">'+
-                                '<tr>'+
-                                    '<td>{{fornitoreSottoGruppo.indirizzo}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.provincia}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.telefono}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.sito}}</td>'+
-                                '</tr>'+
-                            '</tbody>'+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                              '<td >{{fornitoreSottoGruppo.gruppo_azienda}}</td>'+
+                               '<td >{{fornitoreSottoGruppo.nome}}</td>'+
+                               '<td >{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
+                               '<td>{{fornitoreSottoGruppo.stato}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
 
-                        '</table>'+
+                    '</table>'+
 
-                        '<table class="tableFornitore">'+
-                            '<thead class="headFornitore">'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
 
-                                '<tr>'+
-                                    '<th class="intestazioneOliva" colspan="3">Rappresentante</th>'+
-                                '</tr>'+
+                            '<tr>'+
+                                '<th colspan="4">Recapito azienda</th>'+
+                            '</tr>'+
 
-                                '<tr>'+
-                                    '<th class="intestazioneOliva" >Nominativo</th>'+
-                                    '<th class="intestazioneOliva" >Telefono</th>'+
-                                    '<th class="intestazioneOliva" >Email</th>'+
-                                '</tr>'+
+                            '<tr>'+
+                                '<th>Indirizzo</th>'+
+                                '<th>Provincia</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Sito</th>'+
+                            '</tr>'+
 
-                            '</thead>'+
-                            '<tbody class="bodyFornitore">'+
-                                 {%for  rappresentante in listaRappresentanti%}
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{fornitoreSottoGruppo.indirizzo}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.provincia}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.telefono}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.sito}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="3">Rappresentante</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Nominativo</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Email</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+
+                             {%for  rappresentante in listaRappresentanti%}
                                     {% if rappresentante.azienda == fornitoreSottoGruppo.gruppo_azienda %}
                                         '<tr>'+
                                             '<td>{{rappresentante.nome}}</td>'+
@@ -213,76 +215,98 @@
                                             '<td>{{rappresentante.stato}}</td>'+
                                         '</tr>'+
                                     {% endif %}
-                               {%endfor%}
-                            '</tbody>'+
+                             {% endfor %}
+                        '</tbody>'+
 
-                        '</table>'+
-                        '<table class="tableFornitore">'+
-                            '<thead class="headFornitore">'+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
 
+                            '<tr>'+
+                                '<th colspan="3">Sconti</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Standard</th>'+
+                                '<th>Extra 1</th>'+
+                                '<th>Extra 2</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
                                 '<tr>'+
-                                    '<th class="intestazioneNocciola" colspan="3">Sconti</th>'+
+
+                                    '<td  >{{fornitoreSottoGruppo.scontoStandard}} %</td>'+
+                                    '<td >{{fornitoreSottoGruppo.scontoExtra1}} %</td>'+
+                                    '<td >{{fornitoreSottoGruppo.scontoExtra2}} %</td>'+
+
                                 '</tr>'+
+                        '</tbody>'+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
 
-                                '<tr>'+
-                                    '<th class="intestazioneNocciola">Standard</th>'+
-                                    '<th class="intestazioneNocciola">Extra 1</th>'+
-                                    '<th class="intestazioneNocciola">Extra 2</th>'+
-                                '</tr>'+
+                            '<tr>'+
+                                '<th colspan="3">Pagamenti</th>'+
+                            '</tr>'+
 
-                            '</thead>'+
-                            '<tbody class="bodyFornitore">'+
-                                '<tr>'+
-                                    '<td  >{{fornitoreSottoGruppo.scontoStandard}}</td>'+
-                                    '<td >{{fornitoreSottoGruppo.scontoExtra1}}</td>'+
-                                    '<td >{{fornitoreSottoGruppo.scontoExtra2}}</td>'+
-                                '</tr>'+
-                            '</tbody>'+
-                        '</table>'+
-                        '<table class="tableFornitore">'+
-                            '<thead class="headFornitore">'+
+                            '<tr>'+
+                                '<th>Giorni</th>'+
+                                '<th>Modalità</th>'+
+                                '<th>Tipologia</th>'+
+                            '</tr>'+
 
-                                '<tr>'+
-                                    '<th  class="intestazioneBlu" colspan="3">Pagamenti</th>'+
-                                '</tr>'+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{fornitoreSottoGruppo.giorniPagamenti}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
 
-                                '<tr>'+
-                                    '<th class="intestazioneBlu">Giorni</th>'+
-                                    '<th class="intestazioneBlu">Modalità</th>'+
-                                    '<th class="intestazioneBlu">Tipologia</th>'+
-                                '</tr>'+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
 
-                            '</thead>'+
-                            '<tbody class="bodyFornitore">'+
-                                '<tr>'+
-                                    '<td>{{fornitoreSottoGruppo.giorniPagamenti}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
-                                '</tr>'+
-                            '</tbody>'+
+                            '<tr>'+
+                                '<th>Tempi di consegna</th>'+
+                                '<th></th>'+
+                                '<th>Prezzi netti</th>'+
+                            '</tr>'+
 
-                        '</table>'+
-                        '<table class="tableFornitore">'+
-                            '<thead class="headFornitore">'+
-                                '<tr>'+
-                                    '<th class="intestazioneRosso" >Tempi di consegna</th>'+
-                                    '<th class="intestazioneRosso">Prezzi netti</th>'+
-                                    '<th class="intestazioneRosso">Trasporto</th>'+
-                                '</tr>'+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
+                                '<td></td>'+
+                                '<td>{{fornitoreSottoGruppo.prezziNetti}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
 
-                            '</thead>'+
-                            '<tbody class="bodyFornitore">'+
-                                '<tr>'+
-                                    '<td>{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.prezziNetti}}</td>'+
-                                    '<td>{{fornitoreSottoGruppo.trasporto}} {{fornitoreSottoGruppo.trasportoUnitaMisura}} </td>'+
-                                '</tr>'+
-                            '</tbody>'+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
 
-                        '</table>'
+                            '<tr>'+
+                                '<th>Trasporto</th>'+
+                                '<th>Imballo</th>'+
+                                '<th>Montaggio</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>&euro; {{fornitoreSottoGruppo.trasporto}}</td>'+
+                                '<td>&euro; {{fornitoreSottoGruppo.imballo}}</td>'+
+                                '<td>&euro; {{fornitoreSottoGruppo.montaggio}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>' );
 
 
-                    );
+
                 }
                 else
                     console.log("Che palle!:_{{fornitoreSottoGruppo.nome}}_"+ nomeFornitoreToPrint.split(' - ')[1] )
@@ -349,14 +373,14 @@
                         '<thead class="headFornitore">'+
 
                             '<tr>'+
-                                '<th class="intestazionePino" colspan="4">Recapito azienda</th>'+
+                                '<th colspan="4">Recapito azienda</th>'+
                             '</tr>'+
 
                             '<tr>'+
-                                '<th class="intestazionePino">Indirizzo</th>'+
-                                '<th class="intestazionePino">Provincia</th>'+
-                                '<th class="intestazionePino">Telefono</th>'+
-                                '<th class="intestazionePino">Sito</th>'+
+                                '<th>Indirizzo</th>'+
+                                '<th>Provincia</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Sito</th>'+
                             '</tr>'+
 
                         '</thead>'+
@@ -375,13 +399,13 @@
                         '<thead class="headFornitore">'+
 
                             '<tr>'+
-                                '<th class="intestazioneOliva" colspan="3">Rappresentante</th>'+
+                                '<th colspan="3">Rappresentante</th>'+
                             '</tr>'+
 
                             '<tr>'+
-                                '<th class="intestazioneOliva" >Nominativo</th>'+
-                                '<th class="intestazioneOliva" >Telefono</th>'+
-                                '<th class="intestazioneOliva" >Email</th>'+
+                                '<th>Nominativo</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Email</th>'+
                             '</tr>'+
 
                         '</thead>'+
@@ -398,13 +422,13 @@
                         '<thead class="headFornitore">'+
 
                             '<tr>'+
-                                '<th class="intestazioneNocciola" colspan="3">Sconti</th>'+
+                                '<th colspan="3">Sconti</th>'+
                             '</tr>'+
 
                             '<tr>'+
-                                '<th class="intestazioneNocciola">Standard</th>'+
-                                '<th class="intestazioneNocciola">Extra 1</th>'+
-                                '<th class="intestazioneNocciola">Extra 2</th>'+
+                                '<th>Standard</th>'+
+                                '<th>Extra 1</th>'+
+                                '<th>Extra 2</th>'+
                             '</tr>'+
 
                         '</thead>'+
@@ -420,13 +444,13 @@
                         '<thead class="headFornitore">'+
 
                             '<tr>'+
-                                '<th  class="intestazioneBlu" colspan="3">Pagamenti</th>'+
+                                '<th colspan="3">Pagamenti</th>'+
                             '</tr>'+
 
                             '<tr>'+
-                                '<th class="intestazioneBlu">Giorni</th>'+
-                                '<th class="intestazioneBlu">Modalità</th>'+
-                                '<th class="intestazioneBlu">Tipologia</th>'+
+                                '<th>Giorni</th>'+
+                                '<th>Modalità</th>'+
+                                '<th>Tipologia</th>'+
                             '</tr>'+
 
                         '</thead>'+
@@ -467,17 +491,36 @@
                         '<thead class="headFornitore">'+
 
                             '<tr>'+
-                                '<th class="intestazioneRosso" >Tempi di consegna</th>'+
-                                '<th class="intestazioneRosso">Prezzi netti</th>'+
-                                '<th class="intestazioneRosso">Trasporto</th>'+
+                                '<th>Tempi di consegna</th>'+
+                                '<th></th>'+
+                                '<th>Prezzi netti</th>'+
                             '</tr>'+
 
                         '</thead>'+
                         '<tbody class="bodyFornitore">'+
                             '<tr>'+
                                 '<td>{{form.tempiDiConsegna(placeholder="tempi di consegna")}}</td>'+
+                                '<td></td>'+
                                 '<td>{{form.prezziNetti}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th>Trasporto</th>'+
+                                '<th>Imballo</th>'+
+                                '<th>Montaggio</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
                                 '<td>{{form.trasporto(placeholder="costo di trasporto")}} {{form.trasportoUnitaMisura}}</td>'+
+                                '<td>{{form.imballo(placeholder="costo di imballo")}} {{form.imballoUnitaMisura}}</td>'+
+                                '<td>{{form.montaggio(placeholder="costo di posa")}} {{form.montaggioUnitaMisura}}</td>'+
                             '</tr>'+
                         '</tbody>'+
 

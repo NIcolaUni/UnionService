@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
+from sqlalchemy import Column, String, Float, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
 from .dbUSinterface import DbUSinterface
 
 class SottoGruppoFornitoriDBmodel(DbUSinterface, DbUSinterface.db.Model ):
@@ -24,8 +24,12 @@ class SottoGruppoFornitoriDBmodel(DbUSinterface, DbUSinterface.db.Model ):
     scontoStandard = Column(Integer())
     scontoExtra1 = Column(Integer())
     scontroExtra2 = Column(Integer())
-    trasporto = Column(Integer())
+    trasporto = Column(Float())
+    imballo = Column(Float())
+    montaggio = Column(Float())
     trasportoUnitaMisura = Column(String(8))
+    imballoUnitaMisura = Column(String(8))
+    montaggioUnitaMisura = Column(String(8))
     giorniPagamenti = Column(String(100))
     modalitaPagamenti = Column(String(100))
     tipologiaPagamenti = Column(String(100))

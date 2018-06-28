@@ -3984,7 +3984,7 @@ button.elementFattura {
   }
 
   #dataSelect{
-    width: 12%;
+    width: 14%;
     display: inline-block;
 
   }
@@ -4002,5 +4002,42 @@ button.elementFattura {
     }
 
     .aCtrlPreventivo{
+
+    }
+
+    #tabFatturaPaginaCliente{
+        width: 100%;
+    }
+
+    #totalePrev{
+        height: 40px;
+    }
+
+
+    #totalePrev > span{
+        right: 8%;
+        position: absolute;
+    }
+
+    .tdTotale {
+        width: 10%;
+    }
+
+    .tdUnitaMisura{
+        width: 10%;
+    }
+
+    .tdQuantita {
+        width: 10%;
+    }
+
+    }
+
+    aside#sidebar {
+    font-size: 14px !important;
+    }
+
+    #sidebar .main-menu {
+        font-size: 15px;
 
     }

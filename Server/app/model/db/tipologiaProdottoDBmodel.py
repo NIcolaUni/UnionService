@@ -1,23 +1,9 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
-from app import database
+from .dbUSinterface import DbUSinterface
 
-class TipologiaProdottoDBmodel(database.Model):
+class TipologiaProdottoDBmodel(DbUSinterface, DbUSinterface.db.Model):
 
     __tablename__ = "tipologia_prodotto_prezzario"
 
 
     nome = Column(String(100), primary_key=True)
-
-    def commitTipoProdotto(tipoProdotto):
-        database.session.add(tipoProdotto)
-        database.session.commit()
-
-    def commitEliminaTipoProdotto(tipoProdotto):
-        database.session.delete(tipoProdotto)
-        database.session.commit()
-
-    def rollback():
-        database.session.rollback()
-
-    def commit():
-        database.session.commit()

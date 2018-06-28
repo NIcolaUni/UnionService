@@ -1,7 +1,7 @@
-from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
-from app import database
+from sqlalchemy import Column, String, Float, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
+from .dbUSinterface import DbUSinterface
 
-class ProdottoPrezzarioDBmodel(database.Model):
+class ProdottoPrezzarioDBmodel(DbUSinterface, DbUSinterface.db.Model):
     __tablename__ = "prodotto_prezzario"
     __table_args__ = (
             PrimaryKeyConstraint('nome', 'tipologia'),
@@ -18,30 +18,25 @@ class ProdottoPrezzarioDBmodel(database.Model):
     codice = Column(String(100))
     fornitore_primo_gruppo = Column(String(150))
     fornitore_sotto_gruppo = Column(String(150))
-    prezzoListino = Column(Integer())
-    prezzoNettoListino = Column(Integer())
-    rincaroListino = Column(Integer())
-    nettoUs = Column(Integer())
-    rincaroTrasporto = Column(Integer())
-    rincaroMontaggio = Column(Integer())
-    scontoUs = Column(Integer())
-    scontoEx1 = Column(Integer())
-    scontoEx2 = Column(Integer())
-    scontoImballo = Column(Integer())
-    rincaroTrasporto2 = Column(Integer())
+
+    prezzoListinoFornituraPosa = Column(Float())
+    prezzoListinoFornitura = Column(Float())
+
+
+    rincaroAzienda = Column(Integer())
+    trasportoAzienda = Column(Float())
+    imballoAzienda = Column(Float())
+    montaggioAzienda = Column(Float())
+
+    trasportoAziendaUnitaMisura = Column(String(8))
+    imballoAziendaUnitaMisura = Column(String(8))
+    montaggioAziendaUnitaMisura = Column(String(8))
+
+    nettoUsFornituraPosa = Column(Float())
+    nettoUsFornitura = Column(Float())
+
+
     rincaroCliente = Column(Integer())
+    versoDiLettura = Column(Boolean()) #true da sinistra a destra, false viceversa
     daVerificare = Column(Boolean(), default=False)
 
-    def commitProdotto(prodotto):
-        database.session.add(prodotto)
-        database.session.commit()
-
-    def commitEliminaProdotto(prodotto):
-        database.session.delete(prodotto)
-        database.session.commit()
-
-    def rollback():
-        database.session.rollback()
-
-    def commit():
-        database.session.commit()

@@ -5,7 +5,7 @@ from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMlDBmodel i
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMqDBmodel import SottolavorazioneMqDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMcDBmodel import SottolavorazioneMcDBmodel
 from .clienteAccolto import  ClienteAccolto
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 import datetime
 import app
 import os
@@ -118,6 +118,66 @@ class PreventivoEdile(PreventivoEdileDBmodel):
 
         return ( lastNumPrev+1, oggi )
 
+    def eliminaPreventivo(numero_preventivo, data):
+
+        app.server.logger.info('\n\nallora abbiamo {} alla data {}\n\n'.format(numero_preventivo, data))
+        toDel = PreventivoEdileDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data).first()
+
+        PreventivoEdileDBmodel.delRow(toDel)
+
+    def __duplicaSottolavorazioni__(sottolavorazioni, unitaMisura):
+
+        returnList = []
+
+        if unitaMisura == 'cad':
+            for sottolav in sottolavorazioni:
+                newSottolav = __SottolavorazioneCadPreventivo__(numero_preventivo=sottolav.numero_preventivo,
+                                                                data=sottolav.data, ordine=sottolav.ordine,
+                                                                ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
+                                                                numero=sottolav.numero)
+                returnList.append(newSottolav)
+
+        elif unitaMisura == 'ml':
+            for sottolav in sottolavorazioni:
+                newSottolav = __SottolavorazioneMlPreventivo__(numero_preventivo=sottolav.numero_preventivo,
+                                                               data=sottolav.data, ordine=sottolav.ordine,
+                                                               ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
+                                                               numero=sottolav.numero, larghezza=sottolav.larghezza)
+                returnList.append(newSottolav)
+
+        elif unitaMisura == 'mq':
+            for sottolav in sottolavorazioni:
+                newSottolav = __SottolavorazioneMqPreventivo__(numero_preventivo=sottolav.numero_preventivo,
+                                                               data=sottolav.data, ordine=sottolav.ordine,
+                                                               ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
+                                                               numero=sottolav.numero, larghezza=sottolav.larghezza,
+                                                               altezza=sottolav.altezza)
+                returnList.append(newSottolav)
+
+        elif unitaMisura == 'mc':
+            for sottolav in sottolavorazioni:
+                newSottolav = __SottolavorazioneMcPreventivo__(numero_preventivo=sottolav.numero_preventivo,
+                                                               data=sottolav.data, ordine=sottolav.ordine,
+                                                               ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
+                                                               numero=sottolav.numero, larghezza=sottolav.larghezza,
+                                                               altezza=sottolav.altezza, profondita=sottolav.profondita)
+                returnList.append(newSottolav)
+
+        return returnList
+
+    def __duplicaLavorazioni__(lavorazioni):
+
+        app.server.logger.info("\n\nEntrato in duplica lav\n")
+
+        returnList = []
+        for lav in lavorazioni:
+            newLav = __LavorazionePreventivo__(numero_preventivo=lav.numero_preventivo, data=lav.data,
+                                               ordine=lav.ordine,
+                                               settore=lav.settore, tipologia_lavorazione=lav.tipologia_lavorazione,
+                                               unitaMisura=lav.unitaMisura, prezzoUnitario=lav.prezzoUnitario)
+            returnList.append(newLav)
+
+        return returnList
 
     def modificaPreventivo(numero_preventivo, dipendente_ultimaModifica):
         '''
@@ -130,17 +190,19 @@ class PreventivoEdile(PreventivoEdileDBmodel):
         :return:
         '''
 
-        lastPrev = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo).order_by(PreventivoEdile.data).first()
+        lastPrev = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo).order_by(desc(PreventivoEdile.data)).first()
         now = datetime.datetime.now()
-        oggi = "{}/{}/{}".format(now.day, now.month, now.year)
+        oggi = "{}-{}-{}".format(now.year, now.month, now.day)
 
         #se il preventivo viene modificato piu' volte lo stesso giorno o viene modificato
         # il giorno non viene fatta alcuna copia e viene unicamente modificato
         # il parametro "dipendente_ultimaModifica"
+        app.server.logger.info("\n\nDi qualcosa {} e {}\n\n".format(numero_preventivo, lastPrev.data))
 
-        if now ==lastPrev.data:
+        if str(now).split(' ')[0] == str(lastPrev.data):
+            app.server.logger.info("\n\nQua ci sono\n\n")
             PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo).update(
-                        {'dipendente_ultimaModifica' : dipendente_ultimaModifica})
+                        {'dipendente_ultimaModifica' : dipendente_ultimaModifica.username})
 
             PreventivoEdile.commit()
 
@@ -150,33 +212,48 @@ class PreventivoEdile(PreventivoEdileDBmodel):
                                      cognome_cliente=lastPrev.cognome_cliente, indirizzo_cliente=lastPrev.indirizzo_cliente,
                                      dipendente_generatore=lastPrev.dipendente_generatore,
                                      tipologia_commessa=lastPrev.tipologia_commessa,
-                                     dipendente_ultimaModifica=dipendente_ultimaModifica)
+                                     dipendente_ultimaModifica=dipendente_ultimaModifica.username)
+
 
         PreventivoEdileDBmodel.addRow(preventivo)
 
         lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
-        for lav in lavorazioni:
-            lav.data = oggi
+        lavorazioni = PreventivoEdile.__duplicaLavorazioni__(lavorazioni)
 
-        PreventivoEdileDBmodel.addRow(lavorazioni)
+        for lav in lavorazioni:
+            app.server.logger.info("\n\nQiclo\n")
+
+            lav.data = oggi
+            PreventivoEdileDBmodel.addRowNoCommit(lav)
+
+        PreventivoEdile.commit()
 
         sottolavorazioniCad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
+        sottolavorazioniCad = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniCad, 'cad')
+
         sottolavorazioniMl = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+
+        sottolavorazioniMl = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniMl, 'ml')
 
         sottolavorazioniMq = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
+        sottolavorazioniMq = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniMq, 'mq')
+
         sottolavorazioniMc = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
+        sottolavorazioniMc = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniMc, 'mc')
 
         sottolavorazioni = sottolavorazioniCad + sottolavorazioniMl + sottolavorazioniMc + sottolavorazioniMq
 
         for sottoLav in sottolavorazioni:
             sottoLav.data= oggi
+            PreventivoEdileDBmodel.addRowNoCommit(sottoLav)
 
-        PreventivoEdileDBmodel.addRow(sottolavorazioni)
+        PreventivoEdile.commit()
 
+        app.server.logger.info("\n\nfineeeen\n")
 
         return ( numero_preventivo, oggi )
 
@@ -588,11 +665,40 @@ class PreventivoEdile(PreventivoEdileDBmodel):
         return ( last_prev, ) + preventivoInfo
 
     def returnAllPreventiviCliente(nome_cliente, cognome_cliente, indirizzo_cliente):
+        '''
+
+        :param cognome_cliente:
+        :param indirizzo_cliente:
+        :return: Ritorna una lista di tutti i preventivi associati ad un dato cliente;
+                 in particolare si tratta di una lista di tuple ( di preciso coppie )
+                 così formate: ( preventivo, [lavorazioni] ),
+                 dove preventivo
+                 e' il risultato di una query e [lavorazioni] e' il risultato della
+                 chiamata a PreventivoEdile.returnSinglePreventivo()
+        '''
 
         preventivi = PreventivoEdile.query.filter_by(nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
-                                                     indirizzo_cliente=indirizzo_cliente).order_by(desc(PreventivoEdile.data)).all()
+                                                     indirizzo_cliente=indirizzo_cliente).order_by(
+                                                        PreventivoEdile.numero_preventivo, desc(PreventivoEdile.data)).all()
 
-        return preventivi
+        returnList = []
+
+        for prev in preventivi:
+            returnList.append( ( prev, PreventivoEdile.returnSinglePreventivo(numero_preventivo=prev.numero_preventivo, data=prev.data)) )
+
+        return returnList
+
+    def get_counter_preventivi_per_cliente(nome_cliente, cognome_cliente, indirizzo_cliente):
+        q = PreventivoEdile.query.filter_by(nome_cliente=nome_cliente, cognome_cliente=cognome_cliente, indirizzo_cliente=indirizzo_cliente)
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count = q.session.execute(count_q).scalar()
+        return count
+
+    def get_counter_preventivi_per_numero(numero_preventivo):
+        q = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo)
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count = q.session.execute(count_q).scalar()
+        return count
 
 
 
@@ -643,16 +749,16 @@ class PreventivoEdile(PreventivoEdileDBmodel):
 
         latexScript += 'Nominativo: & {} {} \\\\'.format(cliente.nome, cliente.cognome)
         latexScript += 'Indirizzo: &  {}  \\\\'.format(cliente.indirizzo)
-        latexScript += 'Telefono: &  {} \\\\ \\hline'.format(cliente.telefono)
+        latexScript += 'Telefono: &  {} \\\\'.format(cliente.telefono)
 
         latexScript += ' Tipologia commessa: & {} \\\\'.format(preventivo.tipologia_commessa)
         latexScript += '''         
-                        \\hline
                         \\end{tabular}
                         \\end{center}
                         
                       '''
         latexScript += '''
+                        \\vspace{5mm}
                         \\begin{center}
                         \\begin{tabular}{| p{1cm} | p{5cm} | l | l |}
                         \\hline
@@ -667,7 +773,7 @@ class PreventivoEdile(PreventivoEdileDBmodel):
             for lav in infoPreventivo[1]:
                 if lav[0].settore == settore:
                     latexScript += '{} & {} & {} {} & \\euro  {} \\\\'.format(lav[0].ordine, lav[0].tipologia_lavorazione,lav[1], lav[0].unitaMisura, lav[2])
-                    totale += int( lav[2])
+                    totale += float( lav[2])
 
         latexScript += '\\hline'
         latexScript += ' & & & Totale: \\euro {} \\\\'.format(totale)
@@ -678,7 +784,7 @@ class PreventivoEdile(PreventivoEdileDBmodel):
                        '''
 
         latexScript += '''
-        
+                        \\vspace{20mm}
                         \\textbf{Dalla seguente offera sono escluse:}
                         \\begin{itemize}
                             \\item IVA e qualsiasi altro onere fiscale;
@@ -705,7 +811,7 @@ class PreventivoEdile(PreventivoEdileDBmodel):
                         \\end{document}
                        '''
 
-        with open('preventiviLatexDir/preventivo.tex', mode='w') as prova:
+        with open('app/preventiviLatexDir/preventivo.tex', mode='w') as prova:
             prova.write(latexScript)
 
-        os.system("cd preventiviLatexDir && pdflatex preventivo.tex")
+        os.system("cd app/preventiviLatexDir && pdflatex preventivo.tex")

@@ -171,7 +171,8 @@
 						<ul>
 							<li><a class="menuBar local" href="#intro">Profilo cliente</a></li>
 							<li><a class="menuBar local" href="#one">Preventivo</a></li>
-
+                            <li><a class="menuBar local" href="#two">Scelta finiture</a></li>
+                        </ul>
 					</nav>
 				</div>
 			</section>
@@ -264,184 +265,50 @@
 
 							<span id="titlePreventivoSpan">
 								<span><h2><a id="newPreventivo" class="fa fa-plus-circle expandPreventivoIcon"></a> Preventivi cliente</h2></span>
-								<span id="ctrlSpanPreventivo">
-									<span class="aCtrlPreventivo">
+
+								{% if countPreventivi > 0 %}
+
+									<span id="ctrlSpanPreventivo">
+										<span class="aCtrlPreventivo">
+										</span>
+										<select id="preventivoSelect" >
+											{% for prev in preventivi_distinti %}
+												{% if prev[2] == lastPreventivo[0].numero_preventivo %}
+													<option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}</option>
+												{% else %}
+													<option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}</option>
+												{% endif %}
+											{% endfor %}
+										</select>
+										<select id="dataSelect" >
+										</select>
+
+
 									</span>
-									<select id="preventivoSelect" >
-										{% for prev in preventivi_distinti %}
-											{% if prev[2] == lastPreventivo[0].numero_preventivo %}
-												<option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - #{{prev[1]}}</option>
-											{% else %}
-												<option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - #{{prev[1]}}</option>
-											{% endif %}
-										{% endfor %}
-									</select>
-									<select id="dataSelect" >
-									</select>
-
-
-								</span>
+								{% endif %}
 							</span>
 
-							<div class="features">
-								<div id="tabFattura" class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Lavorazione</th>
-													<th>Quantità</th>
-													<th>Unità</th>
-													<th>Totale</th>
-												</tr>
-											</thead>
-										</table>
-									{% for settore in lastPreventivo[1] %}
-										<table class="alt">
 
-											<tbody>
-
-
-													<tr>
-														<td colspan="4">{{settore}}</td>
-													</tr>
-
-													{% for lavorazione in lastPreventivo[2] %}
-														{% if lavorazione[0].settore == settore %}
-															<tr>
-																<td>{{lavorazione[0].tipologia_lavorazione}}</td>
-																<td>{{lavorazione[1]}}</td>
-																<td>{{lavorazione[0].unitaMisura}}</td>
-																<td>&euro; {{lavorazione[2]}}</td>
-															</tr>
-														{% endif %}
-													{% endfor %}
-											</tbody>
-										</table>
-									{% endfor %}
-								</div>
-
-							<!--	<div id="tabFattura" class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Settore di lavorazione</th>
-													<th>L</th>
-													<th>P</th>
-													<th>H</th>
-													<th>Quantità</th>
-													<th>Unità</th>
-													<th>Prezzo unitario</th>
-													<th>Totale</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td><1</td>
-													<td>1</td>
-													<td>1</td>
-													<td>8</td>
-													<td>m<sup>3</sup></td>
-													<td>8 &euro;</td>
-													<td>300 &euro;</td>
-												</tr>
-												<tr>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>1</td>
-													<td>2</td>
-													<td>1</td>
-													<td>8</td>
-													<td>m<sup>3</sup></td>
-													<td>8 &euro;</td>
-													<td>300 &euro;</td>
-												</tr>
-												<tr>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>1</td>
-													<td>2</td>
-													<td>1</td>
-													<td>8</td>
-													<td>m<sup>3</sup></td>
-													<td>8 &euro;</td>
-													<td>300 &euro;</td>
-												</tr>
-												<tr>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>1</td>
-													<td>2</td>
-													<td>1</td>
-													<td>8</td>
-													<td>m<sup>3</sup></td>
-													<td>8 &euro;</td>
-													<td>300 &euro;</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="7"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-							</div>-->
 						</div>
 					</section>
 
 				<!-- Two -->
 					<section id="two" class="wrapper style3 fade-up">
 						<div class="inner">
-							<h2>What we do</h2>
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
-							<div class="features">
-														<div class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-							</div>
-							<ul class="actions">
-								<li><a href="#" class="button">Learn more</a></li>
-							</ul>
+                            <span id="titleSceltaFinitureoSpan">
+								<span><h2><a id="newPreventivoFiniture" class="fa fa-plus-circle expandPreventivoIcon"></a> Scelta Finiture </h2></span>
+								<span id="ctrlSpanPreventivoFiniture">
+									<span class="aCtrlPreventivo">
+									</span>
+									<select id="preventivofinitureSelect" >
+
+									</select>
+									<select id="dataPreventivoFinitureSelect" >
+									</select>
+
+
+								</span>
+							</span>
 						</div>
 					</section>
 
@@ -522,6 +389,13 @@
 
 			<script>
 
+				var totalePreventivo=0;
+				{% for lavorazione in lastPreventivo[2] %}
+					totalePreventivo += parseFloat('{{lavorazione[2]}}');
+				{% endfor %}
+
+				$('#totalePrev').children('span').html('Totale: &euro; ' + totalePreventivo);
+
 				$('#header > a').css('border-bottom', 'None' );
 
    				var socketHome = io.connect("{{sockUrl}}"+'/home');
@@ -537,7 +411,7 @@
 
 				var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
 
-
+/*
 				var countLavorazioni=0;
 
 				{% for preventivo in preventivi %}
@@ -556,36 +430,120 @@
 						socketPreventivo.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
 																	  'numero_preventivo': selPrev});
 					});
+				}*/
+
+				/*Stampa l'antemprima del preventivo edile*/
+				function stampaRiassuntoPreventivo( numero_preventivo, data ){
+
+								$('section#one').children('.inner').children('.features').remove();
+
+								strToAdd = '';
+								{% for preventivo in preventivi %}
+									if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
+										console.log("mm dai qualcosa");
+										strToAdd = '<div class="features"> \
+														<div id="tabFatturaPaginaCliente" class="table-wrapper"> \
+																<table class="alt"> \
+																	<thead> \
+																		<tr> \
+																			<th class="tdTipoLav">Lavorazione</th> \
+																			<th class="tdQuantita">Quantità</th> \
+																			<th class="tdUnitaMisura">Unità</th> \
+																			<th class="tdTotale">Totale</th> \
+																		</tr> \
+																	</thead> \
+																</table>';
+
+
+										{% for settore in preventivo[1][0] %}
+											strToAdd += '<table class="alt"> \
+														<tbody> \
+															<tr> \
+																<td colspan="4">{{settore}}</td> \
+															</tr>';
+
+											{% for lavorazione in preventivo[1][1] %}
+												{% if lavorazione[0].settore == settore %}
+													strToAdd +=	'<tr> \
+																	<td class="tdTipoLav">{{lavorazione[0].tipologia_lavorazione}}</td> \
+																	<td class="tdQuantita">{{lavorazione[1]}}</td> \
+																	<td class="tdUnitaMisura">{{lavorazione[0].unitaMisura}}</td> \
+																	<td class="tdTotale">&euro; {{lavorazione[2]}}</td> \
+																 </tr>';
+												{% endif %}
+											{% endfor %}
+
+											strToAdd +=	'</tbody> \
+														</table>';
+										{% endfor %}
+
+										strToAdd += '<div id="totalePrev"> \
+																<span>Totale: </span> \
+															</div> \
+														</div> \
+													</div>';
+									}
+								{% endfor %}
+
+								$(strToAdd).insertAfter("#titlePreventivoSpan");
+
+
 				}
 
-				var selectedPreventivo = $('#preventivoSelect option:selected');
+				function impostaSelectDataPreventivoEdile(numero_preventivo){
 
-				if( !(typeof selectedPreventivo.attr('class') === 'undefined')){
-				//	console.log('entrato ' + selectedPreventivo );
+					var firstCycle=true;
 
-					selectedPreventivo=selectedPreventivo.attr('class').split('-')[1];
+                    //resetto il select togliendo tutti i tag option
+                    $('#dataSelect').html('');
 
-				}
-
-				/*console.log("Il numero di preventivo selezionatoe': "+ selectedPreventivo);*/
-				{% for preventivo in preventivi %}
-					if( "{{preventivo.numero_preventivo}}" == selectedPreventivo ){
+					{% for preventivo in preventivi %}
 						var optionElement = "";
 
 						// di default setto come data quella piu' recente del piu' recente preventivo
 						// generato per questo cliente
-						if( "{{preventivo.numero_preventivo}}" == "{{lastPreventivo[0].numero_preventivo}}" ){
-							if( "{{preventivo.data}}" ==  "{{lastPreventivo[0].data}}" ){
-								optionElement = '<option selected="selected" value="{{preventivo.data}}">{{preventivo.data}}</option>';
+						if( "{{preventivo[0].numero_preventivo}}" == numero_preventivo ){
+							if( firstCycle ){
+								optionElement = '<option selected="selected" value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+								firstCycle=false;
 							}
+							else
+								optionElement = '<option value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
 						}
-						else
-							optionElement = '<option value="{{preventivo.data}}">{{preventivo.data}}</option>';
+
 
 						$('#dataSelect').append( optionElement );
 
-					}
-				{% endfor %}
+
+					{% endfor %}
+				}
+
+				{% if countPreventivi > 0 %}
+					$('.aCtrlPreventivo').html(
+							'<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>'+
+							'<a id="cancellaPreventivo" class="fa fa-trash expandPreventivoIcon"></a>'
+					);
+
+					$('#modificaPreventivo').click(function(){
+					    var selPrev = $('#preventivoSelect option:selected');
+
+						socketPreventivo.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
+																	  'numero_preventivo': selPrev});
+					});
+
+					$('#cancellaPreventivo').click(function(){
+						 var selPrev = $('#preventivoSelect option:selected').attr('class').split('-')[1];
+						 var selData = $('#dataSelect').val();
+						 socketPreventivo.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
+																	  'numero_preventivo': selPrev,
+																	   'data': selData });
+
+
+					});
+
+					impostaSelectDataPreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
+					stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
+				{% endif %}
 
 
 
@@ -624,7 +582,104 @@
 				});
 
 
+				/*Dopo che un preventivo e' stato cancellato viene aggiornata la pagina cliente:
+					- cancellando dal select della data la data specifica
+					- cancellando eventualmente dal select dei preventivi il preventivo specifico
+					-impostando un nuovo preventivo di default negli appositi tag select e 'renderizzandolo'*/
 
+				socketPreventivo.on('aggiornaAnteprimaPreventivo2', function(message){
+
+
+				}
+
+				socketPreventivo.on('aggiornaAnteprimaPreventivo', function(message){
+
+					/* message['preventivi_restanti'] e' la quantita' di preventivi restante dopo la
+					  cancellazione con ugual numero preventivo ma diversa data;
+					   Quindi l'if seguente si puo' leggere: se non ci sono piu' preventi*/
+					if( message['preventivi_restanti'] == 0 ){
+
+
+						$('#preventivoSelect').children('option').each(function(){
+							var numero=$(this).attr('class').split('-')[1];
+
+							if(numero == message['numero_preventivo_deleted']){
+								$(this).remove();
+
+							}
+
+						});
+
+						/*Seleziono il prossimo preventivo di cui mostrare l'anteprima;
+						  Poiche' la pagina non viene aggiornata la variabile jinja "preventivi_distinti"
+						  contiene ancora il preventivo cancellato. Se il preventivo cancellato
+						  e' l'ultimo preventivo fatto allora seleziona il prossimo in ordine di numero,
+						  se e' un preventivo vecchio, viene selezionato l'ultimo fatto.*/
+
+						var trovato=false;
+						var num_preventivo_trovato=0;
+
+						if(message['numero_preventivo_deleted'] == '{{lastPreventivo[0].numero_preventivo}}')
+						{
+							console.log("Il prev cancellato e' l'ultimo fato");
+							{% for preventivo in preventivi_distinti %}
+								if( !trovato && preventivo[2] != message['numero_preventivo_deleted'] ){
+									trovato=true;
+									num_preventivo_trovato = preventivo[2];
+
+								}
+
+
+							{% endfor %}
+
+							/* se num_preventivo_trovato == 0 vuol dire che sono stati
+								cancellati tutti i preventivi associati ad un cliente; */
+							if( num_preventivo_trovato == 0 ){
+								$('section#one').children('.inner').children('.features').remove();
+							}
+							else{
+
+								/* reimposto il preventivoSelect in modo tale che il preventivo in anteprima
+								   sia uguale a quello selezionato */
+								$('#preventivoSelect').html('');
+								var first = true;
+								{% for prev in preventivi_distinti %}
+									 if( '{{prev[2]}}' != num_preventivo_trovato ){
+									 	if( first ){
+									 		first=false;
+									 		$('#preventivoSelect').append('<option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}</option>');
+									 	}
+									 	else{
+									 		$('#preventivoSelect').append('<option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}</option>');
+									 	}
+									 }
+
+								{% endfor %}
+
+								impostaSelectDataPreventivoEdile(num_preventivo_trovato);
+								var selectedData = $('#dataSelect').val();
+								stampaRiassuntoPreventivo(num_preventivo_trovato, selectedData);
+
+							}
+
+
+						}
+						else{
+
+							console.log("Il prev cancellato non e' l'ultimo fato");
+							impostaSelectDataPreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
+							stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
+						}
+
+
+
+					}
+					else{
+
+					}
+
+
+				});
 
                 socketPreventivo.on('confermaRegistrazionePreventivo', function(){
 
@@ -633,16 +688,34 @@
 
                 });
 
-/*
+
 				$('#modificaPreventivo').click(function(){
 
 					var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
-
-					socketPreventivo.emit('modifica_preventivo', {'numero_preventivo': selectedPreventivo, 'dipendente': '{{dipendente.username}}' });
-				});*/
+					console.log("cliccato "+ selectedPreventivo);
+					socketPreventivo.emit('modifica_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'dip': '{{dipendente.username}}' });
+				});
 
 				socketPreventivo.on('startModificaPreventivo', function(){
+					console.log("baaaa");
 					window.location = "{{url_for('apriPreventivoEdile')}}";
+				});
+
+				$('#preventivoSelect').change(function(){
+					var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
+
+					impostaSelectDataPreventivoEdile(selectedPreventivo);
+
+					var selectedData = $('#dataSelect').val();
+					stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
+
+
+				});
+
+				$('#dataSelect').change(function(){
+					var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
+					var selectedData = $('#dataSelect').val();
+					stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
 				});
 
 			</script>

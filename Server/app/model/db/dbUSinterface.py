@@ -17,6 +17,9 @@ class DbUSinterface():
         database.session.add(row)
         DbUSinterface.commit()
 
+    def addRowNoCommit(row):
+        database.session.add(row)
+
     def delRow(row):
         database.session.delete(row)
         DbUSinterface.commit()

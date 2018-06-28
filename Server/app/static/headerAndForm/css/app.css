@@ -8471,6 +8471,7 @@ body #content {
   display: none;
 }
 #sidebar {
+  font-size: 14px;
   position: fixed;
   background: #fff;
   box-shadow: 0 0 10px rgba(51, 51, 51, 0.38);
