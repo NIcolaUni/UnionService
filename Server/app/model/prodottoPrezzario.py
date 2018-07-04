@@ -9,6 +9,7 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                     tipologia,
                     marchio = None,
                     codice = None,
+                    modello = None,
                     fornitore_primo_gruppo = None,
                     fornitore_sotto_gruppo = None,
                     prezzoListinoFornitura = None,
@@ -16,10 +17,9 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                     rincaroAzienda = None,
                     trasportoAzienda = None,
                     imballoAzienda = None,
-                    montaggioAzienda = None,
                     trasportoAziendaUnitaMisura = None,
                     imballoAziendaUnitaMisura = None,
-                    montaggioAziendaUnitaMisura = None,
+                    posa = None,
                     nettoUsFornituraPosa = None,
                     nettoUsFornitura = None,
                     rincaroCliente = None,
@@ -30,6 +30,7 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
         self.tipologia=tipologia
         self.marchio=marchio
         self.codice=codice
+        self.modello=modello
         self.fornitore_primo_gruppo=fornitore_primo_gruppo
         self.fornitore_sotto_gruppo=fornitore_sotto_gruppo
 
@@ -39,10 +40,9 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
         self.rincaroAzienda = rincaroAzienda
         self.trasportoAzienda = trasportoAzienda
         self.imballoAzienda = imballoAzienda
-        self.montaggioAzienda = montaggioAzienda
         self.trasportoAziendaUnitaMisura = trasportoAziendaUnitaMisura
         self.imballoAziendaUnitaMisura = imballoAziendaUnitaMisura
-        self.montaggioAziendaUnitaMisura = montaggioAziendaUnitaMisura
+        self.posa = posa
         self.nettoUsFornituraPosa = nettoUsFornituraPosa
         self.nettoUsFornitura = nettoUsFornitura
 
@@ -56,6 +56,7 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                     tipologia,
                     marchio=None,
                     codice=None,
+                    modello=None,
                     fornitore_primo_gruppo=None,
                     fornitore_sotto_gruppo=None,
 
@@ -65,11 +66,9 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                     rincaroAzienda=None,
                     trasportoAzienda=None,
                     imballoAzienda=None,
-                    montaggioAzienda=None,
                     trasportoAziendaUnitaMisura=None,
                     imballoAziendaUnitaMisura=None,
-                    montaggioAziendaUnitaMisura=None,
-
+                    posa = None,
                     nettoUsFornituraPosa=None,
                     nettoUsFornitura=None,
 
@@ -77,13 +76,13 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
                     versoDiLettura=None,
                     daVerificare=None):
 
-        newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, marchio=marchio, codice=codice,
+        newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, marchio=marchio, codice=codice, modello=modello,
                                         fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
                                         prezzoListinoFornitura=prezzoListinoFornitura, prezzoListinoFornituraPosa=prezzoListinoFornituraPosa,
                                         rincaroAzienda=rincaroAzienda, trasportoAzienda=trasportoAzienda, imballoAzienda=imballoAzienda,
-                                        montaggioAzienda=montaggioAzienda, trasportoAziendaUnitaMisura=trasportoAziendaUnitaMisura,
+                                        trasportoAziendaUnitaMisura=trasportoAziendaUnitaMisura,
                                         imballoAziendaUnitaMisura=imballoAziendaUnitaMisura,
-                                        montaggioAziendaUnitaMisura=montaggioAziendaUnitaMisura,
+                                        posa=posa,
                                         nettoUsFornitura=nettoUsFornitura,
                                         nettoUsFornituraPosa=nettoUsFornituraPosa,
                                         rincaroCliente=rincaroCliente, versoDiLettura=versoDiLettura, daVerificare=daVerificare)

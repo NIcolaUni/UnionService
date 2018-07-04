@@ -46,6 +46,8 @@
 
                 </div>
             </form>
+            <button id="addModello" onclick="nuovoModello();" class="button button--antiman button--text-thick button--text-upper button--size-s button--inverted-alt button--round-l button--border-thick"><i class="button__icon icon icon-plus"></i><span>Aggiungi modello</span></button>
+
 
         </div>
 
@@ -60,41 +62,44 @@
                             <th  class="tableIntestazione colShortString" data-column="column3"></th>
                             <th  class="tableIntestazione colShortString" data-column="column4"></th>
                             <th  class="tableIntestazione colShortString" data-column="column5"></th>
+                            <th  class="tableIntestazione colShortString" data-column="column6"></th>
 
-                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column6"> </th>
-                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column7"></th>
+                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column7"> </th>
+                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column8"></th>
 
-                            <th  class="tableIntestazione  intestazioneRosso" colspan="4" data-column="column8">AZIENDA</th>
+                            <th  class="tableIntestazione  intestazioneRosso" colspan="3" data-column="column9">AZIENDA</th>
 
-                            <th  class="tableIntestazione intestazioneBlu " colspan="6" data-column="column12">FORNITORE</th>
+                            <th  class="tableIntestazione intestazioneBlu " colspan="5" data-column="column12">FORNITORE</th>
+
+                           <th  class="tableIntestazione colNumBig intestazioneOliva" data-column="column17"></th>
 
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column18"></th>
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column19"></th>
 
-                            <th  class="tableIntestazione colNumSmall" data-column="column20"></th>
+                            <th  class="tableIntestazione colNumSmall" data-column="colum20"></th>
                             <th  class="tableIntestazione colNumSmall" data-column="column21"> </th>
                        </tr>
                        <tr id="trIntestazione">
                             <th  class="tableIntestazione colLongString" data-column="column1"><a id="showForm" class="fa fa-plus"></a></th>
                             <th  class="tableIntestazione colLongString"  data-column="column2">Nome prodotto</th>
                             <th  class="tableIntestazione colShortString" data-column="column3">Marchio</th>
-                            <th  class="tableIntestazione colShortString" data-column="column4">Codice</th>
-                            <th  class="tableIntestazione colShortString" data-column="column5">Fornitore</th>
+                            <th  class="tableIntestazione colShortString" data-column="column4">Modello</th>
+                            <th  class="tableIntestazione colShortString" data-column="column5">Codice</th>
+                            <th  class="tableIntestazione colShortString" data-column="column6">Fornitore</th>
 
-                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column6"> &euro; Listino<br/> (F+P)</th>
-                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column7"> &euro; Listino<br/> (F)</th>
+                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column7"> &euro; Listino<br/> (F+P)</th>
+                            <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column8"> &euro; Listino<br/> (F)</th>
 
-                            <th  class="tableIntestazione colNumSmall intestazioneRosso" data-column="column8">  (+%) </th>
-                            <th  class="tableIntestazione colNumSmall intestazioneRosso" data-column="column9"> Trasporto </th>
-                            <th  class="tableIntestazione colNumSmall intestazioneRosso" data-column="column10"> Imballo </th>
-                            <th  class="tableIntestazione colNumBig intestazioneRosso" data-column="column11"> Montaggio <br/> (+50%) </th>
+                            <th  class="tableIntestazione colNumSmall intestazioneRosso" data-column="column9">  (+%) </th>
+                            <th  class="tableIntestazione colNumSmall intestazioneRosso" data-column="column10"> Trasporto </th>
+                            <th  class="tableIntestazione colNumSmall intestazioneRosso" data-column="column11"> Imballo </th>
 
                             <th  class="tableIntestazione colNumSmall intestazioneBlu" data-column="column12"> Sconto </th>
                             <th  class="tableIntestazione colNumSmall intestazioneBlu" data-column="column13">ex.1</th>
                             <th  class="tableIntestazione colNumSmall intestazioneBlu" data-column="column14">ex.2</th>
                             <th  class="tableIntestazione colNumSmall intestazioneBlu" data-column="column15">Trasporto</th>
                             <th  class="tableIntestazione colNumSmall intestazioneBlu" data-column="column16">Imballo</th>
-                            <th  class="tableIntestazione colNumBig intestazioneBlu" data-column="column17"> Montaggio <br/> (+50%) </th>
+                            <th  class="tableIntestazione colNumBig   intestazioneOliva" data-column="column17"> Posa <br/> +<input id="rincaroPosaInput" class="numberInput colorBlack" type="number" name="rincaroPosa" placeholder="percentuale rincaro posa" min=0 max=100 value=50> % </th>
 
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column18"> &euro; netto <br/> U.S. <br/> (F)</th>
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column19"> &euro; netto<br/> U.S.  <br/>(F+P)</th>
@@ -106,6 +111,14 @@
                             <th  class="tableForm colLongString" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  id="registraProdotto" class="buttonPrezzario" type="button">Inserisci</button></th>
                             <th  class="tableForm colLongString"  data-column="column2"><input id="nomeProdottoInput" type="text" name="nomeProdotto" placeholder="Inserire il nome del prodotto"></th>
                             <th  class="tableForm colShortString" data-column="column3"><input id="marchioInput" type="text" name="marchio" placeholder="Inserire il marchio"> </th>
+                            <th  class="tableForm colShortString" data-column="column4">
+                                <select id="modelloSelect" name="fornitore">
+
+                                </select>
+
+                            </th>
+
+
                             <th  class="tableForm colShortString" data-column="column4"><input id="codiceInput" type="text" name="codice" placeholder="Inserire il codice"> </th>
 
                             <th id="fornitoreTh" class="tableForm colShortString" data-column="column5">
@@ -118,15 +131,17 @@
                                 </select>
 
                             </th>
-                            <th  id="listinoFornituraPosaTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column6"><input id="listinoFornituraPosaInput" class="numberInput colorBlack" type="number" name="listinoFornituraPosa" placeholder="listino fornitura posa" step="0.01" value=0.00> &euro; </th>
+                            <th  id="listinoFornituraPosaTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column6"></th>
                             <th  id="listinoFornituraTh"  class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column7"><input id="listinoFornituraInput" class="numberInput colorBlack" type="number" name="listinoFornitura" placeholder="listino fornitura" step="0.01" value=0.00> &euro; </th>
 
-                            <th  id="scontiRincariAziendaClose" class="tableForm colorWhite intestazioneRosso" colspan="4" data-column="column8"></th>
-                            <th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="6" data-column="column12"></th>
+                            <th  id="scontiRincariAziendaClose" class="tableForm colorWhite intestazioneRosso" colspan="3" data-column="column8"></th>
+                            <th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="5" data-column="column11"></th>
+
+                            <th  class="tableIntestazione colNumBig  intestazioneOliva" data-column="column16"><input id="posaInput" class="numberInput colorBlack" type="number" name="posa" placeholder="costo posa" step="0.01" value=0.00> &euro; </th>
 
 
                             <th  id="nettoUsFTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column18"><input id="nettoUsFInput" class="numberInput colorBlack" type="number" name="nettoUsF" placeholder="netto US fornitura" step="0.01" value=0.00> &euro; </th>
-                            <th  id="nettoUsFPTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column19"><input id="nettoUsFPInput" class="numberInput colorBlack" type="number" name="nettoUsFP" placeholder="netto US fornitura+posa" step="0.01" value=0.00> &euro; </th>
+                            <th  id="nettoUsFPTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column19"></th>
 
 
                             <th  class="tableForm colNumSmall colorWhite" data-column="column20"><input id="rincaroInput"  class="numberInput colorBlack" type="number" name="rincaro" placeholder="rincaro" value=0>%</th>
@@ -149,6 +164,19 @@
 
     </div>
    <script>
+
+            function inserisciModelliPerTipologia(){
+                console.log('prima del ciclo');
+                {% for modello in modelli %}
+                    console.log('durante il ciclo '+$('#selectTipologia').val() + '{{modello.tipologia}}' );
+                    if( '{{modello.tipologia}}' ==  $('#selectTipologia').val() ){
+                        console.log('entro????');
+                        $('#modelloSelect').append('<option>{{modello.nome}}</option>');
+                    }
+                {% endfor %}
+            }
+            inserisciModelliPerTipologia();
+
             var rappresentanteDaRegistrare = false;
 
             var socketHome = io.connect("{{sockUrl}}"+'/home');
@@ -161,6 +189,28 @@
 
             var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
 
+
+            function nuovoModello(){
+                 swal.withFormAsync({
+                    title: 'Aggiungi nuovo modello',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+
+                                 { name: 'modello',  placeholder: 'Aggiungi nuovo modello' },
+
+
+                                ]
+
+                 }).then(function (context) {
+                    if(context._isConfirm){
+                        socketProdotto.emit('aggiungi_modello_prodotto', { 'dip': '{{dipendente.username}}','nome': context.swalForm['modello'], 'tipologia': $('#selectTipologia').val() });
+                    }
+                 });
+            }
 
            //Script necessario per renderizzare corretamente il tag select di "settore"
             $.getScript("{{url_for('static', filename='form/js/main.js')}}");
@@ -224,18 +274,19 @@
                                         <div class="col-md-4 iconContainer"> \
                                             <a  class="fa fa-warning iconsTab segnalaProdotto"></a> \
                                         </div> \
+                                        <button class="button settaCapitolatoButton">Setta capitolato</button> \
                                      </div> \
                                      </td> \
                                      <td  class="nome_prodotto colLongString" data-column="column2">{{prodotto.nome}}</td> \
                                      <td  class="numColMedium colShortString" data-column="column3">{{prodotto.marchio}}</td> \
-                                     <td  class="numColMedium colShortString" data-column="column4">{{prodotto.codice}}</td> \
-                                     <td  class="colMedium colShortString" data-column="column5">{{prodotto.fornitore_primo_gruppo}} - {{prodotto.fornitore_sotto_gruppo}}</td> '+
-                                     stampaValore( '{{prodotto.prezzoListinoFornituraPosa}}', 6, "&euro;", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.prezzoListinoFornitura}}', 7, "&euro;", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.rincaroAzienda}}', 8, "%", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.trasportoAzienda}}', 9, "%", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.imballoAzienda}}', 10, "&euro;", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.montaggioAzienda}}', 11, "&euro;", "colNumBig" );
+                                     <td  class="modello_prodotto numColMedium colShortString" data-column="column4">{{prodotto.modello}}</td> \
+                                     <td  class="numColMedium colShortString" data-column="column5">{{prodotto.codice}}</td> \
+                                     <td  class="colMedium colShortString" data-column="column6">{{prodotto.fornitore_primo_gruppo}} - {{prodotto.fornitore_sotto_gruppo}}</td> '+
+                                     stampaValore( '{{prodotto.prezzoListinoFornituraPosa}}', 7, "&euro;", "colNumSmall" )+
+                                     stampaValore( '{{prodotto.prezzoListinoFornitura}}', 8, "&euro;", "colNumSmall" )+
+                                     stampaValore( '{{prodotto.rincaroAzienda}}', 9, "%", "colNumSmall" )+
+                                     stampaValore( '{{prodotto.trasportoAzienda}}', 10, "%", "colNumSmall" )+
+                                     stampaValore( '{{prodotto.imballoAzienda}}', 11, "&euro;", "colNumSmall" );
 
                     if("{{prodotto.versoDiLettura}}" == "True"){
                            {% for fornitore in fornitori %}
@@ -245,8 +296,7 @@
                                                 stampaValore( '{{fornitore.scontoExtra1}}', 13, "%", "colNumSmall" ) +
                                                 stampaValore( '{{fornitore.scontoExtra2}}', 14, "%", "colNumSmall" ) +
                                                 stampaValore( '{{fornitore.trasporto}}', 15, "&euro;", "colNumSmall" ) +
-                                                stampaValore( '{{fornitore.imballo}}', 16, "&euro;", "colNumSmall" ) +
-                                                stampaValore( '{{fornitore.montaggio}}', 17, "&euro;", "colNumBig" );
+                                                stampaValore( '{{fornitore.imballo}}', 16, "&euro;", "colNumSmall" );
 
                                 }
                            {% endfor %}
@@ -256,13 +306,13 @@
                                     <td  class="colNumSmall" data-column="column13">-</td> \
                                     <td  class="colNumSmall" data-column="column14">-</td> \
                                     <td  class="colNumSmall" data-column="column15">-</td> \
-                                    <td  class="colNumSmall" data-column="column16">-</td> \
-                                    <td  class="colNumBig" data-column="column17">-</td>';
+                                    <td  class="colNumSmall" data-column="column16">-</td>';
 
                     }
 
 
-                    rowToAdd +=   stampaValore( '{{prodotto.nettoUsFornitura}}', 18, "&euro;","colNumSmall"  )+
+                    rowToAdd +=   stampaValore( '{{prodotto.posa}}', 17, '&euro;', 'colNumBig')+
+                                  stampaValore( '{{prodotto.nettoUsFornitura}}', 18, "&euro;","colNumSmall"  )+
                                   stampaValore( '{{prodotto.nettoUsFornituraPosa}}', 19, "&euro;","colNumSmall"  )+
                                   stampaValore( '{{prodotto.rincaroCliente}}', 20, "%","colNumSmall"  );
 
@@ -281,6 +331,29 @@
 
 
                 }
+
+                $('.settaCapitolatoButton').click(function(){
+                     var parentRow=$(this).parent().parent();
+                     var nome_prodotto=parentRow.children('.nome_prodotto').text();
+                     var modello=parentRow.children('.modelloProdotto');
+                     var tipologia=$('#selectTipologia').val();
+
+
+                     swal({
+                        title: "Impostare il prodotto come capitolato?",
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        closeOnConfirm: true
+
+                      }, function (isConfirm) {
+
+                        if (isConfirm) {
+                            socketProdotto.emit('setta_capitolato', {'nome_prodotto' : nome_prodotto, 'modello' : modelllo, 'tipologia': tipologia});
+                        }
+                      });
+
+                });
+
             {% endfor %}
 
 
@@ -322,6 +395,7 @@
 
           socketProdotto.emit('cambia_tipologia_prezzario', {"dip": "{{dipendente.username}}", "tipologia": $(this).val() })
 
+
         });
 
 
@@ -358,8 +432,6 @@
 
 
 
-
-
       function calcolaTotaleCliente(valore){
             var rincaroCliente=parseFloat($('#rincaroInput').val());
 
@@ -370,7 +442,7 @@
 
       }
 
-      function calcolaUnionServiceToListino(posa){
+      function calcolaUnionServiceToListino(){
             /*
                 Il parametro posa e' un booleano, vero in caso si sia cominciato a scrivere da listinoFornituraPosaInput
 
@@ -380,13 +452,11 @@
              var rincaro = parseFloat($('#rincaroAziendaInput').val());
              var trasporto = parseFloat($('#trasportoAziendaInput').val());
              var imballo = parseFloat($('#imballoAziendaInput').val());
-             var montaggio = parseFloat($('#montaggioAziendaInput').val());
+             var montaggio = parseFloat($('#posaInput').val());
+             var rincaroMontaggio = parseFloat($('#rincaroPosaInput').val());
 
-             if( posa )
-                prezzoFinale = parseFloat($('#nettoUsFPInput').val());
 
-             else
-                prezzoFinale = parseFloat($('#nettoUsFInput').val());
+             prezzoFinale = parseFloat($('#nettoUsFInput').val());
 
 
              calcolaTotaleCliente(prezzoFinale);
@@ -398,20 +468,20 @@
              $('#listinoFornituraTh').html('&euro; '+ Math.round(prezzoFinale*100)/100);
 
 
-             if( montaggio > 0 ){
-                prezzoFinale += montaggio;
-                $('#listinoFornituraPosaTh').html('&euro; '+ Math.round(prezzoFinale*100)/100);
-             }
-             else if( montaggio == 0 ){
-                $('#listinoFornituraPosaTh').html('');
-             }
+             var incrementoMontaggio = montaggio*rincaroMontaggio/100;
+             prezzoFinale += montaggio+incrementoMontaggio;
+             $('#listinoFornituraPosaTh').html('&euro; '+ Math.round(prezzoFinale*100)/100);
+
+             var prezzoUs = parseFloat($('#nettoUsFInput').val());
+             prezzoUs  += montaggio+incrementoMontaggio;
+             $('#nettoUsFPTh').html("&euro; "+ Math.round(prezzoUs*100)/100);
 
 
-
+            calcolaTotaleCliente(prezzoFinale);
 
       }
 
-      function calcolaListinoToUnionService(posa){
+      function calcolaListinoToUnionService(){
             /*
                 Il parametro posa e' un booleano, vero in caso si sia cominciato a scrivere da listinoFornituraPosaInput
 
@@ -430,12 +500,11 @@
                     var scontoExtra2 = parseFloat('{{fornitore.scontroExtra2}}');
                     var imballo = parseFloat('{{fornitore.imballo}}');
                     var trasporto = parseFloat('{{fornitore.trasporto}}');
-                    var montaggio = parseFloat('{{fornitore.montaggio}}');
+                    var montaggio = parseFloat($('#posaInput').val());
+                    var rincaroMontaggio = parseFloat($('#rincaroPosaInput').val());
 
-                    if( posa )
-                        prezzoFinale = parseFloat($('#listinoFornituraPosaInput').val());
-                    else
-                        prezzoFinale = parseFloat($('#listinoFornituraInput').val());
+
+                    prezzoFinale = parseFloat($('#listinoFornituraInput').val());
 
                     if( scontoStandard != 'None' && scontoStandard > 0 ){
 
@@ -453,12 +522,16 @@
 
                     $('#nettoUsFTh').html("&euro; "+ Math.round(prezzoFinale*100)/100);
 
-
-                    prezzoFinale += montaggio;
+                    var incremetoMontaggio = montaggio*rincaroMontaggio/100;
+                    prezzoFinale += montaggio+incremetoMontaggio;
 
                     $('#nettoUsFPTh').html("&euro; "+ Math.round(prezzoFinale*100)/100);
 
-                    calcolaTotaleCliente(prezzoFinale);
+                    var prezzoListino = parseFloat($('#listinoFornituraInput').val());
+                    prezzoListino += montaggio+incremetoMontaggio;
+                    $('#listinoFornituraPosaTh').html('&euro; '+ Math.round(prezzoListino*100)/100);
+
+                    calcolaTotaleCliente(prezzoListino);
 
 
                 }
@@ -469,51 +542,35 @@
 
 
       var isActiveAzienda=false;
-      var typeOfInput = 'None';
 
-
-      function unionServiceToListino(posa, new_val){
+      function unionServiceToListino(new_val){
 
             if( new_val == 0 ){ //se il suo valore e' gia' stato cambiato e torna a zero
                 $('#rincaroAziendaTh').remove();
                 $('#imballoAziendaTh').remove();
                 $('#trasportoAziendaTh').remove();
-                $('#montaggioAziendaTh').remove();
 
-                $('<th id="scontiRincariAziendaClose" class="tableForm colNumBig colorWhite intestazioneRosso" colspan="4" data-column="column8"></th>').insertAfter('#listinoFornituraTh');
+                $('<th id="scontiRincariAziendaClose" class="tableForm colNumBig colorWhite intestazioneRosso" colspan="3" data-column="column8"></th>').insertAfter('#listinoFornituraTh');
 
-                $('#listinoFornituraPosaTh').html('<input id="listinoFornituraPosaInput" class="numberInput colorBlack" type="number" name="listinoFornituraPosa" placeholder="listino fornitura posa" step="0.01" value=0.00> &euro; ');
+                $('#listinoFornituraPosaTh').html('');
                 $('#listinoFornituraTh').html('<input id="listinoFornituraInput" class="numberInput colorBlack" type="number" name="listinoFornitura" placeholder="listino fornitura" step="0.01" value=0.00> &euro;');
 
-                if( posa ){
-                    $('#nettoUsFTh').html('<input id="nettoUsFInput" class="numberInput colorBlack" type="number" name="nettoUsF" placeholder="netto US fornitura" step="0.01" value=0.00> &euro;');
-                    $('#nettoUsFInput').change(function(){
-                      unionServiceToListino(false, $('#nettoUsFInput').val() );
-                    });
 
-                }
-                else{
-                    $('#nettoUsFPTh').html('<input id="nettoUsFPInput" class="numberInput colorBlack" type="number" name="nettoUsFP" placeholder="netto US fornitura+posa" step="0.01" value=0.00> &euro;');
-                    $('#nettoUsFPInput').change(function(){
-                      unionServiceToListino(true, $('#nettoUsFPInput').val());
-                    });
+                $('#nettoUsFTh').html('<input id="nettoUsFInput" class="numberInput colorBlack" type="number" name="nettoUsF" placeholder="netto US fornitura" step="0.01" value=0.00> &euro;');
+                $('#nettoUsFInput').change(function(){
+                  unionServiceToListino($('#nettoUsFInput').val() );
+                });
 
-                }
 
 
                //se listinoFornitura o listinoFornituraPosa cambia fa apparire/scomparire specifici campi aggiuntivi
                $('#listinoFornituraInput').change(function(){
-                 listinoToUnionService(false, $('#listinoFornituraInput').val());
-               });
-
-               $('#listinoFornituraPosaInput').change(function(){
-                 listinoToUnionService(true, $('#listinoFornituraPosaInput').val());
+                 listinoToUnionService( $('#listinoFornituraInput').val());
                });
 
                $('#totaleClienteTh').html('');
 
                 isActiveAzienda=false;
-                typeOfInput = 'None';
             }
             else if(!isActiveAzienda){
                 isActiveAzienda=true;
@@ -521,54 +578,36 @@
 
                 $(' <th  id="rincaroAziendaTh" class="tableForm colNumSmall colorWhite intestazioneRosso" data-column="column8">  <input id="rincaroAziendaInput" class="numberInput colorBlack" type="number" name="rincaroAzienda" placeholder="rincaro azienda" value=0> %  </th> \
                     <th  id="trasportoAziendaTh" class="tableForm colNumSmall colorWhite intestazioneRosso" data-column="column9"> <input id="trasportoAziendaInput" class="numberInput colorBlack" type="number" name="trasportoAzienda" placeholder="trasporto azienda" step="0.01" value=0.00> &euro;  </th> \
-                    <th  id="imballoAziendaTh" class="tableForm colNumSmall colorWhite intestazioneRosso" data-column="column10"> <input id="imballoAziendaInput"  class="numberInput colorBlack" type="number" name="imballoAzienda" placeholder="imballo azienda" step="0.01" value=0.00> &euro; </th> \
-                    <th  id="montaggioAziendaTh" class="tableForm colNumBig colorWhite intestazioneRosso" data-column="column11"> <input id="montaggioAziendaInput" class="numberInput colorBlack" type="number" name="montaggioAzienda" placeholder="montaggio azienda" step="0.01" value=0.00>&euro; </th> ' ).insertAfter('#listinoFornituraTh');
+                    <th  id="imballoAziendaTh" class="tableForm colNumSmall colorWhite intestazioneRosso" data-column="column10"> <input id="imballoAziendaInput"  class="numberInput colorBlack" type="number" name="imballoAzienda" placeholder="imballo azienda" step="0.01" value=0.00> &euro; </th> ' ).insertAfter('#listinoFornituraTh');
 
                 $('#rincaroAziendaInput').change(function(){
-                    calcolaUnionServiceToListino(posa);
+                    calcolaUnionServiceToListino();
                 });
 
                 $('#trasportoAziendaInput').change(function(){
-                    calcolaUnionServiceToListino(posa);
+                    calcolaUnionServiceToListino();
                 });
 
                 $('#imballoAziendaInput').change(function(){
-                    calcolaUnionServiceToListino(posa);
-                });
-
-                $('#montaggioAziendaInput').change(function(){
-                    calcolaUnionServiceToListino(posa);
+                    calcolaUnionServiceToListino();
                 });
 
 
                 $('#listinoFornituraTh').html('');
                 $('#listinoFornituraPosaTh').html('');
 
-                if( posa ){
-                    $('#nettoUsFTh').html('');
-                    console.log('passo per fornituraPosa');
-                    typeOfInput = 'fornituraPosa';
-                }
-                else{
-                    $('#nettoUsFPTh').html('');
-                    console.log('passo per fornitura');
-                    typeOfInput = 'fornitura';
-                }
-                calcolaUnionServiceToListino(posa);
+                calcolaUnionServiceToListino();
             }
             else{
-                calcolaUnionServiceToListino(posa);
+                calcolaUnionServiceToListino();
             }
       }
 
        //se prezzoNettoUsF cambia fa apparire/scomparire specifici campi aggiuntivi
        $('#nettoUsFInput').change(function(){
-         unionServiceToListino(false, $('#nettoUsFInput').val() );
+         unionServiceToListino($('#nettoUsFInput').val() );
        });
 
-       $('#nettoUsFPInput').change(function(){
-         unionServiceToListino(true, $('#nettoUsFPInput').val());
-       });
 
 
 
@@ -590,8 +629,7 @@
 
 
       var isActiveFornitore=false;
-      var campoPosa=false;
-      function listinoToUnionService(posa, new_val){
+      function listinoToUnionService( new_val){
             /*
                 Il parametro new_val contiene il valore dell'input che triggera questa funziona.
                 Visto che i possibili input tag sono due (#listinoFornituraInput e #listinoFornituraPosaInput),
@@ -604,43 +642,26 @@
                 $('#scontoEx2FornitoreTh').remove();
                 $('#imballoFornitoreTh').remove();
                 $('#trasportoFornitoreTh').remove();
-                $('#montaggioFornitoreTh').remove();
 
-                $('<th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="6" data-column="column12"></th>').insertAfter('#scontiRincariAziendaClose');
+                $('<th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="5" data-column="column11"></th>').insertAfter('#scontiRincariAziendaClose');
                 $('#nettoUsFTh').html('<input id="nettoUsFInput" class="numberInput colorBlack" type="number" name="nettoUsF" placeholder="netto US fornitura" step="0.01" value=0.00> &euro;');
                 $('#nettoUsFPTh').html('<input id="nettoUsFPInput" class="numberInput colorBlack" type="number" name="nettoUsFP" placeholder="netto US fornitura+posa" step="0.01" value=0.00> &euro;');
 
 
-                if( posa ){
-                    $('#listinoFornituraTh').html('<input id="listinoFornituraInput" class="numberInput colorBlack" type="number" name="listinoFornitura" placeholder="listino fornitura" step="0.01" value=0.00> &euro;');
-                    $('#listinoFornituraInput').change(function(){
-                        listinoToUnionService(false, $('#listinoFornituraInput').val());
-                    });
-
-                }
-                else{
-
-                    $('#listinoFornituraPosaTh').html('<input id="listinoFornituraPosaInput" class="numberInput colorBlack" type="number" name="listinoFornituraPosa" placeholder="listino fornitura posa" step="0.01" value=0.00> &euro; ');
-                    $('#listinoFornituraPosaInput').change(function(){
-                        listinoToUnionService(true, $('#listinoFornituraPosaInput').val());
-                    });
-
-                }
 
                 //se prezzoNettoUsF cambia fa apparire/scomparire specifici campi aggiuntivi
                 $('#nettoUsFInput').change(function(){
-                  unionServiceToListino(false, $('#nettoUsFInput').val() );
+                  unionServiceToListino( $('#nettoUsFInput').val() );
                 });
 
                 $('#nettoUsFPInput').change(function(){
-                  unionServiceToListino(true, $('#nettoUsFPInput').val() );
+                  unionServiceToListino( $('#nettoUsFPInput').val() );
                 });
 
                 $('#totaleClienteTh').html('');
 
                 isActiveFornitore=false;
-                typeOfInput = 'None';
-                campoPosa=false;
+
             }
             else if(!isActiveFornitore){
                 isActiveFornitore=true;
@@ -653,12 +674,11 @@
                     if( '{{fornitore.nome}}' == sotto_gruppo && '{{fornitore.gruppo_azienda}}' == primo_gruppo ){
 
 
-                        $( stampaValoreTh( '{{fornitore.scontoStandard}}', 12, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoStandardFornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.scontoExtra1}}', 13, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx1FornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.scontoExtra2}}', 14, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx2FornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.trasporto}}', 15, '{{fornitore.trasportoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'trasportoFornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.imballo}}', 16, '{{fornitore.imballoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'imballoFornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.montaggio}}', 17, '{{fornitore.montaggioUnitaMisura}}', 'tableForm colNumBig colorWhite intestazioneBlu', 'montaggioFornitoreTh' ) ).insertAfter('#scontiRincariAziendaClose');
+                        $( stampaValoreTh( '{{fornitore.scontoStandard}}', 11, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoStandardFornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.scontoExtra1}}', 12, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx1FornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.scontoExtra2}}', 13, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx2FornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.trasporto}}', 14, '{{fornitore.trasportoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'trasportoFornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.imballo}}', 15, '{{fornitore.imballoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'imballoFornitoreTh' ) ).insertAfter('#scontiRincariAziendaClose');
 
 
                     }
@@ -669,90 +689,42 @@
                 $('#nettoUsFPTh').html('');
 
 
-                if( posa ){
-                    $('#listinoFornituraTh').html('');
-                    typeOfInput = 'fornituraPosa';
-                }
-                else{
-                    $('#listinoFornituraPosaTh').html('');
-                    typeOfInput = 'fornitura';
-                }
-
-                calcolaListinoToUnionService(posa);
+                calcolaListinoToUnionService();
 
             }
             else{
-                calcolaListinoToUnionService(posa);
+                calcolaListinoToUnionService();
             }
 
       }
 
-       //se listinoFornitura o listinoFornituraPosa cambia fa apparire/scomparire specifici campi aggiuntivi
+       //se listinoFornitura cambia fa apparire/scomparire specifici campi aggiuntivi
        $('#listinoFornituraInput').change(function(){
-         listinoToUnionService(false, $('#listinoFornituraInput').val());
-         campoPosa=false;
+         listinoToUnionService($('#listinoFornituraInput').val());
        });
 
-       $('#listinoFornituraPosaInput').change(function(){
-         listinoToUnionService(true, $('#listinoFornituraPosaInput').val());
-         campoPosa=true;
-       });
+
 
        $('#rincaroInput').change(function(){
+
+            var prezzo = parseFloat($('#listinoFornituraPosaTh').html().split(' ')[1]);
+            calcolaTotaleCliente(prezzo);
+
+
+       });
+
+
+       $('#posaInput').change(function(){
             if( isActiveAzienda ){
 
-                if( typeOfInput == 'fornitura' ){
+               unionServiceToListino($('#nettoUsFInput').val() );
 
-                    calcolaTotaleCliente(parseFloat($('#nettoUsFInput').val()));
-                }
-                else if( typeOfInput == 'fornituraPosa' ){
-                    calcolaTotaleCliente(parseFloat($('#nettoUsFPInput').val()));
-                }
             }
             else if( isActiveFornitore ){
-                var prezzo = parseFloat($('#nettoUsFPTh').text().split(' ')[1]);
-                calcolaTotaleCliente(prezzo);
+               listinoToUnionService($('#listinoFornituraInput').val());
             }
        });
 
-
-       $('#fornitoreSelect').change(function(){
-
-            var primo_gruppo=$(this).val().split(' - ')[0];
-            var sotto_gruppo=$(this).val().split(' - ')[1];
-
-            if( isActiveFornitore ){
-                console.log("mmmm "+primo_gruppo+" "+sotto_gruppo);
-                {% for fornitore in fornitori %}
-                    if('{{fornitore.nome}}' == sotto_gruppo && '{{fornitore.gruppo_azienda}}' == primo_gruppo){
-                        console.log('entrato');
-                        $('#scontoStandardFornitoreTh').remove();
-                        $('#scontoEx1FornitoreTh').remove();
-                        $('#scontoEx2FornitoreTh').remove();
-                        $('#trasportoFornitoreTh').remove();
-                        $('#imballoFornitoreTh').remove();
-                        $('#montaggioFornitoreTh').remove();
-
-
-                         $( stampaValoreTh( '{{fornitore.scontoStandard}}', 12, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoStandardFornitoreTh' )+
-                          stampaValoreTh( '{{fornitore.scontoExtra1}}', 13, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx1FornitoreTh' )+
-                          stampaValoreTh( '{{fornitore.scontoExtra2}}', 14, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx2FornitoreTh' )+
-                          stampaValoreTh( '{{fornitore.trasporto}}', 15, '{{fornitore.trasportoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'trasportoFornitoreTh' )+
-                          stampaValoreTh( '{{fornitore.imballo}}', 16, '{{fornitore.imballoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'imballoFornitoreTh' )+
-                          stampaValoreTh( '{{fornitore.montaggio}}', 17, '{{fornitore.montaggioUnitaMisura}}', 'tableForm colNumBig colorWhite intestazioneBlu', 'montaggioFornitoreTh' ) ).insertAfter('#scontiRincariAziendaClose');
-
-                        if( campoPosa ){
-                            listinoToUnionService(true, $('#listinoFornituraPosaInput').val());
-                        }
-                        else{
-                            listinoToUnionService(false, $('#listinoFornituraInput').val());
-
-                        }
-                    }
-                {% endfor %}
-
-            }
-       });
 
 
         //variabili globale per il meccanismo di modifica dei prodotti
@@ -786,7 +758,8 @@
 
                         var inputOfProdotti =  [];
                         var selectOfProdotti = [];
-
+                        var firstSelect = true;
+                        var modelloProdotto="";
 
 
                         $("#trForm input").each(function(index){
@@ -796,12 +769,20 @@
 
                         $("#trForm select").each(function(index){
 
-                            selectOfProdotti=$(this).val().split('-');
+                            if(firstSelect){
+                                modelloProdotto=$(this).val();
+                                firstSelect=false;
+                            }
+                            else{
+                                selectOfProdotti=$(this).val().split('-');
 
-                            /*tolgo degli spazi extra*/
+                                /*tolgo degli spazi extra*/
 
-                            selectOfProdotti[0]=selectOfProdotti[0].substring(0, selectOfProdotti[0].length-1 );
-                            selectOfProdotti[1]=selectOfProdotti[1].substring(1, selectOfProdotti[1].length );
+                                selectOfProdotti[0]=selectOfProdotti[0].substring(0, selectOfProdotti[0].length-1 );
+                                selectOfProdotti[1]=selectOfProdotti[1].substring(1, selectOfProdotti[1].length );
+
+
+                            }
 
                         });
 
@@ -813,20 +794,22 @@
                         if(isActiveAzienda){
                             var versoDiLettura=false;
                             var listinoFornitura = parseFloat($('#listinoFornituraTh').text().split(' ')[1]);
+
                             var listinoFornituraPosa = $('#listinoFornituraTh').text();
 
                             if(listinoFornituraPosa == ''){
                                 listinoFornituraPosa = 0;
                             }
-                            else{
-                                listinoFornituraPosa = parseFloat(listinoFornituraPosa.split(' ')[1]);
-                            }
+
+                            listinoFornituraPosa = parseFloat(listinoFornituraPosa.split(' ')[1]);
+
 
 
                             if(!modificaAttiva){
                                 socketProdotto.emit("registra_prodotto", { "dip": "{{dipendente.username}}", "tipologia":  $('#selectTipologia').val(),
                                                                            "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
                                                                            "codice" : inputOfProdotti[2],
+                                                                           "modello": modelloProdotto,
                                                                            "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                            "fornitore_sotto_gruppo": selectOfProdotti[1],
 
@@ -835,11 +818,11 @@
                                                                            "rincaroAzienda":  inputOfProdotti[3],
                                                                            "trasportoAzienda": inputOfProdotti[4],
                                                                            "imballoAzienda": inputOfProdotti[5],
-                                                                           "montaggioAzienda": inputOfProdotti[6],
-                                                                            "campoVariabile" : inputOfProdotti[7], //nota: questo campo avra' come chiave "nettoUsfornitura" oppure "nettoUsfornituraPosa"
+                                                                           "posa": inputOfProdotti[6],
+                                                                           "nettoUsFornitura" : inputOfProdotti[7],
+                                                                           "nettoUsFornituraPosa" : parseFloat($('#nettoUsFPTh').html().split(' ')[1]),
                                                                            "rincaroCliente": inputOfProdotti[8],
-                                                                           "versoDiLettura": versoDiLettura,
-                                                                           "typeOfInput": typeOfInput } );
+                                                                           "versoDiLettura": versoDiLettura } );
                             }
                             else{
                                 socketProdotto.emit("modifica_prodotto", { "dip": "{{dipendente.username}}",
@@ -847,6 +830,7 @@
                                                                                "tipologia":  $('#selectTipologia').val(),
                                                                                "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
                                                                                "codice" : inputOfProdotti[2],
+                                                                               "modello": modelloProdotto,
                                                                                "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                                "fornitore_sotto_gruppo": selectOfProdotti[1],
 
@@ -855,11 +839,11 @@
                                                                                "rincaroAzienda":  inputOfProdotti[3],
                                                                                "trasportoAzienda": inputOfProdotti[4],
                                                                                "imballoAzienda": inputOfProdotti[5],
-                                                                               "montaggioAzienda": inputOfProdotti[6],
-                                                                                "campoVariabile" : inputOfProdotti[7], //nota: questo campo avra' come chiave "nettoUsfornitura" oppure "nettoUsfornituraPosa"
+                                                                               "posa": inputOfProdotti[6],
+                                                                               "nettoUsFornitura" : inputOfProdotti[7],
+                                                                               "nettoUsFornituraPosa" : parseFloat($('#nettoUsFPTh').html().split(' ')[1]),
                                                                                "rincaroCliente": inputOfProdotti[8],
-                                                                               "versoDiLettura": versoDiLettura,
-                                                                               "typeOfInput": typeOfInput } );
+                                                                               "versoDiLettura": versoDiLettura } );
 
                             }
 
@@ -869,41 +853,40 @@
                             var nettoUsFornitura = parseFloat($('#nettoUsFTh').text().split(' ')[1]);
                             var nettoUsFornituraPosa = $('#nettoUsFPTh').text();
 
+                            nettoUsFornituraPosa = parseFloat(nettoUsFornituraPosa.split(' ')[1]);
 
-                            if(nettoUsFornituraPosa == '' ){
-                                nettoUsFornituraPosa = 0;
-                            }
-                            else{
-                                nettoUsFornituraPosa = parseFloat(nettoUsFornituraPosa.split(' ')[1]);
-                            }
 
                             if(!modificaAttiva){
                                 socketProdotto.emit("registra_prodotto", { "dip": "{{dipendente.username}}", "tipologia":  $('#selectTipologia').val(),
                                                                            "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
                                                                            "codice" : inputOfProdotti[2],
+                                                                           "modello": modelloProdotto,
                                                                            "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                            "fornitore_sotto_gruppo": selectOfProdotti[1],
-                                                                           "campoVariabile" : inputOfProdotti[3], //nota: questo campo avra' come chiave "prezzoListinofornitura" oppure "prezzoListinofornituraPosa"
+                                                                           "prezzoListinoFornituraPosa" : parseFloat($('#listinoFornituraPosaTh').html().split(' ')[1]),
+                                                                           "prezzoListinoFornitura" : inputOfProdotti[3],
+                                                                           "posa" : inputOfProdotti[4],
                                                                            "nettoUsFornitura" : nettoUsFornitura,
                                                                            "nettoUsFornituraPosa" : nettoUsFornituraPosa,
-                                                                           "rincaroCliente": inputOfProdotti[4],
-                                                                           "versoDiLettura": versoDiLettura,
-                                                                           "typeOfInput": typeOfInput } );
+                                                                           "rincaroCliente": inputOfProdotti[5],
+                                                                           "versoDiLettura": versoDiLettura } );
                             }
                             else{
-                                  socketProdotto.emit("modifica_prodotto", { "dip": "{{dipendente.username}}",
+                                socketProdotto.emit("modifica_prodotto", { "dip": "{{dipendente.username}}",
                                                                            "old_nome": oldProdottoDaModificare,
                                                                            "tipologia":  $('#selectTipologia').val(),
                                                                            "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
                                                                            "codice" : inputOfProdotti[2],
+                                                                           "modello": modelloProdotto,
                                                                            "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                            "fornitore_sotto_gruppo": selectOfProdotti[1],
-                                                                           "campoVariabile" : inputOfProdotti[3], //nota: questo campo avra' come chiave "prezzoListinofornitura" oppure "prezzoListinofornituraPosa"
+                                                                           "prezzoListinoFornituraPosa" : parseFloat($('#listinoFornituraPosaTh').html().split(' ')[1]),
+                                                                           "prezzoListinoFornitura" : inputOfProdotti[3],
+                                                                           "posa" : inputOfProdotti[4],
                                                                            "nettoUsFornitura" : nettoUsFornitura,
                                                                            "nettoUsFornituraPosa" : nettoUsFornituraPosa,
-                                                                           "rincaroCliente": inputOfProdotti[4],
-                                                                           "versoDiLettura": versoDiLettura,
-                                                                           "typeOfInput": typeOfInput } );
+                                                                           "rincaroCliente": inputOfProdotti[5],
+                                                                           "versoDiLettura": versoDiLettura } );
 
                             }
 

@@ -5,14 +5,14 @@
 <div id="wrapper" class="col-md-8">
     <section id="one" class="wrapper style2 spotlights">
         <div class="inner innerPreventivo">
-            <h2 class="titleInCentro">Preventivo US{{codicePreventivo}}E <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a></h2>
+            <h2 class="titleInCentro">Preventivo US{{codicePreventivo}}F <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a></h2>
             <div id="divFattura" class="features row">
                 <div class="col-md-4">
-                    <span>Settore di Lavorazione</span></br>
+                    <span>Tipologia prodotto</span></br>
                     <div>
-                        <select id="selectSettore" class="js-select2" name="service">
-                            {% for settore in settori %}
-                                <option>{{settore.nome}}</option>
+                        <select id="selectTipologia" class="js-select2" name="service">
+                            {% for tipo in tipologie %}
+                                <option>{{tipo.nome}}</option>
                             {% endfor %}
                         </select>
                         <div class="dropDownSelect2"></div>
@@ -20,8 +20,8 @@
                     <!-- Serve un metodo per ricordare le classi aggiunte dinamicamente ai bottoni
                        del "dropDownSelect2"; per far cio' creo un div perennemente invisibile
                         in cui memorizzo di dati che voglio -->
-                    <div id="memoriaLavorazioniAggiunte">
-                        {% for settore in settori %}
+                    <div id="memoriaProdottiAggiunti">
+                        {% for tipo in tipologie %}
                           <!--
                                 Esempio struttura di #memoriaLavorazioniAggiunte
 
@@ -29,7 +29,7 @@
                                     '<span class="classeToAdd">aggiunto-'+count+'</span>'+
                                 '</div>'
                              -->
-                            <div id="memoriaLavorazioniAggiunte-{{settore.nome}}" class="settoreMemorizzato">
+                            <div id="memoriaProdottiAggiunti-{{tipo.nome}}" class="tipologiaMemorizzata">
 
                             </div>
                         {% endfor %}
@@ -76,7 +76,7 @@
         });
 
 
-        var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+        var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 
         socketPreventivo.on( 'procediADownload', function(){
             window.location = '{{url_for("downloadPreventivoEdile")}}';
@@ -92,59 +92,59 @@
 
         var counter=0;
 
-        {% for elemento in prezzarioEdile %}
-          if( "{{elemento.settore}}" == $('#selectSettore').val() ){
+        {% for elemento in prezzarioProdotti %}
+          if( "{{elemento.tipologia}}" == $('#selectTipologia').val() ){
             $('#listaElementFattura').append(
 
-                 '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura {{elemento.settore}}"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
+                 '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura {{elemento.tipologia}}"><label for="button'+ counter +'">{{elemento.nome_prodotto}}</label></button></li>'
             );
             counter+=1;
           }
         {% endfor %}
 
-        function settaLastElement(settore){
+        function settaLastElement(tipologia){
 
-            $('tr[id^='+settore+'_trBody]').last().addClass(settore+'_lastAdded');
+            $('tr[id^='+tipologia+'_trBody]').last().addClass(tipologia+'_lastAdded');
         }
 
-        function countLavorazioniSettore(settore){
+        function countLavorazioniSettore(tipologia){
             var counter=0;
-            $('tr[id^='+settore+'_trBody]').each(function(){
+            $('tr[id^='+tipologia+'_trBody]').each(function(){
                 counter++;
             });
 
             return counter;
         }
 
-        function righeDimensioniSottolavorazione(unita, prezzoBase, numElement){
+        function righeDimensioniSottoprodotto(unita, numElement){
 
             if( unita == "cad" ){
 
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "ml" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                        '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if ( unita == "mq" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                        '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
             }
             else if( unita == "mc" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' profondita" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
+                return  '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                        '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+                        '<td class="tdPreventivo inputField numColSmall inputPrev"><input class="numInput inputPrev-'+numElement+' profondita" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
                         '<td class="tdPreventivo totDimensioni colSmall"></td>'
 
             }
@@ -163,54 +163,54 @@
             $('#divTotale').html('<span><u>Totale:</u> &euro; ' + Math.round(totale*100)/100 + '</span>' );
         }
 
-        function calcolaTotaleParzialeSettore( settore ){
+        function calcolaTotaleParzialeTipologia( tipologia ){
             totale = 0;
 
-            $("."+settore+"_trFoot").each(function(){
+            $("."+tipologia+"_trFoot").each(function(){
                 totale += parseFloat($(this).children('.footTot').text().split(' ')[1]);
 
             });
 
-            $('.'+settore).each(function(){
+            $('.'+tipologia).each(function(){
                 if( $(this).hasClass('trHead') ){
 
-                    $(this).children('.totaleSettore').html(
+                    $(this).children('.totaleTipologia').html(
                     '&euro; '+totale
                     );
                 }
             });
         }
 
-        function calcolaTotaleParziale(settore, numOfEl){
+        function calcolaTotaleParziale(tipologia, numOfEl){
 
                 var total = 0;
                 var quantita =0;
 
 
-                $('.'+settore+'_trSottolavorazione-'+numOfEl).each(function(){
-                    total+=parseFloat($(this).children('.totalSottolavorazione').text().split(' ')[1]);
+                $('.'+tipologia+'_trSottoprodotto-'+numOfEl).each(function(){
+                    total+=parseFloat($(this).children('.totalSottoprodotto').text().split(' ')[1]);
                     quantita+=parseFloat($(this).children('.totDimensioni').text());
                 });
 
                 $('.trFoot'+numOfEl).children('.footTot').html("&euro; "+ Math.round(total*100)/100 );
                 $('.trFoot'+numOfEl).children('.quantita').html(Math.round(quantita*100)/100);
 
-                calcolaTotaleParzialeSettore( settore );
+                calcolaTotaleParzialeTipologia( tipologia );
                 calcolaTotalePreventivo();
         }
 
 
-        function calcolaTotaleRigaSottolavorazione(classeElemento, ordineSottolav, prezzoBase){
+        function calcolaTotaleRigaSottolavorazione(classeElemento, ordineSottoprod, prezzoBase){
             /*
-                Il paramentro "classeElemento" ha la forma: "<settore>_trSottolavorazione-<ordineLavorazione>"
-                Il parametro "ordineSottolav" ha la forma: "sottolavNum-<ordineSottolavorazione>"
+                Il paramentro "classeElemento" ha la forma: "<settore>_trSottoprodotto-<ordineProdotto>"
+                Il parametro "ordineSottoprod" ha la forma: "sottoprodNum-<ordineSottoprodotto>"
 
             */
 
 
             $('.'+classeElemento).each(function(){
 
-                if($(this).hasClass(ordineSottolav)){
+                if($(this).hasClass(ordineSottoprod)){
                     var totalePrezzo=prezzoBase;
                     var quantita=1;
 
@@ -222,7 +222,7 @@
                     totalePrezzo=parseFloat(totalePrezzo)*quantita;
 
                     $(this).children('td.totDimensioni').text( Math.round(quantita*100)/100 );
-                    $(this).children('td.totalSottolavorazione').html( "&euro; " + Math.round(totalePrezzo*100)/100 );
+                    $(this).children('td.totalSottoprodotto').html( "&euro; " + Math.round(totalePrezzo*100)/100 );
                 }
             });
 
@@ -232,7 +232,7 @@
         function rienumeraMemoriaLavorazioni(){
 
             var counter = 1;
-            $('#memoriaLavorazioniAggiunte').children('.settoreMemorizzato').each(function(){
+            $('#memoriaProdottiAggiunti').children('.tipologiaMemorizzata').each(function(){
                 $(this).children('div').each(function(){
                     $(this).text('aggiunto-'+counter);
                     counter+=1;
@@ -250,7 +250,7 @@
             //averne due uguali nella renumerazione.
             $('.trBody').each(function(){
                 var idThisFirstPart = $(this).attr('id').split('-')[0];
-                var settore=idThisFirstPart.split('_')[0];
+                var tipologia=idThisFirstPart.split('_')[0];
 
 
 
@@ -259,15 +259,15 @@
                 $(this).attr('id', idThisFirstPart+'-old'+oldNum);
 
 
-                $('.'+settore+'_trSottolavorazione-'+oldNum).addClass(settore+'_trSottolavorazione-old'+oldNum);
-                $('.'+settore+'_trSottolavorazione-'+oldNum).removeClass(settore+'_trSottolavorazione-'+oldNum);
+                $('.'+tipologia+'_trSottoprodotto-'+oldNum).addClass(tipologia+'_trSottoprodotto-old'+oldNum);
+                $('.'+tipologia+'_trSottoprodotto-'+oldNum).removeClass(tipologia+'_trSottoprodotto-'+oldNum);
 
                 $(this).next('.trFoot'+oldNum).addClass('trFoot-old'+oldNum);
                 $(this).next('.trFoot'+oldNum).removeClass('trFoot'+oldNum);
 
                 /* nel caso vi siano righe aggiunte il next non recupera il "trFoor" specifico;
                   con questo comando si previene questa eventualita' */
-                $("."+settore+"_trFoot").each(function(){
+                $("."+tipologia+"_trFoot").each(function(){
                     if($(this).hasClass('trFoot'+oldNum)){
                         $(this).addClass('trFoot-old'+oldNum);
                         $(this).removeClass('trFoot'+oldNum);
@@ -288,7 +288,7 @@
 
             $('.trBody').each(function(){
                 var idThisFirstPart = $(this).attr('id').split('-')[0];
-                var settore=idThisFirstPart.split('_')[0];
+                var tipologia=idThisFirstPart.split('_')[0];
                 oldNum =  $(this).attr('id').split('-old')[1];
 
                 $('.aggiunto-old'+oldNum).addClass('aggiunto-'+counter);
@@ -304,9 +304,9 @@
                 $(this).children('.firstCol'+counter).children('.add-old'+oldNum).removeClass('add-old'+oldNum);
 
 
-                $oldSottolavorazioneRows=$('.'+settore+'_trSottolavorazione-old'+oldNum);
+                $oldSottoprodottoRows=$('.'+tipologia+'_trSottoprodotto-old'+oldNum);
 
-                $oldSottolavorazioneRows.children('.inputField').children('.numInput').each(function(){
+                $oldSottoprodottoRows.children('.inputField').children('.numInput').each(function(){
                     $(this).removeClass('inputPrev-'+oldNum);
                     // questa operazione e' per mantenere l'ordine delle classi originario, importante per
                     // recuperare correttamente tutte le informazioni indispensabili.
@@ -318,12 +318,12 @@
                 });
 
 
-                $oldSottolavorazioneRows.each(function(){
-                    $(this).removeClass(settore+'_trSottolavorazione-old'+oldNum);
-                    var oldSottolavorazioneRowClasses=$(this).attr('class');
-                    $(this).removeClass(oldSottolavorazioneRowClasses);
-                    $(this).addClass(settore+'_trSottolavorazione-'+counter);
-                    $(this).addClass(oldSottolavorazioneRowClasses);
+                $oldSottoprodottoRows.each(function(){
+                    $(this).removeClass(tipologia+'_trSottoprodotto-old'+oldNum);
+                    var oldSottoprodottoRowClasses=$(this).attr('class');
+                    $(this).removeClass(oldSottoprodottoRowClasses);
+                    $(this).addClass(settore+'_trSottoprodotto-'+counter);
+                    $(this).addClass(oldSottoprodottoRowClasses);
                 });
 
                 $(this).next('.trFoot-old'+oldNum).addClass('trFoot'+counter);
@@ -331,7 +331,7 @@
 
                 /* nel caso vi siano righe aggiunte il next non recupera il "trFoot" specifico;
                   con questo comando si previene questa eventualita' */
-                $("."+settore+"_trFoot").each(function(){
+                $("."+tipologia+"_trFoot").each(function(){
                     if($(this).hasClass('trFoot-old'+oldNum)){
                         $(this).addClass('trFoot'+counter);
                         $(this).removeClass('trFoot-old'+oldNum);
@@ -342,7 +342,7 @@
                 var unitaMisura = $('.trFoot'+counter).attr('class').split(' ')[2].split('-')[1];
 
 
-                socketPreventivo.emit("modifica_ordine_lavorazione",
+                socketPreventivo.emit("modifica_ordine_prodotto",
                                 {
                                     "numero_preventivo" : "{{preventivo.numero_preventivo}}",
                                     "data" : "{{preventivo.data}}",
@@ -357,66 +357,71 @@
 
 
 
-            rienumeraMemoriaLavorazioni();
+            rienumeraMemoriaProdotti();
 
         } //FINE RIENUMERA PAGINA
 
 
-        /* variabile globale usata per tener conto del numero dell'ultima lavorazione aggiunta */
-        var ordineLavorazioni = 1;
+        /* variabile globale usata per tener conto del numero dell'ultimo prodotto aggiunto */
+        var ordineProdotti = 1;
 
         function aggiungiRiga($this){
                  if( $this.hasClass('aggiunto') ){
                     console.log( "Devo prendere: " + $this.attr('class').split(" ")[1] + " riga num: " + $this.attr('class').split(" ")[3].split("-")[1] );
                  }else{
-                     {% for prezzario in prezzarioEdile %}
-                        if( "{{prezzario.tipologia_lavorazione}}" ==  $this.text() ){
+                     {% for prezzario in prezzarioProdotti %}
+                        if( "{{prezzario.nome}}" ==  $this.text() ){
 
-                            //Segno nel bottono cliccato che e' una lavorazione aggiunto
+                            //Segno nel bottono cliccato che e' un prodotto aggiunto
                             $this.addClass("aggiunto");
-                            $this.addClass("aggiunto-"+ordineLavorazioni);
+                            $this.addClass("aggiunto-"+ordineProdotti);
 
 
-                            /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineLavorazioni al bottone*/
-                            $("#memoriaLavorazioniAggiunte-{{prezzario.settore}}").append(
+                            /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineProdotti al bottone*/
+                            $("#memoriaProdottiAggiunti-{{prezzario.tipologia}}").append(
                                 '<div class="'+$this.attr('id')+'">'+
-                                    '<span class="classeToAdd">aggiunto-'+ordineLavorazioni+'</span>'+
+                                    '<span class="classeToAdd">aggiunto-'+ordineProdotti+'</span>'+
                                 '</div>'
 
                             );
 
 
-                            var sezioneSettore =  $('#bodyPreventivo').children('.{{prezzario.settore}}');
+                            var sezioneTipologia =  $('#bodyPreventivo').children('.{{prezzario.tipologia}}');
 
-                            //Preparo la riga della lavorazione
-                            var rowsToAdd='<tr id="{{prezzario.settore}}_trBody-'+ordineLavorazioni+'" class="trBody {{prezzario.settore}}_lastAdded">'+
-                                            '<td class="firstCol'+ordineLavorazioni+' firstCol"></td>'+
-                                            '<td class="tdPreventivo tdLavorazione"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo prezzoBase colSmall">&euro; {{prezzario.prezzoMax}}</td>'+
-                                            '<td></td>'+
-                                        '</tr>'+
-                                        '<tr class="{{prezzario.settore}}_trSottolavorazione-'+ordineLavorazioni+' sottolavNum-0">'+
-                                                '<td colspan="2"><a class="delSottolavorazione fa fa-trash"></a></td>'+
-                                                righeDimensioniSottolavorazione( '{{prezzario.unitaMisura}}',
+                            //Preparo la riga del prodotto
+                            var rowsToAdd='<tr id="{{prezzario.tipologia}}_trBody-'+ordineProdotti+'" class="trBody {{prezzario.tipologia}}_lastAdded"> \
+                                            <td class="firstCol'+ordineProdotti+' firstCol"></td> \
+                                            <td class="tdPreventivo tdProdotto"><textarea>{{prezzario.nome}}</textarea></td> \
+                                            <td class="tdPreventivo numColSmall">{{prezzario.codice}}</td> \
+                                            <td class="tdPreventivo numColSmall"> \
+                                            <select class="selectModello"> ';
+
+
+                            {% for modello in modelliProdotto %}
+                                if( '{{modello.tipologia}}' == '{{prezzario.tipologia}}' )
+                                    rowsToAdd+='<option class="prodotto_capitolato-{{modello.capitolato}}">{{modello.nome}}</option>';
+
+                            {% endfor %}
+
+                            var rowsToAdd+='</select> \
+                                            </td> \
+                                            <td class="tdPreventivo numColSmall">{{prezzario.fornitore_primo_gruppo}} - {{prezzario.fornitore_sotto_gruppo}} </td> \
+                                        </tr> \
+                                        <tr class="{{prezzario.tipologia}}_trSottoprodotto-'+ordineProdotti+' sottoprodNum-0"> \
+                                                '<td colspan="2"><a class="delSottoprodotto fa fa-trash"></a></td>'+
+                                                righeDimensioniSottoprodotto( '{{prezzario.unitaMisura}}',
                                                                                   '{{prezzario.prezzoMax}}',
-                                                                                   ordineLavorazioni)+
-                                                '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
-                                                '<td class="tdPreventivo colSmall"></td>'+
-                                                '<td class="totalSottolavorazione"></td>'+
-                                        '</tr>'+
-                                        '<tr class="trFoot {{prezzario.settore}}_trFoot unitaMisura-{{prezzario.unitaMisura}} trFoot'+parseInt(ordineLavorazioni)+'">'+
-                                                '<td colspan="6"></td>'+
-                                                '<td class="quantita colSmall"></td>'+
-                                                '<td>{{prezzario.unitaMisura}}</td>'+
-                                                '<td colSmall"></td>'+
-                                                '<td class="footTot"></td>'+
-                                         '</tr>';
+                                                                                   ordineProdotti)+
+                                                '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td> \
+                                                <td class="differenzaCapitolato"></td> \
+                                        </tr> \
+                                        <tr class="trFoot {{prezzario.tipologia}}_trFoot unitaMisura-{{prezzario.unitaMisura}} trFoot'+parseInt(ordineProdotti)+'"> \
+                                                <td colspan="6"></td> \
+                                                <td class="quantita colSmall"></td> \
+                                                <td>{{prezzario.unitaMisura}}</td> \
+                                                <td colSmall"></td> \
+                                                <td class="footTot"></td> \
+                                        </tr>';
 
 
 
@@ -427,8 +432,7 @@
                                 $('#bodyPreventivo').append(
 
                                     '<tr class="trHead {{prezzario.settore}}">'+
-                                        '<td  colspan="9"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
-                                        '<td class="titleSettoreTd totaleSettore"></td>'+
+                                        '<td  colspan="9"  class="titleSettoreTd">{{prezzario.tipologia}}</td>'+
                                     '</tr>'+
                                     '<tr class="trHead {{prezzario.settore}}_head">'+
                                         '<th class="thPreventivo"></th>'+

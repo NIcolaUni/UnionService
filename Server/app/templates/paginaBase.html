@@ -56,7 +56,7 @@
     <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
 <!--===============================================================================================-->
 
-    {% if not prezzario and not schedaFornitoriCss %}
+    {% if not prezzario and not schedaFornitoriCss and not prezzarioProdottiCss %}
     <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css') }}" rel='stylesheet' />
     <script src="{{url_for('static', filename='js/vendor/sweet-alert2.min.js') }}"></script>
     {% endif %}
@@ -168,7 +168,7 @@
     <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
 
     {% endif %}
-    {% if schedaFornitoriCss %}
+    {% if schedaFornitoriCss or prezzarioProdottiCss %}
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/schedaFornitori2.css') }}">
         <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
         <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
