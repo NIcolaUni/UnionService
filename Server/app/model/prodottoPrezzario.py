@@ -6,94 +6,32 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
 
     def __init__(self,
                     nome,
-                    tipologia,
-                    marchio = None,
-                    codice = None,
-                    modello = None,
-                    fornitore_primo_gruppo = None,
-                    fornitore_sotto_gruppo = None,
-                    prezzoListinoFornitura = None,
-                    prezzoListinoFornituraPosa = None,
-                    rincaroAzienda = None,
-                    trasportoAzienda = None,
-                    imballoAzienda = None,
-                    trasportoAziendaUnitaMisura = None,
-                    imballoAziendaUnitaMisura = None,
-                    posa = None,
-                    nettoUsFornituraPosa = None,
-                    nettoUsFornitura = None,
-                    rincaroCliente = None,
-                    versoDiLettura = None,
-                    daVerificare=None):
+                    tipologia, capitolato = None ):
 
         self.nome=nome
         self.tipologia=tipologia
-        self.marchio=marchio
-        self.codice=codice
-        self.modello=modello
-        self.fornitore_primo_gruppo=fornitore_primo_gruppo
-        self.fornitore_sotto_gruppo=fornitore_sotto_gruppo
-
-        self.prezzoListinoFornitura = prezzoListinoFornitura
-        self.prezzoListinoFornituraPosa = prezzoListinoFornituraPosa
-
-        self.rincaroAzienda = rincaroAzienda
-        self.trasportoAzienda = trasportoAzienda
-        self.imballoAzienda = imballoAzienda
-        self.trasportoAziendaUnitaMisura = trasportoAziendaUnitaMisura
-        self.imballoAziendaUnitaMisura = imballoAziendaUnitaMisura
-        self.posa = posa
-        self.nettoUsFornituraPosa = nettoUsFornituraPosa
-        self.nettoUsFornitura = nettoUsFornitura
+        self.capitolato=capitolato
 
 
-        self.rincaroCliente =rincaroCliente
-        self.versoDiLettura = versoDiLettura
-        self.daVerificare = daVerificare
 
 
-    def registraProdotto( nome,
-                    tipologia,
-                    marchio=None,
-                    codice=None,
-                    modello=None,
-                    fornitore_primo_gruppo=None,
-                    fornitore_sotto_gruppo=None,
+    def registraProdotto( nome, tipologia, capitolato = None ):
 
-                    prezzoListinoFornitura=None,
-                    prezzoListinoFornituraPosa=None,
+        prodotto = ProdottoPrezzario.query.filter_by(nome=nome, tipologia=tipologia).first()
 
-                    rincaroAzienda=None,
-                    trasportoAzienda=None,
-                    imballoAzienda=None,
-                    trasportoAziendaUnitaMisura=None,
-                    imballoAziendaUnitaMisura=None,
-                    posa = None,
-                    nettoUsFornituraPosa=None,
-                    nettoUsFornitura=None,
-
-                    rincaroCliente=None,
-                    versoDiLettura=None,
-                    daVerificare=None):
-
-        newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, marchio=marchio, codice=codice, modello=modello,
-                                        fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
-                                        prezzoListinoFornitura=prezzoListinoFornitura, prezzoListinoFornituraPosa=prezzoListinoFornituraPosa,
-                                        rincaroAzienda=rincaroAzienda, trasportoAzienda=trasportoAzienda, imballoAzienda=imballoAzienda,
-                                        trasportoAziendaUnitaMisura=trasportoAziendaUnitaMisura,
-                                        imballoAziendaUnitaMisura=imballoAziendaUnitaMisura,
-                                        posa=posa,
-                                        nettoUsFornitura=nettoUsFornitura,
-                                        nettoUsFornituraPosa=nettoUsFornituraPosa,
-                                        rincaroCliente=rincaroCliente, versoDiLettura=versoDiLettura, daVerificare=daVerificare)
+        if prodotto is None:
+            newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, capitolato=capitolato)
 
 
-        try:
-            ProdottoPrezzarioDBmodel.addRow(newProdotto)
-        except exc.SQLAlchemyError as e:
-            app.server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
-            ProdottoPrezzarioDBmodel.rollback()
-            raise RigaPresenteException("Il prodotto inserito è già presente")
+            try:
+                ProdottoPrezzarioDBmodel.addRow(newProdotto)
+            except exc.SQLAlchemyError as e:
+                app.server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
+                ProdottoPrezzarioDBmodel.rollback()
+                raise RigaPresenteException("Il prodotto inserito è già presente")
+
+        elif capitolato is not None:
+            ProdottoPrezzario.query.filter_by(nome=nome, tipologia=tipologia).update({'capitolato': capitolato})
 
 
     def eliminaProdotto(nome, tipologia):
@@ -113,8 +51,4 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
     def elimina(self):
         ProdottoPrezzarioDBmodel.delRow(self)
 
-    def setDaVerificare(nome, tipologia, valore):
-        app.server.logger.info("Entro qua {}".format(valore))
-        ProdottoPrezzarioDBmodel.query.filter_by(nome=nome, tipologia=tipologia).update({'daVerificare': valore})
-        ProdottoPrezzarioDBmodel.commit()
 

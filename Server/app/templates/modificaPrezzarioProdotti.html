@@ -46,7 +46,6 @@
 
                 </div>
             </form>
-            <button id="addModello" onclick="nuovoModello();" class="button button--antiman button--text-thick button--text-upper button--size-s button--inverted-alt button--round-l button--border-thick"><i class="button__icon icon icon-plus"></i><span>Aggiungi modello</span></button>
 
 
         </div>
@@ -109,12 +108,17 @@
                         </tr>
                         <tr id="trForm">
                             <th  class="tableForm colLongString" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  id="registraProdotto" class="buttonPrezzario" type="button">Inserisci</button></th>
-                            <th  class="tableForm colLongString"  data-column="column2"><input id="nomeProdottoInput" type="text" name="nomeProdotto" placeholder="Inserire il nome del prodotto"></th>
+                            <th  class="tableForm colLongString"  data-column="column2">
+                                <input id="nomeProdottoInput" list="listaProdotti" type="text" name="nomeProdotto" placeholder="Inserire il nome del prodotto">
+
+                                <datalist id="listaProdotti">
+
+                                </datalist>
+
+                            </th>
                             <th  class="tableForm colShortString" data-column="column3"><input id="marchioInput" type="text" name="marchio" placeholder="Inserire il marchio"> </th>
                             <th  class="tableForm colShortString" data-column="column4">
-                                <select id="modelloSelect" name="fornitore">
-
-                                </select>
+                             <input id="modelloInput" type="text" name="modello" placeholder="Inserire il modello del prodotto">
 
                             </th>
 
@@ -165,17 +169,12 @@
     </div>
    <script>
 
-            function inserisciModelliPerTipologia(){
-                console.log('prima del ciclo');
-                {% for modello in modelli %}
-                    console.log('durante il ciclo '+$('#selectTipologia').val() + '{{modello.tipologia}}' );
-                    if( '{{modello.tipologia}}' ==  $('#selectTipologia').val() ){
-                        console.log('entro????');
-                        $('#modelloSelect').append('<option>{{modello.nome}}</option>');
-                    }
-                {% endfor %}
-            }
-            inserisciModelliPerTipologia();
+
+
+            {% for prodotto in prodotti %}
+                if( '{{prodotto.tipologia}}' == $('#selectTipologia').val() )
+                    $('#listaProdotti').append('<option>{{prodotto.nome}}</option>');
+            {% endfor %}
 
             var rappresentanteDaRegistrare = false;
 
@@ -252,10 +251,10 @@
             }
 
             //codice per riempire il #bodyPrezzario
-            {% for prodotto in prodotti %}
-                if( "{{prodotto.tipologia}}" == $("#selectTipologia").val()) {
+            {% for modello in modelli %}
+                if( "{{modello.tipologia}}" == $("#selectTipologia").val()) {
 
-                    {% if prodotto.daVerificare %}
+                    {% if modello.daVerificare %}
                         var classiTr="rowBodyTab daVerificare" ;
                     {% else %}
                         var classiTr="rowBodyTab";
@@ -274,29 +273,28 @@
                                         <div class="col-md-4 iconContainer"> \
                                             <a  class="fa fa-warning iconsTab segnalaProdotto"></a> \
                                         </div> \
-                                        <button class="button settaCapitolatoButton">Setta capitolato</button> \
                                      </div> \
                                      </td> \
-                                     <td  class="nome_prodotto colLongString" data-column="column2">{{prodotto.nome}}</td> \
-                                     <td  class="numColMedium colShortString" data-column="column3">{{prodotto.marchio}}</td> \
-                                     <td  class="modello_prodotto numColMedium colShortString" data-column="column4">{{prodotto.modello}}</td> \
-                                     <td  class="numColMedium colShortString" data-column="column5">{{prodotto.codice}}</td> \
-                                     <td  class="colMedium colShortString" data-column="column6">{{prodotto.fornitore_primo_gruppo}} - {{prodotto.fornitore_sotto_gruppo}}</td> '+
-                                     stampaValore( '{{prodotto.prezzoListinoFornituraPosa}}', 7, "&euro;", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.prezzoListinoFornitura}}', 8, "&euro;", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.rincaroAzienda}}', 9, "%", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.trasportoAzienda}}', 10, "%", "colNumSmall" )+
-                                     stampaValore( '{{prodotto.imballoAzienda}}', 11, "&euro;", "colNumSmall" );
+                                     <td  class="nome_prodotto colLongString" data-column="column2">{{modello.prodotto}}</td> \
+                                     <td  class="numColMedium colShortString" data-column="column3">{{modello.marchio}}</td> \
+                                     <td  class="modello_prodotto numColMedium colShortString" data-column="column4">{{modello.nome}}</td> \
+                                     <td  class="numColMedium colShortString" data-column="column5">{{modello.codice}}</td> \
+                                     <td  class="colMedium colShortString" data-column="column6">{{modello.fornitore_primo_gruppo}} - {{modello.fornitore_sotto_gruppo}}</td> '+
+                                     stampaValore( '{{modello.prezzoListinoFornituraPosa}}', 7, "&euro;", "colNumSmall" )+
+                                     stampaValore( '{{modello.prezzoListinoFornitura}}', 8, "&euro;", "colNumSmall" )+
+                                     stampaValore( '{{modello.rincaroAzienda}}', 9, "%", "colNumSmall" )+
+                                     stampaValore( '{{modello.trasportoAzienda}}', 10, "%", "colNumSmall" )+
+                                     stampaValore( '{{modello.imballoAzienda}}', 11, "&euro;", "colNumSmall" );
 
-                    if("{{prodotto.versoDiLettura}}" == "True"){
+                    if("{{modello.versoDiLettura}}" == "True"){
                            {% for fornitore in fornitori %}
-                                if("{{fornitore.nome}}" == "{{prodotto.fornitore_sotto_gruppo}}" && "{{fornitore.gruppo_azienda}}" == "{{prodotto.fornitore_primo_gruppo}}" ){
+                                if("{{fornitore.nome}}" == "{{modello.fornitore_sotto_gruppo}}" && "{{fornitore.gruppo_azienda}}" == "{{modello.fornitore_primo_gruppo}}" ){
 
-                                    rowToAdd += stampaValore( '{{fornitore.scontoStandard}}', 12, "%", "colNumSmall" ) +
-                                                stampaValore( '{{fornitore.scontoExtra1}}', 13, "%", "colNumSmall" ) +
-                                                stampaValore( '{{fornitore.scontoExtra2}}', 14, "%", "colNumSmall" ) +
-                                                stampaValore( '{{fornitore.trasporto}}', 15, "&euro;", "colNumSmall" ) +
-                                                stampaValore( '{{fornitore.imballo}}', 16, "&euro;", "colNumSmall" );
+                                    rowToAdd += stampaValore( '{{modello.scontoStandard}}', 12, "%", "colNumSmall" ) +
+                                                stampaValore( '{{modello.scontoExtra1}}', 13, "%", "colNumSmall" ) +
+                                                stampaValore( '{{modello.scontoExtra2}}', 14, "%", "colNumSmall" ) +
+                                                stampaValore( '{{modello.trasporto}}', 15, "&euro;", "colNumSmall" ) +
+                                                stampaValore( '{{modello.imballo}}', 16, "&euro;", "colNumSmall" );
 
                                 }
                            {% endfor %}
@@ -311,18 +309,18 @@
                     }
 
 
-                    rowToAdd +=   stampaValore( '{{prodotto.posa}}', 17, '&euro;', 'colNumBig')+
-                                  stampaValore( '{{prodotto.nettoUsFornitura}}', 18, "&euro;","colNumSmall"  )+
-                                  stampaValore( '{{prodotto.nettoUsFornituraPosa}}', 19, "&euro;","colNumSmall"  )+
-                                  stampaValore( '{{prodotto.rincaroCliente}}', 20, "%","colNumSmall"  );
+                    rowToAdd +=   stampaValore( '{{modello.posa}}', 17, '&euro;', 'colNumBig')+
+                                  stampaValore( '{{modello.nettoUsFornitura}}', 18, "&euro;","colNumSmall"  )+
+                                  stampaValore( '{{modello.nettoUsFornituraPosa}}', 19, "&euro;","colNumSmall"  )+
+                                  stampaValore( '{{modello.rincaroCliente}}', 20, "%","colNumSmall"  );
 
-                    if( parseFloat('{{prodotto.nettoUsFornituraPosa}}') == 0  || '{{prodotto.nettoUsFornituraPosa}}' == 'None'){
-                        rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{prodotto.nettoUsFornitura}}')+(parseFloat('{{prodotto.nettoUsFornitura}}')*parseInt('{{prodotto.rincaroCliente}}')/100))*100 )/100+'</td>'+
+                    if( parseFloat('{{modello.nettoUsFornituraPosa}}') == 0  || '{{modello.nettoUsFornituraPosa}}' == 'None'){
+                        rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{modello.nettoUsFornitura}}')+(parseFloat('{{modello.nettoUsFornitura}}')*parseInt('{{modello.rincaroCliente}}')/100))*100 )/100+'</td>'+
                                     '</tr>';
 
                     }
                     else{
-                        rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{prodotto.nettoUsFornituraPosa}}')+(parseFloat('{{prodotto.nettoUsFornituraPosa}}')*parseInt('{{prodotto.rincaroCliente}}')/100))*100)/100+'</td>'+
+                        rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{modello.nettoUsFornituraPosa}}')+(parseFloat('{{modello.nettoUsFornituraPosa}}')*parseInt('{{modello.rincaroCliente}}')/100))*100)/100+'</td>'+
                                         '</tr>';
 
                     }
@@ -332,27 +330,6 @@
 
                 }
 
-                $('.settaCapitolatoButton').click(function(){
-                     var parentRow=$(this).parent().parent();
-                     var nome_prodotto=parentRow.children('.nome_prodotto').text();
-                     var modello=parentRow.children('.modelloProdotto');
-                     var tipologia=$('#selectTipologia').val();
-
-
-                     swal({
-                        title: "Impostare il prodotto come capitolato?",
-                        confirmButtonColor: '#DD6B55',
-                        confirmButtonText: 'Ok',
-                        closeOnConfirm: true
-
-                      }, function (isConfirm) {
-
-                        if (isConfirm) {
-                            socketProdotto.emit('setta_capitolato', {'nome_prodotto' : nome_prodotto, 'modello' : modelllo, 'tipologia': tipologia});
-                        }
-                      });
-
-                });
 
             {% endfor %}
 
@@ -743,23 +720,34 @@
             }else
                 titleTxt='Si sta per aggiungere un nuovo prodotto';
 
-          swal({
+          swal.withForm({
             title: titleTxt,
             text: 'Sicuro di voler continuare?',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Ok',
             cancelButtonText: 'annulla',
-            closeOnConfirm: true
+            closeOnConfirm: true,
+            formFields: [
+
+                {
+                    name: 'capitolato', value: 'Imposta come capitolato', type: 'checkbox' }
+
+                ]
+
 
           }, function (isConfirm) {
 
                   if (isConfirm) {
+                        var capitolato = this.swalForm['capitolato'];
+
+                        if(capitolato == 'Imposta come capitolato')
+                            capitolato = true;
+                        else
+                            capitolato = false;
 
                         var inputOfProdotti =  [];
                         var selectOfProdotti = [];
-                        var firstSelect = true;
-                        var modelloProdotto="";
 
 
                         $("#trForm input").each(function(index){
@@ -769,26 +757,20 @@
 
                         $("#trForm select").each(function(index){
 
-                            if(firstSelect){
-                                modelloProdotto=$(this).val();
-                                firstSelect=false;
-                            }
-                            else{
-                                selectOfProdotti=$(this).val().split('-');
 
-                                /*tolgo degli spazi extra*/
+                            selectOfProdotti=$(this).val().split('-');
 
-                                selectOfProdotti[0]=selectOfProdotti[0].substring(0, selectOfProdotti[0].length-1 );
-                                selectOfProdotti[1]=selectOfProdotti[1].substring(1, selectOfProdotti[1].length );
+                            /*tolgo degli spazi extra*/
 
+                            selectOfProdotti[0]=selectOfProdotti[0].substring(0, selectOfProdotti[0].length-1 );
+                            selectOfProdotti[1]=selectOfProdotti[1].substring(1, selectOfProdotti[1].length );
 
-                            }
 
                         });
 
 
-                         //se non è stato impostato il nome o tipo del prodotto non fare nulla
-                        if( inputOfProdotti[0] == "" )
+                         //se non è stato impostato il nome o modello del prodotto non fare nulla
+                        if( inputOfProdotti[0] == "" || inputOfProdotti[2] == "" )
                             return;
 
                         if(isActiveAzienda){
@@ -806,44 +788,48 @@
 
 
                             if(!modificaAttiva){
+
+
                                 socketProdotto.emit("registra_prodotto", { "dip": "{{dipendente.username}}", "tipologia":  $('#selectTipologia').val(),
                                                                            "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
-                                                                           "codice" : inputOfProdotti[2],
-                                                                           "modello": modelloProdotto,
+                                                                           "modello": inputOfProdotti[2],
+                                                                           "codice" : inputOfProdotti[3],
                                                                            "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                            "fornitore_sotto_gruppo": selectOfProdotti[1],
 
                                                                            "prezzoListinoFornituraPosa": listinoFornituraPosa,
                                                                            "prezzoListinoFornitura": listinoFornitura,
-                                                                           "rincaroAzienda":  inputOfProdotti[3],
-                                                                           "trasportoAzienda": inputOfProdotti[4],
-                                                                           "imballoAzienda": inputOfProdotti[5],
-                                                                           "posa": inputOfProdotti[6],
-                                                                           "nettoUsFornitura" : inputOfProdotti[7],
+                                                                           "rincaroAzienda":  inputOfProdotti[4],
+                                                                           "trasportoAzienda": inputOfProdotti[5],
+                                                                           "imballoAzienda": inputOfProdotti[6],
+                                                                           "posa": inputOfProdotti[7],
+                                                                           "nettoUsFornitura" : inputOfProdotti[8],
                                                                            "nettoUsFornituraPosa" : parseFloat($('#nettoUsFPTh').html().split(' ')[1]),
-                                                                           "rincaroCliente": inputOfProdotti[8],
-                                                                           "versoDiLettura": versoDiLettura } );
+                                                                           "rincaroCliente": inputOfProdotti[9],
+                                                                           "versoDiLettura": versoDiLettura,
+                                                                           "capitolato": capitolato} );
                             }
                             else{
                                 socketProdotto.emit("modifica_prodotto", { "dip": "{{dipendente.username}}",
                                                                                "old_nome": oldProdottoDaModificare,
                                                                                "tipologia":  $('#selectTipologia').val(),
                                                                                "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
-                                                                               "codice" : inputOfProdotti[2],
-                                                                               "modello": modelloProdotto,
+                                                                               "modello": inputOfProdotti[2],
+                                                                               "codice" : inputOfProdotti[3],
                                                                                "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                                "fornitore_sotto_gruppo": selectOfProdotti[1],
 
                                                                                "prezzoListinoFornituraPosa": listinoFornituraPosa,
                                                                                "prezzoListinoFornitura": listinoFornitura,
-                                                                               "rincaroAzienda":  inputOfProdotti[3],
-                                                                               "trasportoAzienda": inputOfProdotti[4],
-                                                                               "imballoAzienda": inputOfProdotti[5],
-                                                                               "posa": inputOfProdotti[6],
-                                                                               "nettoUsFornitura" : inputOfProdotti[7],
+                                                                               "rincaroAzienda":  inputOfProdotti[4],
+                                                                               "trasportoAzienda": inputOfProdotti[5],
+                                                                               "imballoAzienda": inputOfProdotti[6],
+                                                                               "posa": inputOfProdotti[7],
+                                                                               "nettoUsFornitura" : inputOfProdotti[8],
                                                                                "nettoUsFornituraPosa" : parseFloat($('#nettoUsFPTh').html().split(' ')[1]),
-                                                                               "rincaroCliente": inputOfProdotti[8],
-                                                                               "versoDiLettura": versoDiLettura } );
+                                                                               "rincaroCliente": inputOfProdotti[9],
+                                                                               "versoDiLettura": versoDiLettura,
+                                                                               "capitolato": capitolato} );
 
                             }
 
@@ -859,34 +845,36 @@
                             if(!modificaAttiva){
                                 socketProdotto.emit("registra_prodotto", { "dip": "{{dipendente.username}}", "tipologia":  $('#selectTipologia').val(),
                                                                            "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
-                                                                           "codice" : inputOfProdotti[2],
-                                                                           "modello": modelloProdotto,
+                                                                           "modello": inputOfProdotti[2],
+                                                                           "codice" : inputOfProdotti[3],
                                                                            "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                            "fornitore_sotto_gruppo": selectOfProdotti[1],
                                                                            "prezzoListinoFornituraPosa" : parseFloat($('#listinoFornituraPosaTh').html().split(' ')[1]),
-                                                                           "prezzoListinoFornitura" : inputOfProdotti[3],
-                                                                           "posa" : inputOfProdotti[4],
+                                                                           "prezzoListinoFornitura" : inputOfProdotti[4],
+                                                                           "posa" : inputOfProdotti[5],
                                                                            "nettoUsFornitura" : nettoUsFornitura,
                                                                            "nettoUsFornituraPosa" : nettoUsFornituraPosa,
-                                                                           "rincaroCliente": inputOfProdotti[5],
-                                                                           "versoDiLettura": versoDiLettura } );
+                                                                           "rincaroCliente": inputOfProdotti[6],
+                                                                           "versoDiLettura": versoDiLettura,
+                                                                           "capitolato": capitolato} );
                             }
                             else{
                                 socketProdotto.emit("modifica_prodotto", { "dip": "{{dipendente.username}}",
                                                                            "old_nome": oldProdottoDaModificare,
                                                                            "tipologia":  $('#selectTipologia').val(),
                                                                            "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
-                                                                           "codice" : inputOfProdotti[2],
-                                                                           "modello": modelloProdotto,
+                                                                           "modello": inputOfProdotti[2],
+                                                                           "codice" : inputOfProdotti[3],
                                                                            "fornitore_primo_gruppo": selectOfProdotti[0],
                                                                            "fornitore_sotto_gruppo": selectOfProdotti[1],
                                                                            "prezzoListinoFornituraPosa" : parseFloat($('#listinoFornituraPosaTh').html().split(' ')[1]),
-                                                                           "prezzoListinoFornitura" : inputOfProdotti[3],
-                                                                           "posa" : inputOfProdotti[4],
+                                                                           "prezzoListinoFornitura" : inputOfProdotti[4],
+                                                                           "posa" : inputOfProdotti[5],
                                                                            "nettoUsFornitura" : nettoUsFornitura,
                                                                            "nettoUsFornituraPosa" : nettoUsFornituraPosa,
-                                                                           "rincaroCliente": inputOfProdotti[5],
-                                                                           "versoDiLettura": versoDiLettura } );
+                                                                           "rincaroCliente": inputOfProdotti[6],
+                                                                           "versoDiLettura": versoDiLettura,
+                                                                           "capitolato": capitolato } );
 
                             }
 

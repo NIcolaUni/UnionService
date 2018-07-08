@@ -13,7 +13,7 @@ class ProdottoCadDBmodel(app.database.Model):
 
     numero_preventivo = Column(Integer())
     data = Column(Date)
-    ordine = Column(Integer()) # dov e' posizionata  la lavorazione nel preventivo
+    ordine = Column(Integer()) # dov e' posizionatao il prodotto nel preventivo
     ordine_sottoprodotto = Column(Integer())
     numero = Column(Integer())
 

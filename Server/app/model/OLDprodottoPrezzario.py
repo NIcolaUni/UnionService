@@ -1,18 +1,17 @@
-from .db.modelloProdottoDBmodel import ModelloProdottoDBmodel
+from .db.prodottoPrezzarioDBmodel import ProdottoPrezzarioDBmodel
 from sqlalchemy import exc
 from .eccezioni.righaPresenteException import RigaPresenteException
 import app
-class ModelloProdotto(ModelloProdottoDBmodel):
+class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
 
     def __init__(self,
                     nome,
-                    prodotto,
                     tipologia,
                     marchio = None,
                     codice = None,
-                    fornitore_primo_gruppo=None,
-                    fornitore_sotto_gruppo=None,
-
+                    modello = None,
+                    fornitore_primo_gruppo = None,
+                    fornitore_sotto_gruppo = None,
                     prezzoListinoFornitura = None,
                     prezzoListinoFornituraPosa = None,
                     rincaroAzienda = None,
@@ -28,12 +27,12 @@ class ModelloProdotto(ModelloProdottoDBmodel):
                     daVerificare=None):
 
         self.nome=nome
-        self.prodotto=prodotto
         self.tipologia=tipologia
         self.marchio=marchio
         self.codice=codice
-        self.fornitore_primo_gruppo = fornitore_primo_gruppo
-        self.fornitore_sotto_gruppo = fornitore_sotto_gruppo
+        self.modello=modello
+        self.fornitore_primo_gruppo=fornitore_primo_gruppo
+        self.fornitore_sotto_gruppo=fornitore_sotto_gruppo
 
         self.prezzoListinoFornitura = prezzoListinoFornitura
         self.prezzoListinoFornituraPosa = prezzoListinoFornituraPosa
@@ -52,11 +51,12 @@ class ModelloProdotto(ModelloProdottoDBmodel):
         self.versoDiLettura = versoDiLettura
         self.daVerificare = daVerificare
 
-    def registraModello( nome,
-                    prodotto,
+
+    def registraProdotto( nome,
                     tipologia,
                     marchio=None,
                     codice=None,
+                    modello=None,
                     fornitore_primo_gruppo=None,
                     fornitore_sotto_gruppo=None,
 
@@ -76,8 +76,8 @@ class ModelloProdotto(ModelloProdottoDBmodel):
                     versoDiLettura=None,
                     daVerificare=None):
 
-        newModello = ModelloProdotto(nome=nome, prodotto=prodotto, tipologia=tipologia, marchio=marchio, codice=codice,
-                                       fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
+        newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, marchio=marchio, codice=codice, modello=modello,
+                                        fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
                                         prezzoListinoFornitura=prezzoListinoFornitura, prezzoListinoFornituraPosa=prezzoListinoFornituraPosa,
                                         rincaroAzienda=rincaroAzienda, trasportoAzienda=trasportoAzienda, imballoAzienda=imballoAzienda,
                                         trasportoAziendaUnitaMisura=trasportoAziendaUnitaMisura,
@@ -85,34 +85,36 @@ class ModelloProdotto(ModelloProdottoDBmodel):
                                         posa=posa,
                                         nettoUsFornitura=nettoUsFornitura,
                                         nettoUsFornituraPosa=nettoUsFornituraPosa,
-                                        rincaroCliente=rincaroCliente, versoDiLettura=versoDiLettura,
-                                        daVerificare=daVerificare)
+                                        rincaroCliente=rincaroCliente, versoDiLettura=versoDiLettura, daVerificare=daVerificare)
 
 
         try:
-            ModelloProdottoDBmodel.addRow(newModello)
+            ProdottoPrezzarioDBmodel.addRow(newProdotto)
         except exc.SQLAlchemyError as e:
             app.server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
-            ModelloProdottoDBmodel.rollback()
+            ProdottoPrezzarioDBmodel.rollback()
             raise RigaPresenteException("Il prodotto inserito è già presente")
 
 
-    def eliminaModello(nome, prodotto, tipologia):
+    def eliminaProdotto(nome, tipologia):
 
-        toDel = ModelloProdotto.query.filter_by( nome=nome, prodotto=prodotto, tipologia=tipologia ).first()
-        ModelloProdottoDBmodel.delRow(toDel)
+        toDel = ProdottoPrezzario.query.filter_by( nome=nome, tipologia=tipologia ).first()
+        ProdottoPrezzarioDBmodel.delRow(toDel)
 
-    def modificaModello( modifica, nome, prodotto, tipologia ):
+    def modificaProdotto( modifica ):
 
+        oldNome =modifica.pop('oldNome')
+        tipologia=modifica.pop('tipologia')
 
-        ModelloProdotto.query.filter_by(nome=nome, prodotto=prodotto, tipologia=tipologia).update( modifica )
+        ProdottoPrezzario.query.filter_by(nome=oldNome, tipologia=tipologia).update( modifica )
 
-        ModelloProdottoDBmodel.commit()
+        ProdottoPrezzarioDBmodel.commit()
 
     def elimina(self):
-        ModelloProdottoDBmodel.delRow(self)
+        ProdottoPrezzarioDBmodel.delRow(self)
 
-    def setDaVerificare(nome, prodotto, tipologia, valore):
-        ModelloProdottoDBmodel.query.filter_by(nome=nome, prodotto=prodotto, tipologia=tipologia).update({'daVerificare': valore})
-        ModelloProdottoDBmodel.commit()
+    def setDaVerificare(nome, tipologia, valore):
+        app.server.logger.info("Entro qua {}".format(valore))
+        ProdottoPrezzarioDBmodel.query.filter_by(nome=nome, tipologia=tipologia).update({'daVerificare': valore})
+        ProdottoPrezzarioDBmodel.commit()
 

@@ -1,14 +1,14 @@
 <div class="inner">
 
     <span id="titlePreventivoSpan">
-        <span><h2><a id="newPreventivo" class="fa fa-plus-circle expandPreventivoIcon"></a> Scelta finiture</h2></span>
+        <span><h2><a id="newPreventivoFiniture" class="fa fa-plus-circle expandPreventivoIcon"></a> Scelta finiture</h2></span>
 
         {% if countPreventivi > 0 %}
 
             <span id="ctrlSpanPreventivo">
                 <span class="aCtrlPreventivo">
                 </span>
-                <select id="preventivoSelect" >
+                <select id="preventivoFinitureSelect" >
                     {% for prev in preventivi_distinti %}
                         {% if prev[2] == lastPreventivo[0].numero_preventivo %}
                             <option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}F</option>
@@ -17,7 +17,7 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-                <select id="dataSelect" >
+                <select id="dataFinitureSelect" >
                 </select>
 
 
@@ -29,176 +29,49 @@
 </div>
 <script>
 
-    var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoFiniture');
+    var socketFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 
 
-    function calcolaTotalePreventivo(numero_preventivo, data){
-        var totale = 0;
-
-        {% for preventivo in preventivi %}
-            if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
-                {% for prodotto in preventivo[1][1] %}
-                    totale += parseFloat('{{prodotto[2]}}');
-                {% endfor %}
-            }
-
-        {% endfor %}
-
-        $('#totalePrev').html( '<span>Totale: '+ totale +'</span>');
-
-    }
-
-    /*Stampa l'antemprima del preventivo edile*/
-    function stampaRiassuntoPreventivo( numero_preventivo, data ){
-
-                    $('section#one').children('.inner').children('.features').remove();
-
-                    strToAdd = '';
-                    {% for preventivo in preventivi %}
-                        if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
-                            strToAdd = '<div class="features"> \
-                                            <div id="tabFatturaPaginaCliente" class="table-wrapper"> \
-                                                    <table class="alt"> \
-                                                        <thead> \
-                                                            <tr> \
-                                                                <th class="tdTipoLav">Lavorazione</th> \
-                                                                <th class="tdQuantita">Quantità</th> \
-                                                                <th class="tdUnitaMisura">Unità</th> \
-                                                                <th class="tdTotale">Totale</th> \
-                                                            </tr> \
-                                                        </thead> \
-                                                    </table>';
-
-
-                            {% for settore in preventivo[1][0] %}
-                                strToAdd += '<table class="alt"> \
-                                            <tbody> \
-                                                <tr> \
-                                                    <td colspan="4">{{settore}}</td> \
-                                                </tr>';
-
-                                {% for lavorazione in preventivo[1][1] %}
-                                    {% if lavorazione[0].settore == settore %}
-                                        strToAdd +=	'<tr> \
-                                                        <td class="tdTipoLav">{{lavorazione[0].tipologia_lavorazione}}</td> \
-                                                        <td class="tdQuantita">{{lavorazione[1]}}</td> \
-                                                        <td class="tdUnitaMisura">{{lavorazione[0].unitaMisura}}</td> \
-                                                        <td class="tdTotale">&euro; {{lavorazione[2]}}</td> \
-                                                     </tr>';
-                                    {% endif %}
-                                {% endfor %}
-
-                                strToAdd +=	'</tbody> \
-                                            </table>';
-                            {% endfor %}
-
-                            strToAdd += '<div id="totalePrev"> \
-                                                    <span>Totale: </span> \
-                                                </div> \
-                                            </div> \
-                                        </div>';
-                        }
-                    {% endfor %}
-
-                    $(strToAdd).insertAfter("#titlePreventivoSpan");
-                    calcolaTotalePreventivo(numero_preventivo, data);
-
-    }
-
-    function impostaSelectDataPreventivoEdile(numero_preventivo){
-
-        var firstCycle=true;
-
-        //resetto il select togliendo tutti i tag option
-        $('#dataSelect').html('');
-
-        {% for preventivo in preventivi %}
-            var optionElement = "";
-
-            // di default setto come data quella piu' recente del piu' recente preventivo
-            // generato per questo cliente
-            if( "{{preventivo[0].numero_preventivo}}" == numero_preventivo ){
-                if( firstCycle ){
-                    optionElement = '<option selected="selected" value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
-                    firstCycle=false;
-                }
-                else
-                    optionElement = '<option value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
-            }
-
-
-            $('#dataSelect').append( optionElement );
-
-
-        {% endfor %}
-    }
-
-    {% if countPreventivi > 0 %}
-        $('.aCtrlPreventivo').html(
-                '<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>'+
-                '<a id="cancellaPreventivo" class="fa fa-trash expandPreventivoIcon"></a>'
-        );
-
-        $('#modificaPreventivo').click(function(){
-            var selPrev = $('#preventivoSelect option:selected');
-
-            socketPreventivo.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
-                                                          'numero_preventivo': selPrev});
-        });
-
-        $('#cancellaPreventivo').click(function(){
-             var selPrev = $('#preventivoSelect option:selected').attr('class').split('-')[1];
-             var selData = $('#dataSelect').val();
-             socketPreventivo.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
-                                                          'numero_preventivo': selPrev,
-                                                           'data': selData });
-
-
-        });
-
-        impostaSelectDataPreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
-        stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
-    {% endif %}
-
-
-    $('#newPreventivo').click(function(){
-
-        socketPreventivo.emit('registra_nuovo_preventivo',
+    $('#newPreventivoFiniture').click(function(){
+        
+        socketFiniture.emit('registra_nuovo_preventivo',
                                         { 'dip': '{{dipendente.username}}',
                                           'nome_cliente' : '{{cliente.nome}}',
                                           'cognome_cliente' : '{{cliente.cognome}}',
                                           'indirizzo_cliente' : '{{cliente.indirizzo}}',
                                         }
+                              );
 
 
     });
 
 
+/*
     $('#modificaPreventivo').click(function(){
 
-        var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
+        var selectedPreventivo = $('#preventivoFinitureSelect option:selected').attr('class').split('-')[1];
         console.log("cliccato "+ selectedPreventivo);
         socketPreventivo.emit('modifica_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'dip': '{{dipendente.username}}' });
     });
 
 
-    $('#preventivoSelect').change(function(){
-        var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
+    $('#preventivoFinitureSelect').change(function(){
+        var selectedPreventivo = parseInt($('#preventivoFinitureSelect option:selected').attr('class').split('-')[1]);
 
         impostaSelectDataPreventivoEdile(selectedPreventivo);
 
-        var selectedData = $('#dataSelect').val();
+        var selectedData = $('#dataFinitureSelect').val();
         stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
 
 
     });
 
-    $('#dataSelect').change(function(){
-        var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
-        var selectedData = $('#dataSelect').val();
+    $('#dataFinitureSelect').change(function(){
+        var selectedPreventivo = parseInt($('#preventivoFinitureSelect option:selected').attr('class').split('-')[1]);
+        var selectedData = $('#dataFinitureSelect').val();
         stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
     });
-
+*/
 
 
 

@@ -388,14 +388,17 @@ def apriPreventivoFiniture():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     tipologie = TipologiaProdotto.query.all()
     prezzarioProdotti = ProdottoPrezzario.query.all()
+    modelliProdotto = ModelloProdotto.query.all()
+
     preventivo = PreventivoFiniture.query.filter_by(numero_preventivo=app.preventivoFinitureSelezionato[0], data=app.preventivoFinitureSelezionato[1]).first()
-    infoPreventivo = PreventivoFiniture.returnSinglePreventivo(numero_preventivo=app.preventivoFinitureSelezionato[0], data=app.preventivoFinitureSelezionato[1])
+    #infoPreventivo = PreventivoFiniture.returnSinglePreventivo(numero_preventivo=app.preventivoFinitureSelezionato[0], data=app.preventivoFinitureSelezionato[1])
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
 
     return render_template('preventivoFiniture.html', codicePreventivo=codicePreventivo, tipologie=tipologie,
+                            modelliProdotto=modelliProdotto,
                             preventivoFullPage=True, cliente=cliente, prezzarioProdotti=prezzarioProdotti,
-                            preventivo=preventivo, infoPreventivo=infoPreventivo, dipendente=dip)
+                            preventivo=preventivo, dipendente=dip)
 
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required
@@ -477,30 +480,8 @@ def anteprimaPreventivoFiniture():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
 
 
-    preventivi = PreventivoFiniture.returnAllPreventiviCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
-                                                        indirizzo_cliente=app.clienteSelezionato.indirizzo )
 
-    preventivi_distinti = []
-
-    for preventivo in preventivi:
-        preventivo_presente = False
-        for prev_dist in preventivi_distinti:
-            if preventivo[0].numero_preventivo == prev_dist[2]:
-                preventivo_presente = True
-
-        if not preventivo_presente:
-            preventivi_distinti.append(( preventivo[0].calcolaCodicePreventivo(),
-                                        preventivo[0].numero_preventivo))
-
-    lastPrev = PreventivoFiniture.returnLastPreventivoCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
-                                                        indirizzo_cliente=app.clienteSelezionato.indirizzo )
-
-    countPreventivi = PreventivoFiniture.get_counter_preventivi_per_cliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
-                                                        indirizzo_cliente=app.clienteSelezionato.indirizzo )
-
-    return render_template('paginaCliente_prevFiniture.html', dipendente=dip, cliente=app.clienteSelezionato,
-                           preventivi=preventivi, preventivi_distinti=preventivi_distinti,
-                           lastPreventivo=lastPrev, countPreventivi=countPreventivi)
+    return render_template('paginaCliente_prevFiniture.html', dipendente=dip, cliente=app.clienteSelezionato, countPreventivi=0)
 
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
@@ -913,18 +894,24 @@ def handle_registra_prodotto(message):
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    server.logger.info('daiiiii')
-    server.logger.info('Allora nettousfor: {}'.format(message))
+
     try:
+        if message['capitolato']:
+            ProdottoPrezzario.registraProdotto( nome=message['nome'], tipologia=message['tipologia'], capitolato=message['modello'])
+
+        else:
+            ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'])
 
         if message['versoDiLettura']:
 
-                ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'],
+                ModelloProdotto.registraModello(   nome=message['modello'],
+                                                   prodotto=message['nome'], tipologia=message['tipologia'],
                                                    marchio=message['marchio'],
                                                    codice=message['codice'],
-                                                   modello=message['modello'],
+
                                                    fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
                                                    fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
+
                                                    prezzoListinoFornitura=message['prezzoListinoFornitura'],
                                                    prezzoListinoFornituraPosa=message['prezzoListinoFornituraPosa'],
                                                    nettoUsFornituraPosa=message['nettoUsFornituraPosa'],
@@ -934,11 +921,11 @@ def handle_registra_prodotto(message):
                                                    versoDiLettura=message['versoDiLettura'])
 
         else:
-
-                ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'],
+                ModelloProdotto.registraModello(   nome=message['modello'],
+                                                   prodotto=message['nome'], tipologia=message['tipologia'],
                                                    marchio=message['marchio'],
                                                    codice=message['codice'],
-                                                   modello=message['modello'],
+
                                                    fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
                                                    fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
                                                    prezzoListinoFornitura=message['prezzoListinoFornitura'],
@@ -1051,12 +1038,10 @@ def handle_aggiungi_modello_prodotto(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
-@socketio.on('setta_capitolato', namespace='/prezzarioProdotti')
-def handle_setta_capitolato(message):
-    ModelloProdotto.settaCapitolato(nome=message['nome'], tipologia=message['tipologia'], capitolato=message['capitolato'])
 
 @socketio.on('registra_nuovo_preventivo', namespace='/preventivoFiniture')
 def handle_registra_nuovo_preventivo(message):
+    app.server.logger.info('\n\n\n\nEhi ciao prev finit \n\n\n\n')
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     idPreventivo = PreventivoFiniture.registraPreventivo(nome_cliente=message['nome_cliente'],
                                        cognome_cliente=message['cognome_cliente'], indirizzo_cliente=message['indirizzo_cliente'],

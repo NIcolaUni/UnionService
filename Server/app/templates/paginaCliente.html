@@ -266,22 +266,7 @@
 
 				<!-- Two -->
 					<section id="two" class="wrapper style3 fade-up">
-						<div class="inner">
-                            <span id="titleSceltaFinitureoSpan">
-								<span><h2><a id="newPreventivoFiniture" class="fa fa-plus-circle expandPreventivoIcon"></a> Scelta Finiture </h2></span>
-								<span id="ctrlSpanPreventivoFiniture">
-									<span class="aCtrlPreventivo">
-									</span>
-									<select id="preventivofinitureSelect" >
 
-									</select>
-									<select id="dataPreventivoFinitureSelect" >
-									</select>
-
-
-								</span>
-							</span>
-						</div>
 					</section>
 
 				<!-- Three -->
@@ -396,6 +381,7 @@
 				});
 
     			$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
+				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
 
 			</script>
 

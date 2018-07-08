@@ -167,6 +167,10 @@ tr.trFoot {
     visibility: hidden;
 }
 
+#memoriaProdottiAggiunti{
+    visibility: hidden;
+}
+
 textarea {
     resize: none;
 }
