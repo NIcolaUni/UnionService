@@ -73,7 +73,8 @@ def prezzarioProdotti():
         allerta = True
         app.rigaPresente = False
 
-    if app.prezzarioEdileSettoreCorrente is not None:
+
+    if app.prezzarioProdottiTipoCorrente is not None:
 
         return render_template('modificaPrezzarioProdotti.html', dipendente=dip, rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente,
                                tipoProdotto=tipoProdotto, tipoToSel=app.prezzarioProdottiTipoCorrente, modelli=modelli,
@@ -885,6 +886,7 @@ def handle_registra_tipologiaProdotto(message):
 def handle_cambia_settore_prezzario(message):
     app.prezzarioProdottiTipoCorrente = message['tipologia']
 
+    app.server.logger.info('allora vediamo che ci passa di qua: '+app.prezzarioProdottiTipoCorrente)
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 

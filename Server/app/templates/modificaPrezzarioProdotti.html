@@ -66,7 +66,7 @@
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column7"> </th>
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column8"></th>
 
-                            <th  class="tableIntestazione  intestazioneRosso" colspan="3" data-column="column9">AZIENDA</th>
+                            <th  class="tableIntestazione  colNumSmall intestazioneRosso" colspan="3" data-column="column9">AZIENDA</th>
 
                             <th  class="tableIntestazione intestazioneBlu " colspan="5" data-column="column12">FORNITORE</th>
 
@@ -84,7 +84,7 @@
                             <th  class="tableIntestazione colShortString" data-column="column3">Marchio</th>
                             <th  class="tableIntestazione colShortString" data-column="column4">Modello</th>
                             <th  class="tableIntestazione colShortString" data-column="column5">Codice</th>
-                            <th  class="tableIntestazione colShortString" data-column="column6">Fornitore</th>
+                            <th  class="tableIntestazione colMediumString" data-column="column6">Fornitore</th>
 
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column7"> &euro; Listino<br/> (F+P)</th>
                             <th  class="tableIntestazione colNumSmall intestazioneOliva" data-column="column8"> &euro; Listino<br/> (F)</th>
@@ -123,9 +123,9 @@
                             </th>
 
 
-                            <th  class="tableForm colShortString" data-column="column4"><input id="codiceInput" type="text" name="codice" placeholder="Inserire il codice"> </th>
+                            <th  class="tableForm colShortString" data-column="column5"><input id="codiceInput" type="text" name="codice" placeholder="Inserire il codice"> </th>
 
-                            <th id="fornitoreTh" class="tableForm colShortString" data-column="column5">
+                            <th id="fornitoreTh" class="tableForm colMediumString" data-column="column6">
 
                                 <select id="fornitoreSelect" name="fornitore">
                                     {% for fornitore in fornitori %}
@@ -135,13 +135,13 @@
                                 </select>
 
                             </th>
-                            <th  id="listinoFornituraPosaTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column6"></th>
-                            <th  id="listinoFornituraTh"  class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column7"><input id="listinoFornituraInput" class="numberInput colorBlack" type="number" name="listinoFornitura" placeholder="listino fornitura" step="0.01" value=0.00> &euro; </th>
+                            <th  id="listinoFornituraPosaTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column7"></th>
+                            <th  id="listinoFornituraTh"  class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column8"><input id="listinoFornituraInput" class="numberInput colorBlack" type="number" name="listinoFornitura" placeholder="listino fornitura" step="0.01" value=0.00> &euro; </th>
 
-                            <th  id="scontiRincariAziendaClose" class="tableForm colorWhite intestazioneRosso" colspan="3" data-column="column8"></th>
-                            <th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="5" data-column="column11"></th>
+                            <th  id="scontiRincariAziendaClose" class="tableForm colorWhite intestazioneRosso" colspan="3" data-column="column9"></th>
+                            <th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="5" data-column="column12"></th>
 
-                            <th  class="tableIntestazione colNumBig  intestazioneOliva" data-column="column16"><input id="posaInput" class="numberInput colorBlack" type="number" name="posa" placeholder="costo posa" step="0.01" value=0.00> &euro; </th>
+                            <th  class="tableIntestazione colNumBig  intestazioneOliva" data-column="column17"><input id="posaInput" class="numberInput colorBlack" type="number" name="posa" placeholder="costo posa" step="0.01" value=0.00> &euro; </th>
 
 
                             <th  id="nettoUsFTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column18"><input id="nettoUsFInput" class="numberInput colorBlack" type="number" name="nettoUsF" placeholder="netto US fornitura" step="0.01" value=0.00> &euro; </th>
@@ -279,7 +279,7 @@
                                      <td  class="numColMedium colShortString" data-column="column3">{{modello.marchio}}</td> \
                                      <td  class="modello_prodotto numColMedium colShortString" data-column="column4">{{modello.nome}}</td> \
                                      <td  class="numColMedium colShortString" data-column="column5">{{modello.codice}}</td> \
-                                     <td  class="colMedium colShortString" data-column="column6">{{modello.fornitore_primo_gruppo}} - {{modello.fornitore_sotto_gruppo}}</td> '+
+                                     <td  class="colMediumString" data-column="column6">{{modello.fornitore_primo_gruppo}} - {{modello.fornitore_sotto_gruppo}}</td> '+
                                      stampaValore( '{{modello.prezzoListinoFornituraPosa}}', 7, "&euro;", "colNumSmall" )+
                                      stampaValore( '{{modello.prezzoListinoFornitura}}', 8, "&euro;", "colNumSmall" )+
                                      stampaValore( '{{modello.rincaroAzienda}}', 9, "%", "colNumSmall" )+
