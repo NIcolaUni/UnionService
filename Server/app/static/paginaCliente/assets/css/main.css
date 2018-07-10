@@ -4090,6 +4090,15 @@ button.elementPreventivo {
     margin-top: 20px;
   }
 
+  #divProdottiPreventivo {
+    display: block;
+    position: relative;
+    height: 100%;
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 20px;
+  }
+
   #listaElementPreventivo {
     display: inline-block;
     list-style-type: none;
@@ -4102,6 +4111,7 @@ button.elementPreventivo {
     overflow-y: scroll;
 
   }
+
 
     #listaElementPreventivo::-webkit-scrollbar {
         width: 12px;

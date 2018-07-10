@@ -10,7 +10,7 @@ import os
 
 
 class __ProdottoPreventivo__(ProdottoPreventivoFinitureDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, tipologia, nome_prodotto, modello, quantita,
+    def __init__(self, numero_preventivo, data, ordine, tipologia, nome_prodotto, modello, marchio, quantita,
                  unitaMisura):
 
         self.numero_preventivo = numero_preventivo
@@ -21,6 +21,7 @@ class __ProdottoPreventivo__(ProdottoPreventivoFinitureDBmodel):
         self.nome_prodotto = nome_prodotto
         self.unitaMisura = unitaMisura
         self.modello = modello
+        self.marchio = marchio
         self.quantita = quantita
 
 
@@ -51,25 +52,19 @@ class PreventivoFiniture(PreventivoFinitureDBmodel):
         return str(self.numero_preventivo) + dipendente + str(annoPreventivo)
 
     def registraPreventivo(nome_cliente, cognome_cliente, indirizzo_cliente,
-                           dipendente_generatore):
+                           dipendente_generatore, numero_preventivo):
 
-        youngerPrev = PreventivoFiniture.query.order_by(desc(PreventivoFiniture.numero_preventivo)).first()
-        lastNumPrev = 99
-
-        # se ci sono gia' preventivi registrati prende il numero_preventivo del piu' recente
-        if youngerPrev is not None:
-            lastNumPrev = youngerPrev.numero_preventivo
 
         now = datetime.datetime.now()
         oggi = "{}/{}/{}".format(now.day, now.month, now.year)
 
-        preventivo = PreventivoFiniture(numero_preventivo=lastNumPrev + 1, data=oggi, nome_cliente=nome_cliente,
+        preventivo = PreventivoFiniture(numero_preventivo=numero_preventivo, data=oggi, nome_cliente=nome_cliente,
                                      cognome_cliente=cognome_cliente, indirizzo_cliente=indirizzo_cliente,
                                      dipendente_generatore=dipendente_generatore)
 
         PreventivoFinitureDBmodel.addRow(preventivo)
 
-        return (lastNumPrev + 1, oggi)
+        return (numero_preventivo, oggi)
 
     def eliminaPreventivo(numero_preventivo, data):
 
@@ -77,10 +72,10 @@ class PreventivoFiniture(PreventivoFinitureDBmodel):
 
         PreventivoFinitureDBmodel.delRow(toDel)
 
-    def registraProdotto(numero_preventivo, data, ordine, tipologia, nome_prodotto, modello, quantita, unitaMisura ):
+    def registraProdotto(numero_preventivo, data, ordine, tipologia, nome_prodotto, modello, marchio, quantita, unitaMisura ):
 
         prodotto=__ProdottoPreventivo__(numero_preventivo=numero_preventivo, data=data, ordine=ordine,
-                                        tipologia=tipologia, nome_prodotto=nome_prodotto, modello=modello,
+                                        tipologia=tipologia, nome_prodotto=nome_prodotto, modello=modello, marchio=marchio,
                                         quantita=quantita, unitaMisura=unitaMisura)
 
         PreventivoFinitureDBmodel.addRow(prodotto)

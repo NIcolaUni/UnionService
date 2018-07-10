@@ -11,7 +11,8 @@ class ProdottoPrezzarioDBmodel(DbUSinterface, DbUSinterface.db.Model):
 
     nome = Column(String(100))
     tipologia = Column(String(100))
-    capitolato = Column(String(100))
+    capitolato_modello = Column(String(100))
+    capitolato_marchio = Column(String(100))
 
 
 

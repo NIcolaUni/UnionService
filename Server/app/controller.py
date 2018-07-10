@@ -391,13 +391,29 @@ def apriPreventivoFiniture():
     prezzarioProdotti = ProdottoPrezzario.query.all()
     modelliProdotto = ModelloProdotto.query.all()
 
+    modelliDistinti = []
+
+
+    for modello in modelliProdotto:
+        modelPresente = False
+        for modDist in modelliDistinti:
+            if modello.nome == modDist[0] and modello.tipologia == modDist[1]:
+                modelPresente = True
+
+        if not modelPresente:
+            modelliDistinti.append((modello.nome, modello.tipologia, modello.marchio))
+
+    app.server.logger.info("Allora siamo {}".format(modelliDistinti))
+    app.server.logger.info("Poi siamo {}".format(modelliProdotto))
+
+
     preventivo = PreventivoFiniture.query.filter_by(numero_preventivo=app.preventivoFinitureSelezionato[0], data=app.preventivoFinitureSelezionato[1]).first()
     #infoPreventivo = PreventivoFiniture.returnSinglePreventivo(numero_preventivo=app.preventivoFinitureSelezionato[0], data=app.preventivoFinitureSelezionato[1])
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
 
     return render_template('preventivoFiniture.html', codicePreventivo=codicePreventivo, tipologie=tipologie,
-                            modelliProdotto=modelliProdotto,
+                            modelliProdotto=modelliProdotto, modelliDistinti=modelliDistinti,
                             preventivoFullPage=True, cliente=cliente, prezzarioProdotti=prezzarioProdotti,
                             preventivo=preventivo, dipendente=dip)
 
@@ -480,9 +496,25 @@ def anteprimaPreventivoEdile():
 def anteprimaPreventivoFiniture():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
 
+    preventivi = PreventivoEdile.returnAllPreventiviCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
+                                                        indirizzo_cliente=app.clienteSelezionato.indirizzo )
+
+    preventivi_distinti = []
+
+    for preventivo in preventivi:
+        preventivo_presente = False
+        for prev_dist in preventivi_distinti:
+            if preventivo[0].numero_preventivo == prev_dist[2]:
+                preventivo_presente = True
+
+        if not preventivo_presente:
+            preventivi_distinti.append((preventivo[0].tipologia_commessa, preventivo[0].calcolaCodicePreventivo(),
+                                        preventivo[0].numero_preventivo))
 
 
-    return render_template('paginaCliente_prevFiniture.html', dipendente=dip, cliente=app.clienteSelezionato, countPreventivi=0)
+
+    return render_template('paginaCliente_prevFiniture.html', dipendente=dip, cliente=app.clienteSelezionato, countPreventivi=0,
+                           preventivi_distinti=preventivi_distinti)
 
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
@@ -899,7 +931,8 @@ def handle_registra_prodotto(message):
 
     try:
         if message['capitolato']:
-            ProdottoPrezzario.registraProdotto( nome=message['nome'], tipologia=message['tipologia'], capitolato=message['modello'])
+            ProdottoPrezzario.registraProdotto( nome=message['nome'], tipologia=message['tipologia'],
+                                                    capitolato_modello=message['modello'], capitolato_marchio=message['marchio'])
 
         else:
             ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'])
@@ -1047,7 +1080,7 @@ def handle_registra_nuovo_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     idPreventivo = PreventivoFiniture.registraPreventivo(nome_cliente=message['nome_cliente'],
                                        cognome_cliente=message['cognome_cliente'], indirizzo_cliente=message['indirizzo_cliente'],
-                                        dipendente_generatore=dip.username)
+                                        dipendente_generatore=dip.username, numero_preventivo=message['numero_preventivo'])
 
     app.preventivoFinitureSelezionato=idPreventivo
     emit('confermaRegistrazionePreventivo', namespace='/preventivoFiniture', room=dip.session_id)

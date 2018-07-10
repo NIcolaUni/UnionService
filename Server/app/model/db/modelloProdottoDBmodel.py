@@ -4,7 +4,7 @@ from .dbUSinterface import DbUSinterface
 class ModelloProdottoDBmodel(DbUSinterface, DbUSinterface.db.Model):
     __tablename__ = "modello_prodotto_prezzario"
     __table_args__ = (
-            PrimaryKeyConstraint('nome', 'prodotto', 'tipologia'),
+            PrimaryKeyConstraint('nome', 'prodotto', 'tipologia', 'marchio'),
             ForeignKeyConstraint(['prodotto', 'tipologia'],
                                  ['prodotto_prezzario.nome', 'prodotto_prezzario.tipologia'],
                                  onupdate="CASCADE", ondelete="CASCADE"),
