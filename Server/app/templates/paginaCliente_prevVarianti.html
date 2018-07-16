@@ -1,23 +1,23 @@
 <div class="inner">
 
-    <span id="titlePreventivoSpan">
-        <span><h2><a id="newPreventivo" class="fa fa-plus-circle expandPreventivoIcon"></a> Preventivi Edile</h2></span>
+    <span id="titlePreventivoVariantiSpan">
+        <span><h2><a id="newPreventivoVarianti" class="fa fa-plus-circle expandPreventivoIcon"></a> Varianti </h2></span>
 
-        {% if countPreventivi > 0 %}
+        {% if countPreventiviVarianti > 0 %}
 
-            <span id="ctrlSpanPreventivo">
-                <span class="aCtrlPreventivo">
+            <span id="ctrlSpanPreventivoVarianti">
+                <span class="aCtrlPreventivoVarianti">
                 </span>
-                <select id="preventivoSelect" >
-                    {% for prev in preventivi_distinti %}
-                        {% if prev[2] == lastPreventivo[0].numero_preventivo %}
-                            <option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}E</option>
+                <select id="preventivoVariantiSelect" >
+                    {% for prev in preventiviVarianti_distinti %}
+                        {% if prev[2] == lastPreventivoVarianti[0].numero_preventivo %}
+                            <option class="numeroPreventivoVarianti-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}V</option>
                         {% else %}
-                            <option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}E</option>
+                            <option class="numeroPreventivoVarianti-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}V</option>
                         {% endif %}
                     {% endfor %}
                 </select>
-                <select id="dataSelect" >
+                <select id="dataVariantiSelect" >
                 </select>
 
 
@@ -29,13 +29,13 @@
 </div>
 <script>
 
-    var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+    var socketVarianti= io.connect("{{sockUrl}}"+'/preventivoVarianti');
 
 
-    function calcolaTotalePreventivo(numero_preventivo, data){
+    function calcolaTotalePreventivoVarianti(numero_preventivo, data){
         var totale = 0;
 
-        {% for preventivo in preventivi %}
+        {% for preventivo in preventiviVarianti %}
             if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
                 {% for lavorazione in preventivo[1][1] %}
                     totale += parseFloat('{{lavorazione[2]}}');
@@ -44,20 +44,20 @@
 
         {% endfor %}
 
-        $('#totalePrev').html( '<span>Totale: &euro; '+ totale +'</span>');
+        $('#totalePrevVarianti').html( '<span>Totale: &euro; '+ totale +'</span>');
 
     }
 
-    /*Stampa l'antemprima del preventivo edile*/
-    function stampaRiassuntoPreventivo( numero_preventivo, data ){
+    /*Stampa l'antemprima del preventivo varianti*/
+    function stampaRiassuntoPreventivoVarianti( numero_preventivo, data ){
 
-                    $('section#one').children('.inner').children('.features').remove();
+                    $('section#three').children('.inner').children('.features').remove();
 
                     strToAdd = '';
-                    {% for preventivo in preventivi %}
+                    {% for preventivo in preventiviVarianti %}
                         if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
                             strToAdd = '<div class="features"> \
-                                            <div id="tabFatturaPaginaCliente" class="table-wrapper"> \
+                                            <div id="tabVariantiPaginaCliente" class="table-wrapper"> \
                                                     <table class="alt"> \
                                                         <thead> \
                                                             <tr> \
@@ -92,7 +92,7 @@
                                             </table>';
                             {% endfor %}
 
-                            strToAdd += '<div id="totalePrev"> \
+                            strToAdd += '<div id="totalePrevVarianti"> \
                                                     <span>Totale: </span> \
                                                 </div> \
                                             </div> \
@@ -100,19 +100,19 @@
                         }
                     {% endfor %}
 
-                    $(strToAdd).insertAfter("#titlePreventivoSpan");
-                    calcolaTotalePreventivo(numero_preventivo, data);
+                    $(strToAdd).insertAfter("#titlePreventivoVariantiSpan");
+                    calcolaTotalePreventivoVarianti(numero_preventivo, data);
 
     }
 
-    function impostaSelectDataPreventivoEdile(numero_preventivo){
+    function impostaSelectDataPreventivoVarianti(numero_preventivo){
 
         var firstCycle=true;
 
         //resetto il select togliendo tutti i tag option
-        $('#dataSelect').html('');
+        $('#dataVariantiSelect').html('');
 
-        {% for preventivo in preventivi %}
+        {% for preventivo in preventiviVarianti %}
             var optionElement = "";
 
             // di default setto come data quella piu' recente del piu' recente preventivo
@@ -127,44 +127,44 @@
             }
 
 
-            $('#dataSelect').append( optionElement );
+            $('#dataVariantiSelect').append( optionElement );
 
 
         {% endfor %}
     }
 
-    {% if countPreventivi > 0 %}
-        $('.aCtrlPreventivo').html(
-                '<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>'+
-                '<a id="cancellaPreventivo" class="fa fa-trash expandPreventivoIcon"></a>'
+    {% if countPreventiviVarianti > 0 %}
+        $('.aCtrlPreventivoVarianti').html(
+                '<a id="modificaPreventivoVarianti" class="fa fa-edit expandPreventivoIcon"></a>'+
+                '<a id="cancellaPreventivoVarianti" class="fa fa-trash expandPreventivoIcon"></a>'
         );
 
-        $('#modificaPreventivo').click(function(){
-            var selPrev = $('#preventivoSelect option:selected');
+        $('#modificaPreventivoVarianti').click(function(){
+            var selPrev = $('#preventivoVariantiSelect option:selected');
 
-            socketPreventivo.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
+            socketVarianti.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
                                                           'numero_preventivo': selPrev});
         });
 
-        $('#cancellaPreventivo').click(function(){
-             var selPrev = $('#preventivoSelect option:selected').attr('class').split('-')[1];
-             var selData = $('#dataSelect').val();
-             socketPreventivo.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
+        $('#cancellaPreventivoVarianti').click(function(){
+             var selPrev = $('#preventivoVariantiSelect option:selected').attr('class').split('-')[1];
+             var selData = $('#dataVariantiSelect').val();
+             socketVarianti.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
                                                           'numero_preventivo': selPrev,
                                                            'data': selData });
 
 
         });
 
-        impostaSelectDataPreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
-        stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
+        impostaSelectDataPreventivoVarianti('{{lastPreventivoVarianti[0].numero_preventivo}}');
+        stampaRiassuntoPreventivoVarianti('{{lastPreventivoVarianti[0].numero_preventivo}}', '{{lastPreventivoVarianti[0].data}}');
     {% endif %}
 
 
-    $('#newPreventivo').click(function(){
+    $('#newPreventivoVarianti').click(function(){
 
         swal.withFormAsync({
-            title: 'Inserire tipologia commessa:',
+            title: 'Selezionare una commessa:',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Ok',
@@ -172,51 +172,56 @@
             closeOnConfirm: true,
             formFields: [
 
-             { name: 'commessa',  placeholder: 'tipologia commessa' },
+                { id: 'select', type: 'select',
+                    options: [
+                    {% for prev in preventiviEdili_distinti %}
+                        {value: '{{prev[0]}}-{{prev[2]}}', text: '{{prev[0]}} - US{{prev[1]}}E'},
+                    {% endfor %}
 
+                    ]
+                }
 
             ]
         }).then(function (context) {
             if(context._isConfirm){
 
-                socketPreventivo.emit('registra_nuovo_preventivo',
+                    socketVarianti.emit('registra_nuovo_preventivo',
                                         { 'dip': '{{dipendente.username}}',
                                           'nome_cliente' : '{{cliente.nome}}',
                                           'cognome_cliente' : '{{cliente.cognome}}',
                                           'indirizzo_cliente' : '{{cliente.indirizzo}}',
-                                          'tipologia_commessa' : context.swalForm['commessa'] }
-                                     );
+                                          'numero_preventivo': context.swalForm['select'].split('-')[1],
+                                          'commessa': context.swalForm['select'].split('-')[0]
+                                        }
+                              );
 
             }
         });
 
+    });
 
+    $('#modificaPreventivoVarianti').click(function(){
+
+        var selectedPreventivo = $('#preventivoVariantiSelect option:selected').attr('class').split('-')[1];
+        socketVarianti.emit('modifica_preventivo_varianti', {'numero_preventivo': selectedPreventivo, 'dip': '{{dipendente.username}}' });
     });
 
 
-    $('#modificaPreventivo').click(function(){
+    $('#preventivoVariantiSelect').change(function(){
+        var selectedPreventivo = parseInt($('#preventivoVariantiSelect option:selected').attr('class').split('-')[1]);
 
-        var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
-        console.log("cliccato "+ selectedPreventivo);
-        socketPreventivo.emit('modifica_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'dip': '{{dipendente.username}}' });
-    });
+        impostaSelectDataPreventivoVarianti(selectedPreventivo);
 
-
-    $('#preventivoSelect').change(function(){
-        var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
-
-        impostaSelectDataPreventivoEdile(selectedPreventivo);
-
-        var selectedData = $('#dataSelect').val();
-        stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
+        var selectedData = $('#dataVariantiSelect').val();
+        stampaRiassuntoPreventivoVarianti(selectedPreventivo, selectedData);
 
 
     });
 
-    $('#dataSelect').change(function(){
-        var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
-        var selectedData = $('#dataSelect').val();
-        stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
+    $('#dataVariantiSelect').change(function(){
+        var selectedPreventivo = parseInt($('#preventivoVariantiSelect option:selected').attr('class').split('-')[1]);
+        var selectedData = $('#dataVariantiSelect').val();
+        stampaRiassuntoPreventivoVarianti(selectedPreventivo, selectedData);
     });
 
 

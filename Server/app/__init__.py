@@ -39,6 +39,7 @@ prezzarioEdileSettoreCorrente = None
 clienteSelezionato=None
 preventivoEdileSelezionato=None
 preventivoFinitureSelezionato=None
+preventivoVariantiSelezionato=None
 rigaPresente = False
 tabellaRigaPresente = None
 prezzarioProdottiTipoCorrente = None

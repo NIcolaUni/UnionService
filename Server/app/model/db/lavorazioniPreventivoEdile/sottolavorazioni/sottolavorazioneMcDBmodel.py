@@ -4,10 +4,12 @@ import app
 class SottolavorazioneMcDBmodel(app.database.Model):
     __tablename__ = "sottolavorazione_mc_preventivo_edile"
     __table_args__ = (
-            PrimaryKeyConstraint(  'numero_preventivo', 'data', 'ordine', 'ordine_sottolavorazione'),
-            ForeignKeyConstraint(['numero_preventivo', 'data', 'ordine'],
+            PrimaryKeyConstraint(  'numero_preventivo', 'data', 'ordine', 'tipologia', 'ordine_sottolavorazione'),
+            ForeignKeyConstraint(['numero_preventivo', 'data', 'ordine', 'tipologia'],
                                  ['lavorazione_preventivo_edile.numero_preventivo',
-                                  'lavorazione_preventivo_edile.data', 'lavorazione_preventivo_edile.ordine'],
+                                  'lavorazione_preventivo_edile.data',
+                                  'lavorazione_preventivo_edile.ordine',
+                                  'lavorazione_preventivo_edile.tipologia'],
                                  ondelete='CASCADE', onupdate='CASCADE')
             )
 
@@ -15,6 +17,7 @@ class SottolavorazioneMcDBmodel(app.database.Model):
     data = Column(Date)
     ordine = Column(Integer())  # dov e' posizionata  la lavorazione nel preventivo
     ordine_sottolavorazione = Column(Integer())
+    tipologia = Column(String(20))
 
     numero = Column(Integer())
     larghezza = Column(Float())

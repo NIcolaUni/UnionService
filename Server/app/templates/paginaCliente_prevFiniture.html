@@ -1,19 +1,19 @@
 <div class="inner">
 
-    <span id="titlePreventivoSpan">
+    <span id="titlePreventivoFinitureSpan">
         <span><h2><a id="newPreventivoFiniture" class="fa fa-plus-circle expandPreventivoIcon"></a> Scelta finiture</h2></span>
 
-        {% if countPreventivi > 0 %}
+        {% if countPreventiviFiniture > 0 %}
 
-            <span id="ctrlSpanPreventivo">
-                <span class="aCtrlPreventivo">
+            <span id="ctrlSpanPreventivoFiniture">
+                <span class="aCtrlPreventivoFiniture">
                 </span>
                 <select id="preventivoFinitureSelect" >
-                    {% for prev in preventivi_distinti %}
-                        {% if prev[2] == lastPreventivo[0].numero_preventivo %}
-                            <option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}F</option>
+                    {% for prev in preventiviFiniture_distinti %}
+                        {% if prev[2] == lastPreventivoFiniture[0].numero_preventivo %}
+                            <option class="numeroPreventivoFiniture-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}F</option>
                         {% else %}
-                            <option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}</option>
+                            <option class="numeroPreventivoFiniture-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}F</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -35,7 +35,7 @@
     $('#newPreventivoFiniture').click(function(){
 
         swal.withFormAsync({
-            title: 'Selezionare la commessa a cui si fa riferimento:',
+            title: 'Creare una nuova commessa o selezionare una già esistente:',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Ok',
@@ -43,10 +43,11 @@
             closeOnConfirm: true,
             formFields: [
 
+                { name: 'commessa',  placeholder: 'tipologia commessa' },
                 { id: 'select', type: 'select',
                     options: [
-                    {% for prev in preventivi_distinti %}
-                        {value: '{{prev[2]}}', text: '{{prev[0]}} - US{{prev[1]}}E'},
+                    {% for prev in preventiviEdili_distinti %}
+                        {value: '{{prev[0]}}-{{prev[2]}}', text: '{{prev[0]}} - US{{prev[1]}}E'},
                     {% endfor %}
 
                     ]
@@ -61,37 +62,161 @@
                                           'nome_cliente' : '{{cliente.nome}}',
                                           'cognome_cliente' : '{{cliente.cognome}}',
                                           'indirizzo_cliente' : '{{cliente.indirizzo}}',
-                                          'numero_preventivo': context.swalForm['select']
+                                          'numero_preventivo': context.swalForm['select'].split('-')[1],
+                                          'commessa': context.swalForm['select'].split('-')[0]
                                         }
                               );
 
             }
         });
 
-
-
-
-
-
     });
 
+    function calcolaTotalePreventivoFiniture(numero_preventivo, data){
+        var totale = 0;
 
-/*
-    $('#modificaPreventivo').click(function(){
+        {% for preventivo in preventiviFiniture %}
+            if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
+                {% for prodotto in preventivo[1][1] %}
+                    totale += parseFloat('{{prodotto.diffCapitolato}}');
+                {% endfor %}
+            }
 
-        var selectedPreventivo = $('#preventivoFinitureSelect option:selected').attr('class').split('-')[1];
-        console.log("cliccato "+ selectedPreventivo);
-        socketPreventivo.emit('modifica_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'dip': '{{dipendente.username}}' });
-    });
+        {% endfor %}
+
+        $('#totalePrevFiniture').html( '<span>Totale: &euro; '+ Math.round(totale*100)/100 +'</span>');
+
+    }
+
+    /*Stampa l'antemprima del preventivo edile*/
+    function stampaRiassuntoPreventivoFiniture( numero_preventivo, data ){
+
+                    $('section#two').children('.inner').children('.features').remove();
+
+                    strToAdd = '';
+                    {% for preventivo in preventiviFiniture %}
+                        if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
+                            strToAdd = '<div class="features"> \
+                                            <div id="tabFiniturePaginaCliente" class="table-wrapper"> \
+                                                    <table class="alt"> \
+                                                        <thead> \
+                                                            <tr> \
+                                                                <th class="tdProdotto tdString">Prodotto</th> \
+                                                                <th class="tdCodice tdString">Codice</th> \
+                                                                <th class="tdMarchio tdString">Marchio</th> \
+                                                                <th class="tdModello tdString">Modello</th> \
+                                                                <th class="tdQuantita tdShortNum">Quantità</th> \
+                                                                <th class="tdUnitaMisura tdShortNum">Unità misura</th> \
+                                                                <th class="tdDiffCapitolato tdLongNum">diff.<br/> CAPITOLATO </th> \
+                                                            </tr> \
+                                                        </thead> \
+                                                    </table>';
+
+
+                            {% for tipologia in preventivo[1][0] %}
+                                strToAdd += '<table class="alt"> \
+                                            <tbody> \
+                                                <tr> \
+                                                    <td colspan="7">{{tipologia}}</td> \
+                                                </tr>';
+
+                                {% for prodotto in preventivo[1][1] %}
+                                    {% if prodotto.tipologia == tipologia %}
+                                        strToAdd +=	'<tr> \
+                                                         <td class="tdProdotto tdString">{{prodotto.nome_prodotto}}</td> \
+                                                         <td class="tdCodice tdString">{{prodotto.codice}}</td> \
+                                                         <td class="tdMarchio tdString">{{prodotto.marchio}}</td> \
+                                                         <td class="tdModello tdString">{{prodotto.modello}}</td> \
+                                                         <td class="tdQuantita tdShortNum">{{prodotto.quantita}}</td> \
+                                                         <td class="tdUnitaMisura tdShortNum">{{prodotto.unitaMisura}}</td> \
+                                                         <td class="tdDiffCapitolato tdLongNum">&euro; {{prodotto.diffCapitolato}}</td> \
+                                                     </tr>';
+                                    {% endif %}
+                                {% endfor %}
+
+                                strToAdd +=	'</tbody> \
+                                            </table>';
+                            {% endfor %}
+
+                            strToAdd += '<div id="totalePrevFiniture"> \
+                                                    <span>Totale: </span> \
+                                                </div> \
+                                            </div> \
+                                        </div>';
+                        }
+                    {% endfor %}
+
+                    $(strToAdd).insertAfter("#titlePreventivoFinitureSpan");
+                    calcolaTotalePreventivoFiniture(numero_preventivo, data);
+
+    }
+
+
+    function impostaSelectDataPreventivoFiniture(numero_preventivo){
+
+        var firstCycle=true;
+
+        //resetto il select togliendo tutti i tag option
+        $('#dataFinitureSelect').html('');
+
+        {% for preventivo in preventiviFiniture %}
+            var optionElement = "";
+
+            // di default setto come data quella piu' recente del piu' recente preventivo
+            // generato per questo cliente
+            if( "{{preventivo[0].numero_preventivo}}" == numero_preventivo ){
+                if( firstCycle ){
+                    optionElement = '<option selected="selected" value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+                    firstCycle=false;
+                }
+                else
+                    optionElement = '<option value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+            }
+
+
+            $('#dataFinitureSelect').append( optionElement );
+
+
+        {% endfor %}
+    }
+
+    {% if countPreventiviFiniture > 0 %}
+        $('.aCtrlPreventivoFiniture').html(
+                '<a id="modificaPreventivoFiniture" class="fa fa-edit expandPreventivoIcon"></a>'+
+                '<a id="cancellaPreventivoFiniture" class="fa fa-trash expandPreventivoIcon"></a>'
+        );
+
+        $('#modificaPreventivoFiniture').click(function(){
+            var selPrev = $('#preventivoSelect option:selected');
+
+           /* socketPreventivo.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
+                                                          'numero_preventivo': selPrev});*/
+        });
+
+        $('#cancellaPreventivo').click(function(){
+             var selPrev = $('#preventivoSelect option:selected').attr('class').split('-')[1];
+             var selData = $('#dataSelect').val();
+             /*socketPreventivo.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
+                                                          'numero_preventivo': selPrev,
+                                                           'data': selData });*/
+
+
+        });
+
+        impostaSelectDataPreventivoFiniture('{{lastPreventivoFiniture[0].numero_preventivo}}');
+        stampaRiassuntoPreventivoFiniture('{{lastPreventivoFiniture[0].numero_preventivo}}', '{{lastPreventivoFiniture[0].data}}');
+    {% endif %}
+
+
 
 
     $('#preventivoFinitureSelect').change(function(){
         var selectedPreventivo = parseInt($('#preventivoFinitureSelect option:selected').attr('class').split('-')[1]);
 
-        impostaSelectDataPreventivoEdile(selectedPreventivo);
+        impostaSelectDataPreventivoFiniture(selectedPreventivo);
 
         var selectedData = $('#dataFinitureSelect').val();
-        stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
+        stampaRiassuntoPreventivoFiniture(selectedPreventivo, selectedData);
 
 
     });
@@ -99,10 +224,8 @@
     $('#dataFinitureSelect').change(function(){
         var selectedPreventivo = parseInt($('#preventivoFinitureSelect option:selected').attr('class').split('-')[1]);
         var selectedData = $('#dataFinitureSelect').val();
-        stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
+        stampaRiassuntoPreventivoFiniture(selectedPreventivo, selectedData);
     });
-*/
-
 
 
 </script>

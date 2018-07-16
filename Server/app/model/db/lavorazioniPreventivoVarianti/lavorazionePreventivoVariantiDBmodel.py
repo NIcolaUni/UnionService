@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Float, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
 import app
 
-class LavorazionePreventivoDBmodel(app.database.Model):
-    __tablename__ = "lavorazione_preventivo_edile"
+class LavorazionePreventivoVariantiDBmodel(app.database.Model):
+    __tablename__ = "lavorazione_preventivo_varianti"
     __table_args__ = (
             PrimaryKeyConstraint( 'numero_preventivo', 'data', 'tipologia', 'ordine' ),
             ForeignKeyConstraint(['numero_preventivo', 'data', 'tipologia'],

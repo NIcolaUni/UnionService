@@ -3989,7 +3989,45 @@ button.elementFattura {
 
   }
 
+  #preventivoFinitureSelect{
+    width: 40%;
+    display: inline-block;
+    margin-left: 20%;
+  }
+
+  #dataFinitureSelect{
+    width: 14%;
+    display: inline-block;
+
+  }
+
+  #preventivoVariantiSelect{
+    width: 40%;
+    display: inline-block;
+    margin-left: 20%;
+  }
+
+  #dataVariantiSelect{
+    width: 14%;
+    display: inline-block;
+
+  }
+
+
+
     #ctrlSpanPreventivo {
+        height: 50%;
+        display: inline-block;
+        width: 100%;
+    }
+
+    #ctrlSpanPreventivoFiniture {
+        height: 50%;
+        display: inline-block;
+        width: 100%;
+    }
+
+     #ctrlSpanPreventivoVarianti {
         height: 50%;
         display: inline-block;
         width: 100%;
@@ -4001,13 +4039,31 @@ button.elementFattura {
         width: 100%;
     }
 
-    .aCtrlPreventivo{
-
+    span#titlePreventivoFinitureSpan {
+        height: 100%;
+        display: inline-block;
+        width: 100%;
     }
+
+    span#titlePreventivoVariantiSpan {
+        height: 100%;
+        display: inline-block;
+        width: 100%;
+    }
+
 
     #tabFatturaPaginaCliente{
         width: 100%;
     }
+
+    #tabFiniturePaginaCliente{
+        width: 100%;
+    }
+
+    #tabVariantiPaginaCliente{
+        width: 100%;
+    }
+
 
     #totalePrev{
         height: 40px;
@@ -4018,6 +4074,27 @@ button.elementFattura {
         right: 8%;
         position: absolute;
     }
+
+     #totalePrevFiniture{
+        height: 40px;
+    }
+
+
+    #totalePrevFiniture > span{
+        right: 8%;
+        position: absolute;
+    }
+
+     #totalePrevVarianti{
+        height: 40px;
+    }
+
+
+    #totalePrevVarianti > span{
+        right: 8%;
+        position: absolute;
+    }
+
 
     .tdTotale {
         width: 10%;
@@ -4144,3 +4221,16 @@ button.elementPreventivo {
     width: 100%;
     padding-right: 0.5em;
   }
+
+    .tdString{
+        width: 205px;
+
+    }
+
+    .tdShortNum {
+        width: 120px;
+    }
+
+    .tdLongNum {
+        width: 200px;
+    }

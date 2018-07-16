@@ -202,15 +202,40 @@
             }
 
             //codice per riempire il #bodyPrezzario
-            {% for prodotto in prodotti %}
-                if( "{{prodotto.tipologia}}" == $("#selectTipologia").val()) {
+            {% for modello in modelli %}
+                if( "{{modello.tipologia}}" == $("#selectTipologia").val()) {
 
-                    {% if prodotto.daVerificare %}
+                    {% if modello.daVerificare %}
                         var classiTr="rowBodyTab daVerificare" ;
                     {% else %}
                         var classiTr="rowBodyTab";
 
                     {% endif %}
+
+                    {% for fornitore in fornitori %}
+                        console.log('santi Numi');
+                       {% if fornitore.nome == modello.fornitore_sotto_gruppo and fornitore.gruppo_azienda == modello.fornitore_primo_gruppo %}
+                         console.log('how is possible');
+
+                         {% if modello.versoDiLettura %}
+                            console.log('in teoria entro qua {{fornitore.scontoStandard}}');
+                            var toAppend = stampaValore(  {{fornitore.scontoStandard}}, 11, "%","colMedium"  )+
+                                            stampaValore( {{fornitore.scontoExtra1}}, 12, "%","numColSmall"  )+
+                                            stampaValore( {{fornitore.scontoExtra2}}, 13, "%","numColSmall"  )+
+                                            stampaValore( {{fornitore.trasporto}}, 14, "&euro;","numColSmall"  )+
+                                            stampaValore( {{fornitore.imballo}}, 15, "&euro;","numColSmall"  );
+                         {% else %}
+
+                            var toAppend = stampaValore( 0, 11, "&euro;","colMedium"  )+
+                                            stampaValore( 0, 12, "%","numColSmall"  )+
+                                            stampaValore( 0, 13, "&euro;","numColSmall"  )+
+                                            stampaValore( 0, 14, "&euro;","numColSmall"  )+
+                                            stampaValore( 0, 15, "%","numColSmall"  );
+
+                         {% endif %}
+
+                       {% endif %}
+                    {% endfor %}
 
                     $("#bodyPrezzario").append(
                           '<tr class="'+ classiTr +'">'+
@@ -229,25 +254,24 @@
                                       '</div>'+
 
                                 '</td>'+
-                                '<td  class="nome_prodotto" data-column="column2">{{prodotto.nome}}</td>'+
-                                '<td  class="numColMedium" data-column="column3">{{prodotto.marchio}}</td>'+
-                                '<td  class="numColMedium" data-column="column4">{{prodotto.codice}}</td>'+
-                                '<td  class="colMedium" data-column="column5">{{prodotto.fornitore_primo_gruppo}} - {{prodotto.fornitore_sotto_gruppo}}</td>'+
-                                stampaValore( {{prodotto.prezzoListino}}, 6, "&euro;","numColSmall" )+
-                                stampaValore( {{prodotto.prezzoNettoListino}}, 7, "&euro;","numColSmall"  )+
-                                stampaValore( {{prodotto.rincaroListino}}, 8, "%","numColSmall"  )+
-                                stampaValore( {{prodotto.nettoUs}}, 9, "&euro;","numColSmall"  )+
-                                stampaValore( {{prodotto.rincaroTrasporto}}, 10, "&euro;","colMedium"  )+
+                                '<td  class="nome_prodotto" data-column="column2">{{modello.prodotto}}</td>'+
+                                '<td  class="numColMedium" data-column="column3">{{modello.marchio}}</td>'+
+                                '<td  class="numColMedium" data-column="column4">{{modello.codice}}</td>'+
+                                '<td  class="colMedium" data-column="column5">{{modello.fornitore_primo_gruppo}} - {{modello.fornitore_sotto_gruppo}}</td>'+
+                                stampaValore( {{modello.prezzoListinoFornituraPosa}}, 6, "&euro;","numColSmall" )+
+                                stampaValore( {{modello.prezzoListinoFornitura}}, 7, "&euro;","numColSmall"  )+
+                                stampaValore( {{modello.rincaroAzienda}}, 8, "%","numColSmall"  )+
+                                stampaValore( {{modello.trasportoAzienda}}, 9, "&euro;","numColSmall"  )+
+                                stampaValore( {{modello.imballoAzienda}}, 10, "&euro;","colMedium"  )+
 
+                                toAppend+
 
-                                stampaValore( {{prodotto.rincaroMontaggio}}, 11, "&euro;","colMedium"  )+
-                                stampaValore( {{prodotto.scontoUs}}, 12, "%","numColSmall"  )+
-                                stampaValore( {{prodotto.scontoEx1}}, 13, "&euro;","numColSmall"  )+
-                                stampaValore( {{prodotto.scontoEx2}}, 14, "&euro;","numColSmall"  )+
-                                stampaValore( {{prodotto.scontoImballo}}, 15, "%","numColSmall"  )+
-                                stampaValore( {{prodotto.rincaroTrasporto2}}, 16, "&euro;","colMedium"  )+
-                                stampaValore( {{prodotto.rincaroCliente}}, 17, "%","numColSmall"  )+
-                                '<td  class="numColMedium" data-column="column18">Totale cliente</td>'+
+                                stampaValore( {{modello.posa}}, 16, "&euro;","colMedium"  )+
+                                stampaValore( {{modello.nettoUsFornitura}}, 17, "%","numColSmall"  )+
+                                stampaValore( {{modello.nettoUsFornituraPosa}}, 18, "&euro;","colMedium"  )+
+                                stampaValore( {{modello.rincaroCliente}}, 19, "%","numColSmall"  )+
+
+                                '<td  class="numColMedium" data-column="column20">Totale cliente</td>'+
                                 '</td>'+
 
                           '</tr>'
