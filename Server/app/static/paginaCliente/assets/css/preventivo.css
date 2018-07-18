@@ -255,3 +255,57 @@ textarea {
   transition: all 0.4s ease!important;
 }
 
+.sweet-alert {
+   top: 15%;
+   left: 30%!important;
+}
+
+select#sconto{
+    border: solid 1px #dcdcdc;
+    height: 40px !important;
+}
+
+input#iva {
+    width: 10% !important;
+    display: inline;
+    height: 30px;
+    margin-bottom: 5%;
+}
+
+input#scontoTipo {
+    width: 10% !important;
+    display: inline;
+    height: 30px;
+    margin-bottom: 5%;
+}
+
+input#acorpo {
+    margin-left: 12%;
+}
+
+
+input[type="checkbox"] + label, input[type="radio"] + label {
+    color: black;
+    font-size: 1em;
+    font-weight: bold;
+
+    padding-right: 0!important;
+
+}
+
+input[type="checkbox"]:checked + label:before, input[type="radio"]:checked + label:before {
+    background: #ffffff;
+    border-color: #dcdcdc;
+    color: #b74e91;
+    content: '\f00c';
+}
+
+input[type="checkbox"] + label:before, input[type="radio"] + label:before {
+
+    border: solid 1px #dcdcdc;
+
+}
+
+.swal-form label{
+        display: inline;
+ }

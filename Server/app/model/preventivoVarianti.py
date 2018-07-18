@@ -11,6 +11,7 @@ from sqlalchemy import desc, func
 import datetime
 import app
 import os
+import math
 
 class __SottolavorazioneVariantiCadPreventivo__(SottolavorazioneVariantiCadDBmodel):
     def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero):
@@ -88,12 +89,15 @@ class PreventivoVarianti(PreventivoDBmodel):
 
     def __init__(self, numero_preventivo, data, nome_cliente, cognome_cliente,
                  indirizzo_cliente, dipendente_generatore, intervento_commessa,
-                 indirizzo_commessa, comune_commessa,
-                 dipendente_ultimaModifica=None, stato=True):
+                 indirizzo_commessa, comune_commessa, stato=True):
 
-        commessa = __Commessa__(numero_preventivo=numero_preventivo, intervento=intervento_commessa,
-                                indirizzo=indirizzo_commessa, comune=comune_commessa)
-        __Commessa__.addRow(commessa)
+        oldCommessa = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo,
+                                                   intervento=intervento_commessa).first()
+
+        if oldCommessa is None:
+            commessa = __Commessa__(numero_preventivo=numero_preventivo, intervento=intervento_commessa,
+                                    indirizzo=indirizzo_commessa, comune=comune_commessa)
+            __Commessa__.addRow(commessa)
 
         self.numero_preventivo=numero_preventivo
         self.data = data
@@ -105,10 +109,6 @@ class PreventivoVarianti(PreventivoDBmodel):
         self.tipologia = 'varianti'
         self.stato = stato
 
-        if dipendente_ultimaModifica is None:
-            self.dipendente_ultimaModifica = dipendente_generatore
-        else:
-            self.dipendente_ultimaModifica = dipendente_ultimaModifica
 
     def calcolaCodicePreventivo(self):
         #recupero le ultime due cifre dell'anno di creazione
@@ -119,24 +119,43 @@ class PreventivoVarianti(PreventivoDBmodel):
 
         return str(self.numero_preventivo)+dipendente+str(annoPreventivo)
 
+    def calcolaCodicePreventivoNoObj(numero_preventivo, data):
 
-    def registraPreventivo( nome_cliente, cognome_cliente, indirizzo_cliente ,
-                            dipendente_generatore, numero_preventivo, intervento_commessa,
-                            indirizzo_commessa, comune_commessa):
+        prev = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='varianti').first()
 
-        if PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo).first() is not None:
-            dip=Dipendente.query.filter_by(username=dipendente_generatore).first()
-            return PreventivoVarianti.modificaPreventivo(numero_preventivo, dip)
+        #recupero le ultime due cifre dell'anno di creazione
+        annoPreventivo = prev.data.year%100
 
+        #recupero le prime tre lettere del cognome del cliente
+        dipendente = prev.dipendente_generatore.split('_')[1][0:3].upper()
+
+        return str(prev.numero_preventivo)+dipendente+str(annoPreventivo)
+
+    def registraPreventivo( dipendente_generatore, numero_preventivo ):
+
+
+        oldPrev = PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo,
+                                                     tipologia='varianti').order_by(desc(PreventivoVarianti.data)).first()
+
+        if oldPrev is not None:
+            return PreventivoVarianti.modificaPreventivo(numero_preventivo=numero_preventivo, data=oldPrev.data,
+                                                  dipendente_generatore=dipendente_generatore)
 
         now = datetime.datetime.now()
         oggi = "{}/{}/{}".format(now.day, now.month, now.year)
 
-        preventivo = PreventivoVarianti(numero_preventivo=numero_preventivo, data=oggi, nome_cliente=nome_cliente,
-                                     cognome_cliente=cognome_cliente, indirizzo_cliente=indirizzo_cliente,
+
+
+        prevEdile = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, tipologia='edile').first()
+
+        commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
+                                                   intervento=prevEdile.intervento_commessa).first()
+
+        preventivo = PreventivoVarianti(numero_preventivo=numero_preventivo, data=oggi, nome_cliente=prevEdile.nome_cliente,
+                                     cognome_cliente=prevEdile.cognome_cliente, indirizzo_cliente=prevEdile.indirizzo_cliente,
                                      dipendente_generatore=dipendente_generatore,
-                                     intervento_commessa=intervento_commessa,
-                                     indirizzo_commessa=indirizzo_commessa, comune_commessa=comune_commessa)
+                                     intervento_commessa=commessa.intervento,
+                                     indirizzo_commessa=commessa.indirizzo, comune_commessa=commessa.comune)
 
         PreventivoDBmodel.addRow(preventivo)
 
@@ -202,7 +221,7 @@ class PreventivoVarianti(PreventivoDBmodel):
 
         return returnList
 
-    def modificaPreventivo(numero_preventivo, dipendente_ultimaModifica):
+    def modificaPreventivo(numero_preventivo, data, dipendente_generatore):
         '''
          Prende il preventivo che corrisponde al "numero_preventivo" passato come argomento e con la data
          piu' recente, ne fa una copia ( compresa di lavorazioni e sottolavorazioni ) cambiando unicamente
@@ -213,29 +232,25 @@ class PreventivoVarianti(PreventivoDBmodel):
         :return:
         '''
 
-        lastPrev = PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo).order_by(desc(PreventivoVarianti.data)).first()
+        lastPrev = PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='varianti').first()
         now = datetime.datetime.now()
         oggi = "{}-{}-{}".format(now.year, now.month, now.day)
 
         #se il preventivo viene modificato piu' volte lo stesso giorno o viene modificato
-        # il giorno non viene fatta alcuna copia e viene unicamente modificato
-        # il parametro "dipendente_ultimaModifica"
+        # il giorno non viene fatta alcuna copia"
 
         if str(now).split(' ')[0] == str(lastPrev.data):
-            PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo).update(
-                        {'dipendente_ultimaModifica' : dipendente_ultimaModifica.username})
-
-            PreventivoVarianti.commit()
-
             return (numero_preventivo, oggi)
 
-        preventivo = PreventivoVarianti(numero_preventivo=lastPrev.numero_preventivo, data=oggi, nome_cliente=lastPrev.nome_cliente,
+        commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
+                                                   intervento=lastPrev.intervento_commessa).first()
+
+        preventivo = PreventivoVarianti(numero_preventivo=numero_preventivo, data=oggi, nome_cliente=lastPrev.nome_cliente,
                                      cognome_cliente=lastPrev.cognome_cliente, indirizzo_cliente=lastPrev.indirizzo_cliente,
-                                     dipendente_generatore=lastPrev.dipendente_generatore,
-                                     intervento_commessa=lastPrev.intervento_commessa,
-                                     indirizzo_commessa=lastPrev.indirizzo_commessa,
-                                     comune_commessa=lastPrev.comune_commessa,
-                                     dipendente_ultimaModifica=dipendente_ultimaModifica.username)
+                                     dipendente_generatore=dipendente_generatore,
+                                     intervento_commessa=commessa.intervento,
+                                     indirizzo_commessa=commessa.indirizzo,
+                                     comune_commessa=commessa.comune)
 
 
         PreventivoDBmodel.addRow(preventivo)
@@ -672,7 +687,7 @@ class PreventivoVarianti(PreventivoDBmodel):
 
     def returnLastPreventivoCliente(nome_cliente, cognome_cliente, indirizzo_cliente):
 
-        last_prev = PreventivoVarianti.query.filter_by(nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
+        last_prev = PreventivoVarianti.query.filter_by(tipologia='varianti', nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
                                                      indirizzo_cliente=indirizzo_cliente).order_by(desc(PreventivoVarianti.data), desc(PreventivoVarianti.numero_preventivo)).first()
 
         if last_prev is None:
@@ -696,7 +711,7 @@ class PreventivoVarianti(PreventivoDBmodel):
                  chiamata a PreventivoVarianti.returnSinglePreventivo()
         '''
 
-        preventivi = PreventivoVarianti.query.filter_by(nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
+        preventivi = PreventivoVarianti.query.filter_by(tipologia='varianti', nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
                                                      indirizzo_cliente=indirizzo_cliente).order_by(
                                                         PreventivoVarianti.numero_preventivo, desc(PreventivoVarianti.data)).all()
 
@@ -708,129 +723,426 @@ class PreventivoVarianti(PreventivoDBmodel):
         return returnList
 
     def get_counter_preventivi_per_cliente(nome_cliente, cognome_cliente, indirizzo_cliente):
-        q = PreventivoVarianti.query.filter_by(nome_cliente=nome_cliente, cognome_cliente=cognome_cliente, indirizzo_cliente=indirizzo_cliente)
+        q = PreventivoVarianti.query.filter_by(tipologia='varianti', nome_cliente=nome_cliente, cognome_cliente=cognome_cliente, indirizzo_cliente=indirizzo_cliente)
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
         count = q.session.execute(count_q).scalar()
         return count
 
     def get_counter_preventivi_per_numero(numero_preventivo):
-        q = PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo)
+        q = PreventivoVarianti.query.filter_by(tipologia='varianti', numero_preventivo=numero_preventivo)
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
         count = q.session.execute(count_q).scalar()
         return count
 
+    def chiudiPreventivo(numero_preventivo):
 
+        preventivi = PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo, tipologia='varianti').order_by(
+            desc(PreventivoVarianti.data)).all()
 
-    def stampaPreventivo(numero_preventivo, data):
+        primo_giro = True
 
-        preventivo = PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo, data=data).first()
+        for prev in preventivi:
+            if primo_giro:
+                primo_giro = False
+                prev.stato = False
+                PreventivoVarianti.commit()
+
+            else:
+                PreventivoVarianti.delRow(prev)
+
+    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, acorpo):
+
+        if chiudiPreventivo:
+            PreventivoVarianti.chiudiPreventivo(numero_preventivo)
+
+        scontoDaApplicare = sconto
+
+        preventivo = PreventivoVarianti.query.filter_by(tipologia='varianti', numero_preventivo=numero_preventivo,
+                                                     data=data).first()
+
+        dipendente = Dipendente.query.filter_by(username=preventivo.dipendente_generatore).first()
 
         cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente,
                                                  indirizzo=preventivo.indirizzo_cliente).first()
 
         infoPreventivo = PreventivoVarianti.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
 
+        codicePrev = PreventivoVarianti.calcolaCodicePreventivoNoObj(numero_preventivo, data)
+
+        commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
+                                                   intervento=preventivo.intervento_commessa).first()
+
+        contaLavorazioni = 0
+
         now = datetime.datetime.now()
         oggi = "{}/{}/{}".format(now.day, now.month, now.year)
 
-
-        latexScript ='''    
-                        \\documentclass[pdftex,11pt,a4paper]{article} 
+        latexScript = '''
+                        \\documentclass[a4paper]{article}
                         \\usepackage{graphicx}
                         \\graphicspath{ {./Immagini/} }
-                        
-                        \\usepackage[legalpaper]{geometry}
+                        \\usepackage{setspace}
                         \\usepackage{eurosym}
                         \\usepackage{xcolor}
-                        \\geometry{
-                        a4paper,
-                        left=30mm,
-                        right=30mm,
-                        top=10mm,
-                        }
-                        
+                        \\usepackage{tabularx}
+                        \\usepackage[top=1.7cm, bottom=1.7cm, left=2.6cm, right=2.6cm]{geometry}
+
                         \\usepackage{fancyhdr}
                         \\pagestyle{fancy}
-                        \\fancyfoot[C]{UnionService Srl. Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
-                                      Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097 \\\\\\thepage }
-                        
-                        \\renewcommand{\\headrulewidth}{0pt}
-                        \\renewcommand{\\footrulewidth}{1pt}
-                        
-                        \\begin{document}
-                        \\begin{figure}[!t]
-                        \\includegraphics[width=\\textwidth]{intestazioneAlta.jpg}
-                        \\end{figure}
-                        
-                        \\begin{center}
-                        \\begin{tabular}{ l  l }
-                    '''
-
-        latexScript += 'Nominativo: & {} {} \\\\'.format(cliente.nome, cliente.cognome)
-        latexScript += 'Indirizzo: &  {}  \\\\'.format(cliente.indirizzo)
-        latexScript += 'Telefono: &  {} \\\\'.format(cliente.telefono)
-
-        latexScript += ' Tipologia commessa: & {} \\\\'.format(preventivo.tipologia_commessa)
-        latexScript += '''         
-                        \\end{tabular}
-                        \\end{center}
-                        
+                        \\lhead{}
+                        \\chead{} 
                       '''
+
+        latexScript += '\\rhead{US' + codicePrev + 'V}'
+
         latexScript += '''
-                        \\vspace{5mm}
-                        \\begin{center}
-                        \\begin{tabular}{| p{1cm} | p{5cm} | l | l |}
-                        \\hline
-                        \\textbf{Pos.} & \\textbf{Descrizione} & \\textbf{Quantit\\'a}  & \\textbf{Prezzo Totale} \\\\ 
+                        \\lfoot{\\thepage}
+                        \\cfoot{
+                            \\begin{spacing}{0.5}
+                            {\\scriptsize
+                              \\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
+                              Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
+                            }
+                            \\end{spacing}
+                        }
+                        \\rfoot{}
+                        \\renewcommand{\\headrulewidth}{0pt}
+                        \\renewcommand{\\footrulewidth}{0.4pt}
+
+                        \\usepackage{array}
+                        \\usepackage{ragged2e}
+                        \\newcolumntype{R}[1]{>{\\RaggedLeft\\hspace{0pt}}p{#1}}
+                        \\newcolumntype{L}[1]{>{\\RaggedRight\\hspace{0pt}}p{#1}}
+
+                        \\renewcommand{\\arraystretch}{0}
+
+                        \\begin{document}
+
+                        \\begin{figure}[!t]
+                        \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
+                        \\end{figure}
+
+                        \\noindent\\begin{tabular}{| L{72.2mm} |}
+                            \\hline
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                            \\textbf{COMMESSA}
+                            \\end{spacing}\\\\
+                            \\hline
+                            \\vspace{4mm}
+                            \\begin{spacing}{1.2}
+
+                        '''
+        latexScript += commessa.intervento.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                                  "\\'u").replace(
+            "ì", "\\'i") + ' \\newline '
+        latexScript += commessa.indirizzo.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                                 "\\'u").replace(
+            "ì", "\\'i") + ' \\newline ' + commessa.comune.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                             "\\'o").replace(
+            "ù", "\\'u").replace("ì", "\\'i")
+        latexScript += '''
+                          \\end{spacing}\\\\
+                            \\hline
+                          \\end{tabular}
+                          \\quad
+                          \\begin{tabular}{ | R{72.2mm} | }
+                            \\hline
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                            \\textbf{CLIENTE}
+                            \\end{spacing}\\\\
+                            \\hline
+                            \\vspace{4mm}
+                            \\begin{spacing}{1.2}
+
                        '''
-        totale =0
+        latexScript += cliente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                           "\\'u").replace(
+            "ì", "\\'i") + ' ' + cliente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace(
+            "ù", "\\'u").replace("ì", "\\'i") + ' \\newline '
+        latexScript += 'tel. ' + str(cliente.telefono) + ' \\newline '
+        latexScript += cliente.indirizzo.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                                "\\'u").replace(
+            "ì", "\\'i")
 
-        for settore in infoPreventivo[0]:
-            latexScript += '\\hline'
-            latexScript += '& {} & & \\\\ \\hline'.format(settore)
-
-            for lav in infoPreventivo[1]:
-                if lav[0].settore == settore:
-                    latexScript += '{} & {} & {} {} & \\euro  {} \\\\'.format(lav[0].ordine, lav[0].tipologia_lavorazione,lav[1], lav[0].unitaMisura, lav[2])
-                    totale += float( lav[2])
-
-        latexScript += '\\hline'
-        latexScript += ' & & & Totale: \\euro {} \\\\'.format(totale)
         latexScript += '''
-                        \\hline
-                        \\end{tabular}
-                        \\end{center}
+                          \\end{spacing}\\\\
+                            \\hline
+                          \\end{tabular}
+
+                          \\begin{center}
+                          \\begin{tabular}{|L{89mm} R{60mm}| }
+                          \\hline
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Preventivo Varianti}
+                          \\end{spacing}&
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+
+                     '''
+
+        latexScript += oggi
+
+        latexScript += '''
+
+                          \\end{spacing}\\\\
+                          \\hline
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Validit\\'a:}
+                       '''
+        validita= datetime.timedelta(days=30) + datetime.datetime.now()
+
+        validita = "{}/{}/{}".format(validita.day, validita.month, validita.year)
+
+        latexScript += validita
+        latexScript += '''
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Operatore:}
+
                        '''
 
+        latexScript += dipendente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                              "\\'u").replace(
+            "ì", "\\'i") + ' ' + dipendente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                      "\\'o").replace(
+            "ù", "\\'u").replace("ì", "\\'i")
+
         latexScript += '''
-                        \\vspace{20mm}
-                        \\textbf{Dalla seguente offera sono escluse:}
-                        \\begin{itemize}
-                            \\item IVA e qualsiasi altro onere fiscale;
-                            \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
-                            \\item Costi di energia elettrica e acqua ad uso cantiere;
-                            \\item Qualsiasi altra voce non citata;
-                            \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
-                            \\item Pratica per detrazioni fiscali da quantificare;
-                        \\end{itemize}
-                        \\
-                        \\textbf{Pagamenti}
-                        \\begin{itemize}
-                            \\item Da concordare in fase di accetazione.
-                        \\end{itemize}
-                        \\
-                        \\textcolor{red}{La presente offerta ha validit\\'a 30 giorni dalla data odierna.}\\\\
-                        \\\\
-                        \\textbf{Data:} \\hfill  \\textbf{FIRMA per ACCETTAZIONE:} \\\\
+                          \\end{spacing} \\\\
+                          \\hline
+                          \\end{tabular}
+                          \\end{center}
+
+                          \\noindent\\begin{tabular}{ | L{10mm} |  L{86mm} | L{12mm} | L{12mm} | L{16mm} | }
+                          \\hline
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Pos.}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Descrizione}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Qnt.}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{U.M.}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Importo}
+                          \\end{spacing} \\\\
+                          \\hline
+                          %FINE HEADER
+                       '''
+
+        totalePreventivo = 0
+
+        for lav in infoPreventivo[1]:
+            contaLavorazioni += 1
+            latexScript += '''
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+            latexScript += '{}'.format(contaLavorazioni)
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+
+            latexScript += lav[0].tipologia_lavorazione.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                          "\\'o").replace(
+                "ù", "\\'u").replace("ì", "\\'i")
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+
+            if acorpo:
+                latexScript += '-'
+            else:
+                latexScript += '{}'.format(lav[1])
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+
+            if acorpo:
+                latexScript += 'a corpo'
+            else:
+                latexScript += lav[0].unitaMisura
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                                \\euro\\hfill 
+                            '''
+            latexScript += '{}'.format(lav[2])
+            totalePreventivo += lav[2]
+
+            latexScript += '''
+                              \\end{spacing} \\\\
+                              \\hline
+                              %FINE RIGA
+
+                            '''
+
+        latexScript += '''
+                          \\end{tabular}
+
+                          \\noindent\\begin{tabular}{|L{108.5mm} | L{8mm} | L{8mm} |  L{16mm}| }
+                          \\hline
+                          \\multicolumn{3}{ | L{124.5mm} | }{
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{Totale imponibile}
+                            \\end{spacing}
+                          } &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\euro\\hfill
+                       '''
+        latexScript += '{}'.format(totalePreventivo)
+
+        totaleScontato = totalePreventivo
+        laberForSconto = ""
+
+        if tipoSconto == 2:
+            totaleScontato -= sconto;
+            laberForSconto = "Sconto netto"
+        elif tipoSconto == 3:
+            totaleScontato += totalePreventivo * sconto / 100
+            laberForSconto = "\%"
+        elif tipoSconto == 4:
+            totaleScontato = sconto
+            laberForSconto = "Sconto"
+
+        totaleConIva = totaleScontato + (totaleScontato * iva / 100)
+
+        totaleScontato = math.floor(totaleScontato * 100) / 100
+        totaleConIva = math.floor(totaleConIva * 100) / 100
+
+        latexScript += '''
+                          \\end{spacing}\\\\
+                          \\hline
+                          \\multicolumn{1}{  L{108.5mm} | }{} &
+                          \\multicolumn{2}{  L{16mm} | }{
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
                         '''
 
-        latexScript += '{}\\'.format(oggi)
+        latexScript += '\\textbf{' + laberForSconto + '}'
 
-        latexScript +='''
-                        \\end{document}
+        latexScript += '''
+                            \\end{spacing}
+                          } &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                          \\euro\\hfill 
                        '''
 
-        with open('app/preventiviLatexDir/preventivo.tex', mode='w') as prova:
+        latexScript += '{}'.format(totaleScontato)
+
+        latexScript += '''
+                          \\end{spacing}\\\\
+                          \\cline{2-4}
+                          \\multicolumn{1}{  L{108.5mm} | }{} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{IVA}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                        '''
+        latexScript += '\\textbf{' + str(iva) + '\%}'
+
+        latexScript += '''
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                          \\euro\\hfill
+                        '''
+
+        latexScript += '{}'.format(totaleConIva)
+
+        latexScript += '''
+                          \\end{spacing}\\\\
+                          \\cline{2-4}
+                          \\end{tabular}
+
+                       '''
+
+        latexScript += '''
+                      \\vspace{19mm}
+
+
+                      \\begin{center}
+                      \\begin{tabular}{|L{105mm} | L{44mm}| }
+                      \\hline
+                      \\begin{spacing}{0.3}
+                        \\textbf{NOTE} \\newline
+                        \\hfill
+                        Bho ricordati di fare qualcosa del tipo dell'esempio sai
+
+                      \\end{spacing}&
+                      \\begin{spacing}{0.3}
+                      \\textbf{Firma per accettazione}
+                      \\end{spacing}\\\\
+                      \\hline
+                      \\end{tabular}
+                      \\end{center}
+
+                      \\newpage
+
+                      \\begin{figure}[!t]
+                      \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
+                      \\end{figure}
+
+                      \\begin{itemize}
+                          \\item \\textbf{Ipotizzati \\euro 2.500,00 per smaltimenti materiali}
+                      \\end{itemize}
+
+                      \\noindent\\textbf{Dalla seguente offera sono escluse:}
+                      \\begin{itemize}
+                          \\item IVA e qualsiasi altro onere fiscale;
+                          \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
+                          \\item Costi di energia elettrica e acqua ad uso cantiere;
+                          \\item Qualsiasi altra voce non citata;
+                          \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
+                          \\item Pratica per detrazioni fiscali da quantificare;
+                      \\end{itemize}
+
+                      \\noindent\\textbf{Pagamenti}
+                      \\begin{itemize}
+                          \\item Da concordare in fase di accetazione.
+                      \\end{itemize}
+
+                      \\textcolor{red}{La presente offerta ha validit\'a 30 giorni dalla data odierna.}\\\\
+
+                      Castel d'Azzano, il 11 - 7 - 2018
+                      \\vspace{1cm}\\\\
+                      Per accettazione ..............................................................
+
+                    \\end{document}
+
+                       '''
+
+        with open('app/preventiviLatexDir/preventivoVarianti.tex', mode='w') as prova:
             prova.write(latexScript)
 
-        os.system("cd app/preventiviLatexDir && pdflatex preventivo.tex")
+        os.system("cd app/preventiviLatexDir && pdflatex preventivoVarianti.tex")

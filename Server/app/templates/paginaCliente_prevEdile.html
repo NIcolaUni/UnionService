@@ -79,11 +79,13 @@
 
                                 {% for lavorazione in preventivo[1][1] %}
                                     {% if lavorazione[0].settore == settore %}
+                                        var roundedQuantita = Math.round(parseFloat('{{lavorazione[1]}}')*100)/100;
+                                        var roundedTotale =  Math.round(parseFloat('{{lavorazione[2]}}')*100)/100;
                                         strToAdd +=	'<tr> \
                                                         <td class="tdTipoLav">{{lavorazione[0].tipologia_lavorazione}}</td> \
-                                                        <td class="tdQuantita">{{lavorazione[1]}}</td> \
+                                                        <td class="tdQuantita">'+roundedQuantita+'</td> \
                                                         <td class="tdUnitaMisura">{{lavorazione[0].unitaMisura}}</td> \
-                                                        <td class="tdTotale">&euro; {{lavorazione[2]}}</td> \
+                                                        <td class="tdTotale">&euro; '+roundedTotale+'</td> \
                                                      </tr>';
                                     {% endif %}
                                 {% endfor %}
@@ -141,9 +143,11 @@
 
         $('#modificaPreventivo').click(function(){
             var selPrev = $('#preventivoSelect option:selected');
+            var selDate = $('#dataSelect').val();
 
-            socketPreventivo.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
-                                                          'numero_preventivo': selPrev});
+            socketPreventivo.emit('modifica_preventivo_edile', {'dip': '{{dipendente.username}}',
+                                                          'numero_preventivo': selPrev,
+                                                          'data': selDate });
         });
 
         $('#cancellaPreventivo').click(function(){
@@ -164,7 +168,7 @@
     $('#newPreventivo').click(function(){
 
         swal.withFormAsync({
-            title: 'Inserire tipologia commessa:',
+            title: 'Inserire i dati della commessa:',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Ok',
@@ -172,11 +176,14 @@
             closeOnConfirm: true,
             formFields: [
 
-             { name: 'commessa',  placeholder: 'tipologia commessa' },
+             { id: 'intervento', label: 'Tipologia intervento:', name: 'intervento',  placeholder: 'tipologia intervento' },
+             { id: 'indirizzo',  label: 'Indirizzo:', name: 'indirizzo',  placeholder: 'indirizzo' },
+             { id: 'comune', label: 'Comune:', name: 'comune',  placeholder: 'comune' }
 
 
             ]
         }).then(function (context) {
+
             if(context._isConfirm){
 
                 socketPreventivo.emit('registra_nuovo_preventivo',
@@ -184,7 +191,9 @@
                                           'nome_cliente' : '{{cliente.nome}}',
                                           'cognome_cliente' : '{{cliente.cognome}}',
                                           'indirizzo_cliente' : '{{cliente.indirizzo}}',
-                                          'tipologia_commessa' : context.swalForm['commessa'] }
+                                          'intervento_commessa' : context.swalForm['intervento'],
+                                          'indirizzo_commessa' : context.swalForm['indirizzo'],
+                                          'comune_commessa' : context.swalForm['comune']}
                                      );
 
             }
@@ -197,8 +206,10 @@
     $('#modificaPreventivo').click(function(){
 
         var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
-        console.log("cliccato "+ selectedPreventivo);
-        socketPreventivo.emit('modifica_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'dip': '{{dipendente.username}}' });
+        var selDate = $('#dataSelect').val();
+
+        socketPreventivo.emit('modifica_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'data': selDate,
+                                                            'dip': '{{dipendente.username}}' });
     });
 
 

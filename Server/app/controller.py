@@ -381,8 +381,17 @@ def apriPreventivoEdile():
 @server.route('/downloadPreventivoEdile')
 @login_required
 def downloadPreventivoEdile():
-    return send_from_directory(directory='preventiviLatexDir', filename='preventivo.pdf')
+    return send_from_directory(directory='preventiviLatexDir', filename='preventivoEdile.pdf')
 
+@server.route('/downloadPreventivoVarianti')
+@login_required
+def downloadPreventivoVarianti():
+    return send_from_directory(directory='preventiviLatexDir', filename='preventivoVarianti.pdf')
+
+@server.route('/downloadPreventivoFiniture')
+@login_required
+def downloadPreventivoFiniture():
+    return send_from_directory(directory='preventiviLatexDir', filename='preventivoFiniture.pdf')
 
 @server.route('/apriPreventivoFiniture')
 @login_required
@@ -480,7 +489,7 @@ def anteprimaPreventivoEdile():
                 preventivo_presente = True
 
         if not preventivo_presente:
-            preventivi_distinti.append((preventivo[0].tipologia_commessa, preventivo[0].calcolaCodicePreventivo(),
+            preventivi_distinti.append((preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
                                         preventivo[0].numero_preventivo))
 
     lastPrev = PreventivoEdile.returnLastPreventivoCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
@@ -510,7 +519,7 @@ def anteprimaPreventivoFiniture():
                 preventivo_presente = True
 
         if not preventivo_presente:
-            preventivi_distinti.append((preventivo[0].tipologia_commessa, preventivo[0].calcolaCodicePreventivo(),
+            preventivi_distinti.append((preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
                                         preventivo[0].numero_preventivo))
 
     countPreventivi = PreventivoFiniture.get_counter_preventivi_per_cliente(nome_cliente=app.clienteSelezionato.nome,
@@ -533,7 +542,7 @@ def anteprimaPreventivoFiniture():
                 preventivo_presente = True
 
         if not preventivo_presente:
-            preventiviEdili_distinti.append((preventivo[0].tipologia_commessa, preventivo[0].calcolaCodicePreventivo(),
+            preventiviEdili_distinti.append((preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
                                         preventivo[0].numero_preventivo))
 
     return render_template('paginaCliente_prevFiniture.html', dipendente=dip, cliente=app.clienteSelezionato, countPreventiviFiniture=countPreventivi,
@@ -558,7 +567,7 @@ def anteprimaPreventivoVarianti():
                 preventivo_presente = True
 
         if not preventivo_presente:
-            preventiviEdili_distinti.append((preventivo[0].tipologia_commessa, preventivo[0].calcolaCodicePreventivo(),
+            preventiviEdili_distinti.append((preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
                                         preventivo[0].numero_preventivo))
 
 
@@ -574,7 +583,7 @@ def anteprimaPreventivoVarianti():
                 preventivo_presente = True
 
         if not preventivo_presente:
-            preventiviVarianti_distinti.append((preventivo[0].tipologia_commessa, preventivo[0].calcolaCodicePreventivo(),
+            preventiviVarianti_distinti.append((preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
                                         preventivo[0].numero_preventivo))
 
     lastPrev = PreventivoVarianti.returnLastPreventivoCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
@@ -1145,23 +1154,43 @@ def handle_aggiungi_modello_prodotto(message):
     emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
 
-@socketio.on('registra_nuovo_preventivo', namespace='/preventivoFiniture')
-def handle_registra_nuovo_preventivo(message):
+@socketio.on('registra_nuovo_preventivo_nuova_commessa', namespace='/preventivoFiniture')
+def handle_registra_nuovo_preventivo_nuova_commessa(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    idPreventivo = PreventivoFiniture.registraPreventivo(nome_cliente=message['nome_cliente'],
+    idPreventivo = PreventivoFiniture.registraPreventivo_nuovaCommessa(nome_cliente=message['nome_cliente'],
                                        cognome_cliente=message['cognome_cliente'], indirizzo_cliente=message['indirizzo_cliente'],
-                                        dipendente_generatore=dip.username, numero_preventivo=message['numero_preventivo'],
-                                        intervento_commessa=message['intervento_commessa'],
-                                        indirizzo_commessa=message['indirizzo_commessa'],
-                                        comune_commessa=message['comune_commessa'])
+                                        dipendente_generatore=dip.username,
+                                        intervento_commessa=message['intervento'],
+                                        indirizzo_commessa=message['indirizzo'],
+                                        comune_commessa=message['comune'])
 
     app.preventivoFinitureSelezionato=idPreventivo
     emit('confermaRegistrazionePreventivo', namespace='/preventivoFiniture', room=dip.session_id)
 
+@socketio.on('registra_nuovo_preventivo_vecchia_commessa', namespace='/preventivoFiniture')
+def handle_registra_nuovo_preventivo_vecchia_commessa(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    idPreventivo = PreventivoFiniture.registraPreventivo_vecchiaCommessa(dipendente_generatore=dip.username, numero_preventivo=message['numero_preventivo'] )
+
+
+    app.preventivoFinitureSelezionato=idPreventivo
+    emit('confermaRegistrazionePreventivo', namespace='/preventivoFiniture', room=dip.session_id)
+
+@socketio.on('modifica_preventivo_finiture', namespace='/preventivoFiniture')
+def handle_modifica_preventivo_finiture(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    idPreventivo = PreventivoFiniture.modificaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], dipendente_generatore=dip.username)
+    app.preventivoFinitureSelezionato=idPreventivo
+
+    emit('startModificaPreventivo', namespace='/preventivoFiniture', room=dip.session_id)
+
+
 @socketio.on('add_nuovo_prodotto', namespace='/preventivoFiniture')
 def handle_add_nuovo_prodotto(message):
-    app.server.logger.info('Almeno qua entra\n\n\n\n')
+
 
     PreventivoFiniture.registraProdotto(numero_preventivo=message['numero_preventivo'], data=message['data'],
                                         ordine=message['ordine'], tipologia=message['tipologia'], modello=message['modello'],
@@ -1188,20 +1217,33 @@ def handle_elimina_prodotto(message):
 
     PreventivoFiniture.eliminaProdotto(numero_preventivo=message['numero_preventivo'], data=message['data'], ordine=message['ordine'])
 
+@socketio.on('stampa_preventivo', namespace='/preventivoFiniture')
+def handle_stampa_preventivo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PreventivoFiniture.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=message['iva'],
+                                     tipoSconto=message['tipoSconto'], sconto=message['sconto'],
+                                     chiudiPreventivo=message['chiudiPreventivo'], acorpo=message['acorpo'])
+
+    emit('procediADownload', namespace='/preventivoFiniture', room=dip.session_id)
+
 @socketio.on('registra_nuovo_preventivo', namespace='/preventivoVarianti')
 def handle_registra_nuovo_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    idPreventivo = PreventivoVarianti.registraPreventivo(nome_cliente=message['nome_cliente'],
-                                       cognome_cliente=message['cognome_cliente'], indirizzo_cliente=message['indirizzo_cliente'],
-                                        dipendente_generatore=dip.username, numero_preventivo=message['numero_preventivo'],
-                                         intervento_commessa=message['intervento_commessa'],
-                                         indirizzo_commessa=message['indirizzo_commessa'],
-                                         comune_commessa=message['comune_commessa'])
+    idPreventivo = PreventivoVarianti.registraPreventivo( dipendente_generatore=dip.username, numero_preventivo=message['numero_preventivo'] )
 
     app.preventivoVariantiSelezionato=idPreventivo
     emit('confermaRegistrazionePreventivo', namespace='/preventivoVarianti', room=dip.session_id)
 
 
+@socketio.on('modifica_preventivo_varianti', namespace='/preventivoVarianti')
+def handle_modifica_preventivo_varianti(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    idPreventivo = PreventivoVarianti.modificaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], dipendente_generatore=dip.username)
+    app.preventivoVariantiSelezionato=idPreventivo
+
+    emit('startModificaPreventivo', namespace='/preventivoVarianti', room=dip.session_id)
 
 
 @socketio.on('add_nuova_lavorazione', namespace='/preventivoVarianti')
@@ -1263,6 +1305,16 @@ def handle_modifica_sottolavorazione(message):
                                                  ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione,
                                                  modifica=message, unitaMisura=unitaMisura)
 
+@socketio.on('stampa_preventivo', namespace='/preventivoVarianti')
+def handle_stampa_preventivo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PreventivoVarianti.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=message['iva'],
+                                     tipoSconto=message['tipoSconto'], sconto=message['sconto'],
+                                     chiudiPreventivo=message['chiudiPreventivo'], acorpo=message['acorpo'])
+
+    emit('procediADownload', namespace='/preventivoVarianti', room=dip.session_id)
+
 #################################################################################################################
 @socketio.on('registra_nuovo_preventivo', namespace='/preventivoEdile')
 def handle_registra_nuovo_preventivo(message):
@@ -1285,11 +1337,9 @@ def handle_elimina_preventivo(message):
 
     PreventivoEdile.eliminaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'])
 
-    server.logger.info('Start elimina preventivo 2')
 
     preventiviRestanti = PreventivoEdile.get_counter_preventivi_per_numero(numero_preventivo=message['numero_preventivo'])
 
-    server.logger.info('Start elimina preventivo 3')
 
     emit('aggiornaAnteprimaPreventivoEdile',
                     {
@@ -1301,12 +1351,10 @@ def handle_elimina_preventivo(message):
 
 @socketio.on('modifica_preventivo_edile', namespace='/preventivoEdile')
 def handle_modifica_preventivo_edile(message):
-    server.logger.info('\n\nModifica preventivo iniziato\n\n')
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    idPreventivo = PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], dipendente_ultimaModifica=dip)
+    idPreventivo = PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], dipendente_generatore=dip)
     app.preventivoEdileSelezionato=idPreventivo
-    server.logger.info('\n\nModifica preventivo iniziato: {}\n\n'.format(idPreventivo))
 
     emit('startModificaPreventivo', namespace='/preventivoEdile', room=dip.session_id)
 
@@ -1375,10 +1423,12 @@ def handle_modifica_sottolavorazione(message):
 
 @socketio.on('stampa_preventivo', namespace='/preventivoEdile')
 def handle_stampa_preventivo(message):
-    app.server.logger.info('\n\nEntrato in stampa\n\n')
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    PreventivoEdile.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'])
+    PreventivoEdile.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=message['iva'],
+                                     tipoSconto=message['tipoSconto'], sconto=message['sconto'],
+                                     chiudiPreventivo=message['chiudiPreventivo'], acorpo=message['acorpo'])
+
     emit('procediADownload', namespace='/preventivoEdile', room=dip.session_id)
 
 

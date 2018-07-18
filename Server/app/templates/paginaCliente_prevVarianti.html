@@ -1,7 +1,7 @@
 <div class="inner">
 
     <span id="titlePreventivoVariantiSpan">
-        <span><h2><a id="newPreventivoVarianti" class="fa fa-plus-circle expandPreventivoIcon"></a> Varianti </h2></span>
+        <span><h2><a id="newPreventivoVarianti" class="fa fa-plus-circle expandPreventivoIcon"></a>Preventivo varianti</h2></span>
 
         {% if countPreventiviVarianti > 0 %}
 
@@ -44,7 +44,7 @@
 
         {% endfor %}
 
-        $('#totalePrevVarianti').html( '<span>Totale: &euro; '+ totale +'</span>');
+        $('#totalePrevVarianti').html( '<span>Totale: &euro; '+ Math.round(totale*100)/100 +'</span>');
 
     }
 
@@ -79,11 +79,13 @@
 
                                 {% for lavorazione in preventivo[1][1] %}
                                     {% if lavorazione[0].settore == settore %}
+                                        roundedQuantita = Math.round(parseFloat('{{lavorazione[1]}}')*100)/100
+                                        totaleLav = Math.round(parseFloat('{{lavorazione[2]}}')*100)/100;
                                         strToAdd +=	'<tr> \
                                                         <td class="tdTipoLav">{{lavorazione[0].tipologia_lavorazione}}</td> \
-                                                        <td class="tdQuantita">{{lavorazione[1]}}</td> \
+                                                        <td class="tdQuantita">'+roundedQuantita+'</td> \
                                                         <td class="tdUnitaMisura">{{lavorazione[0].unitaMisura}}</td> \
-                                                        <td class="tdTotale">&euro; {{lavorazione[2]}}</td> \
+                                                        <td class="tdTotale">&euro; '+totaleLav+'</td> \
                                                      </tr>';
                                     {% endif %}
                                 {% endfor %}
@@ -141,9 +143,11 @@
 
         $('#modificaPreventivoVarianti').click(function(){
             var selPrev = $('#preventivoVariantiSelect option:selected');
+            var selData = $('#dataVariantiSelect').val();
 
-            socketVarianti.emit('modifica_preventivo', {'dip': '{{dipendente.username}}',
-                                                          'numero_preventivo': selPrev});
+            socketVarianti.emit('modifica_preventivo_varianti', {'dip': '{{dipendente.username}}',
+                                                          'numero_preventivo': selPrev,
+                                                          'data': selData });
         });
 
         $('#cancellaPreventivoVarianti').click(function(){
@@ -187,11 +191,7 @@
 
                     socketVarianti.emit('registra_nuovo_preventivo',
                                         { 'dip': '{{dipendente.username}}',
-                                          'nome_cliente' : '{{cliente.nome}}',
-                                          'cognome_cliente' : '{{cliente.cognome}}',
-                                          'indirizzo_cliente' : '{{cliente.indirizzo}}',
-                                          'numero_preventivo': context.swalForm['select'].split('-')[1],
-                                          'commessa': context.swalForm['select'].split('-')[0]
+                                          'numero_preventivo': context.swalForm['select'].split('-')[1]
                                         }
                               );
 
@@ -202,8 +202,12 @@
 
     $('#modificaPreventivoVarianti').click(function(){
 
-        var selectedPreventivo = $('#preventivoVariantiSelect option:selected').attr('class').split('-')[1];
-        socketVarianti.emit('modifica_preventivo_varianti', {'numero_preventivo': selectedPreventivo, 'dip': '{{dipendente.username}}' });
+        var selPrev = $('#preventivoVariantiSelect option:selected').attr('class').split('-')[1];
+        var selData = $('#dataVariantiSelect').val();
+
+        socketVarianti.emit('modifica_preventivo_varianti', {'dip': '{{dipendente.username}}',
+                                                      'numero_preventivo': selPrev,
+                                                      'data': selData });
     });
 
 

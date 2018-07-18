@@ -79,14 +79,112 @@
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
 
         socketPreventivo.on( 'procediADownload', function(){
-            window.location = '{{url_for("downloadPreventivoEdile")}}';
+            window.open('{{url_for("downloadPreventivoEdile")}}', '_blank');
         });
 
         $('#printButton').click(function(){
-            socketPreventivo.emit('stampa_preventivo', {
+
+            swal.withFormAsync({
+            title: 'Scelte pre-stampa:',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ok',
+            cancelButtonText: 'annulla',
+            closeOnConfirm: false,
+            formFields: [
+
+                { id: 'iva', label: 'Iva (%)', name: 'iva', type: 'number', placeholder: 'intervento commessa', value: '0' },
+                { id: 'scontoTipo',
+                    type: 'select',
+                    options: [
+                      {value: '1', text: 'non applicare sconto'},
+                      {value: '2', text: 'applica sconto netto'},
+                      {value: '3', text: 'applica sconto percentuale'},
+                      {value: '4', text: 'forza totale'},
+                    ]},
+                { id: 'acorpo', label: 'Stampa misure a corpo', name: 'acorpo', value: 'acorpo', type: 'checkbox' },
+                { id: 'chiudi', label: 'Chiudi preventivo', name: 'chiudi', value: 'chiudi', type: 'checkbox' },
+
+            ]
+            }).then(function (context) {
+                if(context._isConfirm){
+
+                    var sceltaSconto=parseInt(context.swalForm['scontoTipo']);
+                    var chiudiPrev=false;
+                    var acorpo=false;
+                    var iva=parseInt(context.swalForm['iva']);
+                    if( context.swalForm['scontoTipo'] == 'chiudi' )
+                        chiudiPrev=true;
+
+                    if( context.swalForm['acorpo'] == 'acorpo' )
+                        acorpo=true;
+
+                    if( sceltaSconto == 1 ){
+                        socketPreventivo.emit('stampa_preventivo', {
                                                         'dip': '{{dipendente.username}}',
                                                         'numero_preventivo': '{{preventivo.numero_preventivo}}',
-                                                        'data': '{{preventivo.data}}'});
+                                                        'data': '{{preventivo.data}}',
+                                                        'iva': iva,
+                                                        'tipoSconto': sceltaSconto,
+                                                        'sconto': 0,
+                                                        'chiudiPreventivo': chiudiPrev,
+                                                        'acorpo': acorpo });
+
+                    }
+                    else{
+                        var toPrint="";
+
+                        if( sceltaSconto == 2 ){
+                            toPrint ="Inserire sconto netto da applicare:";
+                        }
+                        else if( sceltaSconto == 3 ){
+                            toPrint ="Inserire sconto percentuale da applicare:";
+                        }
+                        else if( sceltaSconto == 4 ){
+                            toPrint = "Forza totale:";
+                        }
+
+
+
+                        swal.withFormAsync({
+                            title: toPrint,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'sconto', label: 'Sconto: ', name: 'sconto', type: 'number', placeholder: 'sconto', value: '0' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 socketPreventivo.emit('stampa_preventivo', {
+                                                        'dip': '{{dipendente.username}}',
+                                                        'numero_preventivo': '{{preventivo.numero_preventivo}}',
+                                                        'data': '{{preventivo.data}}',
+                                                        'iva': iva,
+                                                        'tipoSconto': sceltaSconto,
+                                                        'sconto': parseFloat(context.swalForm['sconto']),
+                                                        'chiudiPreventivo': chiudiPrev,
+                                                        'acorpo': acorpo });
+
+                            }
+
+                        });
+
+                    }
+
+
+
+                }
+
+            });
+
+
+
         });
 
 
@@ -920,6 +1018,30 @@
 
 
                 );
+
+                /*Ogni volta che un inputField viene modificato: ricalcola il totale della riga e aggiorna il db */
+                $('.inputPrev-'+ordineLavorazioni).on('input', function(){
+
+                         var prezzoBase = parseFloat($(this).parent().attr('class').split(' ')[3].split('-')[1]);
+                         var classesOfRow = $(this).parent().parent().attr('class').split(' ');
+                         calcolaTotaleRigaSottolavorazione( classesOfRow[0], 'sottolavNum-0', prezzoBase );
+
+                         ordine = classesOfRow[0].split('-')[1];
+                         var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[2].split('-')[1];
+                         numero =parseFloat($(this).val());
+                         variabile =$(this).attr('class').split(' ')[2];
+
+                         messaggio = '{ '+
+                                            '"numero_preventivo" : "{{preventivo.numero_preventivo}}", '+
+                                            '"data" : "{{preventivo.data}}", '+
+                                            '"ordine" : "' + ordine + '", '+
+                                            '"ordine_sottolavorazione" : "0", '+
+                                            '"unitaMisura" : "'+ unitaMisura+ '", '+
+                                            '"'+ variabile +'" : "'+ numero+ '"}';
+
+                         socketPreventivo.emit("modifica_sottolavorazione", messaggio);
+                });
+
 
                 /* aggiungo la classe last_added */
                 settaLastElement('{{settore}}')

@@ -201,7 +201,10 @@
         }
         var labelTag = t("<label for='{id}'>{label}</label>", input)
 
-        return inputTag + labelTag
+        if( input.isRadioOrCheckbox() )
+            return  inputTag +  labelTag
+        else
+            return  labelTag + inputTag
 
         function toHtmlOptions (optionsString, option) {
           option.selected = option.selected ? ' selected' : ''

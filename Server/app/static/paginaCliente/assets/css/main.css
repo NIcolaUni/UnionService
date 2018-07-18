@@ -4234,3 +4234,7 @@ button.elementPreventivo {
     .tdLongNum {
         width: 200px;
     }
+
+    .swal-form label{
+        color: black;
+    }

@@ -170,9 +170,9 @@
 					<nav>
 						<ul>
 							<li><a class="menuBar local" href="#intro">Profilo cliente</a></li>
-							<li><a class="menuBar local" href="#one">Preventivo</a></li>
-                            <li><a class="menuBar local" href="#two">Scelta finiture</a></li>
-							<li><a class="menuBar local" href="#three">Varianti</a></li>
+							<li><a class="menuBar local" href="#one">Preventivo edile</a></li>
+                            <li><a class="menuBar local" href="#two">Preventivo finiture</a></li>
+							<li><a class="menuBar local" href="#three">Preventivo varianti</a></li>
                         </ul>
 					</nav>
 				</div>
@@ -255,7 +255,7 @@
 									</ul>
 									{% endif %}
 								</div>
-							<div>
+							</div>
 
 						</div>
 					</section>
@@ -330,11 +330,21 @@
 
 				});
 
+				socketPreventivoFiniture.on('startModificaPreventivo', function(){
+                    window.location = "{{url_for('apriPreventivoFiniture')}}";
+                });
+
+
 				socketPreventivoVarianti.on('confermaRegistrazionePreventivo', function(){
 
 					window.location = "{{url_for('apriPreventivoVarianti')}}";
 
 				});
+
+				socketPreventivoVarianti.on('startModificaPreventivo', function(){
+                    window.location = "{{url_for('apriPreventivoVarianti')}}";
+                });
+
 
     			$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
 				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
