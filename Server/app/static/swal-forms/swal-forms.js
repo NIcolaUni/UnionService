@@ -1,5 +1,6 @@
 ;(function () {
-  var warnTextNode
+  var warnTextNode;
+  var openSelectedHiddenSelect=false;
   // extend swal with a function for adding forms
   swal.withForm = function () {
     // initialize with field values supplied on `swal.withForm` call
@@ -18,6 +19,28 @@
     swalForm.focusOnFirstInput()
     swalForm.markFirstRadioButtons()
     swalForm.addTabOrder()
+
+    $('input#acorpo').click(function(){
+        $('.sweet-alert').trigger('click');
+        console.log('bella');
+    });
+
+    $('a#selectHiddenSelect').click(function(){
+
+        if(openSelectedHiddenSelect){
+            openSelectedHiddenSelect=false
+
+            $('select#scontoTipo').selectmenu().selectmenu( "close" );
+        }
+        else{
+            openSelectedHiddenSelect=true
+
+            $('select#scontoTipo').selectmenu().selectmenu( "open" );
+
+        }
+
+
+    });
   }
 
   // constructor for helper object
@@ -188,11 +211,23 @@
       },
       toHtml: function () {
         var inputTag
-        if (input.type !== 'select') {
+        console.log("Sto per decidere " +input.type);
+
+        if( input.type == 'select-hidden'){
+          console.log("Cazzo ma passo di qua!");
+          inputTag = t("<label for='{id}'><a id='selectHiddenSelect' class='fa fa-angle-double-down'></a></label><select id='{id}' class='{clazz} swal-form-field hidden-select' name='{name}'" +
+            " value='{value}' title='{placeholder}' style='width:100%'>" +
+            ' data-swal-forms-required={}', input) +
+              input.options.reduce(toHtmlOptions, '') +
+            '</select>'
+        }
+        else if (input.type !== 'select') {
           inputTag = t("<input id='{id}' class='{clazz} swal-form-field' type='{type}' name='{name}'" +
             " value='{value}' title='{placeholder}' placeholder='{placeholder}'" +
             ' data-swal-forms-required={required}>', input)
-        } else {
+        }
+        else {
+        console.log("No invece passo di qua! "+input.type);
           inputTag = t("<select id='{id}' class='{clazz} swal-form-field' name='{name}'" +
             " value='{value}' title='{placeholder}' style='width:100%'>" +
             ' data-swal-forms-required={}', input) +

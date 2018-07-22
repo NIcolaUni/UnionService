@@ -62,6 +62,12 @@
             <div id="divSalvaPreventivo" class="features">
                 <a id="printButton">STAMPA</a>
             </div>
+            <div id="divTitoloNote" >
+                <span>Note:</span>
+            </div>
+            <div id="divNote" class="features">
+                <textarea id="note"></textarea>
+            </div>
         </div>
     </section>
 </div>
@@ -77,6 +83,12 @@
 
 
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoVarianti');
+
+        $('#note').on('input', function(){
+            socketPreventivo.emit('inserisci_note', {   'numero_preventivo': '{{preventivo.numero_preventivo}}',
+                                                        'data': '{{preventivo.data}}',
+                                                        'nota': $(this).val() });
+        });
 
         socketPreventivo.on( 'procediADownload', function(){
             window.open('{{url_for("downloadPreventivoVarianti")}}', '_blank');
@@ -129,7 +141,7 @@
                                                         'sconto': 0,
                                                         'chiudiPreventivo': chiudiPrev,
                                                         'acorpo': acorpo });
-
+                        sweetAlert.close();
                     }
                     else{
                         var toPrint="";

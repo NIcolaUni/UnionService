@@ -1212,6 +1212,24 @@ def handle_modifica_prodotto(message):
                                         ordine=message['ordine'], modifica={'quantita': message['quantita'],
                                                                             'diffCapitolato': message['diffCapitolato']})
 
+@socketio.on('elimina_preventivo', namespace='/preventivoFiniture')
+def handle_elimina_preventivo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PreventivoFiniture.eliminaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'])
+
+
+    preventiviRestanti = PreventivoFiniture.get_counter_preventivi_per_numero(numero_preventivo=message['numero_preventivo'])
+
+
+    emit('aggiornaAnteprimaPreventivoFiniture',
+                    {
+                        'numero_preventivo_deleted' : message['numero_preventivo'],
+                        'data_deleted' : message['data'],
+                        'preventivi_restanti': preventiviRestanti
+
+                    }, namespace='/preventivoFiniture', room=dip.session_id)
+
 @socketio.on('elimina_prodotto', namespace='/preventivoFiniture')
 def handle_elimina_prodotto(message):
 
@@ -1227,6 +1245,11 @@ def handle_stampa_preventivo(message):
 
     emit('procediADownload', namespace='/preventivoFiniture', room=dip.session_id)
 
+@socketio.on('inserisci_note', namespace='/preventivoFiniture')
+def handle_inserisci_note(message):
+    PreventivoFiniture.inserisciNote(numero_preventivo=message['numero_preventivo'], data=message['data'], nota=message['nota'])
+
+
 @socketio.on('registra_nuovo_preventivo', namespace='/preventivoVarianti')
 def handle_registra_nuovo_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
@@ -1234,6 +1257,24 @@ def handle_registra_nuovo_preventivo(message):
 
     app.preventivoVariantiSelezionato=idPreventivo
     emit('confermaRegistrazionePreventivo', namespace='/preventivoVarianti', room=dip.session_id)
+
+@socketio.on('elimina_preventivo', namespace='/preventivoVarianti')
+def handle_elimina_preventivo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PreventivoVarianti.eliminaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'])
+
+
+    preventiviRestanti = PreventivoFiniture.get_counter_preventivi_per_numero(numero_preventivo=message['numero_preventivo'])
+
+
+    emit('aggiornaAnteprimaPreventivoVarianti',
+                    {
+                        'numero_preventivo_deleted' : message['numero_preventivo'],
+                        'data_deleted' : message['data'],
+                        'preventivi_restanti': preventiviRestanti
+
+                    }, namespace='/preventivoVarianti', room=dip.session_id)
 
 
 @socketio.on('modifica_preventivo_varianti', namespace='/preventivoVarianti')
@@ -1315,7 +1356,17 @@ def handle_stampa_preventivo(message):
 
     emit('procediADownload', namespace='/preventivoVarianti', room=dip.session_id)
 
+@socketio.on('inserisci_note', namespace='/preventivoVarianti')
+def handle_inserisci_note(message):
+    PreventivoVarianti.inserisciNote(numero_preventivo=message['numero_preventivo'], data=message['data'], nota=message['nota'])
+
+
 #################################################################################################################
+
+@socketio.on('inserisci_note', namespace='/preventivoEdile')
+def handle_inserisci_note(message):
+    PreventivoEdile.inserisciNote(numero_preventivo=message['numero_preventivo'], data=message['data'], nota=message['nota'])
+
 @socketio.on('registra_nuovo_preventivo', namespace='/preventivoEdile')
 def handle_registra_nuovo_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
@@ -1331,9 +1382,7 @@ def handle_registra_nuovo_preventivo(message):
 
 @socketio.on('elimina_preventivo', namespace='/preventivoEdile')
 def handle_elimina_preventivo(message):
-    server.logger.info('Start elimina preventivo')
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    server.logger.info('Start elimina preventivo 1')
 
     PreventivoEdile.eliminaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'])
 
@@ -1353,8 +1402,11 @@ def handle_elimina_preventivo(message):
 def handle_modifica_preventivo_edile(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
+    app.server.logger.info('entrato in modifica')
     idPreventivo = PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], dipendente_generatore=dip)
     app.preventivoEdileSelezionato=idPreventivo
+
+    app.server.logger.info('modificato {}'.format(idPreventivo))
 
     emit('startModificaPreventivo', namespace='/preventivoEdile', room=dip.session_id)
 

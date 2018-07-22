@@ -27,4 +27,5 @@ class PreventivoDBmodel(DbUSinterface, DbUSinterface.db.Model):
     dipendente_ultimaModifica = Column(String(60))
     intervento_commessa = Column(String(130))
     tipologia = Column(String(20)) # edile, finiture o varianti
-    stato = Column(Boolean()) # true in lavorazione, false chiuso
+    stato = Column(Boolean()) # true in lavorazione, false
+    note = Column(String(500))

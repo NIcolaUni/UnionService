@@ -141,14 +141,14 @@
                 '<a id="cancellaPreventivo" class="fa fa-trash expandPreventivoIcon"></a>'
         );
 
-        $('#modificaPreventivo').click(function(){
+        /*$('#modificaPreventivo').click(function(){
             var selPrev = $('#preventivoSelect option:selected');
             var selDate = $('#dataSelect').val();
 
             socketPreventivo.emit('modifica_preventivo_edile', {'dip': '{{dipendente.username}}',
                                                           'numero_preventivo': selPrev,
                                                           'data': selDate });
-        });
+        });*/
 
         $('#cancellaPreventivo').click(function(){
              var selPrev = $('#preventivoSelect option:selected').attr('class').split('-')[1];
@@ -204,7 +204,7 @@
 
 
     $('#modificaPreventivo').click(function(){
-
+        console.log('Allorraaaaa');
         var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
         var selDate = $('#dataSelect').val();
 

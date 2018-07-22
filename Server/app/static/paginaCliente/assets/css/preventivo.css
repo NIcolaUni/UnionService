@@ -306,6 +306,80 @@ input[type="checkbox"] + label:before, input[type="radio"] + label:before {
 
 }
 
+    input[type="checkbox"] + label:before,
+    input[type="radio"] + label:before {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 0.25em;
+        border: solid 1px #dcdcdc;
+        content: '';
+        display: inline-block;
+        height: 1.65em;
+        left: 0;
+        line-height: 1.58125em;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 1.65em;
+    }
+
+    input[type="checkbox"]:focus + label:before,
+    input[type="radio"]:focus + label:before {
+        border-color: #dcdcdc;
+        box-shadow: 0 0 0 1px #ffffff;
+    }
+
 .swal-form label{
         display: inline;
  }
+
+ #selectHiddenSelect {
+    display: inline;
+    font-size: 25px;
+    cursor: pointer;
+    margin-left: 20%;
+ }
+
+ select#scontoTipo {
+    width: 10%;
+    display: none;
+    height: 30px;
+}
+
+
+
+.ui-selectmenu-button span.ui-selectmenu-text{
+    display: none !important;
+}
+
+.ui-selectmenu-open {
+   z-index: 99999 !important;
+ //   top: 278.707px;
+}
+
+.ui-menu-item{
+    width: 100%;
+    border-bottom:1px solid #E0E0E0;
+    background-color: #F5F5F5;
+    list-style-type: none;
+    padding: 10px 2%;
+    margin: 0px;
+    transition: all 275ms ease-in-out;
+    display: block;
+    cursor:pointer;
+
+    &:last-child {
+    border-radius: 3px;
+    border-bottom:0px;
+
+    }
+     &:hover {
+    background-color: #EEEEEE;
+     }
+
+}
+
+.ui-menu .ui-menu-item {
+
+    padding: 3px 1em 0px .4em;
+
+}

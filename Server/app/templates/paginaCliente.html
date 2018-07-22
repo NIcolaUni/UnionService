@@ -330,6 +330,11 @@
 
 				});
 
+				socketPreventivoFiniture.on('aggiornaAnteprimaPreventivoFiniture', function(){
+    				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
+    			});
+
+
 				socketPreventivoFiniture.on('startModificaPreventivo', function(){
                     window.location = "{{url_for('apriPreventivoFiniture')}}";
                 });
@@ -344,6 +349,11 @@
 				socketPreventivoVarianti.on('startModificaPreventivo', function(){
                     window.location = "{{url_for('apriPreventivoVarianti')}}";
                 });
+
+                socketPreventivoVarianti.on('aggiornaAnteprimaPreventivoVarianti', function(){
+    				$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
+    			});
+
 
 
     			$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');

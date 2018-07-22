@@ -92,6 +92,12 @@
             <div id="divSalvaPreventivo" class="features">
                 <a id="printButton">STAMPA</a>
             </div>
+            <div id="divTitoloNote" >
+                <span>Note:</span>
+            </div>
+            <div id="divNote" class="features">
+                <textarea id="note"></textarea>
+            </div>
         </div>
     </section>
 </div>
@@ -229,6 +235,11 @@
 
     var socketFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 
+    $('#note').on('input', function(){
+            socketFiniture.emit('inserisci_note', {   'numero_preventivo': '{{preventivo.numero_preventivo}}',
+                                                        'data': '{{preventivo.data}}',
+                                                        'nota': $(this).val() });
+    });
 
     socketFiniture.on( 'procediADownload', function(){
         window.open('{{url_for("downloadPreventivoFiniture")}}', '_blank');
@@ -247,7 +258,7 @@
 
             { id: 'iva', label: 'Iva (%)', name: 'iva', type: 'number', placeholder: 'intervento commessa', value: '0' },
             { id: 'scontoTipo',
-                type: 'select',
+                type: 'select-hidden',
                 options: [
                   {value: '1', text: 'non applicare sconto'},
                   {value: '2', text: 'applica sconto netto'},
@@ -265,6 +276,8 @@
                 var chiudiPrev=false;
                 var acorpo=false;
                 var iva=parseInt(context.swalForm['iva']);
+
+                console.log( 'sto stampando: ' + iva );
                 if( context.swalForm['scontoTipo'] == 'chiudi' )
                     chiudiPrev=true;
 
@@ -281,7 +294,7 @@
                                                     'sconto': 0,
                                                     'chiudiPreventivo': chiudiPrev,
                                                     'acorpo': acorpo });
-
+                    sweetAlert.close();
                 }
                 else{
                     var toPrint="";
@@ -768,7 +781,7 @@
                                         '<td class="tdPreventivo tdProdotto"><textarea>{{prodotto.nome_prodotto}}</textarea></td>'+
                                         '<td class="tdPreventivo tdModello">{{prodotto.modello}}</td>'+
                                         '<td class="tdPreventivo tdCodice">{{prodotto.codice}}</td>'+
-                                        '<td class="tdPreventivo numColSmall tdQuantita"><input class="numInput numero" type="number" name="numero" placeholder="quantità" value="{{prodotto.quantita}}"></td>'+
+                                        '<td class="tdPreventivo numColSmall tdQuantita"><input class="numInput numero" type="number" name="numero" placeholder="quantità" value="{{prodotto.quantita}}" step="0.01" value="1.0"></td>'+
                                         '<td class="tdPreventivo numColSmall"><input name="unitaMisura" placeholder="unita misura" value="{{prodotto.unitaMisura}}"></td>'+
                                         '<td class="tdPreventivo numColSmall tdDiffCapitolato">&euro; {{prodotto.diffCapitolato}}</td>'+
                                         '<td class="tdPreventivo tdAdded">&euro; {{modello.prezzoListinoFornituraPosa}}</td>'+

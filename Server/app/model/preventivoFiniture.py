@@ -41,7 +41,7 @@ class PreventivoFiniture(PreventivoDBmodel):
 
     def __init__(self, numero_preventivo, data, nome_cliente, cognome_cliente,
                  indirizzo_cliente, dipendente_generatore, intervento_commessa, 
-                 indirizzo_commessa, comune_commessa, stato=True):
+                 indirizzo_commessa, comune_commessa, stato=True, note=None):
 
 
         oldCommessa = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo, intervento=intervento_commessa).first()
@@ -60,6 +60,7 @@ class PreventivoFiniture(PreventivoDBmodel):
         self.intervento_commessa = intervento_commessa
         self.tipologia='finiture'
         self.stato = stato
+        self.note=note
 
 
 
@@ -251,6 +252,12 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         return (last_prev,) + preventivoInfo
 
+    def inserisciNote(numero_preventivo, data, nota):
+        PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                  tipologia='finiture').update({'note': nota})
+
+        PreventivoDBmodel.commit()
+
     def modificaPreventivo(numero_preventivo, data, dipendente_generatore):
         '''
                  Prende il preventivo che corrisponde al "numero_preventivo" passato come argomento e con la data
@@ -303,9 +310,21 @@ class PreventivoFiniture(PreventivoDBmodel):
         else:
             return (numero_preventivo, lastPrev.data)
 
+    def eliminaPreventivo(numero_preventivo, data):
+
+        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='finiture').first()
+
+
+        PreventivoDBmodel.delRow(toDel)
 
     def get_counter_preventivi_per_cliente(nome_cliente, cognome_cliente, indirizzo_cliente):
         q = PreventivoFiniture.query.filter_by(tipologia='finiture',  nome_cliente=nome_cliente, cognome_cliente=cognome_cliente, indirizzo_cliente=indirizzo_cliente)
+        count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+        count = q.session.execute(count_q).scalar()
+        return count
+
+    def get_counter_preventivi_per_numero(numero_preventivo):
+        q = PreventivoFiniture.query.filter_by(tipologia='finiture', numero_preventivo=numero_preventivo)
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
         count = q.session.execute(count_q).scalar()
         return count
@@ -678,8 +697,11 @@ class PreventivoFiniture(PreventivoDBmodel):
                       \\begin{spacing}{0.3}
                         \\textbf{NOTE} \\newline
                         \\hfill
-                        Bho ricordati di fare qualcosa del tipo dell'esempio sai
+                      '''
 
+        latexScript += preventivo.note
+
+        latexScript += '''
                       \\end{spacing}&
                       \\begin{spacing}{0.3}
                       \\textbf{Firma per accettazione}

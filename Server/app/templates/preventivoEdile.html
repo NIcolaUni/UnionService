@@ -62,6 +62,12 @@
             <div id="divSalvaPreventivo" class="features">
                 <a id="printButton">STAMPA</a>
             </div>
+            <div id="divTitoloNote" >
+                <span>Note:</span>
+            </div>
+            <div id="divNote" class="features">
+                <textarea id="note"></textarea>
+            </div>
         </div>
     </section>
 </div>
@@ -77,6 +83,12 @@
 
 
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+
+        $('#note').on('input', function(){
+            socketPreventivo.emit('inserisci_note', {   'numero_preventivo': '{{preventivo.numero_preventivo}}',
+                                                        'data': '{{preventivo.data}}',
+                                                        'nota': $(this).val() });
+        });
 
         socketPreventivo.on( 'procediADownload', function(){
             window.open('{{url_for("downloadPreventivoEdile")}}', '_blank');
@@ -95,7 +107,7 @@
 
                 { id: 'iva', label: 'Iva (%)', name: 'iva', type: 'number', placeholder: 'intervento commessa', value: '0' },
                 { id: 'scontoTipo',
-                    type: 'select',
+                    type: 'select-hidden',
                     options: [
                       {value: '1', text: 'non applicare sconto'},
                       {value: '2', text: 'applica sconto netto'},
@@ -129,7 +141,7 @@
                                                         'sconto': 0,
                                                         'chiudiPreventivo': chiudiPrev,
                                                         'acorpo': acorpo });
-
+                        sweetAlert.close();
                     }
                     else{
                         var toPrint="";

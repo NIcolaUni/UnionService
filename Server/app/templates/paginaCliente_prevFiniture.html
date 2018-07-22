@@ -1,7 +1,7 @@
 <div class="inner">
 
     <span id="titlePreventivoFinitureSpan">
-        <span><h2><a id="newPreventivoFiniture" class="fa fa-plus-circle expandPreventivoIcon"></a>Preventivo finiture</h2></span>
+        <span><h2><a id="newPreventivoFiniture" class="fa fa-plus-circle expandPreventivoIcon"></a>Preventivo Finiture</h2></span>
 
         {% if countPreventiviFiniture > 0 %}
 
@@ -43,7 +43,7 @@
             closeOnConfirm: false,
             formFields: [
 
-                { name: 'commessa',  placeholder: 'intervento commessa' },
+                { id: 'intervento', label: 'Tipologia', name: 'commessa',  placeholder: 'intervento commessa' },
                 { id: 'select', type: 'select',
                     options: [
                     {% for prev in preventiviEdili_distinti %}
@@ -222,12 +222,12 @@
 
 
 
-        $('#cancellaPreventivo').click(function(){
-             var selPrev = $('#preventivoSelect option:selected').attr('class').split('-')[1];
+        $('#cancellaPreventivoFiniture').click(function(){
+             var selPrev = $('#preventivoFinitureSelect option:selected').attr('class').split('-')[1];
              var selData = $('#dataFinitureSelect').val();
-             /*socketPreventivo.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
+             socketFiniture.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
                                                           'numero_preventivo': selPrev,
-                                                           'data': selData });*/
+                                                           'data': selData });
 
 
         });

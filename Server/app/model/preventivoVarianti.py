@@ -89,7 +89,7 @@ class PreventivoVarianti(PreventivoDBmodel):
 
     def __init__(self, numero_preventivo, data, nome_cliente, cognome_cliente,
                  indirizzo_cliente, dipendente_generatore, intervento_commessa,
-                 indirizzo_commessa, comune_commessa, stato=True):
+                 indirizzo_commessa, comune_commessa, stato=True, note=None):
 
         oldCommessa = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=intervento_commessa).first()
@@ -108,6 +108,7 @@ class PreventivoVarianti(PreventivoDBmodel):
         self.intervento_commessa=intervento_commessa
         self.tipologia = 'varianti'
         self.stato = stato
+        self.note=note
 
 
     def calcolaCodicePreventivo(self):
@@ -163,7 +164,7 @@ class PreventivoVarianti(PreventivoDBmodel):
 
     def eliminaPreventivo(numero_preventivo, data):
 
-        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data).first()
+        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='varianti').first()
 
         PreventivoDBmodel.delRow(toDel)
 
@@ -220,6 +221,12 @@ class PreventivoVarianti(PreventivoDBmodel):
             returnList.append(newLav)
 
         return returnList
+
+    def inserisciNote(numero_preventivo, data, nota):
+        PreventivoVarianti.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                  tipologia='varianti').update({'note': nota})
+
+        PreventivoDBmodel.commit()
 
     def modificaPreventivo(numero_preventivo, data, dipendente_generatore):
         '''
@@ -1097,8 +1104,11 @@ class PreventivoVarianti(PreventivoDBmodel):
                       \\begin{spacing}{0.3}
                         \\textbf{NOTE} \\newline
                         \\hfill
-                        Bho ricordati di fare qualcosa del tipo dell'esempio sai
+                      '''
 
+        latexScript += preventivo.note
+
+        latexScript += '''
                       \\end{spacing}&
                       \\begin{spacing}{0.3}
                       \\textbf{Firma per accettazione}

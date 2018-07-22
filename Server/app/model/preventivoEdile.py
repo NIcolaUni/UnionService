@@ -88,7 +88,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
     def __init__(self, numero_preventivo, data, nome_cliente, cognome_cliente,
                  indirizzo_cliente, dipendente_generatore, intervento_commessa, indirizzo_commessa,  comune_commessa,
-                 stato=True):
+                 stato=True, note=None):
 
         oldCommessa = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=intervento_commessa).first()
@@ -107,6 +107,7 @@ class PreventivoEdile(PreventivoDBmodel):
         self.dipendente_generatore = dipendente_generatore
         self.intervento_commessa=intervento_commessa
         self.stato = stato
+        self.note = note
 
 
 
@@ -157,7 +158,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
     def eliminaPreventivo(numero_preventivo, data):
 
-        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data).first()
+        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='edile').first()
 
         PreventivoDBmodel.delRow(toDel)
 
@@ -215,6 +216,12 @@ class PreventivoEdile(PreventivoDBmodel):
 
         return returnList
 
+    def inserisciNote(numero_preventivo, data, nota):
+        PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                  tipologia='edile').update({'note': nota})
+
+        PreventivoDBmodel.commit()
+
     def modificaPreventivo(numero_preventivo, data, dipendente_generatore):
         '''
          Prende il preventivo che corrisponde al "numero_preventivo" passato come argomento,
@@ -226,6 +233,8 @@ class PreventivoEdile(PreventivoDBmodel):
         :return:
         '''
 
+        app.server.logger.info("\n\nwhat's your problem? {} {} {}\n".format(numero_preventivo, data, dipendente_generatore))
+
         lastPrev = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='edile').first()
         now = datetime.datetime.now()
         oggi = "{}-{}-{}".format(now.year, now.month, now.day)
@@ -235,6 +244,8 @@ class PreventivoEdile(PreventivoDBmodel):
         if str(now).split(' ')[0] == str(lastPrev.data):
 
             return (numero_preventivo, oggi)
+
+        app.server.logger.info("\n\nmA ST!!!!!!!!!!!!!!!!!!!!!!!!!?\n")
 
         commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=lastPrev.intervento_commessa).first()
@@ -246,18 +257,27 @@ class PreventivoEdile(PreventivoDBmodel):
                                      indirizzo_commessa=commessa.indirizzo,
                                      comune_commessa=commessa.comune )
 
+        app.server.logger.info("\n\nmA STAI SCHERZANDDOOO???????????\n")
 
-        PreventivoDBmodel.addRow(preventivo)
+        PreventivoDBmodel.addRowNoCommit(preventivo)
+        PreventivoDBmodel.commit()
+
+        app.server.logger.info("\n\nIN MEZZO\n")
 
         lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+
+        app.server.logger.info("\n\nwhat?!\n")
 
         lavorazioni = PreventivoEdile.__duplicaLavorazioni__(lavorazioni)
 
         for lav in lavorazioni:
+            app.server.logger.info("\n\nnON DIRMI CHE\n")
             lav.data = oggi
             PreventivoDBmodel.addRowNoCommit(lav)
 
+        app.server.logger.info("\n\nnON DIRMI CHE1\n")
         PreventivoEdile.commit()
+        app.server.logger.info("\n\nnON DIRMI CWWW11112HE\n")
 
         sottolavorazioniCad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
@@ -1079,8 +1099,12 @@ class PreventivoEdile(PreventivoDBmodel):
                       \\begin{spacing}{0.3}
                         \\textbf{NOTE} \\newline
                         \\hfill
-                        Bho ricordati di fare qualcosa del tipo dell'esempio sai
-                    
+                      '''
+
+
+        latexScript += preventivo.note
+
+        latexScript += '''
                       \\end{spacing}&
                       \\begin{spacing}{0.3}
                       \\textbf{Firma per accettazione}
