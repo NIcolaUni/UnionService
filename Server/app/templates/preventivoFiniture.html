@@ -265,7 +265,7 @@
                   {value: '3', text: 'applica sconto percentuale'},
                   {value: '4', text: 'forza totale'},
                 ]},
-            { id: 'acorpo', label: 'Stampa misure a corpo', name: 'acorpo', value: 'acorpo', type: 'checkbox' },
+            { id: 'sumisura', label: 'Preventivo su misura', name: 'sumisura', value: 'sumisura', type: 'checkbox' },
             { id: 'chiudi', label: 'Chiudi preventivo', name: 'chiudi', value: 'chiudi', type: 'checkbox' },
 
         ]
@@ -274,15 +274,15 @@
 
                 var sceltaSconto=parseInt(context.swalForm['scontoTipo']);
                 var chiudiPrev=false;
-                var acorpo=false;
+                var sumisura=false;
                 var iva=parseInt(context.swalForm['iva']);
 
                 console.log( 'sto stampando: ' + iva );
                 if( context.swalForm['scontoTipo'] == 'chiudi' )
                     chiudiPrev=true;
 
-                if( context.swalForm['acorpo'] == 'acorpo' )
-                    acorpo=true;
+                if( context.swalForm['sumisura'] == 'sumisura' )
+                    sumisura=true;
 
                 if( sceltaSconto == 1 ){
                     socketFiniture.emit('stampa_preventivo', {
@@ -293,7 +293,7 @@
                                                     'tipoSconto': sceltaSconto,
                                                     'sconto': 0,
                                                     'chiudiPreventivo': chiudiPrev,
-                                                    'acorpo': acorpo });
+                                                    'sumisura': sumisura });
                     sweetAlert.close();
                 }
                 else{
@@ -334,7 +334,7 @@
                                                     'tipoSconto': sceltaSconto,
                                                     'sconto': parseFloat(context.swalForm['sconto']),
                                                     'chiudiPreventivo': chiudiPrev,
-                                                    'acorpo': acorpo });
+                                                    'sumisura': sumisura });
 
                         }
 

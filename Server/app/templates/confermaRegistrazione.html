@@ -1,4 +1,4 @@
-{% extends "paginaBase.html" %}
+{% extends "paginaBase_noChat.html" %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 
             swal({
                 title: "Operazione completata",
-                text: "username: {{username}}\npassword: {{password}}",
+                html: "username: {{username}}<br/>password: {{password}}",
                 type: "success",
                 confirmButtonText: "Ok",
             }).then((result) => {

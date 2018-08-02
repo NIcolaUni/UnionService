@@ -15,22 +15,22 @@
             <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
         </li>
         <li>
-            <a class="show-2 calendarButton" href="#"><i class="fa fa-book"></i>Agenda</a>
+            <a class="show-2 agendaButton" href="#"><i class="fa fa-book"></i>Agenda</a>
+        </li>
+        <li>
+            <a class="show-3 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario</a>
         </li>
           {% if dipendente.dirigente%}
         <li>
-            <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
+            <a class="show-4 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
         </li>
           {% endif %}
           {% if dipendente.classe == 'commerciale' or  dipendente.dirigente %}
         <li>
-            <a class="show-4 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
+            <a class="show-5 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
         </li>
           {% endif %}
 
-        <li>
-            <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
-        </li>
         <li>
             <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
         </li>
@@ -61,25 +61,23 @@
                     <a class="show-1 active homebutton" href="#"><i class="fa fa-home"></i>Home</a>
                 </li>
                 <li>
-                    <a class="show-2 calendarButton" href="#"><i class="fa fa-book"></i>Agenda</a>
+                    <a class="show-2 agendaButton" href="#"><i class="fa fa-book"></i>Agenda</a>
+                </li>
+                <li>
+                    <a class="show-3 calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario</a>
                 </li>
                 {% if dipendente.dirigente%}
                 <li>
-                    <a class="show-3 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
+                    <a class="show-4 gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br/> Dipendenti</a>
                 </li>
                 {% endif %}
 
                 {% if dipendente.classe == 'commerciale' or  dipendente.dirigente  %}
                 <li>
-                    <a class="show-4 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
+                    <a class="show-5 accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br/> Cliente</a>
                 </li>
                 {% endif %}
-            <!--      <li>
-                    <a class="show-4 cercaDipButton" href="#"><i class="fa fa-search"></i>Cerca <br/> Dipendente</a>
-                </li>
-              <li>
-                    <a class="show-5 profiloDipButton" href="#"><i class="fa fa-address-card"></i> Profilo Personale </a>
-                </li>-->
+
                 <li>
                     <a class="show-6 contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a>
                 </li>
@@ -173,19 +171,23 @@
     <!--============================ Sezioni "chiamate" via Ajax =====================================-->
 
               <div id="menu-2" class="row content calendario-section col-md-6 col-sm-12">
-                  <div id='calendar' data-full-calendar></div>
+                  <div id='calendar-agenda' data-full-calendar class="agenda"></div>
 
               </div>
 
-              <div id="menu-3" class="content gestioneDip-section col-sm-12">
+             <div id="menu-3" class="content col-md-6 col-sm-12">
+                <div id='calendar-calendario'></div>
+             </div>
+
+              <div id="menu-4" class="content gestioneDip-section col-sm-12">
 
               </div>
 
-              <div id="menu-4" class="content accoglienza-section col-sm-12">
+              <div id="menu-5" class="content accoglienza-section col-sm-12">
 
               </div>
 
-              <div id="menu-5" class="content profiloDip-section col-sm-12">
+              <div id="menu-6" class="content profiloDip-section col-sm-12">
 
               </div>
 
@@ -210,16 +212,548 @@
 
 <script>
 
+  var socketCalendario = io.connect("{{sockUrl}}"+'/calendario');
+
+  $('.agenda').fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay,listWeek'
+      },
+      navLinks: true, // can click day/week names to navigate views
+      //selectable: true,
+     // selectHelper: true,
+      editable: true,
+      eventLimit: true, // allow "more" link when too many events
+
+      events: [
+        {% for evento in agenda %}
+        {
+          title: '{{evento.titolo}}\n{{evento.luogo}}\nAccompagnatore:',
+          start: '{{evento.start_date}}',
+          color: 'red'
+        },
+        {% endfor %}
+       ],
+
+      eventClick: function(calEvent, jsEvent, view) {
+
+
+
+        giornoSelected = $(this)
+        $('.clicked').each(function(){
+          if( !$(this).is(giornoSelected) ){
+            $(this).removeClass('clicked');
+            $(this).popover('hide');
+          }
+        });
+
+        if( !$(this).hasClass('clicked') ){
+          $(this).addClass('clicked');
+          contenuto = ' <div> \
+                          <div id="agenda-edit-event" class="popover-option '+calEvent._id+'">Modifica evento</div>     \
+                          <hr/> \
+                          <div id="agenda-del-event" class="popover-option '+calEvent._id+'">Rimuovi evento</div>     \
+                        </div> \
+                      '
+
+          $(this).popover({
+              trigger: 'manual',
+              container: 'body',
+              html:true,
+              content: contenuto
+          });
+
+          $(this).popover('show');
+
+          $('#agenda-del-event').click(function(){
+
+            eventId=$(this).attr('class').split(' ')[1];
+
+            $('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
+                return eventId == evt._id;
+            })[0]._id);
+            $('.popover').remove();
+            $('.clicked').removeClass('clicked');
+
+
+          });
+
+          $('#agenda-edit-event').click(function(){
+
+                eventId=$(this).attr('class').split(' ')[1];
+
+
+                var start_date = moment(new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
+                return eventId == evt._id;
+            })[0].start) )
+
+                var end_date= moment( new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
+                return eventId == evt._id;
+            })[0].end) )
+
+
+
+                swal.withFormAsync({
+                    title: 'Modifica evento',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+
+                        { id: 'titolo', label: 'Titolo evento:', name: 'titolo', value: calEvent.title, placeholder: 'titolo evento' },
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+
+
+                        $('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
+                            return eventId == evt._id;
+                        })[0]._id);
+
+
+                        $('.agenda').fullCalendar( 'addEventSource', {
+
+
+                          events: [
+                            {
+                              title  : context.swalForm['titolo'],
+                              start  : start_date
+
+                            }
+                          ]}
+                        );
+
+
+
+                        $('.popover').remove();
+                        $('.clicked').removeClass('clicked');
+
+                    }
+                    else{
+                        $('.popover').remove();
+                        $('.clicked').removeClass('clicked');
+                    }
+
+                });
+          });
+        }
+        else{
+            $(this).removeClass('clicked');
+            $(this).popover('hide');
+        }
+
+      },
+      dayClick: function(date, jsEvent, view) {
+
+
+
+        if( view.name == 'month'){
+
+            giornoSelected = $(this)
+            $('.clicked').each(function(){
+              if( !$(this).is(giornoSelected) ){
+                $(this).removeClass('clicked');
+                $(this).popover('hide');
+              }
+            });
+
+            if( !$(this).hasClass('clicked') ){
+              $(this).addClass('clicked');
+              contenuto = ' <div> \
+                              <div id="agenda-add-event" class="popover-option">Aggiungi evento</div>     \
+                            </div> \
+                          '
+
+              $(this).popover({
+                  trigger: 'manual',
+                  container: 'body',
+                  html:true,
+                  content: contenuto
+              });
+
+              $(this).popover('show');
+
+              $('#agenda-add-event').click(function(){
+
+                    swal.withFormAsync({
+                        title: 'Nuovo evento',
+                        showCancelButton: true,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        cancelButtonText: 'annulla',
+                        closeOnConfirm: true,
+                        formFields: [
+
+                            { id: 'titolo', label: 'Titolo evento:', name: 'titolo',  placeholder: 'titolo evento' },
+
+                            { id: 'durata',  type: 'number', label: 'Durata giorni evento:', name: 'durata', value: 1 },
+
+
+
+                        ]
+                    }).then(function (context) {
+                        if(context._isConfirm){
+
+                            var start_date = moment( date.format() )
+                            var end_date = moment( date.format() ).add( parseInt(context.swalForm['durata']), 'd')
+
+                            $('.agenda').fullCalendar( 'addEventSource', {
+
+
+                              events: [
+                                {
+                                  title  : context.swalForm['titolo'],
+                                  start  : start_date,
+                                  end : end_date
+                                }
+                              ]}
+                            );
+
+                            $('.clicked').popover('hide');
+                            $('.clicked').removeClass('clicked');
+
+
+
+                        }
+                        else{
+                            $('.clicked').popover('hide');
+                            $('.clicked').removeClass('clicked');
+                        }
+
+                    });
+
+
+
+              });
+            }
+            else{
+                $(this).removeClass('clicked');
+                $(this).popover('hide');
+            }
+        }
+        else if( view.name == 'agendaWeek' ){
+            console.log('week');
+
+        }
+        else if( view.name == 'agendaDay' ){
+            console.log('day');
+
+        }
+      }
+  });
+
+  $('.fc-button').click(function(){
+     $('.popover').remove();
+     $('.clicked').removeClass('clicked');
+  });
+
  /* Collego i bottoni alle pagine che devono ritornare */
+
+    var chiamatoCalendario = false;
+    var chiamataAgenda = false;
 
 	$(".main-menu a").click(function(){
 		var id =  $(this).attr('class');
 		id = id.split('-');
+        idNum=id[1].split(' ')[0];
+
+		// se sto scegliendo l'opzione calendario o agenda, mi ritrovo a dover usare
+		// delle librerie che necessitano della creazione di un div con id "calendar".
+		// Poiche' ho due sezioni con due elementi con stesso id, differenzo gli id che
+		// dovrebbero essere uguali e quando la relativa sezione verra' chiamato gli
+		// assegno l'id "corretto"
+
+		if( idNum == '3' ){
+		    chiamatoCalendario = true;
+
+		    if( chiamataAgenda ){
+		        chiamataAgenda = false;
+		        $('#calendar').attr('id', 'calendar-agenda');
+		    }
+
+		    $('#calendar-calendario').attr('id', 'calendar');
+
+            function saveEvent(e, titolo, luogo, durata) {
+
+                var end_date = moment(e.date).add(durata-1, 'd').toDate();
+
+                var dataSource = $('#calendar').data('calendar').getDataSource();
+                dataSource.push({startDate: e.date, endDate: end_date, name: titolo, location: luogo})
+                $('#calendar').data('calendar').setDataSource(dataSource);
+
+                 socketCalendario.emit('aggiungi_evento', {
+                    'dip': '{{dipendente.username}}',
+                    'titolo': titolo,
+                    'start_date': moment(e.date).add(1, 'd').toDate(),
+                    'end_date': moment(end_date).add(1, 'd').toDate(),
+                    'luogo': luogo,
+                });
+            }
+
+            function editEvent(event) {
+              $('#event-modal input[name="event-index"]').val(event ? event.id : '');
+              $('#event-modal input[name="event-name"]').val(event ? event.name : '');
+              $('#event-modal input[name="event-location"]').val(event ? event.location : '');
+              $('#event-modal input[name="event-start-date"]').datepicker('update', event ? event.startDate : '');
+              $('#event-modal input[name="event-end-date"]').datepicker('update', event ? event.endDate : '');
+              $('#event-modal').modal();
+            }
+
+            function deleteEvent(event) {
+              var dataSource = $('#calendar').data('calendar').getDataSource();
+
+              for(var i in dataSource) {
+                  if(dataSource[i].id == event.id) {
+                      dataSource.splice(i, 1);
+                      break;
+                  }
+              }
+
+              $('#calendar').data('calendar').setDataSource(dataSource);
+            }
+
+            var currentYear = new Date().getFullYear();
+
+            $('#calendar').calendar(
+
+              {
+                 enableContextMenu: true,
+                 enableRangeSelection: true,
+                 language: 'it',
+
+                 selectRange: function(e) {
+                    // editEvent({ startDate: e.startDate, endDate: e.endDate });
+                  /*  contenuto = ' <div> \
+                                  ciao        \
+                                  </div> \
+                                '
+                    $('.day-content').popover({
+                        trigger: 'manual',
+                        container: 'body',
+                        html:true,
+                        content: contenuto
+                    });
+                    $('.day-content').popover('show');*/
+                 },
+                 /*mouseOnDay: function(e) {
+                     if(e.events.length > 0) {
+                         var content = '';
+
+                         for(var i in e.events) {
+                             content += '<div class="event-tooltip-content">'
+                                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+                                             + '<div class="event-location">' + e.events[i].location + '</div>'
+                                         + '</div>';
+                             content += ' <div> \
+                                       <div id="cal-edit-event" class="popover-option">Modifica Evento</div>     \
+                                      <hr/> \
+                                      <div  id="cal-del-event" class="popover-option">Rimuovi Evento</div>     \
+                                      </div> \
+                                    '
+                         }
+
+
+
+                         $(e.element).popover({
+                             trigger: 'manual',
+                             container: 'body',
+                             html:true,
+                             content: content
+                         });
+
+
+
+                         $(e.element).popover('show');
+                     }
+
+                 },
+                 mouseOutDay: function(e) {
+                  if(e.events.length > 0)
+                   $(e.element).popover('hide');
+
+                },*/
+                dataSource: [
+
+                   {% for evento in calendario %}
+                    {% if not evento.tipologia %}
+                       {
+
+
+                           name: 'Ferie {{evento.dipendente}}',
+                           location: '',
+                           startDate: moment('{{evento.start_date}}').toDate(),
+                           endDate: moment('{{evento.end_date}}').toDate(),
+                           color: 'green'
+                       },
+                    {% else %}
+                       {
+
+                           name: '{{evento.titolo}}',
+                           location: '{{evento.luogo}}',
+                           startDate: moment('{{evento.start_date}}').toDate(),
+                           endDate: moment('{{evento.end_date}}').toDate()
+                       },
+                    {% endif %}
+                   {% endfor %}
+
+                ],
+
+                clickDay: function(e) {
+                    //alert('almeo qua');
+
+                    giornoSelected = $(e.element)
+                    $('.clicked').each(function(){
+                      if( !$(this).is(giornoSelected) ){
+                        $(this).removeClass('clicked');
+                        $(this).popover('hide');
+                      }
+                    });
+
+                    if( !giornoSelected.hasClass('clicked') ){
+
+                      giornoSelected.addClass('clicked');
+                      content = ''
+
+
+                      if(e.events.length > 0) {
+                      //  $('.popover').popover('hide');
+                        for(var i in e.events) {
+                             content += '<div class="event-tooltip-content">'
+                                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+                                             + '<div class="event-location">' + e.events[i].location + '</div>'
+                                         + '</div>';
+
+                        }
+
+                        content += '<br/><hr/> <div> \
+                                    <div id="cal-add-event" class="popover-option">Aggiungi evento</div>     \
+                                    <hr/> \
+                                    <div id="cal-edit-event" class="popover-option">Modifica Evento</div>     \
+                                    <hr/> \
+                                    <div  id="cal-del-event" class="popover-option">Rimuovi Evento</div>     \
+                                    </div> \
+                                   '
+                      }
+                      else{
+                        content = ' <div> \
+                                  <div id="cal-add-event" class="popover-option">Aggiungi evento</div>     \
+                                  </div> \
+                                '
+                      }
+
+
+
+
+                      giornoSelected.popover({
+                          trigger: 'manual',
+                          container: 'body',
+                          html:true,
+                          content: content
+                      });
+
+                      giornoSelected.popover('show');
+
+                    /*  $('#cal-del-event').click(function(){
+
+                            eventId=$(this).attr('class').split(' ')[1];
+
+                            $('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
+                                return eventId == evt._id;
+                            })[0]._id);
+                            $('.popover').remove();
+                            $('.clicked').removeClass('clicked');
+
+                            $('#calendar').data('calendar').
+
+                      });*/
+
+                      $('#cal-add-event').click(function(){
+                            swal.withFormAsync({
+                                title: 'Aggiungi evento',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                    { id: 'titolo', label: 'Titolo evento:', name: 'titolo', placeholder: 'titolo evento' },
+                                    { id: 'luogo', label: 'Luogo evento:', name: 'luogo',  placeholder: 'luogo evento' },
+                                    { id: 'durata', type: 'number', label: 'Durata giorni evento:', name: 'durata', value: 1 },
+
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+
+                                    saveEvent(e, context.swalForm['titolo'], context.swalForm['luogo'], context.swalForm['durata']);
+
+                                }
+
+                            });
+
+
+
+                            $('.popover').remove();
+                            $('.clicked').removeClass('clicked');
+
+
+                      });
+                    }
+                   else {
+                        giornoSelected.removeClass('clicked');
+                        giornoSelected.popover('hide');
+
+                    }
+                }
+              }
+            )
+
+
+
+
+
+		}
+		else if( idNum == '2'){
+		    chiamataAgenda =true;
+
+		    if( chiamatoCalendario ){
+		        chiamatoCalendario = false;
+		        $('#calendar').attr('id', 'calendar-calendario');
+		    }
+
+		    $('#calendar-agenda').attr('id', 'calendar');
+
+		}
+
+        if( idNum != '3'){
+            $('.popover').remove();
+        }
+         if( idNum != '2'){
+            $('.popover').remove();
+        }
+
+
 		$('a.active').removeClass('active');
 	  	$(this).addClass('active');
 		$("#menu-container .content").slideUp('slow');
 		$("#menu-container .homepage").slideUp('slow');
+
 		$("#menu-container #menu-"+id[1]).slideDown('slow');
+        console.log('SOno dwsds '+ $('#menu-3').attr('class'))
+        if( idNum != '3'){
+            $('#menu-3').removeClass('force-show');
+		    $('#menu-3').addClass( 'force-hide' );
+
+		}else{
+		    $('#menu-3').removeClass('force-hide');
+		    $('#menu-3').addClass( 'force-show' );
+
+        }
+         console.log('SOno dwsds '+ $('#menu-3').attr('class'))
 
 		return false;
 	});
@@ -243,7 +777,7 @@
 			return false;
 	});
 */
-	$(".main-menu a.calendarButton").click(function(){
+	$(".main-menu a.agendaButton").click(function(){
 		//	$("#menu-container .content").slideUp('slow');
 			$("#menu-container .calendario-section").slideDown('slow');
 			$("#calendar").fullCalendar("render");
@@ -296,6 +830,7 @@
 </script>
 
 <script>
+
 
     $('#contentImpegni').load('listImpegni');
     var socketImpegni = io.connect("{{sockUrl}}"+'/impegni');

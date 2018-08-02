@@ -434,6 +434,10 @@ h1, h2, h3, h4, h5 {
 
 }
 
+.agendaButton {
+    background: #008092;
+}
+
 .gestioneDipButton {
   /*background: #5c9faf;*/
   background: #00603C;
@@ -527,4 +531,43 @@ a#listProdotti{
 
 .radioLeft {
     text-align: left;
+}
+
+.calendar .month-container {
+    text-align: center;
+    height: 250px !important;
+    /* padding-top: 100px; */
+}
+
+div#menu-3 {
+    background-color: rgba(255,255, 255,0.50);
+    display: block;
+    height: 90%;
+    width: 100%;
+    color: black;
+    margin-left: 5%;
+}
+
+.popover-option {
+    color: black;
+}
+
+.force-hide {
+    display: none !important;
+}
+
+.force-show {
+    display: block !important
+}
+
+.event-location {
+    color: black;
+}
+
+.popover-option{
+    cursor: pointer;
+}
+
+.fc-scroller::-webkit-scrollbar {
+    display: none;
 }

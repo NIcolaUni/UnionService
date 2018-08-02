@@ -51,14 +51,14 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/button-modificaProfilo.css') }}">
 
 <!--==================== css calendario e agenda====== =============================================-->
-    <link href="{{url_for('static', filename='calendario/fullcalendar.min.css') }}" rel='stylesheet' />
-    <link href="{{url_for('static', filename='calendario/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
+    <link href="{{url_for('static', filename='agenda/fullcalendar.min.css') }}" rel='stylesheet' />
+    <link href="{{url_for('static', filename='agenda/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
 
     <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
 
-    <script src="{{url_for('static', filename='calendario/lib/moment.min.js') }}"></script>
-    <script src="{{url_for('static', filename='calendario/fullcalendar.min.js') }}"></script>
-    <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/lib/moment.min.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/fullcalendar.min.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/locale/it.js') }}"></script>
 <!--===============================================================================================-->
 
     <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css') }}" rel='stylesheet' />
@@ -152,6 +152,15 @@
 		<!--[if lte IE 8]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie8.css') }}" /><![endif]-->
 
 
+        <link rel="stylesheet" href="{{url_for('static', filename='calendario/css/bootstrap-year-calendar.css') }}">
+        <script src="{{url_for('static', filename='calendario/js/bootstrap-year-calendar.js') }}"></script>
+
+        <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
+        <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
+        <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
+        <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
+
+
 	</head>
 	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
@@ -172,6 +181,7 @@
 					<nav>
 						<ul>
 							<li><a class="menuBar local" href="#intro">Profilo personale</a></li>
+                            <li><a class="menuBar local" href="#page2">Imposta ferie</a></li>
 
 
 					</nav>
@@ -187,11 +197,83 @@
 						<div class="inner">
 							<h1>{{dipendente.nome}} {{dipendente.cognome}}</h1>
 
-							
+							<div class="row">
+								<div class="col-md-6">
+									<ul class="contact">
+                                        <li>
+											<h3>Ufficio:</h3>
+											<span>{{dipendente.classe}}</span>
+                                            <button class="editProfilo classe">modifica</button>
+
+										</li>
+                                        <li>
+											<h3>Codice fiscale:</h3>
+											<span>{{dipendente.cf}}</span>
+                                            <button class="editProfilo cf">modifica</button>
+										</li>
+                                        <li>
+											<h3>Data di nascita:</h3>
+											<span>{{dipendente.dataNascita}}</span>
+                                            <button class="editProfilo nascita">modifica</button>
+										</li>
+										<li>
+											<h3>Indirizzo residenza:</h3>
+											<span>{{dipendente.residenza}}</span>
+                                            <button class="editProfilo residenza">modifica</button>
+										</li>
+                                        <li>
+											<h3>Indirizzo domicilio:</h3>
+											<span>{{dipendente.domicilio}}</span>
+                                            <button class="editProfilo domicilio">modifica</button>
+										</li>
+										<li>
+											<h3>Email aziendale:</h3>
+											<a href="#">{{dipendente.email_aziendale}}</a>
+                                            <button class="editProfilo email_aziendale">modifica</button>
+										</li>
+                                        <li>
+											<h3>Email personale:</h3>
+											<a href="#">{{dipendente.email_personale}}</a>
+                                            <button class="editProfilo email_personale">modifica</button>
+										</li>
+										<li>
+											<h3>Telefono:</h3>
+											<span>{{dipendente.telefono}}</span>
+                                            <button class="editProfilo telefono">modifica</button>
+										</li>
+
+                                        <li>
+											<h3>Iban:</h3>
+											<span>{{dipendente.iban}}</span>
+                                            <button class="editProfilo iban">modifica</button>
+										</li>
+
+                                        <li>
+											<h3>Partita IVA:</h3>
+											<span>{{dipendente.partitaIva}}</span>
+                                            <button class="editProfilo iva">modifica</button>
+										</li>
+
+
+
+										<li>
+                                            <form id="uploadImgForm" action="/uploadImgProfilo" method="post" enctype="multipart/form-data" >
+                                                <input id="uploadImg" type="file" name="image">
+
+                                            </form>
+                                             <button onclick="$('#uploadImg').trigger('click');">Cambia immagine profilo</button>
+										</li>
+									</ul>
+								</div>
 
 
 						</div>
 					</section>
+                    <section id="page2" class="wrapper style1 fullscreen fade-up">
+                        <span><h2>Calendario ferie</h2></span>
+                        <div id='calendar'></div>
+
+                    </section>
 
 
 			</div>
@@ -213,8 +295,506 @@
 		<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
 
 		<script>
+            var socketProfilo = io.connect("{{sockUrl}}"+'/profilo');
+
+            var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+            socketHome.on('connect', function() {
+
+                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+            });
 
 			$('#header > a').css('border-bottom', 'None' );
+			$('#uploadImg').change(function(){
+                $('#uploadImgForm').submit()
+
+
+			});
+
+			function saveEvent(e, titolo, luogo, durata) {
+
+                var end_date = moment(e.date).add(durata-1, 'd').toDate();
+
+                var dataSource = $('#calendar').data('calendar').getDataSource();
+                dataSource.push({startDate: e.date, endDate: end_date, name: titolo, location: luogo})
+                $('#calendar').data('calendar').setDataSource(dataSource);
+
+                socketProfilo.emit('aggiungi_ferie', {
+                    'dip': '{{dipendente.username}}',
+                    'titolo': titolo,
+                    'start_date': moment(e.date).add(1, 'd').toDate(),
+                    'end_date': moment(end_date).add(1, 'd').toDate(),
+                    'luogo': '',
+                });
+
+            }
+
+            var currentYear = new Date().getFullYear();
+
+			$('#calendar').calendar(
+
+              {
+                 enableContextMenu: true,
+                 enableRangeSelection: true,
+                 language: 'it',
+
+                dataSource: [
+                   {% for evento in calendario %}
+                    {% if not evento.tipologia %}
+                       {
+
+
+                           name: '{{evento.titolo}}',
+                           location: '',
+                           startDate: moment('{{evento.start_date}}').toDate(),
+                           endDate: moment('{{evento.end_date}}').toDate()
+                       },
+                    {% endif %}
+                   {% endfor %}
+
+                ],
+
+
+                clickDay: function(e) {
+                    //alert('almeo qua');
+
+                    giornoSelected = $(e.element)
+                    $('.clicked').each(function(){
+                      if( !$(this).is(giornoSelected) ){
+                        $(this).removeClass('clicked');
+                        $(this).popover('hide');
+                      }
+                    });
+
+                    if( !giornoSelected.hasClass('clicked') ){
+
+                      giornoSelected.addClass('clicked');
+                      content = ''
+
+
+                      if(e.events.length > 0) {
+                      //  $('.popover').popover('hide');
+                        for(var i in e.events) {
+                             content += '<div class="event-tooltip-content">'
+                                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+                                             + '<div class="event-location">' + e.events[i].location + '</div>'
+                                         + '</div>';
+
+                        }
+
+                        content += '<hr/> <div> \
+                                    <div  id="cal-del-event" class="popover-option">Rimuovi</div>     \
+                                    </div> \
+                                   '
+                      }
+                      else{
+                        content = ' <div> \
+                                  <div id="cal-add-event" class="popover-option">Aggiungi ferie</div>     \
+                                  </div> \
+                                '
+                      }
+
+
+
+
+                      giornoSelected.popover({
+                          trigger: 'manual',
+                          container: 'body',
+                          html:true,
+                          content: content
+                      });
+
+                      giornoSelected.popover('show');
+
+                      $('#cal-add-event').click(function(){
+                            swal.withFormAsync({
+                                title: 'Aggiungi evento',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                    { id: 'titolo', label: 'Titolo evento:', name: 'titolo', placeholder: 'titolo evento' },
+
+                                    { id: 'durata', type: 'number', label: 'Durata giorni evento:', name: 'durata', value: 1 },
+
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+
+                                    saveEvent(e, context.swalForm['titolo'], "", context.swalForm['durata']);
+
+                                }
+
+                            });
+
+
+
+                            $('.popover').remove();
+                            $('.clicked').removeClass('clicked');
+
+
+                      });
+                    }
+                   else {
+                        giornoSelected.removeClass('clicked');
+                        giornoSelected.popover('hide');
+
+                    }
+                }
+              }
+            )
+
+            $('.editProfilo').click(function(){
+
+                var campoToEdit = $(this).attr('class').split(' ')[1];
+                var titolo = "";
+                var label="";
+                var campo ="";
+                var valore ="";
+
+                if( campoToEdit == 'classe' ){
+                    titolo="Modifica ufficio classe d'appartenenza";
+                    label="Ufficio:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'ufficio', label: label, name: 'ufficio', type: 'select', options: [
+                                  {value: 'commerciale', text: 'commerciale'},
+                                  {value: 'tecnico', text: 'tecnico'},
+                                  {value: 'capocantiere', text: 'capocantieri'},
+                                  {value: 'contabile', text: 'contabile'},
+                                ]},
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="classe";
+                                 valore=context.swalForm['ufficio'];
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'cf' ){
+                    titolo="Modifica codice fiscale";
+                    label="Codice Fiscale:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="classe";
+                                 valore=context.swalForm['testo'];
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'nascita' ){
+                    titolo="Modifica data di nascita";
+                    swal.withFormAsync({
+                        title: titolo,
+                        showCancelButton: true,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        cancelButtonText: 'annulla',
+                        closeOnConfirm: true,
+                        formFields: [
+
+                            { id: 'nascita', label: 'Data di nascita: ', name: 'nascita', type: 'date', value: '{{dipendente.dataNascita}}' },
+
+
+                        ]
+                    }).then(function (context) {
+                        if(context._isConfirm){
+                             campo="dataNascita";
+                             valore=context.swalForm['nascita'];
+
+                             socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                        }
+
+                    });
+                }
+                else if( campoToEdit == 'residenza' ){
+                    titolo="Modifica luogo di residenza";
+                    label="Residenza:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="residenza";
+                                 valore=context.swalForm['testo'];
+
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'domicilio' ){
+                    titolo="Modifica luogo di domicilio";
+                    label="Domicilio:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="domicilio";
+                                 valore=context.swalForm['testo'];
+
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'email_aziendale' ){
+                    titolo="Modifica email aziendale";
+                    label="Email:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="email_aziendale";
+                                 valore=context.swalForm['testo'];
+
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'email_personale' ){
+                    titolo="Modifica email personale";
+                    label="Email:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="email_personale";
+                                 valore=context.swalForm['testo'];
+
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'telefono' ){
+                    titolo="Modifica telefono";
+                    label="Telefono: ";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="telefono";
+                                 valore=context.swalForm['testo'];
+
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'iban' ){
+                    titolo="Modifica iban";
+                    label="IBAN:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="iban";
+                                 valore=context.swalForm['testo'];
+
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+
+                            }
+
+                        });
+
+                }
+                else if( campoToEdit == 'iva' ){
+                    titolo="Modifica partita IVA";
+                    label="Partita IVA:";
+                    swal.withFormAsync({
+                            title: titolo,
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+
+
+                            ]
+                        }).then(function (context) {
+                            if(context._isConfirm){
+                                 campo="partitaIva";
+                                 valore=context.swalForm['testo'];
+
+                                 socketProfilo.emit('modifica_profilo', {
+                                    'dip' : '{{dipendente.username}}',
+                                    'campo': campo,
+                                    'valore': valore
+                                 });
+
+                            }
+
+                        });
+
+                }
+
+
+
+
+            });
+
+            socketProfilo.on('aggiorna_pagina', function(){
+                 window.location ="{{url_for('paginaProfilo')}}"
+            });
+
 		</script>
 
 	</div>

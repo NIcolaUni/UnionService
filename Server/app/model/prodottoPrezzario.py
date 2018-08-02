@@ -56,5 +56,3 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
 
     def elimina(self):
         ProdottoPrezzarioDBmodel.delRow(self)
-
-

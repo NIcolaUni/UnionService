@@ -112,7 +112,10 @@ class ModelloProdotto(ModelloProdottoDBmodel):
     def elimina(self):
         ModelloProdottoDBmodel.delRow(self)
 
-    def setDaVerificare(nome, prodotto, tipologia, valore):
-        ModelloProdottoDBmodel.query.filter_by(nome=nome, prodotto=prodotto, tipologia=tipologia).update({'daVerificare': valore})
+    def setDaVerificare(modello, prodotto, marchio, tipologia, valore):
+
+        app.server.logger.info('il modello {} prodotto {} marchio {} tipologia {}\n\n\n'.format(modello, prodotto, marchio, tipologia))
+
+        ModelloProdottoDBmodel.query.filter_by(nome=modello, prodotto=prodotto, marchio=marchio, tipologia=tipologia).update({'daVerificare': valore})
         ModelloProdottoDBmodel.commit()
 

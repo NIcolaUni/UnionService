@@ -3,6 +3,8 @@ from .db.dirigenteDBmodel import DirigenteDBmodel
 from .dipendenteFittizio import DipendenteFittizio
 from .dipendenteRegistrato import DipendenteRegistrato
 from .dirigente import Dirigente
+import os
+import app
 
 class Dipendente(DipendenteDBmodel):
 
@@ -27,8 +29,8 @@ class Dipendente(DipendenteDBmodel):
         self.session_id = session_id
 
     # Equivalente al toString() di java
-    def __repr__(self):
-        return "<Dipendente - {0} {1}>".format(self.nome, self.cognome)
+ #   def __repr__(self):
+ #       return "<Dipendente - {0} {1}>".format(self.nome, self.cognome)
 
     def registraDipendente(dipFitUsername, nome, cognome, cf, dataNascita,
                                 residenza, domicilio, telefono,
@@ -77,4 +79,30 @@ class Dipendente(DipendenteDBmodel):
 
     def registraSid(username, sid):
         Dipendente.query.filter_by(username=username).update({'session_id': sid})
-        DipendenteDBmodel.commitSid()
+        DipendenteDBmodel.commit()
+
+    def salvaImmagineProfilo(username, file, dip):
+
+        path_img = "{}.{}".format(dip.username, file.filename.split('.')[1] )
+
+
+        if os.path.exists('./app/static/immaginiProfilo/{}'.format(path_img)):
+            os.remove('./app/static/immaginiProfilo/{}'.format(path_img))
+            path_img = "new_{}".format(path_img)
+
+
+        elif os.path.exists('.app/static/immaginiProfilo/new_{}'.format(path_img)):
+            os.remove('./app/static/immaginiProfilo/new_{}'.format(path_img))
+
+        Dipendente.query.filter_by(username=username).update({'immagine_profilo': path_img})
+        DipendenteDBmodel.commit()
+
+        f = os.path.join(app.server.config['UPLOAD_FOLDER'], path_img)
+
+        # add your custom code to check that the uploaded file is a valid image and not a malicious file (out-of-scope for this post)
+        file.save(f)
+
+    def modificaProfilo(username, modifica):
+
+        Dipendente.query.filter_by(username=username).update(modifica)
+        DipendenteDBmodel.commit()

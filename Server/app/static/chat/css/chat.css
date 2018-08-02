@@ -1,0 +1,159 @@
+
+.chat-div {
+    display: block;
+    position: fixed;
+    height: 60%;
+    width: 18%;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+}
+
+.listColleghi {
+    /* position: fixed; */
+    background-color: white;
+    height: 100%;
+    margin-left: 20%;
+    padding: 0;
+    overflow-y: scroll;
+}
+#ulListColleghi {
+    height: 100%;
+    width: 100%;
+}
+
+li.collega {
+    border: 1px solid #00000038;
+    height: 15%;
+}
+
+.collega  img {
+    border-radius: 50%;
+    width: 30%;
+}
+
+.collega  label {
+
+    width: 100%;
+    cursor: pointer;
+}
+
+.collega  label:hover {
+
+    opacity: 0.5;
+}
+
+.collega span {
+    font-size: 1.4em;
+    color: black;
+    margin-left: 10%;
+    /* margin-bottom: 50px; */
+    margin-top: 6%;
+    display: inline-block;
+    position: absolute;
+}
+
+div#openCloseChat {
+
+    position: fixed;
+
+}
+div#openCloseChat img {
+
+}
+
+.close-chat {
+    border-radius: 50%;
+    background-color: orange;
+    font-size: 3em;
+    color: blanchedalmond;
+    cursor: pointer;
+}
+
+.open-chat {
+    border-radius: 50%;
+    background-color: orange;
+    font-size: 3em;
+    color: blanchedalmond;
+    cursor: pointer;
+}
+
+div#chat-box {
+    margin-right: 5%;
+    display: block;
+    position: fixed;
+    bottom: 0;
+    width: 16%;
+    height: 50%;
+    right: 0;
+    z-index: 8;
+    border-top-left-radius: 5%;
+    border-top-right-radius: 5%;
+}
+
+div#chat-box-header {
+    background-color: blue;
+    /* position: fixed; */
+    /* z-index: 9; */
+    height: 10%;
+    width: 100%;
+    border-top-left-radius: 12%;
+    border-top-right-radius: 12%;
+}
+
+div#chat-box-header label{
+   font-size: 1.3em;
+}
+
+
+div#chat-box-content {
+    background-color: white;
+    height: 70%;
+    overflow-y: scroll;
+}
+
+div#chat-box-textField {
+    border: 1px solid #00000052;
+    background-color: white;
+    height: 14%;
+    color: black;
+}
+
+div#chat-box-textField textarea {
+    height: 100%;
+    width: 100%;
+    resize: none;
+}
+span#controlChatBox {
+    font-size: 1.3em;
+    color: white;
+    display: inline-block;
+    position: absolute;
+    right: 6px;
+}
+
+
+
+div#button-chatBox {
+    height: 6%;
+    background-color: white;
+    color: black;
+}
+
+
+div#button-chatBox button {
+    background-color: blue;
+    color: white;
+    height: 100%;
+    width: 100%;
+}
+
+div#button-chatBox button:hover {
+
+    opacity: 0.7;
+}
+
+.closeChatBox {
+    cursor: pointer;
+    color: white;
+}

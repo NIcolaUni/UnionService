@@ -28,7 +28,7 @@
                     <div id="divTipologia" class="wrap-form input100-select bg1 fieldSelect col-md-10">
                         <span class="label-input100">Tipologia Prodotti</span>
                         <div>
-                            <select id="selectTipologia" class="js-select2" name="settoriDisponibili">
+                            <select id="selectTipologia" class="js-select2" name="selectTipologia">
                                 {% for tipo in tipoProdotto %}
 
                                     {% if tipo.nome == tipoToSel %}
@@ -171,167 +171,166 @@
 
 
 
-            {% for prodotto in prodotti %}
-                if( '{{prodotto.tipologia}}' == $('#selectTipologia').val() )
-                    $('#listaProdotti').append('<option>{{prodotto.nome}}</option>');
-            {% endfor %}
+        {% for prodotto in prodotti %}
+            if( '{{prodotto.tipologia}}' == $('#selectTipologia').val() )
+                $('#listaProdotti').append('<option>{{prodotto.nome}}</option>');
+        {% endfor %}
 
-            var rappresentanteDaRegistrare = false;
+        var rappresentanteDaRegistrare = false;
 
-            var socketHome = io.connect("{{sockUrl}}"+'/home');
-
-
-            socketHome.on('connect', function() {
-
-                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-            });
-
-            var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
+        var socketHome = io.connect("{{sockUrl}}"+'/home');
 
 
-            function nuovoModello(){
-                 swal.withFormAsync({
-                    title: 'Aggiungi nuovo modello',
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: 'Ok',
-                    cancelButtonText: 'annulla',
-                    closeOnConfirm: true,
-                    formFields: [
+        socketHome.on('connect', function() {
 
-                                 { name: 'modello',  placeholder: 'Aggiungi nuovo modello' },
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
+
+        var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
 
 
-                                ]
+        function nuovoModello(){
+             swal.withFormAsync({
+                title: 'Aggiungi nuovo modello',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+                formFields: [
 
-                 }).then(function (context) {
-                    if(context._isConfirm){
-                        socketProdotto.emit('aggiungi_modello_prodotto', { 'dip': '{{dipendente.username}}','nome': context.swalForm['modello'], 'tipologia': $('#selectTipologia').val() });
-                    }
-                 });
-            }
+                             { name: 'modello',  placeholder: 'Aggiungi nuovo modello' },
 
-           //Script necessario per renderizzare corretamente il tag select di "settore"
-            $.getScript("{{url_for('static', filename='form/js/main.js')}}");
 
-            /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
+                            ]
+
+             }).then(function (context) {
+                if(context._isConfirm){
+                    socketProdotto.emit('aggiungi_modello_prodotto', { 'dip': '{{dipendente.username}}','nome': context.swalForm['modello'], 'tipologia': $('#selectTipologia').val() });
+                }
+             });
+        }
+
+       //Script necessario per renderizzare corretamente il tag select di "settore"
+        $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+
+        /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
+        $('#trForm').hide();
+
+        $('#hideForm').click(function(){
             $('#trForm').hide();
+            $(showForm).addClass('fa');
+            $(showForm).addClass('fa-plus');
+            $('#bodyPrezzario').css('height', '88%');
 
-            $('#hideForm').click(function(){
-                $('#trForm').hide();
-                $(showForm).addClass('fa');
-                $(showForm).addClass('fa-plus');
-                $('#bodyPrezzario').css('height', '88%');
+        });
 
-            });
+        $('#showForm').click(function(){
+            $('#trForm').show();
+            $(this).removeClass('fa');
+            $(this).removeClass('fa-plus');
+            $('#bodyPrezzario').css('height', '81%');
 
-            $('#showForm').click(function(){
-                $('#trForm').show();
-                $(this).removeClass('fa');
-                $(this).removeClass('fa-plus');
-                $('#bodyPrezzario').css('height', '81%');
-
-            });
+        });
 
 
-            //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
-            function stampaValore(valore, colonna, unita,   classValues){
+        //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
+        function stampaValore(valore, colonna, unita,   classValues){
 
-                 var where="column"+colonna
+             var where="column"+colonna
 
-                 if( valore == 0 || valore == "None" )
-                    return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
-                 else
-                    if( unita == "%" )
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
-                    else
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
-
-
-            }
-
-            //codice per riempire il #bodyPrezzario
-            {% for modello in modelli %}
-                if( "{{modello.tipologia}}" == $("#selectTipologia").val()) {
-
-                    {% if modello.daVerificare %}
-                        var classiTr="rowBodyTab daVerificare" ;
-                    {% else %}
-                        var classiTr="rowBodyTab";
-
-                    {% endif %}
-
-                    var rowToAdd =  '<tr class="'+ classiTr +'"> \
-                                     <td class="controlCol colLongString" data-column="column1"> \
-                                     <div class="iconsDiv row"> \
-                                        <div class="col-md-4 iconContainer firstIconContainer" > \
-                                            <a class="fa fa-trash iconsTab delProdotto"></a> \
-                                        </div> \
-                                        <div class="col-md-4 iconContainer"> \
-                                            <a  class="fa fa-edit iconsTab modProdotto"></a> \
-                                        </div> \
-                                        <div class="col-md-4 iconContainer"> \
-                                            <a  class="fa fa-warning iconsTab segnalaProdotto"></a> \
-                                        </div> \
-                                     </div> \
-                                     </td> \
-                                     <td  class="nome_prodotto colLongString" data-column="column2">{{modello.prodotto}}</td> \
-                                     <td  class="numColMedium colShortString" data-column="column3">{{modello.marchio}}</td> \
-                                     <td  class="modello_prodotto numColMedium colShortString" data-column="column4">{{modello.nome}}</td> \
-                                     <td  class="numColMedium colShortString" data-column="column5">{{modello.codice}}</td> \
-                                     <td  class="colMediumString" data-column="column6">{{modello.fornitore_primo_gruppo}} - {{modello.fornitore_sotto_gruppo}}</td> '+
-                                     stampaValore( '{{modello.prezzoListinoFornituraPosa}}', 7, "&euro;", "colNumSmall" )+
-                                     stampaValore( '{{modello.prezzoListinoFornitura}}', 8, "&euro;", "colNumSmall" )+
-                                     stampaValore( '{{modello.rincaroAzienda}}', 9, "%", "colNumSmall" )+
-                                     stampaValore( '{{modello.trasportoAzienda}}', 10, "%", "colNumSmall" )+
-                                     stampaValore( '{{modello.imballoAzienda}}', 11, "&euro;", "colNumSmall" );
-
-                    if("{{modello.versoDiLettura}}" == "True"){
-                           {% for fornitore in fornitori %}
-                                if("{{fornitore.nome}}" == "{{modello.fornitore_sotto_gruppo}}" && "{{fornitore.gruppo_azienda}}" == "{{modello.fornitore_primo_gruppo}}" ){
-
-                                    rowToAdd += stampaValore( '{{modello.scontoStandard}}', 12, "%", "colNumSmall" ) +
-                                                stampaValore( '{{modello.scontoExtra1}}', 13, "%", "colNumSmall" ) +
-                                                stampaValore( '{{modello.scontoExtra2}}', 14, "%", "colNumSmall" ) +
-                                                stampaValore( '{{modello.trasporto}}', 15, "&euro;", "colNumSmall" ) +
-                                                stampaValore( '{{modello.imballo}}', 16, "&euro;", "colNumSmall" );
-
-                                }
-                           {% endfor %}
-                    }
-                    else{
-                        rowToAdd += '<td  class="colNumSmall" data-column="column12">-</td> \
-                                    <td  class="colNumSmall" data-column="column13">-</td> \
-                                    <td  class="colNumSmall" data-column="column14">-</td> \
-                                    <td  class="colNumSmall" data-column="column15">-</td> \
-                                    <td  class="colNumSmall" data-column="column16">-</td>';
-
-                    }
+             if( valore == 0 || valore == "None" )
+                return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
+             else
+                if( unita == "%" )
+                 return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
+                else
+                 return '<td  class="'+ classValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
 
 
-                    rowToAdd +=   stampaValore( '{{modello.posa}}', 17, '&euro;', 'colNumBig')+
-                                  stampaValore( '{{modello.nettoUsFornitura}}', 18, "&euro;","colNumSmall"  )+
-                                  stampaValore( '{{modello.nettoUsFornituraPosa}}', 19, "&euro;","colNumSmall"  )+
-                                  stampaValore( '{{modello.rincaroCliente}}', 20, "%","colNumSmall"  );
+        }
 
-                    if( parseFloat('{{modello.nettoUsFornituraPosa}}') == 0  || '{{modello.nettoUsFornituraPosa}}' == 'None'){
-                        rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{modello.nettoUsFornitura}}')+(parseFloat('{{modello.nettoUsFornitura}}')*parseInt('{{modello.rincaroCliente}}')/100))*100 )/100+'</td>'+
-                                    '</tr>';
+        //codice per riempire il #bodyPrezzario
+        {% for modello in modelli %}
+            if( "{{modello.tipologia}}" == $("#selectTipologia").val()) {
 
-                    }
-                    else{
-                        rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{modello.nettoUsFornituraPosa}}')+(parseFloat('{{modello.nettoUsFornituraPosa}}')*parseInt('{{modello.rincaroCliente}}')/100))*100)/100+'</td>'+
-                                        '</tr>';
+                {% if modello.daVerificare %}
+                    var classiTr="rowBodyTab daVerificare" ;
+                {% else %}
+                    var classiTr="rowBodyTab";
 
-                    }
+                {% endif %}
 
-                    $("#bodyPrezzario").append(rowToAdd);
+                var rowToAdd =  '<tr class="'+ classiTr +'"> \
+                                 <td class="controlCol colLongString" data-column="column1"> \
+                                 <div class="iconsDiv row"> \
+                                    <div class="col-md-4 iconContainer firstIconContainer" > \
+                                        <a class="fa fa-trash iconsTab delProdotto"></a> \
+                                    </div> \
+                                    <div class="col-md-4 iconContainer"> \
+                                        <a  class="fa fa-edit iconsTab modProdotto"></a> \
+                                    </div> \
+                                    <div class="col-md-4 iconContainer"> \
+                                        <a  class="fa fa-warning iconsTab segnalaProdotto"></a> \
+                                    </div> \
+                                 </div> \
+                                 </td> \
+                                 <td  class="nome_prodotto colLongString" data-column="column2">{{modello.prodotto}}</td> \
+                                 <td  class="marchio_prodotto numColMedium colShortString" data-column="column3">{{modello.marchio}}</td> \
+                                 <td  class="modello_prodotto numColMedium colShortString" data-column="column4">{{modello.nome}}</td> \
+                                 <td  class="numColMedium colShortString" data-column="column5">{{modello.codice}}</td> \
+                                 <td  class="colMediumString" data-column="column6">{{modello.fornitore_primo_gruppo}} - {{modello.fornitore_sotto_gruppo}}</td> '+
+                                 stampaValore( '{{modello.prezzoListinoFornituraPosa}}', 7, "&euro;", "colNumSmall" )+
+                                 stampaValore( '{{modello.prezzoListinoFornitura}}', 8, "&euro;", "colNumSmall" )+
+                                 stampaValore( '{{modello.rincaroAzienda}}', 9, "%", "colNumSmall" )+
+                                 stampaValore( '{{modello.trasportoAzienda}}', 10, "%", "colNumSmall" )+
+                                 stampaValore( '{{modello.imballoAzienda}}', 11, "&euro;", "colNumSmall" );
 
+                if("{{modello.versoDiLettura}}" == "True"){
+                       {% for fornitore in fornitori %}
+                            if("{{fornitore.nome}}" == "{{modello.fornitore_sotto_gruppo}}" && "{{fornitore.gruppo_azienda}}" == "{{modello.fornitore_primo_gruppo}}" ){
+                                rowToAdd += stampaValore( '{{fornitore.scontoStandard}}', 12, "%", "colNumSmall" ) +
+                                            stampaValore( '{{fornitore.scontoExtra1}}', 13, "%", "colNumSmall" ) +
+                                            stampaValore( '{{fornitore.scontoExtra2}}', 14, "%", "colNumSmall" ) +
+                                            stampaValore( '{{fornitore.trasporto}}', 15, "&euro;", "colNumSmall" ) +
+                                            stampaValore( '{{fornitore.imballo}}', 16, "&euro;", "colNumSmall" );
+
+                            }
+                       {% endfor %}
+                }
+                else{
+                    rowToAdd += '<td  class="colNumSmall" data-column="column12">-</td> \
+                                <td  class="colNumSmall" data-column="column13">-</td> \
+                                <td  class="colNumSmall" data-column="column14">-</td> \
+                                <td  class="colNumSmall" data-column="column15">-</td> \
+                                <td  class="colNumSmall" data-column="column16">-</td>';
 
                 }
 
 
-            {% endfor %}
+                rowToAdd +=   stampaValore( '{{modello.posa}}', 17, '&euro;', 'colNumBig')+
+                              stampaValore( '{{modello.nettoUsFornitura}}', 18, "&euro;","colNumSmall"  )+
+                              stampaValore( '{{modello.nettoUsFornituraPosa}}', 19, "&euro;","colNumSmall"  )+
+                              stampaValore( '{{modello.rincaroCliente}}', 20, "%","colNumSmall"  );
+
+                if( parseFloat('{{modello.nettoUsFornituraPosa}}') == 0  || '{{modello.nettoUsFornituraPosa}}' == 'None'){
+                    rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{modello.nettoUsFornitura}}')+(parseFloat('{{modello.nettoUsFornitura}}')*parseInt('{{modello.rincaroCliente}}')/100))*100 )/100+'</td>'+
+                                '</tr>';
+
+                }
+                else{
+                    rowToAdd += '<td  class="colNumSmall" data-column="column21">&euro; '+Math.round((parseFloat('{{modello.nettoUsFornituraPosa}}')+(parseFloat('{{modello.nettoUsFornituraPosa}}')*parseInt('{{modello.rincaroCliente}}')/100))*100)/100+'</td>'+
+                                    '</tr>';
+
+                }
+
+                $("#bodyPrezzario").append(rowToAdd);
+
+
+            }
+
+
+        {% endfor %}
 
 
 
@@ -375,6 +374,102 @@
 
         });
 
+        /*Codice per aggiungere il cancella e il modifica alle opzioni del select #selectTipologia */
+
+        var firstTime = true;
+
+
+        $('#divTipologia').click(function(){
+
+            if( $('li.select2-results__message').text() != 'No results found' ){
+                if( firstTime )
+                {
+                    firstTime = false;
+                    $('.select2-results').addClass('resizedResults');
+
+                    $('.select2-dropdown').addClass('dropDownEffettivo');
+
+
+                    $('.select2-dropdown').append(
+                        '<span class="delModResults"><ul class="controlSelectUl"></ul></span>'
+                    );
+
+                    $('ul.select2-results__options').addClass('togliOverflowUlSelect');
+
+                    $('.select2-results li').each(function(){
+
+
+                            $('.delModResults ul').append(
+
+                                '<li val="'+$(this).text() +'" class="controlSelectLi"><a class="fa fa-trash delTipologia" ></a><a class="fa fa-edit leftIcon modTipologia" ></a></li>'
+                            );
+
+
+                    });
+
+
+                    $('.modTipologia').click(function() {
+
+                          var oldNome=$(this).parent().attr('val');
+
+                          swal.withForm({
+                            title: 'Modifica nome tipologia',
+                            text: 'Inserire il nome modificato: ',
+                            showCancelButton: true,
+                            confirmButtonColor: '#DD6B55',
+                            confirmButtonText: 'Ok',
+                            cancelButtonText: 'annulla',
+                            closeOnConfirm: true,
+                            formFields: [
+
+                              { id: 'newTipologia', placeholder: 'Inserire il nome della nuova tipologia', value: oldNome }
+
+
+                            ]
+                          }, function (isConfirm) {
+
+                                  if (isConfirm) {
+                                        var form=this.swalForm
+                                        socketProdotto.emit("modifica_tipologiaProdotto",
+                                           { 'dip': '{{dipendente.username}}', 'newTipologia': form['newTipologia'], 'oldTipologia': oldNome });
+
+                                  }
+
+                          })
+
+                    });
+
+                    $('.delTipologia').click(function() {
+
+                             var tipologiaSelezionata = $(this).parent().attr('val');
+
+                              swal({
+                                title: 'Eliminazione tipologia '+ tipologiaSelezionata,
+                                text: 'sicuro di voler procedere?',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+
+                              }, function (isConfirm) {
+
+                                      if (isConfirm) {
+
+                                           socketProdotto.emit("elimina_tipologiaProdotto", {'dip': '{{dipendente.username}}', 'tipologia': tipologiaSelezionata});
+
+                                      }
+
+                              })
+
+
+                        });
+
+
+                }
+            }
+
+        });
 
         $('#addTipologiaProdotto').click(function(){
 
@@ -420,10 +515,7 @@
       }
 
       function calcolaUnionServiceToListino(){
-            /*
-                Il parametro posa e' un booleano, vero in caso si sia cominciato a scrivere da listinoFornituraPosaInput
 
-            */
 
              var prezzoFinale = 0;
              var rincaro = parseFloat($('#rincaroAziendaInput').val());
@@ -459,10 +551,7 @@
       }
 
       function calcolaListinoToUnionService(){
-            /*
-                Il parametro posa e' un booleano, vero in caso si sia cominciato a scrivere da listinoFornituraPosaInput
 
-            */
             var fornitoreSelected=$('#fornitoreSelect').val();
             var primo_gruppo=fornitoreSelected.split(' - ')[0];
             var sotto_gruppo=fornitoreSelected.split(' - ')[1];
@@ -586,6 +675,13 @@
        });
 
 
+       $('#fornitoreSelect').change(function(){
+
+            console.log('sono cambiato');
+            isActiveFornitore=false;
+            listinoToUnionService($('#listinoFornituraInput').val());
+
+       });
 
 
          //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
@@ -619,6 +715,7 @@
                 $('#scontoEx2FornitoreTh').remove();
                 $('#imballoFornitoreTh').remove();
                 $('#trasportoFornitoreTh').remove();
+                $('#scontiRincariFornitoreClose').remove();
 
                 $('<th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="5" data-column="column11"></th>').insertAfter('#scontiRincariAziendaClose');
                 $('#nettoUsFTh').html('<input id="nettoUsFInput" class="numberInput colorBlack" type="number" name="nettoUsF" placeholder="netto US fornitura" step="0.01" value=0.00> &euro;');
@@ -646,16 +743,17 @@
                 var primo_gruppo=fornitoreSelected.split(' - ')[0];
                 var sotto_gruppo=fornitoreSelected.split(' - ')[1];
                 $('#scontiRincariFornitoreClose').remove();
+                $('.infoFornitore').remove();
 
                 {% for fornitore in fornitori %}
                     if( '{{fornitore.nome}}' == sotto_gruppo && '{{fornitore.gruppo_azienda}}' == primo_gruppo ){
 
 
-                        $( stampaValoreTh( '{{fornitore.scontoStandard}}', 11, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoStandardFornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.scontoExtra1}}', 12, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx1FornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.scontoExtra2}}', 13, '%', 'tableForm colNumSmall colorWhite intestazioneBlu', 'scontoEx2FornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.trasporto}}', 14, '{{fornitore.trasportoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'trasportoFornitoreTh' )+
-                           stampaValoreTh( '{{fornitore.imballo}}', 15, '{{fornitore.imballoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu', 'imballoFornitoreTh' ) ).insertAfter('#scontiRincariAziendaClose');
+                        $( stampaValoreTh( '{{fornitore.scontoStandard}}', 11, '%', 'tableForm colNumSmall colorWhite intestazioneBlu infoFornitore', 'scontoStandardFornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.scontoExtra1}}', 12, '%', 'tableForm colNumSmall colorWhite intestazioneBlu infoFornitore', 'scontoEx1FornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.scontoExtra2}}', 13, '%', 'tableForm colNumSmall colorWhite intestazioneBlu infoFornitore', 'scontoEx2FornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.trasporto}}', 14, '{{fornitore.trasportoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu infoFornitore', 'trasportoFornitoreTh' )+
+                           stampaValoreTh( '{{fornitore.imballo}}', 15, '{{fornitore.imballoUnitaMisura}}', 'tableForm colNumSmall colorWhite intestazioneBlu infoFornitore', 'imballoFornitoreTh' ) ).insertAfter('#scontiRincariAziendaClose');
 
 
                     }
@@ -915,16 +1013,21 @@
 
             var tipo = $('#selectTipologia').val();
             var prodotto = $(this).closest('.rowBodyTab').children('.nome_prodotto').text();
+            var marchio = $(this).closest('.rowBodyTab').children('.marchio_prodotto').text();
+            var modello = $(this).closest('.rowBodyTab').children('.modello_prodotto').text();
 
+            console.log('stampo marchio: ' + marchio);
 
             if(!$(this).closest('tr').hasClass('daVerificare') ){
 
                 socketProdotto.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
-                                                           'prodotto': prodotto, 'valore': true});
+                                                           'prodotto': prodotto, 'marchio': marchio,
+                                                           'modello': modello, 'valore': true});
             }
             else {
                 socketProdotto.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
-                                                       'prodotto': prodotto, 'valore': false});
+                                                       'prodotto': prodotto, 'marchio': marchio,
+                                                           'modello': modello, 'valore': false});
 
             }
 
@@ -998,8 +1101,8 @@
 
                      $( '   <th  id="listinoFornituraPosaTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column6"><input id="listinoFornituraPosaInput" class="numberInput colorBlack" type="number" name="listinoFornituraPosa" placeholder="listino fornitura posa" step="0.01" value=0.00> &euro; </th> \
                             <th  id="listinoFornituraTh"  class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column7"><input id="listinoFornituraInput" class="numberInput colorBlack" type="number" name="listinoFornitura" placeholder="listino fornitura" step="0.01" value=0.00> &euro; </th> \
-                            <th  id="scontiRincariAziendaClose" class="tableForm colorWhite intestazioneRosso" colspan="4" data-column="column8"></th>  \
-                            <th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="6" data-column="column12"></th> \
+                            <th  id="scontiRincariAziendaClose" class="tableForm colorWhite intestazioneRosso" colspan="3" data-column="column8"></th>  \
+                            <th  id="scontiRincariFornitoreClose" class="tableForm  colorWhite intestazioneBlu" colspan="5" data-column="column12"></th> \
                             <th  id="nettoUsFTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column18"><input id="nettoUsFInput" class="numberInput colorBlack" type="number" name="nettoUsF" placeholder="netto US fornitura" step="0.01" value=0.00> &euro; </th> \
                             <th  id="nettoUsFPTh" class="tableForm colNumSmall colorWhite intestazioneOliva" data-column="column19"><input id="nettoUsFPInput" class="numberInput colorBlack" type="number" name="nettoUsFP" placeholder="netto US fornitura+posa" step="0.01" value=0.00> &euro; </th> ').insertAfter('#fornitoreTh');
 

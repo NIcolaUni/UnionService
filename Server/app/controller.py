@@ -22,10 +22,13 @@ from .model.preventivoEdile import PreventivoEdile
 from .model.preventivoFiniture import PreventivoFiniture
 from .model.preventivoVarianti import PreventivoVarianti
 from .model.eccezioni.righaPresenteException import RigaPresenteException
+from .model.agenda import Agenda
+from .model.calendario import Calendario
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import app
 import json
+import os
 
 
 ####################################### ROUTE HANDLER #################################################
@@ -338,16 +341,32 @@ def gestioneDip():
         DipendenteFittizio.registraDipendente(username=form.username.data, password=form.password.data,
                                                 classe=form.tipo_dip.data, dirigente=form.dirigente.data, creatoreCredenziali=current_user.get_id())
 
+        DipendenteFittizio.inviaCredenziali(email=form.email_dip.data, username=form.username.data, password=form.password.data)
+
         return redirect('/homepage')
     else:
         form.assegnaUserEPass()
         return render_template('gestioneDip.html', form=form )
 
+
+@server.route('/uploadImgProfilo', methods=['POST'])
+def upload_file():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+
+    file = request.files['image']
+
+    #Dipendente.salvaImmagineProfilo(dip.username, "{}.{}".format(dip.username, file.filename.split('.')[1] ))
+    Dipendente.salvaImmagineProfilo(dip.username, file, dip )
+
+    return redirect('/paginaProfilo')
+
 @server.route('/paginaProfilo')
 @login_required
 def paginaProfilo():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-    return render_template('paginaProfilo.html', dipendente=dip)
+
+    calendario = Calendario.query.filter_by(dipendente=dip.username).all()
+    return render_template('paginaProfilo.html', dipendente=dip, calendario=calendario)
 
 
 @server.route('/newPreventivoEdile')
@@ -454,9 +473,11 @@ def apriPaginaCliente():
     ufficioTecnico = []#Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
     ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
 
+    colleghi = Dipendente.query.all()
 
-    return render_template('paginaCliente.html', dipendente=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
-                                                    ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere )
+    return render_template('paginaCliente.html', colleghi=colleghi,
+                           dipendente=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
+                           ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere )
 
 @server.route('/clientBack')
 @login_required
@@ -468,7 +489,9 @@ def clientBack():
     ufficioTecnico = []#Dipendente.query.filter_by( classe="tecnico", username=cliente.tecnico )
     ufficioCapicantiere = []#Dipendente.query.filter_by( classe="commerciale", username=cliente.capocantiere )
 
-    return render_template('paginaCliente.html', dipendente=dip, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
+    colleghi = Dipendente.query.all()
+
+    return render_template('paginaCliente.html', dipendente=dip, colleghi=colleghi, cliente=app.clienteSelezionato, ufficioCommerciale=ufficioCommerciale,
                             ufficioTecnico=ufficioTecnico, ufficioCapicantiere=ufficioCapicantiere)
 
 @server.route('/anteprimaPreventivoEdile')
@@ -610,10 +633,18 @@ def accoglienza(error):
     la variabile accoglienzaForm viene sovrascritta con un form nuovo, ovvero quello
     richiamato dalla pagina stessa ritornata.
     '''
-    if error == 1 :
+    app.server.logger.info('\n\n\nCIAOOOOO {} {}\n\n'.format(error, app.accoglienzaOk))
+    if error == 1 or error == 2 :
+
         if app.accoglienzaOk:
+            app.server.logger.info('\n\n\ndaiiiii\n\n')
             app.accoglienzaOk=False
-            return render_template('confermaRegistrazioneCliente.html')
+
+            if error == 1:
+                return render_template('confermaRegistrazioneCliente.html')
+            else:
+                app.server.logger.info('\n\n\npreventivo apriti\n\n')
+                return redirect('/newPreventivoEdile')
         else:
             return render_template('accoglienzaCliente.html', form=app.accoglienzaForm)
 
@@ -621,14 +652,13 @@ def accoglienza(error):
 
     if request.method == 'POST':
 
-        server.logger.info("\n\nEntrato in Post {}\n\n".format(app.accoglienzaForm))
-
+        app.server.logger.info('\n\n\nprevalidate\n\n')
         if app.accoglienzaForm.validate_on_submit():
-
+            app.server.logger.info('\n\n\nvalidato\n\n')
             ClienteAccolto.registraCliente(nome=app.accoglienzaForm.nome.data, cognome=app.accoglienzaForm.cognome.data, indirizzo=app.app.accoglienzaForm.indirizzo.data,
                                            telefono=app.accoglienzaForm.telefono.data, email=app.accoglienzaForm.email.data, difficolta=app.accoglienzaForm.difficolta.data,
                                            tipologia=app.accoglienzaForm.tipologia.data, referenza=app.accoglienzaForm.referenza.data, sopraluogo=app.accoglienzaForm.sopraluogo.data,
-                                           datasopraluogo=app.accoglienzaForm.datasopraluogo.data, lavorazione=app.accoglienzaForm.lavorazione.data, commerciale=current_user.get_id())
+                                           lavorazione=app.accoglienzaForm.lavorazione.data, commerciale=current_user.get_id())
 
             app.accoglienzaOk=True
             return render_template('confermaRegistrazioneCliente.html')
@@ -644,7 +674,11 @@ def accoglienza(error):
 def homepage():
 
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-    return render_template('homepage.html', dipendente=dip, sockUrl=app.appUrl)
+    colleghi = Dipendente.query.all()
+    agenda=Agenda.query.filter_by(dipendente=dip.username).all()
+    calendario=Calendario.query.all()
+
+    return render_template('homepage.html', dipendente=dip, colleghi=colleghi, agenda=agenda, calendario=calendario, sockUrl=app.appUrl)
 
 
 @server.route('/impegni')
@@ -978,6 +1012,23 @@ def handle_elimina_tipologiaPagamento(message):
     emit('aggiornaTipologiaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
 
 
+@socketio.on('modifica_tipologiaProdotto', namespace="/prezzarioProdotti")
+def handle_modifica_tipologiaProdotto(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    TipologiaProdotto.modificaTipologiaProdotto(oldNome=message['oldTipologia'], nome=message['newTipologia'])
+
+
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
+@socketio.on('elimina_tipologiaProdotto', namespace="/prezzarioProdotti")
+def handle_elimina_tipologiaProdotto(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    TipologiaProdotto.eliminaTipologiaProdotto(nome=message['tipologia'])
+
+    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
 
 @socketio.on('registra_tipologiaProdotto', namespace="/prezzarioProdotti")
 def handle_registra_tipologiaProdotto(message):
@@ -1127,7 +1178,8 @@ def handle_modifica_prodotto(message):
 
 @socketio.on('settaProdottoDaVerificare', namespace='/prezzarioProdotti')
 def handle_settaProdottoDaVerificare(message):
-    ProdottoPrezzario.setDaVerificare(tipologia=message['tipo'], nome=message['prodotto'], valore=message['valore'])
+    ModelloProdotto.setDaVerificare(tipologia=message['tipo'], prodotto=message['prodotto'],
+                                    marchio=message['marchio'], modello=message['modello'], valore=message['valore'])
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
@@ -1241,7 +1293,7 @@ def handle_stampa_preventivo(message):
 
     PreventivoFiniture.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=message['iva'],
                                      tipoSconto=message['tipoSconto'], sconto=message['sconto'],
-                                     chiudiPreventivo=message['chiudiPreventivo'], acorpo=message['acorpo'])
+                                     chiudiPreventivo=message['chiudiPreventivo'], sumisura=message['sumisura'])
 
     emit('procediADownload', namespace='/preventivoFiniture', room=dip.session_id)
 
@@ -1352,7 +1404,7 @@ def handle_stampa_preventivo(message):
 
     PreventivoVarianti.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=message['iva'],
                                      tipoSconto=message['tipoSconto'], sconto=message['sconto'],
-                                     chiudiPreventivo=message['chiudiPreventivo'], acorpo=message['acorpo'])
+                                     chiudiPreventivo=message['chiudiPreventivo'], sumisura=message['sumisura'])
 
     emit('procediADownload', namespace='/preventivoVarianti', room=dip.session_id)
 
@@ -1403,7 +1455,7 @@ def handle_modifica_preventivo_edile(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
     app.server.logger.info('entrato in modifica')
-    idPreventivo = PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], dipendente_generatore=dip)
+    idPreventivo = PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], dipendente_generatore=dip.username)
     app.preventivoEdileSelezionato=idPreventivo
 
     app.server.logger.info('modificato {}'.format(idPreventivo))
@@ -1479,10 +1531,65 @@ def handle_stampa_preventivo(message):
 
     PreventivoEdile.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=message['iva'],
                                      tipoSconto=message['tipoSconto'], sconto=message['sconto'],
-                                     chiudiPreventivo=message['chiudiPreventivo'], acorpo=message['acorpo'])
+                                     chiudiPreventivo=message['chiudiPreventivo'], sumisura=message['sumisura'])
 
     emit('procediADownload', namespace='/preventivoEdile', room=dip.session_id)
 
+@socketio.on('imposta_sopraluogo', namespace='/agenda')
+def handle_imposta_sopraluogo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    app.server.logger.info('\n\nStampo la data {} e intervallo {} \n\n'.format(message['giorno'], message['ora']))
+    titolo = "Sopraluogo cliente {}".format(message['cliente'])
+    Agenda.registraEvento(dipendente=dip.username, titolo=titolo, start_date=message['giorno'],
+                          durata_giorni=1, tipologia=False,
+                          start_hour=message['ora'], durata_ore=message['durata'],
+                          accompagnatore_sopraluogo=message['accompagnatore'], cliente_sopraluogo=message['cliente'],
+                          sopraluogo=True, luogo_sopraluogo=message['luogo'])
+
+@socketio.on('modifica_profilo', namespace='/profilo')
+def handle_modifica_profilo(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    Dipendente.modificaProfilo(username=dip.username, modifica={message['campo'] : message['valore']})
+
+    emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
+
+@socketio.on('aggiungi_ferie', namespace='/profilo')
+def handle_aggiungi_ferie(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    Calendario.registraEvento(dipendente=dip.username, titolo=message['titolo'],
+                              start_date=message['start_date'], end_date=message['end_date'],
+                              luogo=message['luogo'], tipologia=False)
+
+@socketio.on('aggiungi_evento', namespace='/calendario')
+def handle_aggiungi_evento(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    Calendario.registraEvento(dipendente=dip.username, titolo=message['titolo'],
+                              start_date=message['start_date'], end_date=message['end_date'],
+                              luogo=message['luogo'], tipologia=True)
+
+
+
+
+@socketio.on_error('/calendario')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
+
+@socketio.on_error('/profilo')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
+
+@socketio.on_error('/agenda')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/impegni')
 def error_handler(e):

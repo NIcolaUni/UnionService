@@ -345,12 +345,12 @@ class PreventivoFiniture(PreventivoDBmodel):
             else:
                 PreventivoFiniture.delRow(prev)
 
-    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, acorpo):
+    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura):
 
         if chiudiPreventivo:
             PreventivoFiniture.chiudiPreventivo(numero_preventivo)
 
-        scontoDaApplicare = sconto
+
 
         preventivo = PreventivoFiniture.query.filter_by(tipologia='finiture', numero_preventivo=numero_preventivo,
                                                      data=data).first()
@@ -452,6 +452,7 @@ class PreventivoFiniture(PreventivoDBmodel):
                             \\begin{spacing}{1.2}
 
                        '''
+
         latexScript += cliente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
                                                                                                            "\\'u").replace(
             "ì", "\\'i") + ' ' + cliente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace(
@@ -500,7 +501,6 @@ class PreventivoFiniture(PreventivoDBmodel):
                             \\textbf{Operatore:}
 
                        '''
-
         latexScript += dipendente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
                                                                                                               "\\'u").replace(
             "ì", "\\'i") + ' ' + dipendente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
@@ -538,7 +538,7 @@ class PreventivoFiniture(PreventivoDBmodel):
                           \\hline
                           %FINE HEADER
                        '''
-
+        app.server.logger.info('fine del header')
         totalePreventivo = 0
 
         for prod in prodotti[1]:
@@ -570,10 +570,12 @@ class PreventivoFiniture(PreventivoDBmodel):
                               \\begin{spacing}{0}
                            '''
 
-            if acorpo:
-                latexScript += '-'
-            else:
+            if sumisura:
                 latexScript += '{}'.format(prod.quantita)
+
+            else:
+                latexScript += '-'
+
 
             latexScript += '''
                               \\end{spacing} &
@@ -581,10 +583,12 @@ class PreventivoFiniture(PreventivoDBmodel):
                               \\begin{spacing}{0}
                            '''
 
-            if acorpo:
-                latexScript += 'a corpo'
-            else:
+            if sumisura:
                 latexScript += prod.unitaMisura
+
+            else:
+                latexScript += 'a corpo'
+
 
             latexScript += '''
                               \\end{spacing} &
@@ -619,8 +623,14 @@ class PreventivoFiniture(PreventivoDBmodel):
                        '''
         latexScript += '{}'.format(totalePreventivo)
 
+        latexScript += '''
+                          \\end{spacing}\\\\
+                          \\hline
+                       '''
+
         totaleScontato = totalePreventivo
         laberForSconto = ""
+
 
         if tipoSconto == 2:
             totaleScontato -= sconto;
@@ -630,37 +640,36 @@ class PreventivoFiniture(PreventivoDBmodel):
             laberForSconto = "\%"
         elif tipoSconto == 4:
             totaleScontato = sconto
-            laberForSconto = "Sconto"
+            laberForSconto = "Totale con sconto"
 
         totaleConIva = totaleScontato + (totaleScontato * iva / 100)
 
         totaleScontato = math.floor(totaleScontato * 100) / 100
         totaleConIva = math.floor(totaleConIva * 100) / 100
 
+
+        if tipoSconto != 1:
+            latexScript += '''
+                              \\multicolumn{1}{  L{108.5mm} | }{} &
+                              \\multicolumn{2}{  L{16mm} | }{
+                                \\vspace{2.5mm}
+                                \\begin{spacing}{0}
+                            '''
+
+            latexScript += '\\textbf{' + laberForSconto + '}'
+
+            latexScript += '''
+                                \\end{spacing}
+                              } &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                              \\euro\\hfill 
+                           '''
+
+            latexScript += '{}'.format(totaleScontato)+'\\end{spacing}\\\\ \\cline{2-4}'
+
+
         latexScript += '''
-                          \\end{spacing}\\\\
-                          \\hline
-                          \\multicolumn{1}{  L{108.5mm} | }{} &
-                          \\multicolumn{2}{  L{16mm} | }{
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                        '''
-
-        latexScript += '\\textbf{' + laberForSconto + '}'
-
-        latexScript += '''
-                            \\end{spacing}
-                          } &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                          \\euro\\hfill 
-                       '''
-
-        latexScript += '{}'.format(totaleScontato)
-
-        latexScript += '''
-                          \\end{spacing}\\\\
-                          \\cline{2-4}
                           \\multicolumn{1}{  L{108.5mm} | }{} &
                           \\vspace{2.5mm}
                           \\begin{spacing}{0}
@@ -669,7 +678,10 @@ class PreventivoFiniture(PreventivoDBmodel):
                           \\vspace{2.5mm}
                           \\begin{spacing}{0}
                         '''
-        latexScript += '\\textbf{' + str(iva) + '\%}'
+        if iva == 0:
+            latexScript += '\\textbf{\%}'
+        else:
+            latexScript += '\\textbf{' + str(iva) + '\%}'
 
         latexScript += '''
                           \\end{spacing} &
@@ -699,7 +711,9 @@ class PreventivoFiniture(PreventivoDBmodel):
                         \\hfill
                       '''
 
-        latexScript += preventivo.note
+
+        if preventivo.note is not None:
+            latexScript += preventivo.note
 
         latexScript += '''
                       \\end{spacing}&

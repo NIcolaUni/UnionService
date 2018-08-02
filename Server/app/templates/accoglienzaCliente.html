@@ -58,7 +58,43 @@
                            <span>Necessario sopralluogo</span>
                         </label>
                     </div>
+
                 </div>
+
+               <!--<div class="wrap-input100" >
+					<div class="optionalDiv">
+
+                       <div class="wrap-input100 rs1-wrap-input100 bg1" >
+                           <span class="label-input100">Luogo sopralluogo:</span>
+                        {{form.luogo_sopraluogo}}
+
+                        </div>
+                        <div class="wrap-input100 rs1-wrap-input100 bg1" >
+                            <span class="label-input100">Data sopralluogo:</span>
+                        {{form.data_sopraluogo}}
+
+                        </div>
+                        <div class="wrap-input100" >
+                            <span class="label-input100">Orario inizio sopralluogo:</span>
+                        {{form.orario_inizio_sopraluogo}}
+
+                        </div>
+                        <div class="wrap-input100" >
+                            <span class="label-input100">Orario fine sopralluogo:</span>
+                        {{form.orario_fine_sopraluogo}}
+
+                        </div>
+                        <div class="wrap-input100 input100-select bg1" >
+                            <span class="label-input100">Accompagnatore</span>
+                            <div>
+                                {{form.accompagnatore_sopraluogo}}
+                                <div class="dropDownSelect2"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+				</div>-->
 
 				<div class="wrap-input100" >
 					<span class="label-input100">Lavorazione<span class="asteriscoRosso">*</span></span>
@@ -112,19 +148,44 @@
 
         $('input#sopraluogo').addClass("input-check100");
 
+        $('#data_sopraluogo').attr('type', 'date');
+        $('#orario_inizio_sopraluogo').attr('type', 'time' );
+        $('#orario_fine_sopraluogo').attr('type', 'time' );
+
+        $('#accompagnatore_sopraluogo').addClass("js-select2");
+
+
+        //$('#luogo_sopraluogo').addClass();
+
+      var procedere_con_preventivo=false;
 
       $('form#form-regCli').on('submit',function(e){
             e.preventDefault();
-            $.ajax({
-                type     : "POST",
-                cache    : false,
-                url      : $(this).attr('action'),
-                data     : $(this).serialize(),
-                success  : function(data) {
-                   $(".accoglienza-section").load("{{url_for('accoglienza', error=1)}}");
 
-                }
-            });
+            if( !procedere_con_preventivo ){
+                $.ajax({
+                    type     : "POST",
+                    cache    : false,
+                    url      : $(this).attr('action'),
+                    data     : $(this).serialize(),
+                    success  : function(data) {
+                       $(".accoglienza-section").load("{{url_for('accoglienza', error=1)}}");
+
+                    }
+                });
+            }
+            else{
+                 $.ajax({
+                    type     : "POST",
+                    cache    : false,
+                    url      : $(this).attr('action'),
+                    data     : $(this).serialize(),
+                    success  : function(data) {
+                       $(".accoglienza-section").load("{{url_for('accoglienza', error=2)}}");
+
+                    }
+                });
+            }
 
         });
 
@@ -136,29 +197,28 @@
             var indirizzoCliente = $('input#indirizzo').val();
 
 			 swal({
-              title: "Registrazione cliente",
-              text: "Si sta per registrare un nuovo cliente,\n"+
-			            "passare alla pagina del preventivo al termine?",
-              type: 'info',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: "procedere col preventivo",
-              cancelButtonText: "registra soltanto",
-            }).then((result) => {
-              if (result.value) {
+                  title: "Registrazione cliente",
+                  text: "Si sta per registrare un nuovo cliente,\n"+
+                            "passare alla pagina del preventivo al termine?",
+                  type: 'info',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: "procedere col preventivo",
+                  cancelButtonText: "registra soltanto",
+             }, function(isConfirm) {
 
-                /*  var url='apriPaginaClienteAccoglienza/'+nomeCliente+ '/'+cognomeCliente;
-                  console.log(url + "  dai" );
-                  form.submit();
-                  window.location=url;*/
-                  form.submit();
+                if( isConfirm ){
+                    procedere_con_preventivo=true;
+                    form.submit();
+                }
+                else{
+                    procedere_con_preventivo=false;
+                    form.submit();
+                }
 
-              }else {
-                form.submit();
+             })
 
-              }
-            });
 
 
 		}
@@ -297,5 +357,26 @@
     }
 
     stampaErrori();
+
+    $('.optionalDiv').css( "display", "none");
+    var sopraluogoClicked = false;
+    $('#sopraluogo').click(function(){
+        if( sopraluogoClicked )
+        {
+            sopraluogoClicked = false;
+            $('.optionalDiv').css( "display", "none");
+        }
+        else{
+            sopraluogoClicked = true;
+            $('.optionalDiv').css( "display", "unset");
+        }
+
+    });
+
+    $.getScript("{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}");
+    $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
+    $.getScript("{{url_for('static', filename='form/js/main.js')}}");
     </script>
 

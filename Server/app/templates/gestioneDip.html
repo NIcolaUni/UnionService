@@ -21,6 +21,13 @@
                     </div>
                 </div>
 
+                <div class="wrap-input100 input100-select bg1" data-validate="Campo obbligatorio">
+                    <span class="label-input100">Email dipendente</span>
+                    <div>
+                        {{form.email_dip}}
+
+                    </div>
+                </div>
 
 
                 <div class="wrap-contact100-form-check">
@@ -78,13 +85,33 @@
             classe= classe + " dirigente"
         }
         swal({   title: "Stai per aggiungere un nuovo dipendente\n"+ classe,
-        text: "Sei sicuro di voler procedere?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Sono sicuro!",
-        cancelButtonText: "Ho sbagliato...",
-        }).then((result) => {
+            text: "Sei sicuro di voler procedere?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Sono sicuro!",
+            cancelButtonText: "Ho sbagliato...",
+            closeOnConfirm: false,
+        }, function(isConfirm) {
+            if (isConfirm) {
+                    swal({
+                        title: "Operazione eseguita!",
+                        text: "username: "+username+"\npassword: "+password,
+                        icon: "success",
+                        type: "success",
+                        confirmButtonText: "ok",
+                    }, function(isConfirm){
+                        form.submit();
+                    });
+
+
+            }else {
+              swal("", "Operazione Annullata", "error");
+            }
+        });
+
+
+      /*  ).then((result) => {
               if (result.value) {
                      swal({
                     title: "Operazione eseguita!",
@@ -100,7 +127,7 @@
               }else {
                 swal("", "Operazione Annullata", "error");
               }
-            });
+            });*/
 
     }
 

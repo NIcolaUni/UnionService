@@ -69,12 +69,13 @@ div#divIntestazione {
 }
 
 .resizedResults {
-    display: inline-block;
+    display: table-cell;
     width: 95% !important;
+    overflow: hidden;
 }
 
 .delModResults{
-    display: inline-block;
+    display: table-cell;
     width: 5% !important;
 }
 .dropDownEffettivo{
@@ -108,10 +109,10 @@ div#divIntestazione {
 }
 
 .controlSelectUl{
-    max-height: 200px;
-    font-size: 14px;
+   // max-height: 200px;
+   // font-size: 14px;
     color: #555555;
-    line-height: 1.2;
+    line-height: 2;
 }
 
 .controlSelectFirstLi{
@@ -124,9 +125,9 @@ div#divIntestazione {
 
 
 .controlSelectLi{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 24px;
+  //  padding-top: 10px;
+  //  padding-bottom: 10px;
+  //  padding-left: 24px;
     font-size: 1.6em;
     color: black;
     cursor: pointer;
@@ -343,6 +344,7 @@ th.doubleCol {
   transform: translateY(4px);
 }
 
+/*
 #bodyPrezzario {
  //   position: absolute;
     display: inline-block;
@@ -351,6 +353,16 @@ th.doubleCol {
     height: 88%;
     overflow-y: scroll;
     color: black
+}*/
+
+#bodyPrezzario {
+    display: inline-block;
+    background-color: #F7F7F7;
+    height: 60%;
+    overflow-y: scroll;
+
+    color: black;
+
 }
 
 
@@ -478,4 +490,15 @@ td.noteColumn {
 
 #hideForm {
     font-size: 2em;
+}
+
+.select2-container .select2-results__option[aria-selected='true'] {
+    color: black;
+    background: white;
+}
+
+span.select2-dropdown.select2-dropdown--below.dropDownEffettivo {
+
+    display: table;
+
 }

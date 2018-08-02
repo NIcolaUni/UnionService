@@ -383,3 +383,7 @@ input[type="checkbox"] + label:before, input[type="radio"] + label:before {
     padding: 3px 1em 0px .4em;
 
 }
+
+#ui-id-1{
+    display: none;
+}

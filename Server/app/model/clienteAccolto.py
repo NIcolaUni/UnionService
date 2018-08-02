@@ -5,7 +5,7 @@ class ClienteAccolto(ClienteAccoltoDBmodel):
     def __init__(self,
                  nome, cognome, indirizzo, telefono, email,
                   difficolta, tipologia, referenza, sopraluogo,
-                    datasopraluogo, lavorazione, commerciale,
+                     lavorazione, commerciale,
                         tecnico=None, capocantiere=None ):
         self.nome = nome
         self.cognome = cognome
@@ -16,7 +16,6 @@ class ClienteAccolto(ClienteAccoltoDBmodel):
         self.tipologia = tipologia
         self. referenza = referenza
         self.sopraluogo = sopraluogo
-        self.datasopraluogo = datasopraluogo
         self.lavorazione = lavorazione
         self.commerciale = commerciale
         self.tecnico = tecnico
@@ -28,11 +27,11 @@ class ClienteAccolto(ClienteAccoltoDBmodel):
 
     def registraCliente(nome, cognome, indirizzo, telefono, email,
               difficolta, tipologia, referenza, sopraluogo,
-                datasopraluogo, lavorazione, commerciale):
+              lavorazione, commerciale):
 
         cliente = ClienteAccolto(nome=nome, cognome=cognome, indirizzo=indirizzo, telefono=telefono,
                                  email=email, difficolta=difficolta, tipologia=tipologia, referenza=referenza,
-                                 sopraluogo=sopraluogo,datasopraluogo=datasopraluogo, lavorazione=lavorazione,
+                                 sopraluogo=sopraluogo, lavorazione=lavorazione,
                                  commerciale=commerciale)
 
         ClienteAccoltoDBmodel.commitClienteAccolto(cliente)

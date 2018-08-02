@@ -51,14 +51,14 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/button-modificaProfilo.css') }}">
 
 <!--==================== css calendario e agenda====== =============================================-->
-    <link href="{{url_for('static', filename='calendario/fullcalendar.min.css') }}" rel='stylesheet' />
-    <link href="{{url_for('static', filename='calendario/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
+    <link href="{{url_for('static', filename='agenda/fullcalendar.min.css') }}" rel='stylesheet' />
+    <link href="{{url_for('static', filename='agenda/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
 
     <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
 
-    <script src="{{url_for('static', filename='calendario/lib/moment.min.js') }}"></script>
-    <script src="{{url_for('static', filename='calendario/fullcalendar.min.js') }}"></script>
-    <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/lib/moment.min.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/fullcalendar.min.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/locale/it.js') }}"></script>
 <!--===============================================================================================-->
 
     <link href="{{url_for('static', filename='headerAndForm/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css') }}" rel='stylesheet' />
@@ -153,6 +153,9 @@
 		<link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/main.css') }}" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie9.css') }}" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie8.css') }}" /><![endif]-->
+
+		<link rel="stylesheet" href="{{url_for('static', filename='css/agenda.css') }}">
+
 	</head>
 	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
@@ -199,6 +202,7 @@
 							<div class="row">
 								<div class="col-md-6">
 									<ul class="contact">
+
 										<li>
 											<h3>Indirizzo:</h3>
 											<span>{{cliente.indirizzo}}</span>
@@ -223,7 +227,7 @@
 												<span>{{cliente.datasopralugo}}</span>
 											{% endif %}
 											<br/><br/><br/>
-											<a class="button">Imposta data sopraluogo</a>
+											<a id="setSopraluogo" class="button">Imposta data sopraluogo/appuntamento</a>
 										</li>
 									</ul>
 								</div>
@@ -260,10 +264,15 @@
 						</div>
 					</section>
 
+				<section id="appuntamenti" class="wrapper style3 fade-up">
+						<div id='calendar' data-full-calendar class="agenda"></div>
+				</section>
+
 				<!-- One -->
 					<section id="one" class="wrapper style2 spotlights">
 
 					</section>
+					<!-- Two -->
 
 				<!-- Two -->
 					<section id="two" class="wrapper style3 fade-up">
@@ -295,12 +304,15 @@
 
 			<script>
 
+
+
 				$('#header > a').css('border-bottom', 'None' );
 
    				var socketHome = io.connect("{{sockUrl}}"+'/home');
 				var socketPreventivoEdile= io.connect("{{sockUrl}}"+'/preventivoEdile');
 				var socketPreventivoFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 				var socketPreventivoVarianti= io.connect("{{sockUrl}}"+'/preventivoVarianti');
+				var socketAgenda= io.connect("{{sockUrl}}"+'/agenda');
 
                 socketHome.on('connect', function() {
                     console.log('connected listino');
@@ -359,6 +371,288 @@
     			$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
 				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
 				$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
+
+
+				$('#setSopraluogo').click(function(){
+				    swal.withFormAsync({
+                        title: 'Imposta data sopraluogo',
+                        showCancelButton: true,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        cancelButtonText: 'annulla',
+                        closeOnConfirm: true,
+                        formFields: [
+
+							{ id: 'luogo',  type: 'text', label: 'Luogo sopraluogo:', name: 'luogo' },
+							{ id: 'giorno',  type: 'date', label: 'Giorno sopraluogo:', name: 'giorno' },
+
+                            { id: 'ora', type: 'time', label: 'Orario sopraluogo:', name: 'orario' },
+
+                            { id: 'durata',  type: 'number', label: 'Durata in ore sopraluogo:', name: 'durata', value: 1 },
+
+							{ id: 'accompagnatore', label: 'Accompagnatore:',
+											type: 'select',
+											options: [
+
+											  {% for dip in colleghi %}
+											  {value: '{{dip.username}}', text: '{{dip.nome}} {{dip.cognome}}'},
+
+											  {% endfor %}
+											]},
+
+                        ]
+                    }).then(function (context) {
+                        if(context._isConfirm){
+							socketAgenda.emit('imposta_sopraluogo', {
+								'dip' : '{{dipendente.username}}',
+								'cliente' : '{{cliente.nome}} {{cliente.cognome}}',
+								'giorno' : context.swalForm['giorno'],
+								'ora' : context.swalForm['ora'],
+								'durata': context.swalForm['durata'],
+								'accompagnatore': context.swalForm['accompagnatore'],
+								'luogo': context.swalForm['luogo']
+							});
+                        }
+
+                    });
+
+				});
+			</script>
+
+			<script>
+				/*In questa parte viene settata l'agenda da far apparire nella pagina cliente*/
+
+				 $('.agenda').fullCalendar({
+					  header: {
+						left: 'prev,next today',
+						center: 'title',
+						right: 'month,agendaWeek,agendaDay,listWeek'
+					  },
+					  navLinks: true, // can click day/week names to navigate views
+					  //selectable: true,
+					 // selectHelper: true,
+					  editable: true,
+					  eventLimit: true, // allow "more" link when too many events
+
+					  events: [
+						{% for evento in agenda %}
+						{
+						  title: '{{evento.titolo}}\n{{evento.luogo}}\nAccompagnatore:',
+						  start: '{{evento.start_date}}',
+						  color: 'red'
+						},
+						{% endfor %}
+					   ],
+
+					  eventClick: function(calEvent, jsEvent, view) {
+
+
+
+						giornoSelected = $(this)
+						$('.clicked').each(function(){
+						  if( !$(this).is(giornoSelected) ){
+							$(this).removeClass('clicked');
+							$(this).popover('hide');
+						  }
+						});
+
+						if( !$(this).hasClass('clicked') ){
+						  $(this).addClass('clicked');
+						  contenuto = ' <div> \
+										  <div id="agenda-edit-event" class="popover-option '+calEvent._id+'">Modifica evento</div>     \
+										  <hr/> \
+										  <div id="agenda-del-event" class="popover-option '+calEvent._id+'">Rimuovi evento</div>     \
+										</div> \
+									  '
+
+						  $(this).popover({
+							  trigger: 'manual',
+							  container: 'body',
+							  html:true,
+							  content: contenuto
+						  });
+
+						  $(this).popover('show');
+
+						  $('#agenda-del-event').click(function(){
+
+							eventId=$(this).attr('class').split(' ')[1];
+
+							$('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
+								return eventId == evt._id;
+							})[0]._id);
+							$('.popover').remove();
+							$('.clicked').removeClass('clicked');
+
+
+						  });
+
+						  $('#agenda-edit-event').click(function(){
+
+								eventId=$(this).attr('class').split(' ')[1];
+
+
+								var start_date = moment(new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
+								return eventId == evt._id;
+							})[0].start) )
+
+								var end_date= moment( new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
+								return eventId == evt._id;
+							})[0].end) )
+
+
+
+								swal.withFormAsync({
+									title: 'Modifica evento',
+									showCancelButton: true,
+									confirmButtonColor: '#DD6B55',
+									confirmButtonText: 'Ok',
+									cancelButtonText: 'annulla',
+									closeOnConfirm: true,
+									formFields: [
+
+										{ id: 'titolo', label: 'Titolo evento:', name: 'titolo', value: calEvent.title, placeholder: 'titolo evento' },
+
+									]
+								}).then(function (context) {
+									if(context._isConfirm){
+
+
+										$('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
+											return eventId == evt._id;
+										})[0]._id);
+
+
+										$('.agenda').fullCalendar( 'addEventSource', {
+
+
+										  events: [
+											{
+											  title  : context.swalForm['titolo'],
+											  start  : start_date
+
+											}
+										  ]}
+										);
+
+
+
+										$('.popover').remove();
+										$('.clicked').removeClass('clicked');
+
+									}
+									else{
+										$('.popover').remove();
+										$('.clicked').removeClass('clicked');
+									}
+
+								});
+						  });
+						}
+						else{
+							$(this).removeClass('clicked');
+							$(this).popover('hide');
+						}
+
+					  },
+					  dayClick: function(date, jsEvent, view) {
+
+
+
+						if( view.name == 'month'){
+
+							giornoSelected = $(this)
+							$('.clicked').each(function(){
+							  if( !$(this).is(giornoSelected) ){
+								$(this).removeClass('clicked');
+								$(this).popover('hide');
+							  }
+							});
+
+							if( !$(this).hasClass('clicked') ){
+							  $(this).addClass('clicked');
+							  contenuto = ' <div> \
+											  <div id="agenda-add-event" class="popover-option">Aggiungi evento</div>     \
+											</div> \
+										  '
+
+							  $(this).popover({
+								  trigger: 'manual',
+								  container: 'body',
+								  html:true,
+								  content: contenuto
+							  });
+
+							  $(this).popover('show');
+
+							  $('#agenda-add-event').click(function(){
+
+									swal.withFormAsync({
+										title: 'Nuovo evento',
+										showCancelButton: true,
+										confirmButtonColor: '#DD6B55',
+										confirmButtonText: 'Ok',
+										cancelButtonText: 'annulla',
+										closeOnConfirm: true,
+										formFields: [
+
+											{ id: 'titolo', label: 'Titolo evento:', name: 'titolo',  placeholder: 'titolo evento' },
+
+											{ id: 'durata',  type: 'number', label: 'Durata giorni evento:', name: 'durata', value: 1 },
+
+
+
+										]
+									}).then(function (context) {
+										if(context._isConfirm){
+
+											var start_date = moment( date.format() )
+											var end_date = moment( date.format() ).add( parseInt(context.swalForm['durata']), 'd')
+
+											$('.agenda').fullCalendar( 'addEventSource', {
+
+
+											  events: [
+												{
+												  title  : context.swalForm['titolo'],
+												  start  : start_date,
+												  end : end_date
+												}
+											  ]}
+											);
+
+											$('.clicked').popover('hide');
+											$('.clicked').removeClass('clicked');
+
+
+
+										}
+										else{
+											$('.clicked').popover('hide');
+											$('.clicked').removeClass('clicked');
+										}
+
+									});
+
+
+
+							  });
+							}
+							else{
+								$(this).removeClass('clicked');
+								$(this).popover('hide');
+							}
+						}
+						else if( view.name == 'agendaWeek' ){
+							console.log('week');
+
+						}
+						else if( view.name == 'agendaDay' ){
+							console.log('day');
+
+						}
+					  }
+				 });
 
 			</script>
 

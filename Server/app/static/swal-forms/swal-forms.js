@@ -211,15 +211,20 @@
       },
       toHtml: function () {
         var inputTag
-        console.log("Sto per decidere " +input.type);
+
 
         if( input.type == 'select-hidden'){
-          console.log("Cazzo ma passo di qua!");
           inputTag = t("<label for='{id}'><a id='selectHiddenSelect' class='fa fa-angle-double-down'></a></label><select id='{id}' class='{clazz} swal-form-field hidden-select' name='{name}'" +
             " value='{value}' title='{placeholder}' style='width:100%'>" +
             ' data-swal-forms-required={}', input) +
               input.options.reduce(toHtmlOptions, '') +
             '</select>'
+        }
+        else if( input.type == 'date'){
+          inputTag = t("<label for='{id}'></label>"+
+          "<input type='date' class='{clazz} swal-form-field' id='{id}' name='{id}' value='{value}' min='2018-01-01' max='2018-12-31' /> ", input) +
+              input.options.reduce(toHtmlOptions, '')
+
         }
         else if (input.type !== 'select') {
           inputTag = t("<input id='{id}' class='{clazz} swal-form-field' type='{type}' name='{name}'" +

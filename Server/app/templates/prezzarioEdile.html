@@ -225,7 +225,7 @@
 
           $('#selectSettori').click(function(){
 
-               if($('#dropDownSettori').children().length > 0) {
+                if( $('li.select2-results__message').text() != 'No results found' ){
                     if( firstTime )
                     {
                         firstTime = false;

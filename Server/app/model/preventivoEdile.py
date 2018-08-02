@@ -233,6 +233,7 @@ class PreventivoEdile(PreventivoDBmodel):
         :return:
         '''
 
+
         app.server.logger.info("\n\nwhat's your problem? {} {} {}\n".format(numero_preventivo, data, dipendente_generatore))
 
         lastPrev = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='edile').first()
@@ -245,8 +246,6 @@ class PreventivoEdile(PreventivoDBmodel):
 
             return (numero_preventivo, oggi)
 
-        app.server.logger.info("\n\nmA ST!!!!!!!!!!!!!!!!!!!!!!!!!?\n")
-
         commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=lastPrev.intervento_commessa).first()
 
@@ -257,27 +256,20 @@ class PreventivoEdile(PreventivoDBmodel):
                                      indirizzo_commessa=commessa.indirizzo,
                                      comune_commessa=commessa.comune )
 
-        app.server.logger.info("\n\nmA STAI SCHERZANDDOOO???????????\n")
 
         PreventivoDBmodel.addRowNoCommit(preventivo)
         PreventivoDBmodel.commit()
 
-        app.server.logger.info("\n\nIN MEZZO\n")
-
         lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
-        app.server.logger.info("\n\nwhat?!\n")
 
         lavorazioni = PreventivoEdile.__duplicaLavorazioni__(lavorazioni)
 
         for lav in lavorazioni:
-            app.server.logger.info("\n\nnON DIRMI CHE\n")
             lav.data = oggi
             PreventivoDBmodel.addRowNoCommit(lav)
 
-        app.server.logger.info("\n\nnON DIRMI CHE1\n")
         PreventivoEdile.commit()
-        app.server.logger.info("\n\nnON DIRMI CWWW11112HE\n")
 
         sottolavorazioniCad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
@@ -302,8 +294,6 @@ class PreventivoEdile(PreventivoDBmodel):
             PreventivoDBmodel.addRowNoCommit(sottoLav)
 
         PreventivoEdile.commit()
-
-        app.server.logger.info("\n\nfineeeen\n")
 
         return ( numero_preventivo, oggi )
 
@@ -766,13 +756,11 @@ class PreventivoEdile(PreventivoDBmodel):
                 PreventivoEdile.delRow(prev)
 
 
-    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, acorpo ):
+    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura ):
 
 
         if chiudiPreventivo :
             PreventivoEdile.chiudiPreventivo(numero_preventivo)
-
-        scontoDaApplicare=sconto
 
 
         preventivo = PreventivoEdile.query.filter_by(tipologia='edile', numero_preventivo=numero_preventivo,
@@ -972,10 +960,11 @@ class PreventivoEdile(PreventivoDBmodel):
                               \\begin{spacing}{0}
                            '''
 
-            if acorpo:
-                latexScript += '-'
-            else:
+            if sumisura:
                 latexScript += '{}'.format(lav[1])
+            else:
+                latexScript += '-'
+
 
             latexScript += '''
                               \\end{spacing} &
@@ -983,10 +972,12 @@ class PreventivoEdile(PreventivoDBmodel):
                               \\begin{spacing}{0}
                            '''
 
-            if acorpo:
-                latexScript += 'a corpo'
-            else:
+            if sumisura:
                 latexScript += lav[0].unitaMisura
+
+            else:
+                latexScript += 'a corpo'
+
 
             latexScript += '''
                               \\end{spacing} &
@@ -1019,50 +1010,56 @@ class PreventivoEdile(PreventivoDBmodel):
                           \\begin{spacing}{0}
                             \\euro\\hfill
                        '''
+
         latexScript += '{}'.format(totalePreventivo)
-
-        totaleScontato = totalePreventivo
-        laberForSconto = ""
-
-        if tipoSconto == 2:
-            totaleScontato -= sconto;
-            laberForSconto ="Sconto netto"
-        elif tipoSconto == 3:
-            totaleScontato+=totalePreventivo*sconto/100
-            laberForSconto ="\%"
-        elif tipoSconto == 4:
-            totaleScontato=sconto
-            laberForSconto="Sconto"
-
-        totaleConIva = totaleScontato+(totaleScontato*iva/100)
-
-        totaleScontato = math.floor(totaleScontato*100)/100
-        totaleConIva = math.floor(totaleConIva*100)/100
 
         latexScript += '''
                           \\end{spacing}\\\\
                           \\hline
-                          \\multicolumn{1}{  L{108.5mm} | }{} &
-                          \\multicolumn{2}{  L{16mm} | }{
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                        '''
-
-        latexScript += '\\textbf{'+laberForSconto+'}'
-
-        latexScript += '''
-                            \\end{spacing}
-                          } &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                          \\euro\\hfill 
                        '''
 
-        latexScript += '{}'.format(totaleScontato)
+        totaleScontato = totalePreventivo
+        laberForSconto = ""
 
-        latexScript +=  '''
-                          \\end{spacing}\\\\
-                          \\cline{2-4}
+
+        if tipoSconto == 2:
+            totaleScontato -= sconto;
+            laberForSconto = "Sconto netto"
+        elif tipoSconto == 3:
+            totaleScontato += totalePreventivo * sconto / 100
+            laberForSconto = "\%"
+        elif tipoSconto == 4:
+            totaleScontato = sconto
+            laberForSconto = "Totale con sconto"
+
+        totaleConIva = totaleScontato + (totaleScontato * iva / 100)
+
+        totaleScontato = math.floor(totaleScontato * 100) / 100
+        totaleConIva = math.floor(totaleConIva * 100) / 100
+
+
+        if tipoSconto != 1:
+            latexScript += '''
+                              \\multicolumn{1}{  L{108.5mm} | }{} &
+                              \\multicolumn{2}{  L{16mm} | }{
+                                \\vspace{2.5mm}
+                                \\begin{spacing}{0}
+                            '''
+
+            latexScript += '\\textbf{' + laberForSconto + '}'
+
+            latexScript += '''
+                                \\end{spacing}
+                              } &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                              \\euro\\hfill 
+                           '''
+
+            latexScript += '{}'.format(totaleScontato)+'\\end{spacing}\\\\ \\cline{2-4}'
+
+
+        latexScript += '''
                           \\multicolumn{1}{  L{108.5mm} | }{} &
                           \\vspace{2.5mm}
                           \\begin{spacing}{0}
@@ -1071,7 +1068,11 @@ class PreventivoEdile(PreventivoDBmodel):
                           \\vspace{2.5mm}
                           \\begin{spacing}{0}
                         '''
-        latexScript +=  '\\textbf{'+str(iva)+'\%}'
+
+        if iva == 0:
+            latexScript += '\\textbf{\%}'
+        else:
+            latexScript += '\\textbf{' + str(iva) + '\%}'
 
         latexScript += '''
                           \\end{spacing} &
@@ -1101,8 +1102,8 @@ class PreventivoEdile(PreventivoDBmodel):
                         \\hfill
                       '''
 
-
-        latexScript += preventivo.note
+        if preventivo.note is not None:
+            latexScript += preventivo.note
 
         latexScript += '''
                       \\end{spacing}&

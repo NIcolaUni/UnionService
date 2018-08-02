@@ -60,9 +60,7 @@
                 </div>
             </li>
             {% endraw %}
-            <li class="hidden-xs" data-target="chat" data-toggle-sidebar data-model-right="mactrl.sidebarToggle.right" data-ng-class="{ 'open': mactrl.sidebarToggle.right === true }">
-                <a class="tm-chat" href=""></a>
-            </li>
+
         </ul>
     </li>
 </ul>
@@ -76,6 +74,7 @@
        <!-- <input type="text"  list="clienti"  placeholder="Cerca qua i tuoi clienti..."> -->
         <i id="top-search-close" data-ng-click="hctrl.closeSearch()">&times;</i>
                  <datalist  id="clienti">
+
                      {% for cliente in listaClienti %}
                         <option value="{{cliente.cognome}} . {{cliente.nome}} . {{cliente.indirizzo}}" >
                      {% endfor %}

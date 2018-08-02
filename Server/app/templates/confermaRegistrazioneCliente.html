@@ -5,9 +5,15 @@
           text: "Registrazione cliente avvenuta con successo",
           type: 'info',
           confirmButtonText: "ok",
-        }).then((result) => {
-            window.location = "{{url_for('homepage')}}";
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+
+        }, function(isConfirm) {
+
+             window.location = "{{url_for('homepage')}}";
         });
+
 
 
     </script>

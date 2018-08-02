@@ -33,6 +33,7 @@ class DipFittizioForm(FlaskForm):
     password = PasswordField("Inserire la propria password d'accesso")
     tipo_dip = SelectField("Tipo Dipendente", choices=[("commerciale","Commerciale"), ("tecnico", "Tecnico"),
                                                        ("capo-cantiere", "Capo-cantiere"), ("contabile", "Contabile"), ("esterno", "Esterno")])
+    email_dip = StringField("email", validators=[Length(max=60)])
     dirigente = BooleanField("Dirigente")
 
     def assegnaUserEPass(self):
@@ -50,8 +51,16 @@ class ClienteAccoltoForm(FlaskForm):
     tipologia = RadioField("Tipologia cliente", choices=[("immobiliare","Immobiliare"), ("privato", "Privato"), ("azienda", "Azienda")])
     referenza = RadioField("Tipologia cliente", choices=[("passaparola","Passaparola"), ("fiera", "Fiera"), ("ufficio", "Ufficio"), ("internet", "Internet"), ("altro", "Altro")])
     sopraluogo = BooleanField("Sopraluogo")
-    datasopraluogo = DateField("Data sopraluogo")
+
     lavorazione = TextAreaField("Lavorazione", validators=[DataRequired("Campo obbligatorio!"), Length( max=500)])
+
+    #luogo_sopraluogo = StringField("luogo_sopraluogo")
+    #data_sopraluogo = DateField("Data sopraluogo")
+    #orario_inizio_sopraluogo = StringField("orario_inizio_sopraluogo")
+    #orario_fine_sopraluogo = StringField("orario_fine_sopraluogo")
+    #accompagnatore_sopraluogo = SelectField("Tipo accompagnatore_sopraluogo", choices=[("commerciale","Commerciale"), ("tecnico", "Tecnico"),
+    #                                                   ("capo-cantiere", "Capo-cantiere"), ("contabile", "Contabile"), ("esterno", "Esterno")])
+
     submit = SubmitField('Registra cliente')
 
 class ApriPaginaClienteForm(FlaskForm):

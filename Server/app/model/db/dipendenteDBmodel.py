@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Date, Boolean, ForeignKeyConstraint
+from .dbUSinterface import DbUSinterface
 from app import database
 
-
-class DipendenteDBmodel(database.Model):
+class DipendenteDBmodel(DbUSinterface, DbUSinterface.db.Model):
     __tablename__ = "dipendente"
     __table_args__ = (
             ForeignKeyConstraint(['username', 'password'], ['dipendente_registrato.username', 'dipendente_registrato.password'],
@@ -24,6 +24,7 @@ class DipendenteDBmodel(database.Model):
     classe = Column(String(30), nullable=False)
     dirigente = Column(Boolean, nullable=False)
     session_id = Column(String(40), unique=True, default=None)
+    immagine_profilo = Column(String(500), default='senzaImmagine.jpg')
 
 
     def commitRegistrazione(dipFitReg, dipReg, dip):
@@ -33,5 +34,4 @@ class DipendenteDBmodel(database.Model):
         database.session.add(dip)
         database.session.commit()
 
-    def commitSid():
-        database.session.commit()
+

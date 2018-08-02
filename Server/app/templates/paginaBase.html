@@ -46,14 +46,14 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/button-modificaProfilo.css') }}">
 
 <!--==================== css calendario e agenda====== =============================================-->
-    <link href="{{url_for('static', filename='calendario/fullcalendar.min.css') }}" rel='stylesheet' />
-    <link href="{{url_for('static', filename='calendario/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
+    <link href="{{url_for('static', filename='agenda/fullcalendar.min.css') }}" rel='stylesheet' />
+    <link href="{{url_for('static', filename='agenda/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
 
     <script src="{{url_for('static', filename='js/vendor/jquery-1.10.2.min.js') }}"></script>
 
-    <script src="{{url_for('static', filename='calendario/lib/moment.min.js') }}"></script>
-    <script src="{{url_for('static', filename='calendario/fullcalendar.min.js') }}"></script>
-    <script src="{{url_for('static', filename='calendario/locale/it.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/lib/moment.min.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/fullcalendar.min.js') }}"></script>
+    <script src="{{url_for('static', filename='agenda/locale/it.js') }}"></script>
 <!--===============================================================================================-->
 
     {% if not prezzario and not schedaFornitoriCss and not prezzarioProdottiCss %}
@@ -177,6 +177,15 @@
 
     {% endif %}
 
+    <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
+     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
+    <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
+    <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='calendario/css/bootstrap-year-calendar.css') }}">
+    <script src="{{url_for('static', filename='calendario/js/bootstrap-year-calendar.js') }}"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='chat/css/chat.css')}}">
 </head>
 
     {% if fittizio %}
@@ -191,6 +200,17 @@
        {% block content %}
        {% endblock %}
 
+        <div class="chat-div row">
+            <div id="openCloseChat" class="col-md-3"><a class="close-chat fa fa-arrow-left"></a></div>
+            <div class="listColleghi col-md-9">
+                <ul id="ulListColleghi">
+                    {% for collega in colleghi %}
+                    <li class="collega"><label><img src="{{url_for('static', filename='immaginiProfilo/'+collega.immagine_profilo ) }}"><span>{{collega.nome}} {{collega.cognome}}</span></label></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
 
 <!--================================= JS Form =================================================================-->
        <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
@@ -202,6 +222,35 @@
 
 
         <script src="{{url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{url_for('static', filename='chat/js/chat.js') }}"></script>
 
+        <script>
+            $('.collega label').click(function(){
+                 //chat_opened=false;
+                 //$('.chat-div').animate({"margin-right": '-=13%'});
+                 //$(this).removeClass('close-chat');
+                 //$(this).addClass('open-chat');
+
+                 $('.close-chat').trigger('click');
+                 $('.open-chat').trigger('click');
+                 $('#chat-box').remove();
+
+                 nomeCollega = $(this).children('span').text();
+
+                 $(' <div id="chat-box"> \
+                       <div id="chat-box-header"><label>'+nomeCollega+'</label><span id="controlChatBox"><a class="closeChatBox fa fa-close"></a></span></div> \
+                       <div id="chat-box-content"></div> \
+                       <div id="chat-box-textField"><textarea></textarea></div> \
+                       <div id="button-chatBox"><button>Invia</button></div> \
+                      </div>' ).insertAfter('.chat-div');
+
+                 $('.closeChatBox').click(function(){
+                    $(this).parent().parent().parent().remove();
+                 });
+
+            });
+
+
+        </script>
     </body>
 </html>
