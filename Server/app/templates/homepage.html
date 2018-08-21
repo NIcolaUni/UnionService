@@ -221,130 +221,115 @@
         right: 'month,agendaWeek,agendaDay,listWeek'
       },
       navLinks: true, // can click day/week names to navigate views
-      //selectable: true,
-     // selectHelper: true,
       editable: true,
+      eventDurationEditable: true,
       eventLimit: true, // allow "more" link when too many events
-
+      views: {
+          agenda: {
+            eventLimit: 3 // adjust to 6 only for agendaWeek/agendaDay
+          }
+      },
       events: [
         {% for evento in agenda %}
         {
-          title: '{{evento.titolo}}\n{{evento.luogo}}\nAccompagnatore:',
+          title: '{{evento.titolo}}\n{{evento.luogo}}',
           start: '{{evento.start_date}}',
-          color: 'red'
+          color: 'blue'
         },
         {% endfor %}
        ],
 
-      eventClick: function(calEvent, jsEvent, view) {
-
-
-
-        giornoSelected = $(this)
-        $('.clicked').each(function(){
-          if( !$(this).is(giornoSelected) ){
-            $(this).removeClass('clicked');
-            $(this).popover('hide');
-          }
+      eventMouseout: function( event, jsEvent, view ){
+        $('#popupEvent-over').each(function(){
+            $('.Hunter-pop-up').remove();
         });
 
-        if( !$(this).hasClass('clicked') ){
-          $(this).addClass('clicked');
-          contenuto = ' <div> \
-                          <div id="agenda-edit-event" class="popover-option '+calEvent._id+'">Modifica evento</div>     \
-                          <hr/> \
-                          <div id="agenda-del-event" class="popover-option '+calEvent._id+'">Rimuovi evento</div>     \
+        $('.popover').remove();
+      },
+
+      eventMouseover: function( event, jsEvent, view ) {
+        jsEvent.preventDefault();
+        jsEvent.stopPropagation();
+
+        $('body').append(
+            '<div id="popupEvent-over" style="display:none"> \
+                <div> \
+                    <div class="panel panel-default"> \
+                        <div class="panel-heading subtitle">Accompagnatori:</div> \
+                        <div class="panel-body form-inline dept1"> \
+                          <ul> \
+                            <li>ACC1</li> \
+                            <li>ACC2</li> \
+                            <li>ACC3</li> \
+                          </ul> \
                         </div> \
-                      '
-
-          $(this).popover({
-              trigger: 'manual',
-              container: 'body',
-              html:true,
-              content: contenuto
-          });
-
-          $(this).popover('show');
-
-          $('#agenda-del-event').click(function(){
-
-            eventId=$(this).attr('class').split(' ')[1];
-
-            $('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
-                return eventId == evt._id;
-            })[0]._id);
-            $('.popover').remove();
-            $('.clicked').removeClass('clicked');
+                    </div> \
+                </div> \
+            </div>'
+        );
 
 
-          });
+        var popupEvent = function() {
 
-          $('#agenda-edit-event').click(function(){
-
-                eventId=$(this).attr('class').split(' ')[1];
-
-
-                var start_date = moment(new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
-                return eventId == evt._id;
-            })[0].start) )
-
-                var end_date= moment( new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
-                return eventId == evt._id;
-            })[0].end) )
-
-
-
-                swal.withFormAsync({
-                    title: 'Modifica evento',
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: 'Ok',
-                    cancelButtonText: 'annulla',
-                    closeOnConfirm: true,
-                    formFields: [
-
-                        { id: 'titolo', label: 'Titolo evento:', name: 'titolo', value: calEvent.title, placeholder: 'titolo evento' },
-
-                    ]
-                }).then(function (context) {
-                    if(context._isConfirm){
-
-
-                        $('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
-                            return eventId == evt._id;
-                        })[0]._id);
-
-
-                        $('.agenda').fullCalendar( 'addEventSource', {
-
-
-                          events: [
-                            {
-                              title  : context.swalForm['titolo'],
-                              start  : start_date
-
-                            }
-                          ]}
-                        );
-
-
-
-                        $('.popover').remove();
-                        $('.clicked').removeClass('clicked');
-
-                    }
-                    else{
-                        $('.popover').remove();
-                        $('.clicked').removeClass('clicked');
-                    }
-
-                });
-          });
         }
-        else{
-            $(this).removeClass('clicked');
-            $(this).popover('hide');
-        }
+
+        $(this).hunterPopup({
+
+                width: '320px',
+                height: '200px',
+                title: event.title,
+                content: $('#popupEvent-over'),
+                event: popupEvent
+
+        });
+
+        $(this).trigger('launch-popup-over');
+
+      },
+
+      eventClick: function(calEvent, jsEvent, view) {
+
+           jsEvent.preventDefault();
+           jsEvent.stopPropagation();
+
+           $('body').append(
+                '<div id="popupEvent-click" style="display:none"> \
+                    <div> \
+                        <div class="panel panel-default"> \
+                            <div class="panel-heading subtitle">Durata evento:</div> \
+                            <div class="panel-body form-inline dept1"> \
+                              <label for="inizio_evento">Orario inizio:</label> \
+                              <input id="inizio_evento" type="time"> <br/>\
+                              <label for="fine_evento">Orario fine:</label> \
+                              <input id="fine_evento" type="time"> \
+                            </div> \
+                            <div class="panel-heading subtitle">Selezione accompagnatori:</div> \
+                            <div class="panel-body form-inline dept1"> \
+                              <label for="num_accompagnatori">Numero accompagnatori:</label> \
+                              <input id="num_accompagnatori" type="number" value="0" min="0" max="5"> \
+                            </div> \
+                        </div> \
+                    </div> \
+                </div>'
+           );
+
+
+            var popupEvent = function() {
+
+            }
+
+            $(this).hunterPopup({
+
+                width: '320px',
+                height: '200px',
+                title: calEvent.title,
+                content: $('#popupEvent-click'),
+                event: popupEvent
+
+            });
+
+            $(this).trigger('launch-popup-click');
+
 
       },
       dayClick: function(date, jsEvent, view) {
@@ -364,7 +349,7 @@
             if( !$(this).hasClass('clicked') ){
               $(this).addClass('clicked');
               contenuto = ' <div> \
-                              <div id="agenda-add-event" class="popover-option">Aggiungi evento</div>     \
+                              <div id="agenda-add-event" class="popover-option">Aggiungi appuntamento</div>     \
                             </div> \
                           '
 
@@ -446,9 +431,22 @@
       }
   });
 
+
+
   $('.fc-button').click(function(){
      $('.popover').remove();
      $('.clicked').removeClass('clicked');
+  });
+
+  $('.fc-view-container').mouseover(function(){
+    $('.popover').remove();
+    $('.Hunter-pop-up').remove();
+  });
+
+
+  $('#row-content').mouseover(function(){
+    $('.popover').remove();
+    $('.Hunter-pop-up').remove();
   });
 
  /* Collego i bottoni alle pagine che devono ritornare */

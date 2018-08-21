@@ -331,6 +331,12 @@ def modificaFornitore(nomeFornitore, primoGruppo, nomeRappresentante):
 
 
 
+@server.route('/agendaClientePag/dipUsername')
+@login_required
+def agendaClientePag(dipUsername):
+
+    agenda = Agenda.query.filter_by(dipendente=dipUsername)
+    return render_template('agendaPaginaCliente.html', agenda=agenda)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required

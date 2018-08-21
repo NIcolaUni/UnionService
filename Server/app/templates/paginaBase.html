@@ -109,8 +109,8 @@
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.curvedlines/curvedLines.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.resize.js') }}"></script>
-        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/moment/min/moment.min.js') }}"></script>
-        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>
+       <!--  <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/moment/min/moment.min.js') }}"></script>
+       <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>-->
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot-orderBars/js/jquery.flot.orderBars.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.pie.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js') }}"></script>
@@ -142,6 +142,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/agenda.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/gestioneDip.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/popover.css') }}"
     <link rel="stylesheet" href="{{url_for('static', filename='css/registraDipendente.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/impegni.css') }}">
 
@@ -178,7 +179,7 @@
     {% endif %}
 
     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
-     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
     <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
     <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
 
@@ -186,6 +187,10 @@
     <script src="{{url_for('static', filename='calendario/js/bootstrap-year-calendar.js') }}"></script>
 
     <link rel="stylesheet" href="{{url_for('static', filename='chat/css/chat.css')}}">
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='hunterPopup/css/hunterPopup.css')}}">
+    <script type="text/javascript" src="{{url_for('static', filename='hunterPopup/js/jquery-popup.js')}}"></script>
+
 </head>
 
     {% if fittizio %}

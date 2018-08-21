@@ -16,6 +16,8 @@
     margin-left: 20%;
     padding: 0;
     overflow-y: scroll;
+    border: 1px solid cornflowerblue;
+    border-radius: 3%;
 }
 #ulListColleghi {
     height: 100%;
@@ -29,13 +31,15 @@ li.collega {
 
 .collega  img {
     border-radius: 50%;
-    width: 30%;
+    width: 40%;
+    margin-left: 8%;
 }
 
 .collega  label {
 
-    width: 100%;
+    width: 68%;
     cursor: pointer;
+    display: inline-block;
 }
 
 .collega  label:hover {
@@ -44,11 +48,11 @@ li.collega {
 }
 
 .collega span {
-    font-size: 1.4em;
+    font-size: 1.2em;
     color: black;
-    margin-left: 10%;
+    margin-left: 7%;
     /* margin-bottom: 50px; */
-    margin-top: 6%;
+    margin-top: 4%;
     display: inline-block;
     position: absolute;
 }
@@ -87,22 +91,23 @@ div#chat-box {
     height: 50%;
     right: 0;
     z-index: 8;
-    border-top-left-radius: 5%;
-    border-top-right-radius: 5%;
+
 }
 
 div#chat-box-header {
     background-color: blue;
     /* position: fixed; */
     /* z-index: 9; */
-    height: 10%;
+    height: 8%;
     width: 100%;
-    border-top-left-radius: 12%;
-    border-top-right-radius: 12%;
+    border-top-left-radius: 73%;
+    border-top-right-radius: 73%;
 }
 
 div#chat-box-header label{
    font-size: 1.3em;
+   margin-left: 27%;
+   margin-top: 3%;
 }
 
 
@@ -129,7 +134,12 @@ span#controlChatBox {
     color: white;
     display: inline-block;
     position: absolute;
-    right: 6px;
+    right: 1%;
+    width: 7%;
+    height: 4%;
+    top: 2%;
+    padding-left: 1%;
+    padding-bottom: 11%;
 }
 
 
