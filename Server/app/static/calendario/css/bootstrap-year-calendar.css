@@ -261,3 +261,13 @@
 .calendar-context-menu  .item:hover > .submenu {
 	display:block;
 }
+
+/****************************miei*************************************/
+
+.popup-ctrl-btns {
+    float: right;
+}
+
+.popup-ctrl-btns button{
+    border: outset;
+}

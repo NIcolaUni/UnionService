@@ -8292,6 +8292,12 @@ body #content {
     background-size: 24px 24px;
   }
 }
+
+.top-menu > li > a.full-screen {
+  background-image: url("../img/icons/fullscreen-my-white.png");
+  cursor: pointer;
+}
+
 .top-menu > li:before {
   top: -1px !important;
 }
@@ -15819,3 +15825,14 @@ hr.fc-divider {
 input#nome_cognome_indirizzo::placeholder {
     color: #C0C0C0 !important;
 }
+
+.pull-left {
+    width: 100%;
+}
+
+.pull-left button {
+    border: outset;
+    color: black;
+    float: right;
+}
+

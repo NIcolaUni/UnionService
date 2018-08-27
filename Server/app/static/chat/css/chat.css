@@ -14,6 +14,7 @@
     background-color: white;
     height: 100%;
     margin-left: 20%;
+    margin-top: 1%;
     padding: 0;
     overflow-y: scroll;
     border: 1px solid cornflowerblue;
@@ -31,13 +32,14 @@ li.collega {
 
 .collega  img {
     border-radius: 50%;
-    width: 40%;
-    margin-left: 8%;
+    width: 30%;
+    //margin-left: 8%;
 }
 
 .collega  label {
-
-    width: 68%;
+    padding-top: 5%;
+    padding-left: 5%;
+    width: 100%;
     cursor: pointer;
     display: inline-block;
 }
@@ -166,4 +168,9 @@ div#button-chatBox button:hover {
 .closeChatBox {
     cursor: pointer;
     color: white;
+}
+
+#chat-title {
+    margin-left: 6%;
+    font-size: 1.6em;
 }

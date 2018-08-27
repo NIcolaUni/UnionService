@@ -105,6 +105,39 @@
             box.unbind();
         });
 
+        box.on('launch-popup-overYear', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            $('.Hunter-pop-up').remove();
+            var _this = $(this);
+            var offset = _this.offset();
+            var top = offset.top + _this.outerHeight() + 15;
+            if(obj.placement == 'left') {
+                template.css({
+                    'left': offset.left-20,
+                    'top': top
+                });
+            } else {
+
+                template.addClass("Hunter-pop-up-right");
+                template.css({
+                    'left': offset.left - obj.width + _this.width() / 2,
+                    'top': top
+                });
+            }
+
+            buildPopup();
+            $('body').append(template);
+            $('.Hunter-pop-up').click(function(event) {
+                event.stopPropagation();
+            });
+
+            //调用弹出层内容注册的事件。
+            obj.event();
+         //   box.unbind();
+        });
+
        /* box.click(function(event) {
             alert('clickjs');
             event.preventDefault();

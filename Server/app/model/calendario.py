@@ -16,7 +16,7 @@ class Calendario(CalendarioDBmodel):
                                end_date=end_date, tipologia=tipologia, luogo=luogo)
         CalendarioDBmodel.addRow(newEvento)
 
-    def eliminaEvento(dipendente, titolo, start_date):
-        toDel = CalendarioDBmodel.query.filter_by(dipendente=dipendente, titolo=titolo, start_date=start_date).first()
+    def eliminaEvento(dipendente, titolo, start_date, tipologia):
+        toDel = CalendarioDBmodel.query.filter_by(dipendente=dipendente, titolo=titolo, start_date=start_date, tipologia=tipologia).first()
 
         CalendarioDBmodel.delRow(toDel)

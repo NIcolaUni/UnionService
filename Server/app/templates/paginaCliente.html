@@ -219,7 +219,7 @@
 											<h3>Lavorazione in corso:</h3>
 												<span>{{cliente.lavorazione}}</span>
 										</li>
-										<li>
+										<li id="sopralluogoLiEl">
 											<h3>Sopraluogo:</h3>
 											{% if not cliente.sopraluogo %}
 												<span>Non necessario</span>
@@ -228,6 +228,7 @@
 											{% endif %}
 											<br/><br/><br/>
 											<a id="setSopraluogo" class="button">Imposta data sopraluogo/appuntamento</a>
+											<a id="closeAgenda"  style="display:none" class="button">Chiudi agenda</a>
 										</li>
 									</ul>
 								</div>
@@ -260,7 +261,7 @@
 									{% endif %}
 								</div>
 							</div>
-							<iframe id="agendaDipendente" src="/agendaClientePag/{{dipendentr.username}}"></iframe>
+							<iframe id="agendaDipendente" src="{{url_for('agendaClientePag', dipUsername=dipendente.username)}}"></iframe>
 						</div>
 					</section>
 
@@ -370,9 +371,23 @@
 				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
 				$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
 
+				$('#closeAgenda').click( function(){
+					$('#agendaDipendente').css('display', 'none');
+
+					$('#setSopraluogo').show();
+					$('#closeAgenda').hide();
+
+				});
 
 				$('#setSopraluogo').click(function(){
-				    swal.withFormAsync({
+
+					$('#agendaDipendente').css('display', 'unset');
+
+					$('#setSopraluogo').hide();
+					$('#closeAgenda').show();
+
+
+				   /* swal.withFormAsync({
                         title: 'Imposta data sopraluogo',
                         showCancelButton: true,
                         confirmButtonColor: '#DD6B55',
@@ -412,7 +427,7 @@
 							});
                         }
 
-                    });
+                    });*/
 
 				});
 			</script>

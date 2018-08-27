@@ -1,0 +1,38 @@
+.popover {
+    height: 3%;
+    padding-top: 0.8%;
+}
+
+.Hunter-pop-up{
+    width: 444px;
+}
+
+#Hunter_pop_wrap{
+    width: 100% !important;
+}
+
+.Hunter-pop-up .title {
+    color: black;
+}
+
+.popup-ctrl-btns {
+    width: 36%;
+    float: right;
+}
+
+.popup-ctrl-btns button {
+    color: black !important;
+    border: outset !important;
+    border-radius: 0;
+    width: 50%;
+    padding: 0;
+    margin: 0;
+    font-size: 7px;
+    /* height: 7px; */
+    /* margin-left: -1%; */
+    padding-bottom: 11%;
+    /* padding-right: 11%; */
+    /* padding-top: 18%; */
+    display: inline-block;
+    float: right;
+}

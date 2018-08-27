@@ -331,12 +331,12 @@ def modificaFornitore(nomeFornitore, primoGruppo, nomeRappresentante):
 
 
 
-@server.route('/agendaClientePag/dipUsername')
+@server.route('/agendaClientePag/<dipUsername>')
 @login_required
 def agendaClientePag(dipUsername):
 
     agenda = Agenda.query.filter_by(dipendente=dipUsername)
-    return render_template('agendaPaginaCliente.html', agenda=agenda)
+    return render_template('paginaCliente_agenda.html', agenda=agenda)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -370,9 +370,9 @@ def upload_file():
 @login_required
 def paginaProfilo():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-
+    dipendenti = Dipendente.query.all()
     calendario = Calendario.query.filter_by(dipendente=dip.username).all()
-    return render_template('paginaProfilo.html', dipendente=dip, calendario=calendario)
+    return render_template('paginaProfilo.html', dipendente=dip, dipendenti=dipendenti, calendario=calendario)
 
 
 @server.route('/newPreventivoEdile')
@@ -1558,7 +1558,13 @@ def handle_modifica_profilo(message):
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    Dipendente.modificaProfilo(username=dip.username, modifica={message['campo'] : message['valore']})
+    if message['campo'] == 'nome_cognome':
+        nome = message['valore'].split(' ')[0]
+        cognome = message['valore'].split(' ')[1]
+        Dipendente.modificaProfilo(username=dip.username, modifica={'nome': nome, 'cognome': cognome})
+
+    else:
+        Dipendente.modificaProfilo(username=dip.username, modifica={message['campo'] : message['valore']})
 
     emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
 
@@ -1569,7 +1575,17 @@ def handle_aggiungi_ferie(message):
 
     Calendario.registraEvento(dipendente=dip.username, titolo=message['titolo'],
                               start_date=message['start_date'], end_date=message['end_date'],
-                              luogo=message['luogo'], tipologia=False)
+                              luogo="", tipologia=False)
+
+@socketio.on('elimina_ferie', namespace='/profilo')
+def handle_aggiungi_ferie(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    Calendario.eliminaEvento(dipendente=dip.username, titolo=message['titolo'],
+                              start_date=message['start_date'], tipologia=False)
+
+    emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
 
 @socketio.on('aggiungi_evento', namespace='/calendario')
 def handle_aggiungi_evento(message):

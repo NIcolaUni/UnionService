@@ -3,6 +3,37 @@
         Gestione Dipendenti
     </span>
 
+    <div id="nuovoDipendenteBar">
+        <form>
+            <div class="field">
+                <select style="display:none">
+                    <option>Commerciale</option>
+                    <option>Tecnico</option>
+                    <option>Capocantiere</option>
+                </select>
+                <div class="visible-select">
+                    <a class="chosen-one">
+                       <span>Commerciale</span>
+                       <i class="fa fa-angle-down"></i>
+                    </a>
+
+                    <div class="select-options">
+                        <ul class="options-list">
+                            <li class="option-el">Commerciale</li>
+                            <li class="option-el">Tecnico</li>
+                            <li class="option-el">Capocantiere</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="field"><input id="dir" type="checkbox"><label for="dir">Dirigente</label></div>
+            <div class="field">
+                <input type="text" placeholder="Email a cui inviare le credenziali">
+            </div>
+            <div class="field"><button>Genera credenziali</button></div>
+        </form>
+    </div>
+
     <div class="wrap-contact100" id="contenutoGestDip">
 
         <div class="row" id="rigaCredenziali">

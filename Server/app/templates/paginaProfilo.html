@@ -160,6 +160,9 @@
         <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
         <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
 
+        <link rel="stylesheet" href="{{url_for('static', filename='css/popover-paginaProfilo.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='hunterPopup/css/hunterPopup.css')}}">
+        <script type="text/javascript" src="{{url_for('static', filename='hunterPopup/js/jquery-popup.js')}}"></script>
 
 	</head>
 	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
@@ -182,7 +185,7 @@
 						<ul>
 							<li><a class="menuBar local" href="#intro">Profilo personale</a></li>
                             <li><a class="menuBar local" href="#page2">Imposta ferie</a></li>
-
+                        </ul>
 
 					</nav>
 				</div>
@@ -193,83 +196,57 @@
 			<div id="wrapper" class="col-md-9">
 
 				<!-- Intro -->
-					<section id="intro" class="wrapper style1 fullscreen fade-up">
-						<div class="inner">
-							<h1>{{dipendente.nome}} {{dipendente.cognome}}</h1>
+					<section id="intro" class="wrapper style1 fullscreen fade-up black-background">
+                         <div id="datiPersonali">
+                             <div id="imgDiv">
 
-							<div class="row">
-								<div class="col-md-6">
-									<ul class="contact">
-                                        <li>
-											<h3>Ufficio:</h3>
-											<span>{{dipendente.classe}}</span>
-                                            <button class="editProfilo classe">modifica</button>
+                                 <div id="changeImgProfiloDiv">
+                                     <form id="uploadImgForm" action="/uploadImgProfilo" method="post" enctype="multipart/form-data" >
+                                            <input id="uploadImg" type="file" name="image">
 
-										</li>
-                                        <li>
-											<h3>Codice fiscale:</h3>
-											<span>{{dipendente.cf}}</span>
-                                            <button class="editProfilo cf">modifica</button>
-										</li>
-                                        <li>
-											<h3>Data di nascita:</h3>
-											<span>{{dipendente.dataNascita}}</span>
-                                            <button class="editProfilo nascita">modifica</button>
-										</li>
-										<li>
-											<h3>Indirizzo residenza:</h3>
-											<span>{{dipendente.residenza}}</span>
-                                            <button class="editProfilo residenza">modifica</button>
-										</li>
-                                        <li>
-											<h3>Indirizzo domicilio:</h3>
-											<span>{{dipendente.domicilio}}</span>
-                                            <button class="editProfilo domicilio">modifica</button>
-										</li>
-										<li>
-											<h3>Email aziendale:</h3>
-											<a href="#">{{dipendente.email_aziendale}}</a>
-                                            <button class="editProfilo email_aziendale">modifica</button>
-										</li>
-                                        <li>
-											<h3>Email personale:</h3>
-											<a href="#">{{dipendente.email_personale}}</a>
-                                            <button class="editProfilo email_personale">modifica</button>
-										</li>
-										<li>
-											<h3>Telefono:</h3>
-											<span>{{dipendente.telefono}}</span>
-                                            <button class="editProfilo telefono">modifica</button>
-										</li>
+                                     </form>
+                                     <button id="changeImgProfiloBtn" style="display:none" onclick="$('#uploadImg').trigger('click');">Cambia immagine profilo</button>
+                                 </div>
+                                 <img src="{{url_for('static', filename='immaginiProfilo/'+dipendente.immagine_profilo ) }}" alt="">
 
-                                        <li>
-											<h3>Iban:</h3>
-											<span>{{dipendente.iban}}</span>
-                                            <button class="editProfilo iban">modifica</button>
-										</li>
+                             </div>
 
-                                        <li>
-											<h3>Partita IVA:</h3>
-											<span>{{dipendente.partitaIva}}</span>
-                                            <button class="editProfilo iva">modifica</button>
-										</li>
+                             <div id="right-info">
 
+                                 <span id="name_container">
+                                     <h1>{{dipendente.nome}}</h1>
+                                     <h1 id="cognome">{{dipendente.cognome}}</h1>
+                                     <a class="fa fa-edit editProfilo nome_cognome"></a>
+                                 </span><br/>
+                                 <span id="classe_dip">{{dipendente.classe}}</span>
 
+                                 <div id="dati-effettivi" class="row">
+                                     <div class="col-md-6">
+                                         <span class="dato"><h3>Codice fiscale:<a class="fa fa-edit editProfilo cf"></a></h3><span id="cf">{{dipendente.cf}}</span></span><br/>
+                                         <span class="dato"><h3>Data di nascita:<a class="fa fa-edit editProfilo nascita"></a></h3><span id="nascita">{{dipendente.dataNascita}}</span></span><br/>
+                                         <span class="dato"><h3>Indirizzo residenza:<a class="fa fa-edit editProfilo residenza"></a></h3><span id="residenza">{{dipendente.residenza}}</span></span><br/>
+                                         <span class="dato"><h3>Indirizzo domicilio:<a class="fa fa-edit editProfilo domicilio"></a></h3><span id="domicilio">{{dipendente.domicilio}}</span></span><br/>
+                                         <span class="dato"><h3>Telefono:<a class="fa fa-edit editProfilo telefono"></a></h3><span id="telefono">{{dipendente.telefono}}</span></span><br/>
+                                     </div>
+                                     <div class="col-md-6">
+                                         <span class="dato"><h3>Email personale:<a class="fa fa-edit editProfilo email_personale"></a></h3><span id="email_personale">{{dipendente.email_personale}}</span></span><br/>
+                                         <span class="dato"><h3>Email aziendale:<a class="fa fa-edit editProfilo email_aziendale"></a></h3><span id="email_aziendale">{{dipendente.email_aziendale}}</span></span><br/>
+                                         <span class="dato"><h3>Iban:<a class="fa fa-edit editProfilo iban"></a></h3><span id="iban">{{dipendente.iban}}</span></span><br/>
+                                         <span class="dato"><h3>Partiva IVA:<a class="fa fa-edit editProfilo iva"></a></h3><span id="iva">{{dipendente.partitaIva}}</span></span><br/>
 
-										<li>
-                                            <form id="uploadImgForm" action="/uploadImgProfilo" method="post" enctype="multipart/form-data" >
-                                                <input id="uploadImg" type="file" name="image">
+                                     </div>
+                                 </div>
+                                 <div id="buttons-edit">
+                                     <a class="fa fa-edit" id="show-buttons"></a>
+                                     <button id="edit-credenziali" style="display:none">Modifica credenziali d'accesso</button>
+                                     <button id="hide-edit" style="display:none">Congela modifiche</button>
 
-                                            </form>
-                                             <button onclick="$('#uploadImg').trigger('click');">Cambia immagine profilo</button>
-										</li>
-									</ul>
-								</div>
+                                 </div>
+                             </div>
+                         </div>
 
-
-						</div>
 					</section>
-                    <section id="page2" class="wrapper style1 fullscreen fade-up">
+                    <section id="page2" class="wrapper style1 fullscreen fade-up agenda-ferie">
                         <span><h2>Calendario ferie</h2></span>
                         <div id='calendar'></div>
 
@@ -295,6 +272,28 @@
 		<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
 
 		<script>
+
+            $('#show-buttons').click(function(){
+                $(this).hide();
+                $('.dato a').show();
+		        $('#name_container a').show();
+		        $('#hide-edit').show();
+		        $('#edit-credenziali').show();
+                $('#changeImgProfiloBtn').show();
+                $('#imgDiv').css('margin-top', '-6%');
+            });
+
+
+		    $('#hide-edit').click(function(){
+		        $('.dato a').hide();
+		        $('#name_container a').hide();
+		        $('#edit-credenziali').hide();
+		         $('#changeImgProfiloBtn').hide();
+		        $(this).hide();
+		        $('#show-buttons').show();
+		        $('#imgDiv').css('margin-top', '0');
+		    });
+
             var socketProfilo = io.connect("{{sockUrl}}"+'/profilo');
 
             var socketHome = io.connect("{{sockUrl}}"+'/home');
@@ -311,25 +310,27 @@
 
 			});
 
-			function saveEvent(e, titolo, luogo, durata) {
+			function saveEvent(e, titolo) {
 
-                var end_date = moment(e.date).add(durata-1, 'd').toDate();
+                //var end_date = moment(e.date).add(durata-1, 'd').toDate();
 
                 var dataSource = $('#calendar').data('calendar').getDataSource();
-                dataSource.push({startDate: e.date, endDate: end_date, name: titolo, location: luogo})
+                dataSource.push({startDate: e.startDate, endDate: e.endDate, name: titolo })
                 $('#calendar').data('calendar').setDataSource(dataSource);
 
                 socketProfilo.emit('aggiungi_ferie', {
                     'dip': '{{dipendente.username}}',
                     'titolo': titolo,
-                    'start_date': moment(e.date).add(1, 'd').toDate(),
-                    'end_date': moment(end_date).add(1, 'd').toDate(),
-                    'luogo': '',
+                    'start_date': e.startDate, //moment(e.date).add(1, 'd').toDate(),
+                    'end_date': e.endDate, //moment(end_date).add(1, 'd').toDate()
                 });
 
             }
 
             var currentYear = new Date().getFullYear();
+
+            var modificaFerieAttiva = false;
+            var eliminaFerieAttiva = false;
 
 			$('#calendar').calendar(
 
@@ -347,117 +348,207 @@
                            name: '{{evento.titolo}}',
                            location: '',
                            startDate: moment('{{evento.start_date}}').toDate(),
-                           endDate: moment('{{evento.end_date}}').toDate()
+                           endDate: moment('{{evento.end_date}}').toDate(),
+                           dipendente: '{{evento.dipendente}}'
                        },
                     {% endif %}
                    {% endfor %}
 
                 ],
 
-
-                clickDay: function(e) {
-                    //alert('almeo qua');
-
-                    giornoSelected = $(e.element)
-                    $('.clicked').each(function(){
-                      if( !$(this).is(giornoSelected) ){
-                        $(this).removeClass('clicked');
-                        $(this).popover('hide');
-                      }
-                    });
-
-                    if( !giornoSelected.hasClass('clicked') ){
-
-                      giornoSelected.addClass('clicked');
-                      content = ''
+                mouseOnDay: function(e) {
 
 
-                      if(e.events.length > 0) {
-                      //  $('.popover').popover('hide');
-                        for(var i in e.events) {
-                             content += '<div class="event-tooltip-content">'
-                                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
-                                             + '<div class="event-location">' + e.events[i].location + '</div>'
-                                         + '</div>';
+                     if(e.events.length > 0) {
 
-                        }
+                         $('#popupEvent-year-cal').remove();
 
-                        content += '<hr/> <div> \
-                                    <div  id="cal-del-event" class="popover-option">Rimuovi</div>     \
-                                    </div> \
-                                   '
-                      }
-                      else{
-                        content = ' <div> \
-                                  <div id="cal-add-event" class="popover-option">Aggiungi ferie</div>     \
-                                  </div> \
-                                '
-                      }
+                         var content = '';
+
+                         for(var i in e.events) {
+                            {% for dip in dipendenti %}
+
+                                if( '{{dip.username}}' == e.events[i].dipendente ){
+                                     monthStartDate=e.events[i].startDate.getMonth()+1;
+                                     var startDate = e.events[i].startDate.getDate()+"/"+ monthStartDate+"/"+e.events[i].startDate.getFullYear();
+
+                                     monthEndDate=e.events[i].endDate.getMonth()+1;
+                                     var endDate = e.events[i].endDate.getDate()+"/"+ monthEndDate+"/"+e.events[i].endDate.getFullYear();
+
+                                     content += '<div class="panel-heading subtitle"> {{dip.nome}} {{dip.cognome}}'+
+                                                    '<div class="popup-ctrl-btns '+ startDate +' '+ endDate +'"><button id="modificaBtn">Modifica</button><button id="eliminaBtn">Elimina</button></div> \
+                                                 </div> \
+                                                 <div class="panel-body form-inline dept1">'
+                                                 +e.events[i].name+
+                                                 '</div>';
+                                 }
+
+                             {% endfor %}
+                         }
 
 
 
+                         $('body').append(
+                            '<div id="popupEvent-year-cal" style="display:none"> \
+                                <div> \
+                                    <div class="panel panel-default">'+
+                                     content +
+                                    '</div> \
+                                </div> \
+                            </div>'
+                         );
 
-                      giornoSelected.popover({
-                          trigger: 'manual',
-                          container: 'body',
-                          html:true,
-                          content: content
-                      });
+                         var popupEvent = function() {
+                            var startDate=$('.popup-ctrl-btns').attr('class').split(' ')[1];
+                            var endDate=$('.popup-ctrl-btns').attr('class').split(' ')[2];
+                            var titoloFerie=$('.panel-body').text();
 
-                      giornoSelected.popover('show');
+                            $('#modificaBtn').click(function(){
 
-                      $('#cal-add-event').click(function(){
-                            swal.withFormAsync({
-                                title: 'Aggiungi evento',
-                                showCancelButton: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'annulla',
-                                closeOnConfirm: true,
-                                formFields: [
+                                swal.withFormAsync({
+                                    title: 'Modifica descrizione ferie dal '+ startDate +' al '+endDate,
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#DD6B55',
+                                    confirmButtonText: 'Ok',
+                                    cancelButtonText: 'annulla',
+                                    closeOnConfirm: true,
+                                    formFields: [
 
-                                    { id: 'titolo', label: 'Titolo evento:', name: 'titolo', placeholder: 'titolo evento' },
+                                        { id: 'titolo', label: 'Descrizione tipologia ferie (opzionale):', name: 'titolo', placeholder: 'descrizione ferie' },
 
-                                    { id: 'durata', type: 'number', label: 'Durata giorni evento:', name: 'durata', value: 1 },
 
-                                ]
-                            }).then(function (context) {
-                                if(context._isConfirm){
+                                    ]
+                                }).then(function (context) {
+                                    if(context._isConfirm){
 
-                                    saveEvent(e, context.swalForm['titolo'], "", context.swalForm['durata']);
 
-                                }
+                                        alert('ok');
+
+
+                                    }
+
+                                });
 
                             });
 
+                            $('#eliminaBtn').click(function(){
+
+                                swal({
+                                    title: 'Confermare cancellazione ferie dal '+  startDate +' al '+ endDate,
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#DD6B55',
+                                    confirmButtonText: 'Ok',
+                                    cancelButtonText: 'annulla',
+                                    closeOnConfirm: true,
+
+                                }).then(function (context) {
+                                    if(context._isConfirm){
+
+                                           socketProfilo.emit('elimina_ferie', {
+                                                'dip': '{{dipendente.username}}',
+                                                'titolo': titoloFerie,
+                                                'start_date': startDate,
+
+                                           });
+
+                                           eliminaFerieAttiva=true;
+
+                                    }
+
+                                });
+
+                            });
+
+                         }
+
+                         monthToday=e.date.getMonth()+1;
+                         var today = e.date.getDate()+"/"+ monthToday+"/"+e.date.getFullYear();
+
+                         $(e.element).hunterPopup({
+
+                            width: '320px',
+                            height: '200px',
+                            title: "Dipendenti in ferie giorno: "+ today,
+                            content: $('#popupEvent-year-cal'),
+                            event: popupEvent
+
+                         });
+
+                         $(e.element).trigger('launch-popup-overYear');
 
 
-                            $('.popover').remove();
-                            $('.clicked').removeClass('clicked');
+                     }
 
-
-                      });
+                 },
+                 mouseOutDay: function(e) {
+                    if (!$('.Hunter-pop-up:hover').length != 0) {
+                        $('.Hunter-pop-up').remove();
                     }
-                   else {
-                        giornoSelected.removeClass('clicked');
-                        giornoSelected.popover('hide');
 
-                    }
-                }
+                 },
+                 selectRange: function(e){
+
+                    monthStartDate=e.startDate.getMonth()+1;
+                    monthEndDate=e.endDate.getMonth()+1;
+                    var startDate = e.startDate.getDate()+"/"+ monthStartDate+"/"+e.startDate.getFullYear();
+                    var endDate = e.endDate.getDate()+"/"+ monthEndDate+"/"+e.endDate.getFullYear();
+
+                    swal.withFormAsync({
+                        title: 'Richiesta ferie dal '+  startDate + ' al ' + endDate,
+                        showCancelButton: true,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        cancelButtonText: 'annulla',
+                        closeOnConfirm: true,
+                        formFields: [
+
+                            { id: 'titolo', label: 'Descrizione tipologia ferie (opzionale):', name: 'titolo', placeholder: 'descrizione ferie' },
+
+
+                        ]
+                    }).then(function (context) {
+                        if(context._isConfirm){
+
+                            saveEvent(e, context.swalForm['titolo']);
+
+                        }
+
+                    });
+
+                 }
               }
-            )
+            );
+
+            //Elimina i popup se si esce dal calendario evitando di doverli chiudere a mano
+            $('#menu-container').mouseout(function(){
+                //Se il mouse e' sopra un popup element non elimina il popup
+                if (!$('.Hunter-pop-up:hover').length != 0) {
+                    $('.Hunter-pop-up').remove();
+                }
+            });
+
+            /* Cliccando sui tag di classe ".editProfilo" si può modificare un campo "dati personali" del dipendente.
+               Specificato il nuovo valore, viene inviato al server il segnale di effetture la modifica sul database e
+               questo risponderà al client con un segnale "aggiornaPagina". Le due variabili che seguono vengono usate
+               per aggiornare i campi specifici e non l'intera pagina */
+
+            var nomeObjToChange = "#";
+            var newValObjToChange ="";
+
 
             $('.editProfilo').click(function(){
 
-                var campoToEdit = $(this).attr('class').split(' ')[1];
+
+                var campoToEdit = $(this).attr('class').split(' ')[3];
                 var titolo = "";
                 var label="";
                 var campo ="";
                 var valore ="";
 
-                if( campoToEdit == 'classe' ){
-                    titolo="Modifica ufficio classe d'appartenenza";
-                    label="Ufficio:";
+
+                if( campoToEdit == 'nome_cognome' ){
+                    titolo="Modifica nome e cognome";
+                    label="";
                     swal.withFormAsync({
                             title: titolo,
                             showCancelButton: true,
@@ -467,26 +558,22 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'ufficio', label: label, name: 'ufficio', type: 'select', options: [
-                                  {value: 'commerciale', text: 'commerciale'},
-                                  {value: 'tecnico', text: 'tecnico'},
-                                  {value: 'capocantiere', text: 'capocantieri'},
-                                  {value: 'contabile', text: 'contabile'},
-                                ]},
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.nome}} {{dipendente.cognome}}' },
 
 
                             ]
                         }).then(function (context) {
                             if(context._isConfirm){
-                                 campo="classe";
-                                 valore=context.swalForm['ufficio'];
+                                 campo="nome_cognome";
+                                 valore=context.swalForm['testo'];
                                  socketProfilo.emit('modifica_profilo', {
                                     'dip' : '{{dipendente.username}}',
                                     'campo': campo,
                                     'valore': valore
                                  });
 
-
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
                             }
 
                         });
@@ -504,13 +591,13 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.cf}}' },
 
 
                             ]
                         }).then(function (context) {
                             if(context._isConfirm){
-                                 campo="classe";
+                                 campo="cf";
                                  valore=context.swalForm['testo'];
                                  socketProfilo.emit('modifica_profilo', {
                                     'dip' : '{{dipendente.username}}',
@@ -518,6 +605,8 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
 
                             }
 
@@ -548,8 +637,10 @@
                                     'dip' : '{{dipendente.username}}',
                                     'campo': campo,
                                     'valore': valore
-                                 });
+                             });
 
+                             nomeObjToChange+='nascita';
+                             newValObjToChange=valore;
 
                         }
 
@@ -567,7 +658,7 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.residenza}}' },
 
 
                             ]
@@ -582,6 +673,8 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
 
                             }
 
@@ -600,7 +693,7 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.domicilio}}' },
 
 
                             ]
@@ -615,6 +708,8 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
 
                             }
 
@@ -633,7 +728,7 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.email_aziendale}}' },
 
 
                             ]
@@ -648,6 +743,8 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
 
                             }
 
@@ -666,7 +763,7 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.email_personale}}' },
 
 
                             ]
@@ -681,6 +778,8 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
 
                             }
 
@@ -699,7 +798,7 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.telefono}}' },
 
 
                             ]
@@ -714,6 +813,8 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
 
                             }
 
@@ -732,7 +833,7 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.iban}}' },
 
 
                             ]
@@ -747,6 +848,8 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+=campo;
+                                 newValObjToChange=valore;
 
                             }
 
@@ -765,7 +868,7 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text' },
+                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.iva}}' },
 
 
                             ]
@@ -780,6 +883,9 @@
                                     'valore': valore
                                  });
 
+                                 nomeObjToChange+='iva';
+                                 newValObjToChange=valore;
+
                             }
 
                         });
@@ -792,7 +898,25 @@
             });
 
             socketProfilo.on('aggiorna_pagina', function(){
-                 window.location ="{{url_for('paginaProfilo')}}"
+                // window.location ="{{url_for('paginaProfilo')}}"
+
+                if( eliminaFerieAttiva ){
+
+                    window.location ="{{url_for('paginaProfilo')}}"
+                    eliminaFerieAttiva=false;
+                }
+                else if( modificaFerieAttiva ){
+
+                    window.location ="{{url_for('paginaProfilo')}}"
+                    modificaFerieAttiva=false;
+                }
+                else{
+
+                    $(nomeObjToChange).text(newValObjToChange);
+                    nomeObjToChange='#';
+                    newValObjToChange='';
+
+                }
             });
 
 		</script>

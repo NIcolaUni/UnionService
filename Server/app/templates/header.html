@@ -42,6 +42,7 @@
                                     <div class="pull-left">
                                         {% endraw %}
                                         <img class="lv-img-sm" ng-src="{{url_for('static', filename='images/sys_notifica.png') }}" alt="">
+                                        <button>Elimina</button>
                                         {% raw %}
                                     </div>
                                     <div class="media-body">
@@ -60,6 +61,9 @@
                 </div>
             </li>
             {% endraw %}
+            <li>
+                <a id="full-screen" class="full-screen"></a>
+            </li>
 
         </ul>
     </li>
@@ -93,4 +97,15 @@
     <script>
         $("input#nome_cognome_indirizzo").attr("list", "clienti");
         $("input#nome_cognome_indirizzo").attr("placeholder", "Cerca qua i tuoi clienti...");
+
+
+        $(".full-screen").click(function(){
+            var elem = document.documentElement;
+            if (elem.webkitRequestFullscreen) {
+              elem.webkitRequestFullscreen();
+            }
+
+            $(this).css('background-image', '{{url_for("static", filename="headerAndForm/img/icons/fullscreen-my-white-close.png") }}')
+        });
+
     </script>

@@ -52,3 +52,49 @@ p.text-muted {
 div.icon.success.animate::before {
     visibility: hidden;
 }
+
+div#nuovoDipendenteBar {
+    background: #ffffff;
+    height: 55px;
+    -moz-border-radius: 80px;
+    -ms-border-radius: 80px;
+    -o-border-radius: 80px;
+    border-radius: 80px;
+    float: left;
+    left: 50%;
+    margin-left: -470px;
+    position: relative;
+    width: 940px;
+    color: black;
+}
+
+#nuovoDipendenteBar > form {
+    background: rgba(0,0,0,0);
+    display: table;
+    float: left;
+    width: 100%;
+    position: relative;
+    height: 100%;
+    position: absolute;
+
+}
+
+.field > input[type="text"] {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: medium none;
+    color: #8d99ae;
+    float: left;
+    font-family: Roboto;
+    font-size: 14px;
+    height: 60px;
+    margin: 0;
+    padding: 0 0 0 20px;
+    width: 100%;
+}
+
+.field{
+    display: table-cell;
+    padding: 0 30px;
+    position: relative;
+    vertical-align: middle;
+}

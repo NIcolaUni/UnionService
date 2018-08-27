@@ -304,9 +304,9 @@
                               <input id="fine_evento" type="time"> \
                             </div> \
                             <div class="panel-heading subtitle">Selezione accompagnatori:</div> \
-                            <div class="panel-body form-inline dept1"> \
+                            <div class="panel-body form-inline dept1 accompagnatori-div"> \
                               <label for="num_accompagnatori">Numero accompagnatori:</label> \
-                              <input id="num_accompagnatori" type="number" value="0" min="0" max="5"> \
+                              <input id="num_accompagnatori" type="number" value="0" min="0" max="5"> <br/>\
                             </div> \
                         </div> \
                     </div> \
@@ -315,7 +315,21 @@
 
 
             var popupEvent = function() {
+                $('#num_accompagnatori').change(function(){
+                    $(".select-accompagnatori").remove();
+                    $(".spazio").remove();
 
+                    for( i=0; i < $('#num_accompagnatori').val(); i++ ){
+
+                        $('.accompagnatori-div').append(
+                            '<select class="select-accompagnatori"> \
+                                <option>Scetulin de scetulinis</option> \
+                                <option>Nicola Pancheri</option> \
+                            </select><br class="spazio"/>'
+                        );
+                    }
+
+                });
             }
 
             $(this).hunterPopup({
@@ -432,6 +446,9 @@
   });
 
 
+/*
+    Gestione della scomparsa dei popup dall'agenda
+*/
 
   $('.fc-button').click(function(){
      $('.popover').remove();
@@ -440,14 +457,22 @@
 
   $('.fc-view-container').mouseover(function(){
     $('.popover').remove();
-    $('.Hunter-pop-up').remove();
   });
 
+  $('.fc-view-container').mouseleave(function(){
+
+    //Se il mouse e' sopra un popup element non elimina il popup
+    if (!$('.Hunter-pop-up:hover').length != 0) {
+        $('.Hunter-pop-up').remove();
+    }
+  });
 
   $('#row-content').mouseover(function(){
     $('.popover').remove();
-    $('.Hunter-pop-up').remove();
   });
+
+/******************************************************************/
+
 
  /* Collego i bottoni alle pagine che devono ritornare */
 
@@ -522,59 +547,7 @@
                  enableContextMenu: true,
                  enableRangeSelection: true,
                  language: 'it',
-
-                 selectRange: function(e) {
-                    // editEvent({ startDate: e.startDate, endDate: e.endDate });
-                  /*  contenuto = ' <div> \
-                                  ciao        \
-                                  </div> \
-                                '
-                    $('.day-content').popover({
-                        trigger: 'manual',
-                        container: 'body',
-                        html:true,
-                        content: contenuto
-                    });
-                    $('.day-content').popover('show');*/
-                 },
-                 /*mouseOnDay: function(e) {
-                     if(e.events.length > 0) {
-                         var content = '';
-
-                         for(var i in e.events) {
-                             content += '<div class="event-tooltip-content">'
-                                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
-                                             + '<div class="event-location">' + e.events[i].location + '</div>'
-                                         + '</div>';
-                             content += ' <div> \
-                                       <div id="cal-edit-event" class="popover-option">Modifica Evento</div>     \
-                                      <hr/> \
-                                      <div  id="cal-del-event" class="popover-option">Rimuovi Evento</div>     \
-                                      </div> \
-                                    '
-                         }
-
-
-
-                         $(e.element).popover({
-                             trigger: 'manual',
-                             container: 'body',
-                             html:true,
-                             content: content
-                         });
-
-
-
-                         $(e.element).popover('show');
-                     }
-
-                 },
-                 mouseOutDay: function(e) {
-                  if(e.events.length > 0)
-                   $(e.element).popover('hide');
-
-                },*/
-                dataSource: [
+                 dataSource: [
 
                    {% for evento in calendario %}
                     {% if not evento.tipologia %}
@@ -598,12 +571,74 @@
                     {% endif %}
                    {% endfor %}
 
-                ],
+                 ],
+
+                 mouseOnDay: function(e) {
+
+                    //alert(' io entavo ' + $('#calendar').data('calendar').getEvents(e.date).length);
+
+                     if(e.events.length > 0) {
+
+                         $('#popupEvent-year-cal').remove();
+
+                         var content = '';
+
+                         for(var i in e.events) {
+                             content += '<div class="panel-heading subtitle">'+ e.events[i].name +
+                                            '<div class="popup-ctrl-btns"><button>Modifica</button><button>Elimina</button></div> \
+                                         </div> \
+                                         <div class="panel-body form-inline dept1"> \
+                                          questo è il contenuto di questo evento :) \
+                                         </div>'
+                         }
+
+
+
+                         $('body').append(
+                            '<div id="popupEvent-year-cal" style="display:none"> \
+                                <div> \
+                                    <div class="panel panel-default">'+
+                                     content +
+                                    '</div> \
+                                </div> \
+                            </div>'
+                         );
+
+                         var popupEvent = function() {
+
+                         }
+
+
+                         $(e.element).hunterPopup({
+
+                            width: '320px',
+                            height: '200px',
+                            title: "Eventi del giorno",
+                            content: $('#popupEvent-year-cal'),
+                            event: popupEvent
+
+                         });
+
+                         $(e.element).trigger('launch-popup-overYear');
+
+
+                     }
+
+                 },
+                 mouseOutDay: function(e) {
+                    if (!$('.Hunter-pop-up:hover').length != 0) {
+                        $('.Hunter-pop-up').remove();
+                    }
+
+                 },
+
 
                 clickDay: function(e) {
-                    //alert('almeo qua');
 
-                    giornoSelected = $(e.element)
+                    $('.Hunter-pop-up').remove();
+
+                    giornoSelected = $(e.element);
+
                     $('.clicked').each(function(){
                       if( !$(this).is(giornoSelected) ){
                         $(this).removeClass('clicked');
@@ -617,34 +652,10 @@
                       content = ''
 
 
-                      if(e.events.length > 0) {
-                      //  $('.popover').popover('hide');
-                        for(var i in e.events) {
-                             content += '<div class="event-tooltip-content">'
-                                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
-                                             + '<div class="event-location">' + e.events[i].location + '</div>'
-                                         + '</div>';
-
-                        }
-
-                        content += '<br/><hr/> <div> \
-                                    <div id="cal-add-event" class="popover-option">Aggiungi evento</div>     \
-                                    <hr/> \
-                                    <div id="cal-edit-event" class="popover-option">Modifica Evento</div>     \
-                                    <hr/> \
-                                    <div  id="cal-del-event" class="popover-option">Rimuovi Evento</div>     \
-                                    </div> \
-                                   '
-                      }
-                      else{
-                        content = ' <div> \
+                      content = ' <div> \
                                   <div id="cal-add-event" class="popover-option">Aggiungi evento</div>     \
                                   </div> \
                                 '
-                      }
-
-
-
 
                       giornoSelected.popover({
                           trigger: 'manual',
@@ -655,19 +666,12 @@
 
                       giornoSelected.popover('show');
 
-                    /*  $('#cal-del-event').click(function(){
 
-                            eventId=$(this).attr('class').split(' ')[1];
 
-                            $('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
-                                return eventId == evt._id;
-                            })[0]._id);
-                            $('.popover').remove();
-                            $('.clicked').removeClass('clicked');
 
-                            $('#calendar').data('calendar').
 
-                      });*/
+
+
 
                       $('#cal-add-event').click(function(){
                             swal.withFormAsync({
@@ -701,7 +705,7 @@
 
                       });
                     }
-                   else {
+                    else {
                         giornoSelected.removeClass('clicked');
                         giornoSelected.popover('hide');
 
@@ -709,8 +713,6 @@
                 }
               }
             )
-
-
 
 
 
@@ -734,6 +736,13 @@
             $('.popover').remove();
         }
 
+        //Elimina i popup se si esce dal calendario evitando di doverli chiudere a mano
+        $('#menu-container').mouseout(function(){
+            //Se il mouse e' sopra un popup element non elimina il popup
+            if (!$('.Hunter-pop-up:hover').length != 0) {
+                $('.Hunter-pop-up').remove();
+            }
+        });
 
 		$('a.active').removeClass('active');
 	  	$(this).addClass('active');

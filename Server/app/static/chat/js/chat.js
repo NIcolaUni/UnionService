@@ -17,7 +17,8 @@
             $(this).removeClass('open-chat');
             $(this).removeClass('fa-arrow-right');
             $(this).addClass('close-chat');
-            $(this).addClass('fa-arrow-left')
+            $(this).addClass('fa-arrow-left');
+            $('#chat-title').css('margin-left', '6%');
 
         }
         else{
@@ -27,6 +28,7 @@
             $(this).removeClass('fa-arrow-left')
             $(this).addClass('open-chat');
             $(this).addClass('fa-arrow-right');
+            $('#chat-title').css('margin-left', '22%');
 
         }
 
