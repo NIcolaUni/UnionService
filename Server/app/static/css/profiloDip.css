@@ -104,7 +104,7 @@ table.month {
     height: 586px;
     /* position: fixed; */
     /* left: 3%; */
-    z-index: 9999;
+    z-index: 9;
 
     margin-left: -7%;
 }

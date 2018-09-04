@@ -1,8 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
-from app import database
+from .dbUSinterface import DbUSinterface
 
-
-class ImpegniDBmodel(database.Model):
+class ImpegniDBmodel(DbUSinterface, DbUSinterface.db.Model):
     __tablename__ = "impegni"
     __table_args__ = (
             PrimaryKeyConstraint('dipendente', 'id'),
@@ -15,12 +14,5 @@ class ImpegniDBmodel(database.Model):
     id = Column(Integer)
     testo = Column(String(500), nullable=False)
     dirigente = Column(String(60))
+    checkato = Column(Boolean())
 
-    def commitImpegni(impegno):
-
-        database.session.add(impegno)
-        database.session.commit()
-
-    def eliminaImpegni(impegno):
-        database.session.delete(impegno)
-        database.session.commit()

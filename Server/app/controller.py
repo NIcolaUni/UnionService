@@ -4,6 +4,7 @@ from .model.form import DipFittizioForm, LoginForm, RegistraDipendenteForm, Clie
 from .model.dipendenteFittizio import DipendenteFittizio
 from .model.dipendenteRegistrato import DipendenteRegistrato
 from .model.dipendente import Dipendente
+from .model.dirigente import Dirigente
 from .model.notifica import Notifica
 from .model.settoreLavorazione import SettoreLavorazione
 from .model.prezzarioEdile import PrezzarioEdile
@@ -24,6 +25,8 @@ from .model.preventivoVarianti import PreventivoVarianti
 from .model.eccezioni.righaPresenteException import RigaPresenteException
 from .model.agenda import Agenda
 from .model.calendario import Calendario
+from .model.richiestaFerie import RichiestaFerie
+from .model.messaggio import Messaggio
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import app
@@ -683,14 +686,11 @@ def homepage():
     colleghi = Dipendente.query.all()
     agenda=Agenda.query.filter_by(dipendente=dip.username).all()
     calendario=Calendario.query.all()
+    impegni = Impegni.query.filter_by(dipendente=current_user.get_id())
 
-    return render_template('homepage.html', dipendente=dip, colleghi=colleghi, agenda=agenda, calendario=calendario, sockUrl=app.appUrl)
+    return render_template('homepage.html', impegni=impegni, dipendente=dip, colleghi=colleghi, agenda=agenda, calendario=calendario, sockUrl=app.appUrl)
 
 
-@server.route('/impegni')
-@login_required
-def impegni():
-    return render_template('impegni.html')
 
 @server.route('/sidebarLeft')
 @login_required
@@ -719,8 +719,8 @@ def header():
 
 
 
-    numNot = Notifica.get_counter(dipendente=current_user.get_id())
-    return render_template('header.html', numNotifiche=numNot, listaClienti=listaClienti, form=app.formCercaCliente)
+    numNot = Notifica.get_counter(destinatario=current_user.get_id())
+    return render_template('header.html', dipendente=dip, numNotifiche=numNot, listaClienti=listaClienti, form=app.formCercaCliente)
 
 @server.route('/registraDipendente', methods=['GET','POST'])
 @login_required
@@ -785,22 +785,21 @@ def logout():
 @server.route('/getNotifiche')
 @login_required
 def getNotifiche():
-    notiche = Notifica.query.filter_by(dipendente=current_user.get_id());
+
+
+    notiche = Notifica.query.filter_by(destinatario=current_user.get_id());
 
     returnList = ""
 
     for nota in notiche:
-        returnList += '{ "titolo": "' +nota.titolo+ '", "contenuto": "' + nota.contenuto +'" },'
+
+
+        returnList += '{ "titolo": "' +nota.titolo+ '", "contenuto": "' + nota.contenuto +'", "tipologia": "'+nota.tipologia+'", "numero_nota": "'+str(nota.numero)+'"  },'
+
+
 
     return '{ "list":[' +returnList[:-1]+'] }'
 
-@server.route('/listImpegni')
-@login_required
-def listImpegni():
-
-    impegni = Impegni.query.filter_by(dipendente=current_user.get_id())
-
-    return render_template('impegni.html', impegni=impegni)
 
 @server.route('/getImpegni')
 @login_required
@@ -830,12 +829,84 @@ def handle_registrazione_effetuata(message):
     nuovoDip = Dipendente.query.filter_by(username=message['dipendente_registrato']).first()
 
 
-    Notifica.registraNotifica(dipendente=responsabile.username, titolo="Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
+    Notifica.registraNotifica(destinatario=responsabile.username, titolo="Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
                               contenuto="Ricorda di completare la sua registrazione.")
 
     emit('aggiornaNotifiche', {'titolo': "Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
-                               'contenuto': "Ricorda di completare la sua registrazione."},
+                               'contenuto': "Ricorda di completare la sua registrazione.", 'tipologia' : "newDip"},
                                 namespace='/notifica', room=responsabile.session_id)
+
+
+@socketio.on('elimina_nota', namespace="/notifica")
+def handle_elimina_nota(message):
+
+    Notifica.eliminaNotifica(destinatario=message['dipendente'], numero=message['numero_notifica'])
+
+@socketio.on('accetta_ferie', namespace="/notifica")
+def handle_accetta_ferie(message):
+
+    dirigente = Dipendente.query.filter_by(username=message['dirigente']).first()
+
+    notifica = Notifica.query.filter_by(destinatario=dirigente.username, numero=message['numero_notifica']).first()
+
+    richiedente_ferie = Dipendente.query.filter_by(username=notifica.richiedente_ferie).first()
+
+    notificheFerieInviate = Notifica.query.filter_by(richiedente_ferie=richiedente_ferie.username,
+                                                     start_date=notifica.start_date).all()
+
+    #Elimino ad ogni dirigente la notifica della richiesta ferie realtime
+
+    for nota in notificheFerieInviate:
+        responsabile = Dipendente.query.filter_by(username=nota.destinatario).first()
+        emit('eliminaNotifica', {'numero': nota.numero}, namespace='/notifica', room=responsabile.session_id)
+
+    RichiestaFerie.accettaRichiesta(dipendente=notifica.richiedente_ferie, start_date=notifica.start_date)
+
+    # invio la nota dell'accettazione al dipendente interessato
+    Notifica.registraNotifica(destinatario=richiedente_ferie.username,
+                              titolo="Richiesta ferie accettata da {} {}".format(dirigente.nome, dirigente.cognome),
+                              contenuto="Commento del dirigente: {}".format(message['nota_dirigente']), tipologia="commonNote" )
+
+    emit('aggiornaNotifiche', {'titolo': "Richiesta ferie accettata da {} {}".format(dirigente.nome, dirigente.cognome),
+                               'contenuto': "Commento del dirigente: {}".format(message['nota_dirigente']), 'tipologia': "commonNote"},
+         namespace='/notifica', room=richiedente_ferie.session_id)
+
+
+
+    Notifica.eliminaNotificaFerie(richiedente_ferie=richiedente_ferie.username, start_date=notifica.start_date)
+
+
+@socketio.on('declina_ferie', namespace="/notifica")
+def handle_declina_ferie(message):
+    dirigente = Dipendente.query.filter_by(username=message['dirigente']).first()
+
+    notifica = Notifica.query.filter_by(destinatario=dirigente.username, numero=message['numero_notifica']).first()
+
+    richiedente_ferie = Dipendente.query.filter_by(username=notifica.richiedente_ferie).first()
+
+    notificheFerieInviate = Notifica.query.filter_by(richiedente_ferie=richiedente_ferie.username,
+                                                     start_date=notifica.start_date).all()
+
+    # Elimino ad ogni dirigente la notifica della richiesta ferie realtime
+
+    for nota in notificheFerieInviate:
+        responsabile = Dipendente.query.filter_by(username=nota.destinatario).first()
+        emit('eliminaNotifica', {'numero': nota.numero}, namespace='/notifica', room=responsabile.session_id)
+
+    RichiestaFerie.declinaRichiesta(dipendente=notifica.richiedente_ferie, start_date=notifica.start_date)
+
+
+    # invio la nota dell'accettazione al dipendente interessato
+    Notifica.registraNotifica(destinatario=richiedente_ferie.username,
+                              titolo="Richiesta ferie rifiutata da {} {}".format(dirigente.nome, dirigente.cognome),
+                              contenuto="Commento del dirigente: {}".format(message['nota_dirigente']), tipologia="commonNote")
+
+    emit('aggiornaNotifiche', {'titolo': "Richiesta ferie rifiutata da {} {}".format(dirigente.nome, dirigente.cognome),
+                               'contenuto': "Commento del dirigente: {}".format(message['nota_dirigente']), 'tipologia': "commonNote"},
+         namespace='/notifica', room=richiedente_ferie.session_id)
+
+    # elimino la nota del dirigente
+    Notifica.eliminaNotificaFerie(richiedente_ferie=richiedente_ferie.username, start_date=notifica.start_date)
 
 
 @socketio.on('registra_settore', namespace="/prezzario")
@@ -908,18 +979,26 @@ def handle_elimina_lavorazione(message):
 
 @socketio.on('registraImpegno', namespace='/impegni')
 def handle_registraImpegno(message):
-    server.logger.info("Mi è arrivato da registrare per {}: {} ".format(message['dip'], message['testo']))
+
+    numeroETipologia = None
 
     if message['dir'] == "":
-        Impegni.registraImpegni(dipendente=message['dip'], testo=message['testo'])
+        numeroETipologia = Impegni.registraImpegni(dipendente=message['dip'], testo=message['testo'])
     else:
-        Impegni.registraImpegni(dipendente=message['dip'], testo=message['testo'], dirigente=message['dir'])
+        numeroETipologia = Impegni.registraImpegni(dipendente=message['dip'], testo=message['testo'], dirigente=message['dir'])
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    emit('aggiornaImpegni', namespace='/impegni', room=dip.session_id)
+    emit('aggiungiImpegno', {'testo': message['testo'], 'numero': numeroETipologia[0], 'tipologia': numeroETipologia[1]}, namespace='/impegni', room=dip.session_id)
 
+@socketio.on('checkaImpegno', namespace='/impegni')
+def handle_checkaImpegno(message):
 
+    Impegni.check(dipendente=message['dipendente'], id=message['numero'])
+
+@socketio.on('eliminaImpegno', namespace='/impegni')
+def handle_eliminaImpegno(message):
+    Impegni.eliminaImpegni(dipendente=message['dipendente'], id=message['numero'])
 
 @socketio.on('modifica_giornoPagamento', namespace="/fornitore")
 def handle_modifica_giornoPagamento(message):
@@ -1577,13 +1656,50 @@ def handle_aggiungi_ferie(message):
                               start_date=message['start_date'], end_date=message['end_date'],
                               luogo="", tipologia=False)
 
+
+@socketio.on('richiesta_ferie', namespace='/profilo')
+def handle_richiesta_ferie(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    dirigenti = Dirigente.query.all()
+
+    RichiestaFerie.registraRichiesta(dipendente=dip.username, titolo=message['titolo'], start_date=message['start_date'],
+                                     end_date=message['end_date'])
+
+    for dirigente in dirigenti:
+        dipDirigente = Dipendente.query.filter_by(username=dirigente.username).first()
+
+        Notifica.registraNotifica(destinatario=dipDirigente.username, titolo="Richiesta ferie di {0} {1}".format(dip.nome, dip.cognome),
+                                  contenuto="{} {} ha richiesto delle ferie dal {} al {}".format(dip.nome, dip.cognome,
+                                                                                                  message['start_date'], message['end_date']),
+                                  tipologia='richiestaFerie', richiedente_ferie=dip.username, start_date=message['start_date'])
+
+        emit('aggiornaNotifiche', {'titolo': "Richiesta ferie di {0} {1}".format(dip.nome, dip.cognome),
+                                   'contenuto': "{} {} ha richiesto delle ferie dal {} al {}.".format(dip.nome, dip.cognome,
+                                                                                                  message['start_date'], message['end_date']),
+                                   'tipologia' : "richiestaFerie"},
+                                    namespace='/notifica', room=dipDirigente.session_id)
+
 @socketio.on('elimina_ferie', namespace='/profilo')
 def handle_aggiungi_ferie(message):
+
+    app.server.logger.info('Allora {}'.format(message['titolo']))
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
     Calendario.eliminaEvento(dipendente=dip.username, titolo=message['titolo'],
                               start_date=message['start_date'], tipologia=False)
+
+    emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
+
+@socketio.on('modifica_ferie', namespace='/profilo')
+def handle_modifica_ferie(message):
+
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    Calendario.modificaFerie(dipendente=dip.username, oldTitolo=message['oldTitolo'],
+                             newTitolo=message['newTitolo'], start_date=message['start_date'])
 
     emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
 
@@ -1597,7 +1713,32 @@ def handle_aggiungi_evento(message):
                               luogo=message['luogo'], tipologia=True)
 
 
+@socketio.on('chat_message', namespace='/chat')
+def handle_chat_message(message):
 
+    mittente = Dipendente.query.filter_by(username=message['mittente']).first()
+    destinatario = Dipendente.query.filter_by(username=message['destinatario']).first()
+
+    ( timestamp, msgForDestHtml ) = Messaggio.registraMessaggio(mittente=message['mittente'], destinatario=message['destinatario'], testo=message['testo'])
+
+    data="{}/{}/{}".format(timestamp[0].day,timestamp[0].month,timestamp[0].year)
+    ora="{}:{}:{}".format(timestamp[1].hour,timestamp[1].minute,timestamp[1].second)
+
+
+    emit("impostaTimestamp", {'data': data, 'ora': ora}, namespace='/chat', room=mittente.session_id)
+
+    emit("nuovoMessaggio", {'htmlMsg': msgForDestHtml, 'mittente': mittente.username}, namespace='/chat', room=destinatario.session_id)
+
+@socketio.on('storico_messaggi', namespace='/chat')
+def handle_storico_messaggi(message):
+    mittente = Dipendente.query.filter_by(username=message['mittente']).first()
+    htmlChat = Messaggio.recuperaConversazioni(mittente=message['mittente'], destinatario=message['destinatario'])
+
+    emit("stampaStorico", {'htmlChat': htmlChat}, namespace='/chat', room=mittente.session_id)
+
+@socketio.on_error('/chat')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/calendario')
 def error_handler(e):

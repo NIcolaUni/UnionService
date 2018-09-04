@@ -20,3 +20,8 @@ class Calendario(CalendarioDBmodel):
         toDel = CalendarioDBmodel.query.filter_by(dipendente=dipendente, titolo=titolo, start_date=start_date, tipologia=tipologia).first()
 
         CalendarioDBmodel.delRow(toDel)
+
+    def modificaFerie(dipendente, newTitolo, oldTitolo, start_date):
+
+        Calendario.query.filter_by(dipendente=dipendente, titolo=oldTitolo, start_date=start_date, tipologia=False).update({'titolo': newTitolo})
+        CalendarioDBmodel.commit()

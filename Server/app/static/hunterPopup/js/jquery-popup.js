@@ -57,7 +57,7 @@
             } else {
                 template.addClass("Hunter-pop-up-right");
                 template.css({
-                    'left': offset.left - obj.width + _this.width() / 2,
+                    'left': offset.left - 250,
                     'top': top
                 });
             }
@@ -122,7 +122,7 @@
 
                 template.addClass("Hunter-pop-up-right");
                 template.css({
-                    'left': offset.left - obj.width + _this.width() / 2,
+                    'left': offset.left - 400,
                     'top': top
                 });
             }
@@ -136,6 +136,7 @@
             //调用弹出层内容注册的事件。
             obj.event();
          //   box.unbind();
+
         });
 
        /* box.click(function(event) {

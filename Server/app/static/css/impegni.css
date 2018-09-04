@@ -1,10 +1,10 @@
-#delImpegno {
+.delImpegno {
     font-size: 30px;
     color: black;
     float: right;
 }
 
-#delImpegno:hover {
+.delImpegno:hover {
     color: red;
 }
 

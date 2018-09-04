@@ -58,15 +58,15 @@ materialAdmin
 
 
 
-          socketNotifica.on('aggiornaNotifiche', function (msg) {
+         socketNotifica.on('aggiornaNotifiche', function (msg) {
 
              angular.element('#corpoNote').append(
-              " <a class=\"lv-item\" ng-href=\"\" >" +
+              " <a onclick=\"gestioneNotifica($(this));\"  class=\"lv-item\" ng-href=\"\" >" +
                                " <div class=\"media\"> " +
                                   "  <div class=\"pull-left\"> " +
                                       "  <img class=\"lv-img-sm\" ng-src=\"/static/images/sys_notifica.png\" src=\"/static/images/sys_notifica.png\" alt=\"\"> " +
                                    " </div> "+
-                                    "<div class=\"media-body\">"+
+                                    "<div class=\"media-body "+ msg['tipologia']+"\">"+
                                        " <div class=\"lv-title\">" + msg['titolo'] + "</div> " +
                                      "   <small class=\"lv-small\">"+ msg['contenuto'] +"</small> " +
                                    " </div> " +
@@ -76,6 +76,29 @@ materialAdmin
 
              var numNot=angular.element('#corpoNote a').length;
              angular.element("#counterNotifiche").text(numNot);
+
+
+
+          });
+
+          socketNotifica.on('eliminaNotifica', function (msg) {
+
+             angular.element('#corpoNote').children('.lv-item').each(function(){
+
+                var typeOfNote=$(this).children('.media').children('.media-body').attr('class').split(' ')[1];
+
+                if( typeOfNote == "richiestaFerie"){
+                    var numOfNote=$(this).children('.media').children('.media-body').attr('class').split(' ')[2];
+
+                    if(numOfNote == msg['numero']){
+                        $(this).remove();
+                        var numNot=angular.element('#corpoNote a').length;
+                        angular.element("#counterNotifiche").text(numNot-1);
+                    }
+
+                }
+             });
+
 
           });
 
@@ -96,6 +119,7 @@ materialAdmin
 
 
         this.messageResult = messageService.getMessage(this.img, this.user, this.text);
+
 
         //Clear Notification
         this.clearNotification = function($event) {

@@ -188,39 +188,44 @@
 				<!-- Intro -->
 					<section id="intro" class="wrapper style1 fullscreen fade-up">
 						<div class="inner">
-							<h1>{{cliente.nome}} {{cliente.cognome}}</h1>
+							<h1 id="nomeCliente">{{cliente.nome}} {{cliente.cognome}}</h1>
+							<a id="showDifficolta" class="fa fa-user"></a>
 							{% if cliente.difficolta == "facile" %}
-								<span>Livello: 1</span>
+								<span class="difficolta" style="display:none">Livello: 1</span>
 							{% elif  cliente.difficolta == "media" %}
-								<span>Livello: 2</span>
+								<span class="difficolta" style="display:none">Livello: 2</span>
 							{% elif  cliente.difficolta == "alta" %}
-								<span>Livello: 3</span>
+								<span class="difficolta" style="display:none">Livello: 3</span>
 							{% endif %}
 
-							<span>	Tipologia: {{cliente.tipologia}} </span>
+							<span id="tipologiaCliente">	Tipologia: {{cliente.tipologia}} </span>
 
 							<div class="row">
 								<div class="col-md-6">
 									<ul class="contact">
 
 										<li>
-											<h3>Indirizzo:</h3>
+											<h3 class="titoloDatoCliente">Indirizzo:</h3>
+											<a class="fa fa-edit editDato" style="display:none"></a><br/>
 											<span>{{cliente.indirizzo}}</span>
 										</li>
 										<li>
-											<h3>Email:</h3>
+											<h3 class="titoloDatoCliente">Email:</h3>
+											<a class="fa fa-edit editDato" style="display:none"></a><br/>
 											<a href="#">{{cliente.email}}</a>
 										</li>
 										<li>
-											<h3>Telefono:</h3>
+											<h3 class="titoloDatoCliente">Telefono:</h3>
+											<a class="fa fa-edit editDato" style="display:none"></a><br/>
 											<span>{{cliente.telefono}}</span>
 										</li>
 										<li>
-											<h3>Lavorazione in corso:</h3>
+											<h3 class="titoloDatoCliente">Lavorazione in corso:</h3>
+												<a class="fa fa-edit editDato" style="display:none"></a><br/>
 												<span>{{cliente.lavorazione}}</span>
 										</li>
 										<li id="sopralluogoLiEl">
-											<h3>Sopraluogo:</h3>
+											<h3 class="titoloDatoCliente">Sopraluogo:</h3>
 											{% if not cliente.sopraluogo %}
 												<span>Non necessario</span>
 											{% else %}
@@ -260,6 +265,7 @@
 									</ul>
 									{% endif %}
 								</div>
+								<a id="editCliente" class="fa fa-edit"></a>
 							</div>
 							<iframe id="agendaDipendente" src="{{url_for('agendaClientePag', dipUsername=dipendente.username)}}"></iframe>
 						</div>
@@ -667,6 +673,34 @@
 					  }
 				 });
 
+				var difficoltaNascosta=true;
+
+				$('#showDifficolta').click(function(){
+
+					if( difficoltaNascosta ){
+						$('.difficolta').show();
+						difficoltaNascosta=false;
+					}
+					else{
+						$('.difficolta').hide();
+						difficoltaNascosta=true;
+					}
+				});
+
+				var editClienteNascosti=true;
+
+				$('#editCliente').click(function(){
+
+					if( editClienteNascosti ){
+						$('.editDato').show();
+						editClienteNascosti=false;
+					}
+					else{
+						$('.editDato').hide();
+						editClienteNascosti=true;
+					}
+
+				});
 			</script>
 
 	</div>

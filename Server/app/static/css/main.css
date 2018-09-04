@@ -571,3 +571,79 @@ div#menu-3 {
 .fc-scroller::-webkit-scrollbar {
     display: none;
 }
+
+.media{
+    overflow-x: scroll;
+}
+
+#notaVersoDipendente{
+    resize: none;
+    border: 1px solid;
+    width: 100%;
+    border-radius: 0;
+    padding: 0;
+}
+
+#divCtrlButtonNotifica{
+    margin-top: 4%;
+    float: right;
+    width: 56%;
+}
+
+#divCtrlButtonCommonNotifica{
+    float: right;
+    width: 56%;
+}
+
+#divCtrlButtonCommonNotifica button{
+
+    font-weight: normal;
+    color: black !important;
+    height: 39px !important;
+    border: outset !important;
+    border-radius: 0;
+    display: inline-block;
+    width: 49%;
+    line-height: normal;
+    padding: 0;
+    float: right;
+    height: 100% !important;
+
+}
+
+
+#divCtrlButtonNotifica button{
+
+    font-weight: normal;
+    color: black !important;
+    height: 39px !important;
+    border: outset !important;
+    border-radius: 0;
+    display: inline-block;
+    width: 49%;
+    line-height: normal;
+    padding: 0;
+
+}
+
+.lv-item{
+    cursor: pointer;
+}
+
+a.zmdi{
+    padding: 0 !important;
+    width: 20px !important;
+    cursor: pointer;
+}
+
+a.zmdi.zmdi-close {
+    margin-right: 9px;
+}
+
+a#addImpegno {
+    margin-right: 4px;
+}
+
+.rigaImpegni {
+    padding-bottom: 10px;
+}

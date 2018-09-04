@@ -27,25 +27,18 @@
                         <div class="lv-header">
                             Notification
 
-                            <ul class="actions">
-                                <li>
-                                    <a href="" data-ng-click="hctrl.clearNotification($event)">
-                                        <i class="zmdi zmdi-check-all"></i>
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                           {% raw %}
                         <div id="corpoNote" class="lv-body">
-                            <a class="lv-item" ng-href="" ng-repeat="w in hctrl.messageResult.list">
+                            <a onclick="gestioneNotifica($(this));" class="lv-item" ng-href="" ng-repeat="w in hctrl.messageResult.list">
                                 <div class="media">
                                     <div class="pull-left">
                                         {% endraw %}
                                         <img class="lv-img-sm" ng-src="{{url_for('static', filename='images/sys_notifica.png') }}" alt="">
-                                        <button>Elimina</button>
+
                                         {% raw %}
                                     </div>
-                                    <div class="media-body">
+                                    <div class="media-body {{ w.tipologia }} {{w.numero_nota}}">
                                         <div class="lv-title">{{ w.titolo }}</div>
                                         <small class="lv-small">{{ w.contenuto }}</small>
                                     </div>
@@ -95,6 +88,17 @@
        <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
 <!--===========================================================================================================-->
     <script>
+      /*  var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+        socketHome.on('connect', function() {
+            console.log('connected');
+
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });*/
+
+        var socketNotifica = io.connect("{{sockUrl}}"+'/notifica');
+
         $("input#nome_cognome_indirizzo").attr("list", "clienti");
         $("input#nome_cognome_indirizzo").attr("placeholder", "Cerca qua i tuoi clienti...");
 
@@ -108,4 +112,135 @@
             $(this).css('background-image', '{{url_for("static", filename="headerAndForm/img/icons/fullscreen-my-white-close.png") }}')
         });
 
+        $('.lv-item').mouseover(function(){
+            alert('dai');
+        });
+
+        var gestioneNotifica= function($this){
+
+            //alert($this.html());
+
+            $('#corpoNote').on( 'scroll', function(){
+                $('.Hunter-pop-up').remove();
+            });
+
+            var typeOfNote=$this.children('.media').children('.media-body').attr('class').split(' ')[1];
+            var numOfNote=$this.children('.media').children('.media-body').attr('class').split(' ')[2];
+
+            var content='';
+            var titolo=''
+
+            if( typeOfNote == 'richiestaFerie' )
+            {
+
+                content='<div class="panel-heading subtitle"> Nota aggiuntiva ( opzionale ) </div> \
+                 <div class="panel-body form-inline dept1"> \
+                    <textarea id="notaVersoDipendente"></textarea> \
+                    <div id="divCtrlButtonNotifica"><button id="accettaRichiestaFerie">Accetta</button><button id="declinaRichiestaFerie">Declina</button></div>\
+                 </div>';
+
+                 titolo="Risposta a richiesta ferie";
+
+            }
+            else if( typeOfNote == 'commonNote' )
+            {
+
+                content='<div class="panel-heading subtitle"> Eliminare la nota? <div id="divCtrlButtonCommonNotifica"> <button id="eliminaNota">Elimina</button> </div></div>';
+
+                 titolo="Opzioni nota";
+
+            }
+
+
+            $('body').append(
+                '<div id="popupEvent-notifica" style="display:none"> \
+                    <div> \
+                        <div class="panel panel-default">'+
+                         content +
+                        '</div> \
+                    </div> \
+                </div>'
+            );
+
+            var popupEvent= function(){
+
+                if( typeOfNote == 'richiestaFerie' )
+                {
+
+                    $("#accettaRichiestaFerie").click(function(){
+                        var notaDirigente=$('#notaVersoDipendente').val();
+
+
+                        socketNotifica.emit("accetta_ferie",
+                                            {
+                                                "dirigente": "{{dipendente.username}}",
+                                                "numero_notifica": numOfNote,
+                                                "nota_dirigente": notaDirigente
+                                            });
+
+
+                        $('.Hunter-pop-up').remove();
+
+
+
+                    });
+
+                    $("#declinaRichiestaFerie").click(function(){
+
+                        var notaDirigente=$('#notaVersoDipendente').val();
+
+
+                        socketNotifica.emit("declina_ferie",
+                                            {
+                                                "dirigente": "{{dipendente.username}}",
+                                                "numero_notifica": numOfNote,
+                                                "nota_dirigente": notaDirigente
+                                            });
+
+
+                        $('.Hunter-pop-up').remove();
+                    });
+
+
+                }
+                else if( typeOfNote == 'commonNote' )
+                {
+                    $('#eliminaNota').click(function(){
+
+                        socketNotifica.emit("elimina_nota",
+                                             {
+                                                "dipendente": "{{dipendente.username}}",
+                                                "numero_notifica": numOfNote
+
+                                             });
+
+                        //elimino la nota dall'elenco delle note e decremento il relativo counter
+                        $this.remove();
+
+                        var oldNumNote=parseInt( $('#counterNotifiche').text() );
+
+                        $('#counterNotifiche').text(oldNumNote-1)
+
+                        $('.Hunter-pop-up').remove();
+
+                    });
+
+                }
+
+            };
+
+            $this.hunterPopup({
+
+                width: '320px',
+                height: '200px',
+                title: titolo,
+                content: $('#popupEvent-notifica'),
+                placement: 'right',
+                event: popupEvent
+
+            });
+
+            $this.trigger('launch-popup-click');
+
+        };
     </script>

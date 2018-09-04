@@ -315,7 +315,7 @@
                 //var end_date = moment(e.date).add(durata-1, 'd').toDate();
 
                 var dataSource = $('#calendar').data('calendar').getDataSource();
-                dataSource.push({startDate: e.startDate, endDate: e.endDate, name: titolo })
+                dataSource.push({startDate: e.startDate, endDate: e.endDate, name: titolo, dipendente: '{{dipendente.username}}' })
                 $('#calendar').data('calendar').setDataSource(dataSource);
 
                 socketProfilo.emit('aggiungi_ferie', {
@@ -331,6 +331,10 @@
 
             var modificaFerieAttiva = false;
             var eliminaFerieAttiva = false;
+
+            delEditStartDate='';
+            delEditEndDate='';
+            delEditTitoloFerie='';
 
 			$('#calendar').calendar(
 
@@ -366,6 +370,7 @@
                          var content = '';
 
                          for(var i in e.events) {
+
                             {% for dip in dipendenti %}
 
                                 if( '{{dip.username}}' == e.events[i].dipendente ){
@@ -376,7 +381,7 @@
                                      var endDate = e.events[i].endDate.getDate()+"/"+ monthEndDate+"/"+e.events[i].endDate.getFullYear();
 
                                      content += '<div class="panel-heading subtitle"> {{dip.nome}} {{dip.cognome}}'+
-                                                    '<div class="popup-ctrl-btns '+ startDate +' '+ endDate +'"><button id="modificaBtn">Modifica</button><button id="eliminaBtn">Elimina</button></div> \
+                                                    '<div class="popup-ctrl-btns '+ startDate +' '+ endDate +'"><button class="modificaBtn">Modifica</button><button class="eliminaBtn">Elimina</button></div> \
                                                  </div> \
                                                  <div class="panel-body form-inline dept1">'
                                                  +e.events[i].name+
@@ -399,61 +404,79 @@
                          );
 
                          var popupEvent = function() {
-                            var startDate=$('.popup-ctrl-btns').attr('class').split(' ')[1];
-                            var endDate=$('.popup-ctrl-btns').attr('class').split(' ')[2];
-                            var titoloFerie=$('.panel-body').text();
 
-                            $('#modificaBtn').click(function(){
+                            $('.popup-ctrl-btns').each(function(){
+                                var startDate=$(this).attr('class').split(' ')[1];
+                                var endDate=$(this).attr('class').split(' ')[2];
+                                var titoloFerie=$(this).parent().next().text();
 
-                                swal.withFormAsync({
-                                    title: 'Modifica descrizione ferie dal '+ startDate +' al '+endDate,
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#DD6B55',
-                                    confirmButtonText: 'Ok',
-                                    cancelButtonText: 'annulla',
-                                    closeOnConfirm: true,
-                                    formFields: [
+                                delEditStartDate=startDate;
+                                delEditEndDate=endDate;
+                                delEditTitoloFerie=titoloFerie;
 
-                                        { id: 'titolo', label: 'Descrizione tipologia ferie (opzionale):', name: 'titolo', placeholder: 'descrizione ferie' },
+                                $(this).children('.modificaBtn').click(function(){
 
+                                    swal.withFormAsync({
+                                        title: 'Modifica descrizione ferie dal '+ startDate +' al '+endDate,
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#DD6B55',
+                                        confirmButtonText: 'Ok',
+                                        cancelButtonText: 'annulla',
+                                        closeOnConfirm: true,
+                                        formFields: [
 
-                                    ]
-                                }).then(function (context) {
-                                    if(context._isConfirm){
-
-
-                                        alert('ok');
+                                            { id: 'titolo', label: 'Descrizione tipologia ferie (opzionale):', name: 'titolo', placeholder: 'descrizione ferie' },
 
 
-                                    }
+                                        ]
+                                    }).then(function (context) {
 
+                                        if(context._isConfirm){
+
+
+                                            socketProfilo.emit('modifica_ferie', {
+                                                    'dip': '{{dipendente.username}}',
+                                                    'oldTitolo': titoloFerie,
+                                                    'newTitolo': context.swalForm['titolo'],
+                                                    'start_date': startDate,
+
+                                            });
+
+                                            modificaFerieAttiva=true;
+
+
+                                        }
+
+                                    });
                                 });
 
-                            });
 
-                            $('#eliminaBtn').click(function(){
+                                $(this).children('.eliminaBtn').click(function(){
 
-                                swal({
-                                    title: 'Confermare cancellazione ferie dal '+  startDate +' al '+ endDate,
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#DD6B55',
-                                    confirmButtonText: 'Ok',
-                                    cancelButtonText: 'annulla',
-                                    closeOnConfirm: true,
+                                    swal({
+                                        title: 'Confermare cancellazione ferie dal '+  startDate +' al '+ endDate,
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#DD6B55',
+                                        confirmButtonText: 'Ok',
+                                        cancelButtonText: 'annulla',
+                                        closeOnConfirm: true,
 
-                                }).then(function (context) {
-                                    if(context._isConfirm){
+                                    },
+                                    function (isConfirm) {
+                                        if(isConfirm){
 
-                                           socketProfilo.emit('elimina_ferie', {
-                                                'dip': '{{dipendente.username}}',
-                                                'titolo': titoloFerie,
-                                                'start_date': startDate,
+                                               socketProfilo.emit('elimina_ferie', {
+                                                    'dip': '{{dipendente.username}}',
+                                                    'titolo': titoloFerie,
+                                                    'start_date': startDate,
 
-                                           });
+                                               });
 
-                                           eliminaFerieAttiva=true;
+                                               eliminaFerieAttiva=true;
 
-                                    }
+                                        }
+
+                                    });
 
                                 });
 
@@ -464,12 +487,19 @@
                          monthToday=e.date.getMonth()+1;
                          var today = e.date.getDate()+"/"+ monthToday+"/"+e.date.getFullYear();
 
+                         popPosition = "left";
+
+                         if( monthToday == 5 || monthToday == 6 ||
+                                monthToday == 11 || monthToday == 12 )
+                                popPosition = "right";
+
                          $(e.element).hunterPopup({
 
                             width: '320px',
                             height: '200px',
                             title: "Dipendenti in ferie giorno: "+ today,
                             content: $('#popupEvent-year-cal'),
+                            placement: popPosition,
                             event: popupEvent
 
                          });
@@ -499,7 +529,7 @@
                         confirmButtonColor: '#DD6B55',
                         confirmButtonText: 'Ok',
                         cancelButtonText: 'annulla',
-                        closeOnConfirm: true,
+                        closeOnConfirm: false,
                         formFields: [
 
                             { id: 'titolo', label: 'Descrizione tipologia ferie (opzionale):', name: 'titolo', placeholder: 'descrizione ferie' },
@@ -509,7 +539,23 @@
                     }).then(function (context) {
                         if(context._isConfirm){
 
-                            saveEvent(e, context.swalForm['titolo']);
+
+                            //    saveEvent(e, context.swalForm['titolo']);
+
+                                socketProfilo.emit('richiesta_ferie', {
+                                    'dip': '{{dipendente.username}}',
+                                    'titolo': context.swalForm['titolo'],
+                                    'start_date': startDate,
+                                    'end_date': endDate
+                                });
+
+
+                            swal({
+                                title: "Richiesta inviata correttamente",
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: true
+                            });
 
                         }
 
@@ -532,7 +578,7 @@
                questo risponderà al client con un segnale "aggiornaPagina". Le due variabili che seguono vengono usate
                per aggiornare i campi specifici e non l'intera pagina */
 
-            var nomeObjToChange = "#";
+            var nomeObjToChange = ".";
             var newValObjToChange ="";
 
 

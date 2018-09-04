@@ -124,15 +124,17 @@
                                 <textarea id="textImpegno" placeholder="Testo..." data-ng-model="tctrl.todo"></textarea>
 
                                 <div class="add-tl-actions">
-
+                                {% endraw %}
                                     {% if dipendente.dirigente %}
                                     <select id="dipImpegni">
                                         <option>Personale</option>
-                                        <option>matteo_cittadini</option>
-                                        <option>Franzo</option>
+
+                                        {% for collega in colleghi %}
+                                        <option>{{collega.username}}</option>
+                                        {% endfor %}
                                     </select>
                                     {% endif %}
-
+                    {% raw %}
                                     <a class="zmdi zmdi-close" data-tl-action="dismiss" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
                                     <a id="addImpegno" class="zmdi zmdi-check" data-tl-action="save" data-ng-click="tctrl.addTodoStat = false; $event.stopPropagation()"></a>
                                 </div>
@@ -140,23 +142,39 @@
                             </div>
                         </div>
 
+                    {% endraw %}
 
-                        <div id="contentImpegni" class="checkbox media" >
-                        <!--    <div class="pull-right">
-                                <a id="delImpegno" href="" > × </a>
-                            </div>
-                            <div class="media-body">
-                                <label>
-                                    <input id="checkImpegni" type="checkbox">
-                                    <i class="input-helper"></i>
-                                    <span> &emsp;</span>
-                                </label>
-                            </div> -->
+                        <div id="contentImpegni" class="checkbox" >
+
+                                {% for impegno in impegni %}
+
+                                    <div class="rigaImpegni {{impegno.id}} {{impegno.checkato}}">
+                                        <div class="pull-right">
+                                            <a class="delImpegno"  href="" > × </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <label>
+                                                <input class="checkImpegno" onclick="registraCheck($(this));" type="checkbox">
+                                                <i class="input-helper"></i>
+                                                <span> &emsp;
+                                                    {% if impegno.dirigente == None %}
+
+                                                        <span class="dirImpegni">Personale</span>: {{ impegno.testo }}</span>
+                                                    {% else %}
+                                                        <span class="dirImpegni">{{impegno.dirigente}}</span>: {{ impegno.testo }}</span>
+
+                                                    {% endif %}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+
                         </div>
 
                     </div>
                   </div>
-                {% endraw %}
+
               </div>
               <div class="col-md-3"></div>
             </div>
@@ -838,13 +856,49 @@
 
 <script>
 
+    $(".rigaImpegni").each(function(){
 
-    $('#contentImpegni').load('listImpegni');
+        var check = $(this).attr('class').split(' ')[2];
+
+        if( check == 'True' )
+            $(this).children('.media-body').children('label').children('.checkImpegno').trigger('click');
+
+
+    });
+
     var socketImpegni = io.connect("{{sockUrl}}"+'/impegni');
 
-    socketImpegni.on('aggiornaImpegni', function(){
-        $('#contentImpegni').load('listImpegni');
+    var registraCheck = function($this){
+
+        var numero_impegno = $this.parent().parent().parent().attr('class').split(' ')[1];
+
+
+        socketImpegni.emit('checkaImpegno', {'dipendente': '{{dipendente.username}}', 'numero': numero_impegno});
+    }
+
+    socketImpegni.on('aggiungiImpegno', function(msg){
+
+        $('#contentImpegni').append(
+
+            '<div class="rigaImpegni '+msg['numero']+'"> \
+                <div class="pull-right"> \
+                    <a class="delImpegno"  href="" > × </a> \
+                </div> \
+                <div class="media-body"> \
+                    <label> \
+                        <input onclick="registraCheck($(this));" class="checkImpegno" type="checkbox"> \
+                        <i class="input-helper"></i> \
+                        <span> &emsp; \
+                        <span class="dirImpegni">'+msg['tipologia']+'</span>: '+msg['testo']+'</span>  \
+                    </label> \
+                </div> \
+            </div>'
+
+        );
+
+
     });
+
 
     {% if dipendente.dirigente %}
         $('#addImpegno').click(function(){
@@ -885,6 +939,14 @@
 
     {% endif %}
 
+    $('a.delImpegno').click(function(){
+        var numero_impegno = $(this).parent().parent().attr('class').split(' ')[1];
+
+        $(this).parent().parent().remove();
+
+        socketImpegni.emit('eliminaImpegno', {'dipendente': '{{dipendente.username}}', 'numero': numero_impegno});
+
+    });
 
 
 </script>
