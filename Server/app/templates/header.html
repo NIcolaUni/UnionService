@@ -21,7 +21,13 @@
 
 
             <li class="dropdown" dropdown>
-                <a dropdown-toggle class="tm-notification" href=""><i id="counterNotifiche" class="tmn-counts">{{numNotifiche}}</i></a>
+                <a dropdown-toggle class="tm-notification" href="">
+                    {% if numNotifiche == 0 %}
+                        <i id="counterNotifiche" class="tmn-counts" style="display:none">{{numNotifiche}}</i>
+                    {% else %}
+                        <i id="counterNotifiche" class="tmn-counts">{{numNotifiche}}</i>
+                    {%endif %}
+                </a>
                 <div class="dropdown-menu dropdown-menu-lg stop-propagate pull-right">
                     <div class="listview" id="notifications">
                         <div class="lv-header">
@@ -220,6 +226,9 @@
                         var oldNumNote=parseInt( $('#counterNotifiche').text() );
 
                         $('#counterNotifiche').text(oldNumNote-1)
+
+                        if(oldNumNote-1 == 0 )
+                            $('#counterNotifiche').hide()
 
                         $('.Hunter-pop-up').remove();
 

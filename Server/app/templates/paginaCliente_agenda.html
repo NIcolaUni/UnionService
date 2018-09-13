@@ -11,6 +11,15 @@
     <script src="{{url_for('static', filename='agenda/lib/moment.min.js') }}"></script>
     <script src="{{url_for('static', filename='agenda/fullcalendar.min.js') }}"></script>
     <script src="{{url_for('static', filename='agenda/locale/it.js') }}"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
+    <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
+    <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='hunterPopup/css/hunterPopup.css')}}">
+    <script type="text/javascript" src="{{url_for('static', filename='hunterPopup/js/jquery-popup.js')}}"></script>
+
     <link rel="stylesheet" href="{{url_for('static', filename='css/agenda.css') }}">
     </head>
     <body>
@@ -21,7 +30,7 @@
 
 
         <script>
-           $('#calendar').fullCalendar({
+        /*   $('#calendar').fullCalendar({
               header: {
                 left: 'prev,next today',
                 center: 'title',
@@ -32,6 +41,160 @@
              // selectHelper: true,
               editable: true,
               eventLimit: true, // allow "more" link when too many events
-           });
+           });*/
+
+
+             $('#calendar').fullCalendar({
+                  header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay,listWeek'
+                  },
+                  navLinks: true, // can click day/week names to navigate views
+                  editable: true,
+                  eventDurationEditable: true,
+                  eventLimit: true, // allow "more" link when too many events
+                  views: {
+                      agenda: {
+                        eventLimit: 3 // adjust to 6 only for agendaWeek/agendaDay
+                      }
+                  },
+                  events: [
+                    {% for evento in agenda %}
+                    {
+                      title: '{{evento.titolo}}\n{{evento.luogo}}',
+                      start: '{{evento.start_date}}',
+                      color: 'blue'
+                    },
+                    {% endfor %}
+                   ],
+
+                  eventMouseout: function( event, jsEvent, view ){
+                    if (!$('.Hunter-pop-up:hover').length != 0) {
+                        setTimeout(function(){
+                            $('.Hunter-pop-up').remove();
+                        }, 1000);
+
+                    }
+
+                  },
+
+
+                  eventClick: function(calEvent, jsEvent, view) {
+
+                       jsEvent.preventDefault();
+                       jsEvent.stopPropagation();
+
+                       $('body').append(
+                            '<div id="popupEvent-click" style="display:none"> \
+                                <div> \
+                                    <div class="panel panel-default"> \
+                                        <div class="panel-heading subtitle">Durata evento: <button class="eliminaAppuntamento">Elimina</button></div> \
+                                        <div class="panel-body form-inline dept1"> \
+                                          <label>Orario inizio:</label>'+
+                                            calEvent.start +
+                                         '<br/> <label>Orario fine:</label>'+calEvent.end+
+                                        '</div> \
+                                    </div> \
+                                </div> \
+                            </div>'
+                       );
+
+
+                        var popupEvent = function() {
+                            $('#num_accompagnatori').change(function(){
+                                $(".select-accompagnatori").remove();
+                                $(".spazio").remove();
+
+                                for( i=0; i < $('#num_accompagnatori').val(); i++ ){
+
+                                    $('.accompagnatori-div').append(
+                                        '<select class="select-accompagnatori"> \
+                                            <option>Scetulin de scetulinis</option> \
+                                            <option>Nicola Pancheri</option> \
+                                        </select><br class="spazio"/>'
+                                    );
+                                }
+
+                            });
+                        }
+
+                        $(this).hunterPopup({
+
+                            width: '320px',
+                            height: '200px',
+                            title: calEvent.title,
+                            content: $('#popupEvent-click'),
+                            event: popupEvent
+
+                        });
+
+                        $(this).trigger('launch-popup-click');
+
+
+                  },
+                  dayClick: function(date, jsEvent, view) {
+
+                    swal.withFormAsync({
+                        title: 'Nuovo appuntamento/impegno',
+                        showCancelButton: true,
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: 'Ok',
+                        cancelButtonText: 'annulla',
+                        closeOnConfirm: true,
+                        formFields: [
+
+                            { id: 'titolo', label: 'Titolo appuntamento/impegno:', name: 'titolo',  placeholder: 'titolo...' },
+
+                            { id: 'dalle',  type: 'time', label: 'Dalle:', name: 'dalle'},
+
+                            { id: 'alle',  type: 'time', label: 'Alle:', name: 'alle' },
+
+                        ]
+                    }).then(function (context) {
+                        if(context._isConfirm){
+
+                            var start_moment =  $.fullCalendar.moment(date.format()+'T'+context.swalForm['dalle']);
+                            var end_moment = $.fullCalendar.moment(date.format()+'T'+context.swalForm['alle']);
+
+
+                            socketAgenda.emit('imposta appuntamento', {
+                                'dip': '{{dipendente.username}}',
+                                'giorno': date.format(),
+                                'inizio_ora': context.swalForm['dalle'],
+                                'fine_ora': context.swalForm['alle'],
+                                'titolo': context.swalForm['titolo']
+                            });
+
+
+
+
+
+
+                        }
+
+                    });
+
+                  }
+              });
+
+              {% for appuntamento in agenda %}
+
+                  var start_moment =  $.fullCalendar.moment('{{appuntamento.giorno}}T{{appuntamento.inizio_ora}}');
+                  var end_moment = $.fullCalendar.moment('{{appuntamento.giorno}}T{{appuntamento.fine_ora}}');
+
+                  $('#calendar').fullCalendar( 'addEventSource', {
+
+
+                      events: [
+                        {
+                          title  : '{{appuntamento.titolo}}',
+                          start  : start_moment,
+                          end : end_moment
+                        }
+                      ]}
+                  );
+
+              {% endfor %}
         </script>
 </html>

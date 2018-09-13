@@ -739,3 +739,7 @@ textarea.input100 {
     display: inline-block;
     width: 50px;
 }
+
+.registrazioneCli{
+    margin-top: 0 !important;
+}

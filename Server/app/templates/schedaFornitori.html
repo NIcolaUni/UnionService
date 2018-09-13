@@ -9,387 +9,37 @@
 
 
 
-    <div id="paginaPrezzario">
+    <div id="paginaFornitori">
 
-        <div id="divIntestazione" class="row">
+        <div id="divIntestazione" >
             <span class="contact100-form-title">
                Scheda Fornitori
             </span>
             <form id="searchFornitore">
-              <input list="listFornitori" name="q" type="text" size="40" placeholder="Search..." />
-              <datalist id="listFornitori">
-                  {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
-                  <option>{{fornitoreSottoGruppo.gruppo_azienda}} - {{fornitoreSottoGruppo.nome}} </option>
-                  {% endfor %}
-              </datalist>
+              <div id="searchContainer">
+                 <span id="spanAddFornitore"><a id="addFornitore" class="fa fa-plus"></a></span>
+                  <input list="listFornitori" id="cercaFornitore" autocomplete="off" name="q" type="text" size="300" placeholder="Cerca fornitore..." />
+                  <datalist id="listFornitori">
+                      {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
+                      <option value="{{fornitoreSottoGruppo.gruppo_azienda}} - {{fornitoreSottoGruppo.nome}}"></option>
+                      {% endfor %}
+                  </datalist>
+              </div>
             </form>
+
         </div>
 
-        <div id="tabellaContainer" class="row">
-
-                <table id="prezzario">
-                    <thead id="headPrezzario">
-
-                      <tr id="groupHeaderIntestazioneProdotti">
-                            <th  class="tableIntestazione intestazionePino" data-column="column1"></th>
-                            <th  class="tableIntestazione whiteBorder" colspan="3" data-column="column2">Dati</th>
-
-                            <th  class="tableIntestazione intestazioneOliva" colspan="4" data-column="column5">Rappresentante</th>
-
-                            <th  class="tableIntestazione intestazioneArancio colBigMedium" data-column="column9"> Tempi di consegna</th>
-                            <th  class="tableIntestazione intestazioneArancio colBigMedium" data-column="column10">Prezzi netti</th>
-                            <th  class="tableIntestazione intestazioneVerde" colspan="3" data-column="column11"> Sconto</th>
-                            <th  class="tableIntestazione intestazioneRosso colMedium" data-column="column14"> Trasporto </th>
-                            <th  class="tableIntestazione intestazioneBlu" colspan="3" data-column="column15">Pagamenti</th>
-                            <th  class="tableIntestazione intestazioneOliva" colspan="4" data-column="column18">Dove</th>
-
-                       </tr>
-
-                       <tr id="headerIntestazioneProdotti">
-                            <th  class="tableIntestazione intestazionePino" data-column="column1"><a id="showForm" class="fa fa-plus"></a></th>
-                            <th  class="tableIntestazione whiteBorder" colspan="2" data-column="column2">Fornitore</th>
-
-                            <th  class="tableIntestazione whiteBorder"  data-column="column4">Settore merceologico</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column5">Referente</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column6">Recapito</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column7">Email</th>
-                            <th  class="tableIntestazione intestazioneOliva colBigMedium" data-column="column8">Stato</th>
-                            <th  class="tableIntestazione intestazioneArancio colBigMedium" data-column="column9"> </th>
-                            <th  class="tableIntestazione intestazioneArancio colBigMedium" data-column="column10">  </th>
-                            <th  class="tableIntestazione  intestazioneVerde colMedium" data-column="column11"> Standard </th>
-                            <th  class="tableIntestazione intestazioneVerde colMedium" data-column="column12">Extra 1</th>
-                            <th  class="tableIntestazione intestazioneVerde colMedium" data-column="column13">Extra 2</th>
-
-                            <th  class="tableIntestazione intestazioneRosso colMedium" data-column="column14"></th>
-                            <th  class="tableIntestazione intestazioneBlu colMedium" data-column="column15">Giorni </th>
-                            <th  class="tableIntestazione intestazioneBlu colBigMedium" data-column="column16">Modalità</th>
-                            <th  class="tableIntestazione intestazioneBlu colBigMedium" data-column="column17">Tipologia</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column18">Provincia</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column19">Indirizzo</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column20">Telefono</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column21">Sito</th>
-
-                       </tr>
-
-                      <tr id="trIntestazione">
-                            <th  class="tableIntestazione intestazionePino" data-column="column1"></th>
-                            <th  class="tableIntestazione whiteBorder"  data-column="column2">Primo gruppo</th>
-                            <th  class="tableIntestazione whiteBorder"  data-column="column3">Sotto gruppo</th>
-                            <th  class="tableIntestazione whiteBorder"  data-column="column4"></th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column5"></th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column6">Telefono</th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column7"></th>
-                            <th  class="tableIntestazione intestazioneOliva colBigMedium" data-column="column8"> </th>
-                            <th  class="tableIntestazione intestazioneArancio colBigMedium " data-column="column9"> </th>
-                            <th  class="tableIntestazione intestazioneArancio colBigMedium" data-column="column10">  </th>
-                            <th  class="tableIntestazione  intestazioneVerde colMedium" data-column="column11">  </th>
-                            <th  class="tableIntestazione intestazioneVerde colMedium" data-column="column12"></th>
-                            <th  class="tableIntestazione intestazioneVerde colMedium" data-column="column13"></th>
-
-                            <th  class="tableIntestazione intestazioneRosso colMedium" data-column="column14"></th>
-                            <th  class="tableIntestazione intestazioneBlu colMedium" data-column="column15"> </th>
-                            <th  class="tableIntestazione intestazioneBlu colBigMedium" data-column="column16"></th>
-                            <th  class="tableIntestazione intestazioneBlu colBigMedium" data-column="column17"></th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column18"></th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column19"></th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column20"></th>
-                            <th  class="tableIntestazione intestazioneOliva" data-column="column21"></th>
-                        </tr>
-                        <tr id="trForm">
-                            <th  class="tableForm intestazionePino" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  id="registraFornitore" class="buttonPrezzario" type="button">Inserisci</button></th>
-                            <th  class="tableForm whiteBorder"  data-column="column2"><input id="primoGruppoInput" type="text" name="primoGruppo" placeholder="primo gruppo" value=""> </th>
-                            <th  class="tableForm whiteBorder" data-column="column3"><input id="sottoGruppoInput" type="text" name="sottoGruppo" placeholder="sotto gruppo" value=""> </th>
-                            <th  class="tableForm whiteBorder" data-column="column4"><input id="settoreMerceInput" type="text" name="settoreMerce" placeholder="settore" value=""> </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column5"><input id="referenteInput" type="text" name="referente" placeholder="referente" value=""> </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column6"><input id="telReferenteInput" type="tel" name="telReferente" placeholder="telefono referente"> </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column7"><input id="emailReferenteInput" type="email" name="emailReferente" placeholder="email referente"> </th>
-                            <th  class="tableForm intestazioneOliva colBigMedium" data-column="column8">
-                                 <select id="selectStatoRappresentante">
-                                    <option>Collabora</option>
-                                    <option>Potenziale</option>
-                                </select>
-
-                            </th>
-                            <th  class="tableForm intestazioneArancio colBigMedium" data-column="column9">
-                                <select id="selectTempiConsegna">
-                                    <option>30</option>
-                                    <option>30/60</option>
-                                    <option>30/60/90</option>
-                                    <option>60</option>
-                                    <option>60/90</option>
-                                    <option>60/90/120</option>
-                                    <option>90 </option>
-                                    <option>90/120 </option>
-                                    <option>120</option>
-                                </select> gg
-                            </th>
-                            <th  class="tableForm intestazioneArancio colBigMedium" data-column="column10">
-
-                                <select id="selectPrezziNetti">
-                                    <option> Sì </option>
-                                    <option> No </option>
-                                </select>
-
-                            </th>
-                            <th  class="tableForm intestazioneVerde colMedium" data-column="column11"><input class="numberInput"  id="scontoStandardInput" type="number" name="scontoStandard" placeholder="standard" value="0"> % </th>
-                            <th  class="tableForm intestazioneVerde colMedium" data-column="column12"><input class="numberInput"  id="extra1Input" type="number" name="scontoEx1" placeholder="extra 1" value="0"> % </th>
-                            <th  class="tableForm intestazioneVerde colMedium" data-column="column13"><input class="numberInput"  id="extra2Input" type="number" name="scontoEx2" placeholder="extra 2" value="0"> % </th>
-                            <th  class="tableForm intestazioneRosso colMedium" data-column="column14"><input class="numberInput" id="trasportoUnitaInput" type="number" name="trasportoUnita" placeholder="trasporto unita" value="0">
-                                    <select id="selectUnitaMisuraTrasporto">
-                                        <option>%</option>
-                                        <option>cad</option>
-                                    </select>
-                            </th>
-                            <th  class="tableForm intestazioneBlu colMedium" data-column="column15">
-                               <select id="selectGiorniPagamento">
-                                    <option>30</option>
-                                    <option>30/60</option>
-                                    <option>30/60/90</option>
-                                    <option>60</option>
-                                    <option>60/90</option>
-                                    <option>60/90/120</option>
-                                    <option>90</option>
-                                    <option>90/120</option>
-                                    <option>120</option>
-                                </select>
-                            </th>
-                            <th  class="tableForm intestazioneBlu colBigMedium" data-column="column16">
-
-                                <select id="selectModalitaPagamento">
-                                    <option>RIBA DF</option>
-                                    <option>RIBA FM</option>
-                                    <option>RD titoli allo scarico</option>
-                                    <option>RD DF</option>
-                                </select>
-                            </th>
-
-                            <th  class="tableForm intestazioneBlu colBigMedium" data-column="column17">
+        <div id="tableSection" >
+            <div class="tabContainer">
 
 
-                                <select id="selectTipologiaPagamenti">
-                                    <option>DISTRIBUTORE</option>
-                                    <option>RIVENDITORE</option>
-                                    <option>PRODUTTORE</option>
-                                </select>
-                            </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column18"><input id="doveProvinciaInput" type="text" name="doveProvincia" placeholder="provincia"> </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column19"><input id="doveIndirizzoInput" type="text" name="doveIndirizzo" placeholder="indirizzo"> </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column20"><input id="doveTelInput" type="tel" name="doveTel" placeholder="telefono"> </th>
-                            <th  class="tableForm intestazioneOliva" data-column="column21"><input id="doveSitoInput" type="url" name="doveSito" placeholder="sito"> </th>
-
-
-                        </tr>
-                    </thead>
-                    <tbody id="bodyPrezzario">
-                 <!--  <tr>
-                        <td colspan="2" data-column="column1">C'era una volta un re seduto su un sofa che disse al</td>
-                    </tr>-->
-
-
-                    </tbody>
-
-
-                </table>
+            </div>
         </div>
 
     </div>
 
-   <script>
-
-            /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
-            $('#trForm').hide();
-
-            $('#hideForm').click(function(){
-                $('#trForm').hide();
-                $(showForm).addClass('fa');
-                $(showForm).addClass('fa-plus');
-                $('#bodyPrezzario').css('height', '88%');
-                modificaAttiva=false
-
-            });
-
-            $('#showForm').click(function(){
-                $('#trForm').show();
-                $(this).removeClass('fa');
-                $(this).removeClass('fa-plus');
-                $('#bodyPrezzario').css('height', '81%');
-
-            });
-
-
-            //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
-            function stampaValore(valore, colonna, unita,   classValues){
-                console.log("almeno qua " + unita);
-                 var where="column"+colonna
-
-                 if( valore == 0 )
-                    return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
-                 else if( unita == "cad" ){
-                     console.log("entrato!");
-                     return '<td  class="'+ classValues +'" data-column="'+where+'"> &euro; '+ valore +' cad </td>';
-
-                 }
-                 else
-                    if( unita == "%" )
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
-                    else
-                     return '<td  class="'+ clnomeassValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
-
-
-            }
-
-
-            //codice per riempire il #bodyPrezzario
-            {% for fornitorePrimoGruppo in listaFornitoriPrimoGruppo %}
-
-                    {% if not fornitorePrimoGruppo.has_sottoGruppo %}
-
-                            var rappresentantiStr="";
-                         {% for rappresentante in listaRappresentanti %}
-                            {% if rappresentante.azienda == fornitorePrimoGruppo.nome_gruppo %}
-                                rappresentantiStr = '<td  data-column="column5">{{rappresentante.nome}}</td>'+
-                                                    '<td  data-column="column6">{{rappresentante.telefono}}</td>'+
-                                                    '<td  data-column="column7">{{rappresentante.email}}</td>'+
-                                                    '<td  class="colBigMedium" data-column="column8">{{rappresentante.stato}}</td>';
-                            {% else %}
-                                rappresentantiStr = '<td  data-column="column5"></td>'+
-                                    '<td  data-column="column6"></td>'+
-                                    '<td  data-column="column7"></td>'+
-                                    '<td  class="colBigMedium" data-column="column8"></td>';
-
-                            {% endif %}
-                        {% endfor %}
-
-
-                        {% if fornitorePrimoGruppo.daVerificare %}
-                            var classiTr="rowBodyTab daVerificare" ;
-                            var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
-                        {% else %}
-                            var classiTr="rowBodyTab";
-                            var inputToVer='<input class="toVerify" type="checkbox" >';
-                        {% endif %}
-
-                        $("#bodyPrezzario").append(
-                              '<tr bgcolor="#E1E1E1" class="'+ classiTr +'">'+
-                                  '<td class="controlCol" data-column="column1">'+
-
-                                          '<div class="iconsDiv row">'+
-                                              '<div class="col-md-4 iconContainer firstIconContainer" >'+
-                                                '<a class="fa fa-trash iconsTab delFornitore"></a>'+
-                                              '</div>'+
-                                              '<div class="col-md-4 iconContainer">'+
-                                                '<a  class="fa fa-edit iconsTab modFornitore"></a>'+
-                                              '</div>'+
-                                              '<div class="col-md-4 iconContainer">'+
-                                                '<a  class="fa fa-warning iconsTab segnalaFornitore"></a>'+
-                                              '</div>'+
-                                          '</div>'+
-
-                                    '</td>'+
-                                '<td id="{{fornitorePrimoGruppo.nome_gruppo}}" class="rowPrimoGruppo  fornitoreRow" colspan="3" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
-                                rappresentantiStr +
-                                '<td colspan="13" data-column="column9"></td>'+
-                              '</tr>'
-                        );
-
-
-
-                    {% else %}
-
-                        var rappresentantiStr="";
-
-                        {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
-                            {% if fornitoreSottoGruppo.gruppo_azienda == fornitorePrimoGruppo.nome_gruppo %}
-
-
-                                {% for rappresentante in listaRappresentanti %}
-                                    {% if rappresentante.azienda == fornitorePrimoGruppo.nome_gruppo %}
-                                        rappresentantiStr = '<td  data-column="column5">{{rappresentante.nome}}</td>'+
-                                                            '<td  data-column="column6">{{rappresentante.telefono}}</td>'+
-                                                            '<td  data-column="column7">{{rappresentante.email}}</td>'+
-                                                            '<td  class="colBigMedium" data-column="column8">{{rappresentante.stato}}</td>';
-                                    {% else %}
-                                        rappresentantiStr = '<td  data-column="column5"></td>'+
-                                            '<td  data-column="column6"></td>'+
-                                            '<td  data-column="column7"></td>'+
-                                            '<td  class="colBigMedium" data-column="column8"></td>';
-
-                                    {% endif %}
-                                {% endfor %}
-
-
-                                {% if fornitoreSottoGruppo.daVerificare %}
-                                    var classiTr="rowBodyTab daVerificare" ;
-                                    var inputToVer='<input class="toVerify" type="checkbox"  checked="checked">';
-                                {% else %}
-                                    var classiTr="rowBodyTab";
-                                    var inputToVer='<input class="toVerify" type="checkbox" >';
-                                {% endif %}
-
-                                $("#bodyPrezzario").append(
-                                      '<tr bgcolor="#E1E1E1" class="'+ classiTr +'">'+
-                                        '<td class="controlCol" data-column="column1"></td>'+
-                                        '<td id="{{fornitorePrimoGruppo.nome_gruppo}}" class="rowPrimoGruppo fornitoreRow" colspan="3" data-column="column2">{{fornitorePrimoGruppo.nome_gruppo}}</td>'+
-                                        rappresentantiStr +
-                                        '<td colspan="13" data-column="column9"></td>'+
-                                      '</tr>'+
-                                      '<tr class="'+ classiTr +'">'+
-                                            '<td class="controlCol" data-column="column1">'+
-
-                                                  '<div class="iconsDiv row">'+
-                                                      '<div class="col-md-4 iconContainer firstIconContainer" >'+
-                                                        '<a class="fa fa-trash iconsTab delSottoGruppo"></a>'+
-                                                      '</div>'+
-                                                      '<div class="col-md-4 iconContainer">'+
-                                                        '<a  class="fa fa-edit iconsTab modSottoGruppo"></a>'+
-                                                      '</div>'+
-                                                      '<div class="col-md-4 iconContainer">'+
-                                                        '<a  class="fa fa-warning iconsTab segnalaSottoGruppo"></a>'+
-                                                      '</div>'+
-                                                  '</div>'+
-
-                                            '</td>'+
-
-                                            '<td  data-column="column2"></td>'+
-                                            '<td class="nome_sottogruppo" data-column="column3">{{fornitoreSottoGruppo.nome}}</td>'+
-                                            '<td  data-column="column4">{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
-                                            '<td  data-column="column5"></td>'+
-                                            '<td  data-column="column6"></td>'+
-                                            '<td  data-column="column7"></td>'+
-                                            '<td   class="colBigMedium" data-column="column8"></td>'+
-                                            '<td   class="colBigMedium" data-column="column9">{{fornitoreSottoGruppo.tempiDiConsegna}} gg</td>'+
-                                            '<td   class="colBigMedium" data-column="column10">{{fornitoreSottoGruppo.prezziNetti}}</td>'+
-
-                                            stampaValore("{{fornitoreSottoGruppo.scontoStandard}}", 11, "%", "colMedium" ) +
-                                            stampaValore("{{fornitoreSottoGruppo.scontoExtra1}}", 12, "%", "colMedium" ) +
-                                            stampaValore("{{fornitoreSottoGruppo.scontroExtra2}}", 13, "%", "colMedium" ) +
-                                            stampaValore("{{fornitoreSottoGruppo.trasporto}}", 14,
-                                                             "{{fornitoreSottoGruppo.trasportoUnitaMisura}}", "colMedium" ) +
-
-                                            '<td  class="colMedium" data-column="column15">{{fornitoreSottoGruppo.giorniPagamenti}} gg</td>'+
-                                            '<td  class="colBigMedium" data-column="column16">{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
-                                            '<td  class="colBigMedium" data-column="column17">{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
-                                            '<td   data-column="column18">{{fornitoreSottoGruppo.provincia}}</td>'+
-
-                                            '<td   data-column="column19">{{fornitoreSottoGruppo.indirizzo}}</td>'+
-                                            '<td   data-column="column20">{{fornitoreSottoGruppo.telefono}}</td>'+
-                                            '<td   data-column="column21">{{fornitoreSottoGruppo.sito}}</td>'+
-
-                                      '</tr>'
-                                );
-
-                            {% endif %}
-
-                        {% endfor %}
-                    {% endif %}
-            {% endfor %}
-
-   </script>
-
-
     <script>
 
-        var rappresentanteDaRegistrare = false;
 
         var socketHome = io.connect("{{sockUrl}}"+'/home');
 
@@ -401,323 +51,736 @@
 
         var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
 
+       socketFornitore.on('aggiornaGiorniPagamento', function(message){
+            $('#listaGiorniPagamento').children().remove();
+            for( i=0; i<parseInt(message['length']); i++){
+                $('#listaGiorniPagamento').append(
+                     '<option value="'+message[i.toString()]+'"></option>'
+                );
+            }
 
-        socketFornitore.on('aggiornaPagina', function() {
-            location.reload();
+       });
 
-        });
+       socketFornitore.on('aggiornaModalitaPagamento', function(message){
+            $('#listaModalitaPagamento').children().remove();
+            for( i=0; i<parseInt(message['length']); i++){
+                $('#listaModalitaPagamento').append(
+                     '<option value="'+message[i.toString()]+'"></option>'
+                );
+            }
 
-        socketFornitore.on('rigaPresente', function(message) {
+       });
 
+       socketFornitore.on('aggiornaTipologiaPagamento', function(message){
+            $('#listaTipologiaPagamento').children().remove();
+            for( i=0; i<parseInt(message['length']); i++){
+                $('#listaTipologiaPagamento').append(
+                     '<option value="'+message[i.toString()]+'"></option>'
+                );
+            }
+
+       });
+
+
+        //Seguono due metodi diversi per stampare l'alert "sottogruppo presente"
+        {% if rigaPresente %}
               swal({
-                title: message['who'] + ' inserito è già presente',
+                title: "Il {{tabellaRigaPresente}} inserito è già presente",
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Ok',
                 closeOnConfirm: true
 
-              })
+              });
+
+        {% endif %}
 
 
-        });
+        function viewPage(nomeFornitoreToPrint){
 
-        socketFornitore.on('regRappresentante', function() {
-            console.log("dai ci siamo");
-            if( rappresentanteDaRegistrare ){
+            {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
 
-                var inputOfFornitori =  [];
-                var selectOfFornitori = [];
+                if( "{{fornitoreSottoGruppo.nome}}" == nomeFornitoreToPrint.split(' - ')[1]){
 
+                    var strCancellaFornitore="";
+                    var strModificaFornitore="";
 
+                    var nomeFornitoreToSend = "{{fornitoreSottoGruppo.nome}}";
+                    var nomeRappresentanteToSend = "";
 
-                $("#trForm input").each(function(index){
-                    inputOfFornitori.push($(this).val());
+                    {% for rappresentante in listaRappresentanti %}
+                        {% if fornitoreSottoGruppo.gruppo_azienda == rappresentante.azienda %}
+                            nomeRappresentanteToSend = "{{rappresentante.nome}}";
+                        {% endif %}
+                    {% endfor %}
 
-                });
-
-                $("#trForm select").each(function(index){
-                    selectOfFornitori.push($(this).val());
-
-                });
-
-                rappresentanteDaRegistrare = false;
-                 socketFornitore.emit("registra_referente", { "dip": "{{dipendente.username}}",
-                                                   "nome": inputOfFornitori[3], "azienda": inputOfFornitori[0],
-                                                   "telefono": inputOfFornitori[4], "email": inputOfFornitori[5], "stato": selectOfFornitori[0],} );
-
-            }
-        });
-
-        //variabili globale per il meccanismo di modifica delle lavorazioni
-        var modificaAttiva=false;
-        var oldFornitore_PrimoG ="";
-        var oldFornitore_SottoG="";
-
-
-        /*funzione lanciata all'evento click del pulsante "inserisci fornitore"*/
-
-       $('#registraFornitore').click( function() {
-
-
-            if(modificaAttiva)
-            {
-                titleTxt="Si sta per modificare una voce fornitore già presente";
-            }else
-                titleTxt='Si sta per aggiungere una nuovo fornitore';
-
-          swal({
-            title: titleTxt,
-            text: 'Sicuro di voler continuare?',
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: 'Ok',
-            cancelButtonText: 'annulla',
-            closeOnConfirm: true
-
-          }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                        var inputOfFornitori =  [];
-                        var selectOfFornitori = [];
+                    if( "{{fornitoreSottoGruppo.nome}}" == "" )
+                        nomeFornitoreToSend = "spazio";
 
 
 
-                        $("#trForm input").each(function(index){
-                            inputOfFornitori.push($(this).val());
-
-                        });
-
-                        $("#trForm select").each(function(index){
-                            selectOfFornitori.push($(this).val());
-
-                        });
-
-                         //se non è stato impostato il referente
-                         if( inputOfFornitori[3] == "" )
-                            rappresentanteDaRegistrare=false;
-                         else
-                            rappresentanteDaRegistrare=true;
+                    nomeRappresentanteToSend= "cci";
 
 
-                         //se non è stato impostato il gruppo del fornitore non fare nulla
-                        if( inputOfFornitori[0] == "" )
-                            return;
-                        else
-                            socketFornitore.emit("registra_fornitore", { "dip": "{{dipendente.username}}", "nome":  inputOfFornitori[0], "has_sottoGruppo": true })
+                   strCancellaFornitore='<a href="'+
+                                         '{{url_for("cancellaFornitore", nomeFornitore=nomeFornitoreToSend, primoGruppo=fornitoreSottoGruppo.gruppo_azienda)}}" class="ctrlBtn fa fa-trash"></a>';
 
-                        if(!modificaAttiva){
+                   strModificaFornitore='<a href="modificaFornitore/'+nomeFornitoreToSend+'/{{fornitoreSottoGruppo.gruppo_azienda}}/'+nomeRappresentanteToSend+'" class="ctrlBtn fa fa-edit"></a>';
 
 
+                    $('.tabContainer').html(
 
-                            socketFornitore.emit("registra_gruppoFornitore", { "dip": "{{dipendente.username}}",
-                                                                            "rappresentante": rappresentanteDaRegistrare,
-                                                                           "gruppo_azienda": inputOfFornitori[0], "nome": inputOfFornitori[1],
-                                                                           "settore_merceologico" : inputOfFornitori[2],
-                                                                            "tempi_consegna": selectOfFornitori[1], "prezziNetti": selectOfFornitori[2],
-                                                                            "scontoStandard": inputOfFornitori[6], "scontoExtra1": inputOfFornitori[7],
-                                                                             "scontroExtra2": inputOfFornitori[8], "trasporto" : inputOfFornitori[9],
-                                                                             "trasportoUnitaMisura": selectOfFornitori[3], "giorniPagamenti": selectOfFornitori[4],
-                                                                              "modalitaPagamenti": selectOfFornitori[5], "tipologiaPagamenti": selectOfFornitori[6],
-                                                                              "provincia": inputOfFornitori[10], "indirizzo": inputOfFornitori[11], "telefono": inputOfFornitori[12],
-                                                                              "sito": inputOfFornitori[13] });
+                        '<div id="ctrlBtnContainer">'+
+                            '<span class="firstCtrlBtn">'+
+                               strCancellaFornitore +
+                               strModificaFornitore +
+                            '</span>'+
+
+                        '</div>'+
 
 
-                        }
-                        else{
-                             socketFornitore.emit("modifica_fornitore", { "dip": "{{dipendente.username}}", "oldFornitore" : oldFornitore, "oldFornitore_SottoG" : oldFornitore_SottoG,
-                                                                           "primo_gruppo": inputOfFornitori[0], "sotto_gruppo": inputOfFornitori[1],
-                                                                           "settore_merceologico" : inputOfFornitori[2],
-                                                                            "tempi_consegna": selectOfFornitori[1], "prezziNetti": selectOfFornitori[2],
-                                                                            "scontoStandard": inputOfFornitori[6], "scontoExtra1": inputOfFornitori[7],
-                                                                             "scontroExtra2": inputOfFornitori[8], "trasporto" : inputOfFornitori[9],
-                                                                             "trasportoUnitaMisura": selectOfFornitori[3], "giorniPagamenti": selectOfFornitori[4],
-                                                                              "modalitaPagamenti": selectOfFornitori[5], "tipologiaPagamenti": selectOfFornitori[6],
-                                                                              "provincia": inputOfFornitori[10], "indirizzo": inputOfFornitori[11], "telefono": inputOfFornitori[12],
-                                                                              "sito": inputOfFornitori[13] });
+                        '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th class="centerText" colspan="4">Dati Fornitore</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Primo gruppo</th>'+
+                                '<th>Sotto gruppo</th>'+
+                                '<th>Settore merceologico</th>'+
+                                '<th>Stato</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                              '<td >{{fornitoreSottoGruppo.gruppo_azienda}}</td>'+
+                               '<td >{{fornitoreSottoGruppo.nome}}</td>'+
+                               '<td >{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
+                               '<td>{{fornitoreSottoGruppo.stato}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="4">Recapito azienda</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Indirizzo</th>'+
+                                '<th>Provincia</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Sito</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{fornitoreSottoGruppo.indirizzo}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.provincia}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.telefono}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.sito}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="3">Rappresentante</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Nominativo</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Email</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+
+                             {%for  rappresentante in listaRappresentanti%}
+                                    {% if rappresentante.azienda == fornitoreSottoGruppo.gruppo_azienda %}
+                                        '<tr>'+
+                                            '<td>{{rappresentante.nome}}</td>'+
+                                            '<td>{{rappresentante.telefono}}</td>'+
+                                            '<td>{{rappresentante.email}}</td>'+
+                                            '<td>{{rappresentante.stato}}</td>'+
+                                        '</tr>'+
+                                    {% endif %}
+                             {% endfor %}
+                        '</tbody>'+
+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="3">Sconti</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Standard</th>'+
+                                '<th>Extra 1</th>'+
+                                '<th>Extra 2</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                                '<tr>'+
+
+                                    '<td  >{{fornitoreSottoGruppo.scontoStandard}} %</td>'+
+                                    '<td >{{fornitoreSottoGruppo.scontoExtra1}} %</td>'+
+                                    '<td >{{fornitoreSottoGruppo.scontoExtra2}} %</td>'+
+
+                                '</tr>'+
+                        '</tbody>'+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="3">Pagamenti</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Giorni</th>'+
+                                '<th>Modalità</th>'+
+                                '<th>Tipologia</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{fornitoreSottoGruppo.giorniPagamenti}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
+                                '<td>{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th>Tempi di consegna</th>'+
+                                '<th></th>'+
+                                '<th>Prezzi netti</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
+                                '<td></td>'+
+                                '<td>{{fornitoreSottoGruppo.prezziNetti}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th>Trasporto</th>'+
+                                '<th>Imballo</th>'+
+                                '<th>Montaggio</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>&euro; {{fornitoreSottoGruppo.trasporto}}</td>'+
+                                '<td>&euro; {{fornitoreSottoGruppo.imballo}}</td>'+
+                                '<td>&euro; {{fornitoreSottoGruppo.montaggio}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>' );
 
 
-                        }
 
-                  }
-
-
-
-          })
-       });
-
-       $('.delFornitore').click(function(){
-
-
-
-            var fornitore=$(this).closest('.rowBodyTab').children('.fornitoreRow').text();
-
-
-            swal({
-                title: "Eliminazione fornitore " + fornitore,
-                text: 'sicuro di voler procedere?',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-
-            }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                        socketFornitore.emit('elimina_fornitore', {'dip': '{{dipendente.username}}', 'fornitore': fornitore });
-
-                  }
-
-            })
-
-       });
-
-
-       $('.delSottoGruppo').click(function(){
-
-            var fornitore=""
-
-            var sotto_gruppo=$(this).closest('.rowBodyTab').children('.nome_sottogruppo').text();
-            var fornitore=""
-            {% for sottoGruppo in listaFornitoriSottoGruppo %}
-                if( "{{sottoGruppo.nome}}" == sotto_gruppo ){
-
-                    fornitore=$('#{{sottoGruppo.gruppo_azienda}}').text()
-                    console.log("wei sono " +fornitore);
                 }
-
+                else
+                    console.log("Che palle!:_{{fornitoreSottoGruppo.nome}}_"+ nomeFornitoreToPrint.split(' - ')[1] )
             {% endfor %}
 
+        }
 
-            swal({
-                title: "Eliminazione sotto gruppo " + sotto_gruppo,
-                text: 'sicuro di voler procedere?',
-                showCancelButton: true,
+        $('#cercaFornitore').change(function(){
+            viewPage($(this).val());
+        });
+
+
+        $('#addFornitore').click(function(){
+
+            $('#searchFornitore').remove();
+            $('#divIntestazione').append(
+                '<div id="searchContainer">'+
+                    '<span id="spanBackTo"><a id="back" class="fa fa-reply"></a></span>'+
+                    '<button id="submitFormFornitore" class="button button--antiman button--text-thick button--text-upper button--size-s button--inverted-alt button--round-l button--border-thick"><i class="button__icon icon icon-plus"></i><span>Aggiungi</span></button>'+
+                '</div>'
+            );
+
+            $('#back').click(function(){
+                window.location="{{url_for('schedaFornitori')}}"
+            });
+
+            $('.tabContainer').html(
+
+                '<form id="formFornitore" method="post" action="schedaFornitori">'+
+                    '{{form.hidden_tag()}}'+
+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th class="centerText" colspan="4">Dati Fornitore</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Primo gruppo</th>'+
+                                '<th>Sotto gruppo</th>'+
+                                '<th>Settore merceologico</th>'+
+                                '<th>Stato</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{form.gruppo_azienda(placeholder="primo gruppo", list="listaFornitori", autocomplete="nope")}}</td>'+
+                                  '<datalist id="listaFornitori">'+
+                                          {% for fornitore in listaFornitoriPrimoGruppo %}
+                                          '<option value="{{fornitore.nome_gruppo}}"></option>'+
+                                          {% endfor %}
+                                      '</datalist>'+
+                                '<td >{{form.nomeFornitore(placeholder="sotto gruppo")}}</td>'+
+                                '<td >{{form.settoreMerceologico( placeholder="settore")}}</td>'+
+                                '<td>{{form.stato}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="4">Recapito azienda</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Indirizzo</th>'+
+                                '<th>Provincia</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Sito</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{form.indirizzo(placeholder="indirizzo")}}</td>'+
+                                '<td>{{form.provincia(placeholder="provincia")}}</td>'+
+                                '<td>{{form.telefono(placeholder="telefono")}}</td>'+
+                                '<td>{{form.sito(placeholder="sito")}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="3">Rappresentante</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Nominativo</th>'+
+                                '<th>Telefono</th>'+
+                                '<th>Email</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{form.nomeRappresentante(placeholder="referente")}}</td>'+
+                                '<td>{{form.telefonoRappresentante(placeholder="telefono referente")}}</td>'+
+                                '<td>{{form.emailRappresentante(placeholder="email referente")}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="3">Sconti</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Standard</th>'+
+                                '<th>Extra 1</th>'+
+                                '<th>Extra 2</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{form.scontoStandard(placeholder="standard")}} %</td>'+
+                                '<td>{{form.scontoExtra1(placeholder="extra 1")}} %</td>'+
+                                '<td>{{form.scontroExtra2(placeholder="extra 2")}} %</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th colspan="3">Pagamenti</th>'+
+                            '</tr>'+
+
+                            '<tr>'+
+                                '<th>Giorni</th>'+
+                                '<th>Modalità</th>'+
+                                '<th>Tipologia</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>'+
+                                    '<a id="giorniPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
+                                    '{{form.giorniPagamenti(placeholder="giorni pagamento", list="listaGiorniPagamento", autocomplete="nope")}}'+
+                                    '<datalist id="listaGiorniPagamento">'+
+                                    {% for giorno in giorniPagamento %}
+                                    '<option value="{{giorno.nome}}"></option>'+
+                                    {% endfor %}
+                                    '</datalist>'+
+                                '</td>'+
+                                '<td>'+
+                                    '<a id="modalitaPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
+                                    '{{form.modalitaPagamenti( placeholder="modalita pagamento", list="listaModalitaPagamento", autocomplete="nope")}}'+
+                                        '<datalist id="listaModalitaPagamento">'+
+                                              {% for modalita in modalitaPagamento %}
+                                              '<option value="{{modalita.nome}}"></option>'+
+                                              {% endfor %}
+                                        '</datalist>'+
+                                '</td>'+
+                                '<td>'+
+                                    '<a id="tipologiaPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
+                                    '{{form.tipologiaPagamenti(placeholder="tipologia pagamento", list="listaTipologiaPagamento", autocomplete="nope")}}'+
+                                       '<datalist id="listaTipologiaPagamento">'+
+                                              {% for tipologia in tipologiaPagamento %}
+                                              '<option value="{{tipologia.nome}}"></option>'+
+                                              {% endfor %}
+                                       '</datalist>'+
+                                 '</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th>Tempi di consegna</th>'+
+                                '<th></th>'+
+                                '<th>Prezzi netti</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{form.tempiDiConsegna(placeholder="tempi di consegna")}}</td>'+
+                                '<td></td>'+
+                                '<td>{{form.prezziNetti}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+                    '<table class="tableFornitore">'+
+                        '<thead class="headFornitore">'+
+
+                            '<tr>'+
+                                '<th>Trasporto</th>'+
+                                '<th>Imballo</th>'+
+                                '<th>Montaggio</th>'+
+                            '</tr>'+
+
+                        '</thead>'+
+                        '<tbody class="bodyFornitore">'+
+                            '<tr>'+
+                                '<td>{{form.trasporto(placeholder="costo di trasporto")}} {{form.trasportoUnitaMisura}}</td>'+
+                                '<td>{{form.imballo(placeholder="costo di imballo")}} {{form.imballoUnitaMisura}}</td>'+
+                                '<td>{{form.montaggio(placeholder="costo di posa")}} {{form.montaggioUnitaMisura}}</td>'+
+                            '</tr>'+
+                        '</tbody>'+
+
+                    '</table>'+
+                '</form>'
+
+            );
+
+            $('#submitFormFornitore').click(function(){
+                $('#formFornitore').submit();
+            });
+
+            $('#giorniPagamentiBtn').click(function(){
+
+                 var giorniPagamentoOptions=[];
+                 $('#listaGiorniPagamento').children().each(function(){
+                    giorniPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
+                 });
+
+
+
+                 swal.withFormAsync({
+                    title: 'Modifica/elimina <br/> giorno pagamento',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: false,
+                    formFields: [
+
+                      {
+                        id: 'select',
+                        type: 'select',
+                        options: giorniPagamentoOptions
+
+                      },
+
+                     { name: 'modDel', value: 'modifica', type: 'radio' },
+                     { name: 'modDel', value: 'elimina', type: 'radio' },
+
+
+                    ]
+                 }).then(function (context) {
+
+                    var giornoSelected=context.swalForm['select'];
+
+                    if(context._isConfirm){
+
+                        if( context.swalForm['modDel'] == 'modifica' ){
+                            swal.withFormAsync({
+                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                 { name: 'toMod', value: giornoSelected, placeholder: 'Modifica campo: ' + giornoSelected },
+
+
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+                                    socketFornitore.emit("modifica_giornoPagamento", { "dip": "{{dipendente.username}}",
+                                                   "oldNome": giornoSelected, "newNome": context.swalForm['toMod'] } );
+
+                                }
+                            });
+                        }
+                        else if( context.swalForm['modDel'] == 'elimina' ) {
+                             socketFornitore.emit("elimina_giornoPagamento", { "dip": "{{dipendente.username}}",
+                                                   "nome": giornoSelected } );
+                             swal({
+                                title: 'Campo eliminato',
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: true
+                             });
+
+                        }
+
+
+                    }
+
+                 });
+
+            });
+
+
+
+            $('#modalitaPagamentiBtn').click(function(){
+
+                 var modalitaPagamentoOptions=[];
+                 $('#listaModalitaPagamento').children().each(function(){
+                    modalitaPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
+                 });
+
+
+
+                 swal.withFormAsync({
+                    title: 'Modifica/elimina <br/> modalità pagamento',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: false,
+                    formFields: [
+
+                      {
+                        id: 'select',
+                        type: 'select',
+                        options: modalitaPagamentoOptions
+
+                      },
+
+                     { name: 'modDel', value: 'modifica', type: 'radio' },
+                     { name: 'modDel', value: 'elimina', type: 'radio' },
+
+
+                    ]
+                 }).then(function (context) {
+
+                    var modalitaSelected=context.swalForm['select'];
+
+                    if(context._isConfirm){
+
+                        if( context.swalForm['modDel'] == 'modifica' ){
+                            swal.withFormAsync({
+                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                 { name: 'toMod', value: modalitaSelected, placeholder: 'Modifica campo: ' + modalitaSelected },
+
+
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+                                    socketFornitore.emit("modifica_modalitaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "oldNome": modalitaSelected, "newNome": context.swalForm['toMod'] } );
+
+                                }
+                            });
+                        }
+                        else if( context.swalForm['modDel'] == 'elimina' ) {
+                             socketFornitore.emit("elimina_modalitaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "nome": modalitaSelected } );
+                             swal({
+                                title: 'Campo eliminato',
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: true
+                             });
+
+                        }
+
+
+                    }
+
+                 });
+
+            });
+
+            $('#tipologiaPagamentiBtn').click(function(){
+
+                 var tipologiaPagamentoOptions=[];
+                 $('#listaTipologiaPagamento').children().each(function(){
+                    tipologiaPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
+                 });
+
+
+
+                 swal.withFormAsync({
+                    title: 'Modifica/elimina <br/> tipologia pagamento',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: false,
+                    formFields: [
+
+                      {
+                        id: 'select',
+                        type: 'select',
+                        options: tipologiaPagamentoOptions
+
+                      },
+
+                     { name: 'modDel', value: 'modifica', type: 'radio' },
+                     { name: 'modDel', value: 'elimina', type: 'radio' },
+
+
+                    ]
+                 }).then(function (context) {
+
+                    var tipologiaSelected=context.swalForm['select'];
+
+                    if(context._isConfirm){
+
+                        if( context.swalForm['modDel'] == 'modifica' ){
+                            swal.withFormAsync({
+                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+                                formFields: [
+
+                                 { name: 'toMod', value: tipologiaSelected, placeholder: 'Modifica campo: ' + tipologiaSelected },
+
+
+                                ]
+                            }).then(function (context) {
+                                if(context._isConfirm){
+                                    socketFornitore.emit("modifica_tipologiaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "oldNome": tipologiaSelected, "newNome": context.swalForm['toMod'] } );
+
+                                }
+                            });
+                        }
+                        else if( context.swalForm['modDel'] == 'elimina' ) {
+                             socketFornitore.emit("elimina_tipologiaPagamento", { "dip": "{{dipendente.username}}",
+                                                   "nome": tipologiaSelected } );
+                             swal({
+                                title: 'Campo eliminato',
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: true
+                             });
+
+                        }
+
+
+                    }
+
+                 });
+
+            });
+
+
+
+        });
+
+
+        {% if error %}
+              swal({
+                title: "{{errorMessage}}",
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
+                closeOnConfirm: true
 
-            }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                        socketFornitore.emit('elimina_sotto_gruppo_fornitore', {'dip': '{{dipendente.username}}', 'fornitore': fornitore,
-                                               'sotto_gruppo': sotto_gruppo });
-
-                  }
-
-            })
-
-       });
-
-       $('.modSottoGruppo').click(function(){
-
-           //se qualche altro fornitore e' gia' stato selezionato per la modifica deselezionalo
-           if( modificaAttiva ){
-                $('.inModifica').removeClass('inModifica');
-
-
-           }
-            else {
-
-                modificaAttiva=true;
-                $('#trForm').show();
-                $('#showForm').removeClass('fa');
-                $('#showForm').removeClass('fa-plus');
-                /*$('#bodyPrezzario').css('height', '81%');*/
-           }
-
-
-           $(this).closest('tr').addClass("inModifica");
-
-           var datiSottoGruppo=[];
-
-           $(".inModifica td").each(function(index){
-
-                datiSottoGruppo.push($(this).text());
-
-           });
-
-            console.log(datiSottoGruppo);
-
-            oldNome = datiSottoGruppo[2];
-            var datiFornitore = "";
-
-
-            {% for sotto_gruppo in listaFornitoriSottoGruppo %}
-
-                if("{{sotto_gruppo.nome}}" == oldNome )
-                    datiFornitore = "{{sotto_gruppo.gruppo_azienda}}";
-
-                    $("#primoGruppoInput").val( "{{sotto_gruppo.gruppo_azienda}}");
-                    $("#sottoGruppoInput").val("{{sotto_gruppo.nome}}");
-                    $("#settoreMerceInput").val("{{sotto_gruppo.settoreMerceologico}}");
-                    $("#selectTempiConsegna").val("{{sotto_gruppo.tempiDiConsegna}}");
-
-                    console.log("prezzi netti:" + "{{sotto_gruppo.prezziNetti}}".substring(1, "{{sotto_gruppo.prezziNetti}}".length) );
-                    $("#selectPrezziNetti").val("{{sotto_gruppo.prezziNetti}}".substring(1, "{{sotto_gruppo.prezziNetti}}".length));
-                    $("#scontoStandardInput").val("{{sotto_gruppo.scontoStandard}}");
-                    $("#extra1Input").val("{{sotto_gruppo.scontoExtra1}}");
-                    $("#extra2Input").val("{{sotto_gruppo.scontoExtra2}}");
-                    $("#trasportoUnitaInput").val("{{sotto_gruppo.trasporto}}");
-                    $("#selectUnitaMisuraTrasporto").val("{{sotto_gruppo.trasportoUnitaMisura}}");
-                    $("#selectGiorniPagamento").val("{{sotto_gruppo.giorniPagamenti}}");
-                    $("#selectModalitaPagamento").val("{{sotto_gruppo.modalitaPagamenti}}");
-                    $("#selectTipologiaPagamenti").val("{{sotto_gruppo.tipologiaPagamenti}}");
-                    $("#doveProvinciaInput").val("{{sotto_gruppo.provincia}}");
-                    $("#doveIndirizzoInput").val("{{sotto_gruppo.indirizzo}}");
-                    $("#doveTelInput").val("{{sotto_gruppo.telefono}}");
-                    $("#doveSitoInput").val("{{sotto_gruppo.sito}}");
-
-            {% endfor %}
-
-            {% for rappresentante in listaRappresentanti %}
-
-                if( "{{rappresentante.azienda}}" == datiFornitore )
-
-                    $("#referenteInput").val("{{rappresentante.nome}}");
-                    $("#telReferenteInput").val("{{rappresentante.telefono}}");
-                    $("#emailReferenteInput").val("{{rappresentante.email}}");
-                    $("#selectStatoRappresentante").val("{{rappresentante.stato}}");
-
-            {% endfor %}
-
-
-
-
-
-
-
-            $(this).closest('tr').removeClass("inModifica");
-
-       });
-
-
-       $('.segnalaProdotto').click(function(){
-
-            var tipo = $('#selectTipologia').val();
-            var prodotto = $(this).closest('.rowBodyTab').children('.nome_prodotto').text();
-
-
-            if(!$(this).closest('tr').hasClass('daVerificare') ){
-
-
-                socketFornitore.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
-                                                           'prodotto': prodotto, 'valore': true});
-            }
-            else {
-                socketFornitore.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
-                                                       'prodotto': prodotto, 'valore': false});
-
-            }
-
-       });
-
+              });
+               $('#addFornitore').trigger('click');
+        {% endif %}
 
     </script>
-
-
-
 {% endblock %}

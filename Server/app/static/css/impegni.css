@@ -5,7 +5,7 @@
 }
 
 .delImpegno:hover {
-    color: red;
+    color: #edb755;
 }
 
 
@@ -55,4 +55,66 @@ select#dipImpegni option:hover {
 	padding-left: 25px;
 	width: 270px;
 	color: #EC6F66;
+}
+
+#titleMemorandum{
+    font-size: 145%;
+    font-family: monospace;
+}
+
+label.labelImpegno {
+    font-family: monospace;
+    word-wrap: break-word;
+    width: 93%;
+
+    padding-left: 30px !important;
+}
+
+.dirImpegni {
+    float: left !important;
+}
+
+.msgImpegno{
+    display: inline-block;
+    float: left;
+    width: 95%;
+    word-wrap: break-word;
+}
+
+}
+
+.conDirigente{
+    margin-left: 3% !important;
+}
+
+.rigaImpegni {
+    padding-bottom: 10px;
+    display: inline-block;
+    width: 96%;
+}
+
+
+element.style {
+}
+.tl-body .media-body {
+    padding-top: 3px;
+}
+
+.media-body {
+    margin-left: 0 !important;
+    display: inline-block !important;
+    width: 100% !important;
+}
+
+.pull-left {
+    float: left!important;
+    display: inline-block;
+    width: 17px !important;
+}
+
+.pull-center {
+    width: 93% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-block !important;
 }

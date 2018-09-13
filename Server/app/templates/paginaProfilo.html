@@ -540,7 +540,10 @@
                         if(context._isConfirm){
 
 
-                            //    saveEvent(e, context.swalForm['titolo']);
+
+                             //   saveEvent(e, context.swalForm['titolo']);
+
+
 
                                 socketProfilo.emit('richiesta_ferie', {
                                     'dip': '{{dipendente.username}}',
@@ -548,6 +551,7 @@
                                     'start_date': startDate,
                                     'end_date': endDate
                                 });
+
 
 
                             swal({

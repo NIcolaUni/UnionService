@@ -65,7 +65,7 @@ div#openCloseChat img {
 
 .close-chat {
     border-radius: 50%;
-    background-color: orange;
+    //background-color: orange;
     font-size: 3em;
     color: blanchedalmond;
     cursor: pointer;
@@ -73,7 +73,7 @@ div#openCloseChat img {
 
 .open-chat {
     border-radius: 50%;
-    background-color: orange;
+    //background-color: orange;
     font-size: 3em;
     color: blanchedalmond;
     cursor: pointer;

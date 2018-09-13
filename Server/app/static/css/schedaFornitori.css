@@ -1,0 +1,131 @@
+
+.viewContainer {
+    position: absolute;
+    margin-left: 4%;
+}
+
+viewContainer tr.headerTabella {
+
+    height: 51px;
+
+}
+
+
+#tabellaContainer1 {
+    width: 45%;
+    display: inline-block;
+    position: absolute;
+    z-index: 7;
+}
+
+#tabellaContainer2 {
+    width: 46%;
+    display: inline-block;
+    position: absolute;
+    z-index: 6;
+    right: 9%;
+}
+
+div#tabellaContainer3 {
+    position: absolute;
+    display: initial;
+    width: 41%;
+    display: inline-block;
+    z-index: 5;
+    right: -32%;
+
+}
+
+.centralIcon {
+    padding-left: 5% !important;
+}
+
+.viewContainer tr.dimensionaTabella th {
+    padding-top: 2% !important;
+
+}
+
+.sezioneTabella.newRow th{
+    padding-top: 2% !important;
+}
+
+tr.dimensionaTabella td {
+    height: 30px;
+    /* padding-bottom: 29%; */
+}
+
+
+div.scheda {
+
+    width: 93% !important;
+    margin-left: 2% !important;
+}
+
+.finalIcon {
+    margin-left: 7%;
+}
+
+.radioContainer{
+    cursor: unset !important;
+}
+
+.radioContainer input, label{
+    cursor: pointer;
+}
+
+tr.headerDelHeader {
+    height: 46px;
+}
+
+#tabellaContainer3 tr.dimensionaTabella td {
+    width: 16%;
+    height: 31px;
+
+}
+
+
+#tabellaContainer3 tr.dimensionaTabella th {
+
+    width: 16%;
+}
+
+tr.sezioneTabella {
+    height: 40px !important;
+}
+
+.sezioneTabella.newRow input{
+    width: 40%;
+}
+
+div#headerNewRow {
+    position: absolute;
+    margin-left: 4%;
+    z-index: 11;
+    margin-top: -10%;
+    width: 100%;
+}
+
+div#tabellaContainerNewRow1 {
+    display: inline-block;
+    width: 46%;
+    z-index: 4;
+    left: -1%;
+    position: absolute;
+}
+
+div#tabellaContainerNewRow2 {
+    display: inline-block;
+    width: 46%;
+    position: absolute;
+    z-index: 2;
+    left: 45%
+}
+
+
+div#tabellaContainerNewRow3 {
+    display: inline-block;
+    width: 46%;
+    position: absolute;
+    left: 91%;
+    z-index: 3;
+}

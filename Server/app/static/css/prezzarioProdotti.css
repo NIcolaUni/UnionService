@@ -1,0 +1,21 @@
+.viewContainer {
+    margin-left: -5%;
+    width: 107%;
+    overflow-y: unset;
+}
+
+div#tabellaContainer1 {
+    display: inline-block;
+    width: 51%;
+}
+
+div#tabellaContainer2 {
+    display: inline-block;
+    width: 47%;
+    right: 3.3%;
+    position: absolute;
+}
+
+.headerDelHeader {
+    height: 40px;
+}

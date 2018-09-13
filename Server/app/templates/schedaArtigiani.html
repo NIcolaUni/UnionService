@@ -1,0 +1,85 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+
+        <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+        <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+        <div id="schedaArtigiani" class="scheda">
+            <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
+
+                <div class="filterInputContainer">
+                    <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInputArtigiano" placeholder="Selezionare la mansione...">
+                    <datalist id="listMansioni">
+                      <option>prova</option>
+                    </datalist>
+
+
+                </div>
+
+                <div class="filterInputContainer">
+                    <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInputArtigiano" placeholder="Selezionare l'artigiano...">
+                    <datalist id="listArtigiani">
+                          <option>prova</option>
+                    </datalist>
+
+                </div>
+
+
+
+
+
+            </div>
+            <div class="fc-view-container viewContainer">
+                <div id="tabellaContainer">
+                    <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th colspan="6" class="secondaCol"></th>
+
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                            <th> Nominativo </th>
+                            <th> Valutazione </th>
+                            <th> Contatti 1 </th>
+                            <th> Contatti 2 </th>
+                            <th class="noteArtigiano"> Note </th>
+                            <th> Email </th>
+                        </tr>
+                        <tr class="sezioneTabella dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th colspan="7">Impiego: idraulico</th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+                            <td class="primaCol"><a class="fa fa-trash primaColIcon"></a></td>
+                            <td><label class="cellaDato">Beghini Marco</label><input style="display:none" class="inputScheda" value="Beghini Marco" placeholder="nome artigiano..." ></td>
+                            <td><label class="cellaDato">3</label><input style="display:none" type="number" class="inputScheda" value="3" placeholder="valutazione artigiano..." ></td>
+                            <td><label class="cellaDato">328 9773545</label><input style="display:none" type="tel" class="inputScheda" value="328 9773545" placeholder="contatto 1..." ></td>
+                            <td><label class="cellaDato"></label><input style="display:none" type="tel" class="inputScheda" value="Beghini Marco" placeholder="contatto 2..." ></td>
+                            <td class=noteArtigiano><label class="cellaDato"></label><input style="display:none" class="inputScheda" value="" placeholder="nome artigiano..." ></td>
+                            <td><label class="cellaDato">termoidraula@gmail.com</label><input style="display:none" type="email" class="inputScheda" value="termoidraula@gmail.com" placeholder="email artigiano..." ></td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+
+
+        $('.datiScheda td').click( function(){
+            $(this).children('label').hide();
+            $(this).children('input').show();
+        });
+
+        $('.primaCol').unbind('click');
+
+    </script>
+{% endblock%}

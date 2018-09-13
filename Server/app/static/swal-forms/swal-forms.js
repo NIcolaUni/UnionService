@@ -22,7 +22,7 @@
 
     $('input#acorpo').click(function(){
         $('.sweet-alert').trigger('click');
-        console.log('bella');
+
     });
 
     $('a#selectHiddenSelect').click(function(){
@@ -204,6 +204,7 @@
       placeholder: field.placeholder || camelCaseToHuman(field.id),
       value: field.value || '',
       type: field.type || 'text',
+      list: field.list || '',
       options: field.options || [],
       required: field.required,
       isRadioOrCheckbox: function () {
@@ -228,11 +229,11 @@
         }
         else if (input.type !== 'select') {
           inputTag = t("<input id='{id}' class='{clazz} swal-form-field' type='{type}' name='{name}'" +
-            " value='{value}' title='{placeholder}' placeholder='{placeholder}'" +
+            " value='{value}' title='{placeholder}' placeholder='{placeholder}' list='{list}'" +
             ' data-swal-forms-required={required}>', input)
         }
         else {
-        console.log("No invece passo di qua! "+input.type);
+
           inputTag = t("<select id='{id}' class='{clazz} swal-form-field' name='{name}'" +
             " value='{value}' title='{placeholder}' style='width:100%'>" +
             ' data-swal-forms-required={}', input) +

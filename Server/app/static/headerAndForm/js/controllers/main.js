@@ -77,6 +77,10 @@ materialAdmin
              var numNot=angular.element('#corpoNote a').length;
              angular.element("#counterNotifiche").text(numNot);
 
+             if( numNot == 0 )
+                angular.element("#counterNotifiche").hide();
+             else
+                angular.element("#counterNotifiche").show();
 
 
           });
@@ -94,7 +98,12 @@ materialAdmin
                         $(this).remove();
                         var numNot=angular.element('#corpoNote a').length;
                         angular.element("#counterNotifiche").text(numNot-1);
-                    }
+
+                        if( numNot == 0 )
+                            angular.element("#counterNotifiche").hide();
+                        else
+                            angular.element("#counterNotifiche").show();
+                        }
 
                 }
              });

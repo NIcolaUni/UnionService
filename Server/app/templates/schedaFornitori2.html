@@ -1,0 +1,397 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+
+        <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+        <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+        <div id="schedaFornitori" class="scheda">
+
+            <div id="headerNewRow">
+                <div id="tabellaContainerNewRow1">
+                    <table class="tabella">
+                        <tr class="sezioneTabella dimensionaTabella newRow">
+                            <th class="primaCol"><a class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
+                            <th colspan="3">
+                                <label>Selezionare/digitare il settore di lavorazione: </label>
+                                <input list="listaSettori" class="inputScheda" placeholder="settore di lavorazione...">
+                            </th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th class="secondaCol"> Primo gruppo </th>
+                            <th> Sotto gruppo </th>
+                            <th> Stato  </th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella newRow">
+                            <td class="primaCol">
+                                <a class="fa fa-address-card primaColIcon"></a>
+                                <a class="fa fa-users primaColIcon centralIcon"></a>
+                            </td>
+                            <td class="secondaCol hiddenInput"><input class="inputScheda" placeholder="Primo gruppo..." ></td>
+                            <td><input class="inputScheda"  placeholder="Sotto gruppo..." ></td>
+                            <td class="radioContainer">
+                                    <input id="inputCollaboraNewRow1" type="radio" name="collaboraNewRow" class="" value="Collabora" checked="checked">
+                                    <label for="inputCollaboraNewRow1" class="radioLabel">Collabora</label>
+                                    <input id="inputCollaboraNewRow2" type="radio" name="collaboraNewRow" class="" value="Potenziale">
+                                    <label for="inputCollaboraNewRow2" class="radioLabel">Potenziale</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="tabellaContainerNewRow2">
+                    <table class="tabella">
+                        <tr class="sezioneTabella dimensionaTabella newRow">
+                            <th colspan="5" class="newPageCell newRow"><a class="fa fa-angle-double-right"></a></th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th> Tempi di consegna </th>
+                            <th> Prezzi netti  </th>
+                            <th> Trasporto </th>
+                            <th> Imballo </th>
+                            <th> Montaggio </th>
+
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella newRow">
+                            <td>
+                                <input  list="listaTempiConsegna"  class="inputScheda" value="" placeholder="tempi di consegna..." >
+                            </td>
+                            <td class="radioContainer">
+                                <input type="radio" id="inputPrezziNettiNewRow1"  name="prezziNettiNewRow" class="" value="si" checked="checked">
+                                <label for="inputPrezziNettiNewRow1" class="radioLabel">Sì</label>
+                                <input type="radio" id="inputPrezziNettiNewRow2" name="prezziNettiNewRow" class="" value="no" >
+                                <label for="inputPrezziNettiNewRow2" class="radioLabel">No</label>
+                            </td>
+                            <td>
+                                <input type="number" class="inputScheda numInput"  placeholder="costi di trasporto..." >
+                                <input type="radio" id="inputEuroPercTrasportoNewRow1"  name="euroPercTrasportoNewRow" class="" value="euro">
+                                <label for="inputEuroPercTrasportoNewRow1"  class="radioLabel">&euro;</label>
+                                <input type="radio" id="inputEuroPercTrasportoNewRow2" name="euroPercTrasportoNewRow" class="" value="%">
+                                <label for="inputEuroPercTrasportoNewRow2" class="radioLabel">%</label>
+                            </td>
+                            <td>
+                                <input type="number" class="inputScheda numInput"  placeholder="costi imballo..." >
+                                <input type="radio" id="inputEuroPercImballoNewRow1" name="euroPercImballoNewRow" class="" value="euro">
+                                <label for="inputEuroPercImballoNewRow1" class="radioLabel">&euro;</label>
+                                <input type="radio" id="inputEuroPercImballoNewRow2" name="euroPercImballoNewRow" class="" value="%">
+                                <label for="inputEuroPercImballoNewRow2" class="radioLabel">%</label>
+                            </td>
+                            <td>
+                                <input type="number" class="inputScheda numInput"  placeholder="costi posa..." >
+                                <input type="radio" id="inputEuroPercPosaNewRow1" name="euroPercPosaNewRow" class="" value="euro">
+                                <label for="inputEuroPercPosaNewRow1" class="radioLabel">&euro;</label>
+                                <input type="radio" id="inputEuroPercPosaNewRow2" name="euroPercPosaNewRow" class="" value="%">
+                                <label for="inputEuroPercPosaNewRow2" class="radioLabel">%</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="tabellaContainerNewRow3" style="display:none">
+                    <table class="tabella">
+                        <tr class="sezioneTabella dimensionaTabella newRow">
+                            <th colspan="6" class="oldPageCell newRow"><a  class="fa fa-angle-double-left"></a></th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th> Standard </th>
+                            <th> Extra 1 </th>
+                            <th> Extra 2 </th>
+                            <th> Giorni </th>
+                            <th> Modalità </th>
+                            <th> Tipologia </th>
+
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella newRow">
+                            <td>
+                                <input type="number" class="inputScheda numInput" ><label class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td>
+                                <input type="number" class="inputScheda numInput" ><label class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td>
+                                <input type="number" class="inputScheda numInput" ><label class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td>
+                                <input class="inputScheda" value="" placeholder="giorni pagamento..." >
+                            </td>
+                            <td>
+                                <input class="inputScheda" value="" placeholder="modalità pagamento..." >
+                            </td>
+                            <td>
+                                <input class="inputScheda" value="" placeholder="tipologia..." >
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
+
+                <div class="filterInputContainer">
+                    <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
+                    <datalist id="listMansioni">
+                      <option>prova</option>
+                    </datalist>
+
+
+                </div>
+
+                <div class="filterInputContainer">
+                    <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
+                    <datalist id="listArtigiani">
+                          <option>prova</option>
+                    </datalist>
+
+                </div>
+
+            </div>
+
+
+            <div class="fc-view-container viewContainer">
+                <div id="tabellaContainer1">
+                     <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th class="secondaCol" colspan="3" >Dati fornitore</th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                            <th class="secondaCol"> Primo gruppo </th>
+                            <th> Sotto gruppo </th>
+                            <th> Stato  </th>
+                        </tr>
+                        <tr class="sezioneTabella dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th class="secondaCol" colspan="3">Settore merceologico: sanitari</th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+                            <td class="primaCol">
+                                <a class="fa fa-address-card primaColIcon"></a>
+                                <a class="fa fa-users primaColIcon centralIcon"></a>
+                                <a class="fa fa-trash primaColIcon finalIcon"></a>
+                            </td>
+                            <td class="secondaCol hiddenInput"><label class="cellaDato">Cambielli</label><input style="display:none" class="inputScheda" value="Cambielli" placeholder="Primo gruppo..." ></td>
+                            <td class="hiddenInput"><label class="cellaDato">Idel Standard</label><input style="display:none" class="inputScheda" value="Ideal Standard" placeholder="Sotto gruppo..." ></td>
+                            <td class="radioContainer">
+
+                                    <input id="inputCollabora1" type="radio" name="collabora" class="" value="Collabora" checked="checked">
+                                    <label for="inputCollabora1" class="radioLabel">Collabora</label>
+                                    <input id="inputCollabora2" type="radio" name="collabora" class="" value="Potenziale">
+                                    <label for="inputCollabora2" class="radioLabel">Potenziale</label>
+
+                            </td>
+
+                        </tr>
+                    </table>
+
+                </div>
+                <div id="tabellaContainer2">
+                    <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                            <th colspan="5" class="newPageCell"><a class="fa fa-angle-double-right"></a></th>
+
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th> Tempi di consegna </th>
+                            <th> Prezzi netti  </th>
+                            <th> Trasporto </th>
+                            <th> Imballo </th>
+                            <th> Montaggio </th>
+
+                        </tr>
+                        <tr class="sezioneTabella dimensionaTabella">
+                            <th colspan="5"></th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input  list="listaTempiConsegna" style="display:none" class="inputScheda" value="" placeholder="tempi di consegna..." >
+
+                            </td>
+                            <td class="radioContainer">
+                                <input type="radio" id="inputPrezziNetti1"  name="prezziNetti" class="" value="si" checked="checked">
+                                <label for="inputPrezziNetti1" class="radioLabel">Sì</label>
+                                <input type="radio" id="inputPrezziNetti2" name="prezziNetti" class="" value="no" >
+                                <label for="inputPrezziNetti2" class="radioLabel">No</label>
+                            </td>
+
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput"  placeholder="costi di trasporto..." >
+
+                                <input type="radio" id="inputEuroPercTrasporto1" style="display:none" name="euroPercTrasporto" class="" value="euro">
+                                <label for="inputEuroPercTrasporto1" style="display:none" class="radioLabel">&euro;</label>
+                                <input type="radio" id="inputEuroPercTrasporto2" style="display:none" name="euroPercTrasporto" class="" value="%">
+                                <label for="inputEuroPercTrasporto2" style="display:none" class="radioLabel">%</label>
+                            </td>
+
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput"  placeholder="costi imballo..." >
+
+                                <input type="radio" id="inputEuroPercImballo1" style="display:none" name="euroPercImballo" class="" value="euro">
+                                <label for="inputEuroPercImballo1" style="display:none" class="radioLabel">&euro;</label>
+                                <input type="radio" id="inputEuroPercImballo2" style="display:none" name="euroPercImballo" class="" value="%">
+                                <label for="inputEuroPercImballo2" style="display:none" class="radioLabel">%</label>
+                            </td>
+
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput"  placeholder="costi posa..." >
+
+                                <input type="radio" id="inputEuroPercPosa1" style="display:none" name="euroPercPosa" class="" value="euro">
+                                <label for="inputEuroPercPosa1" style="display:none" class="radioLabel">&euro;</label>
+                                <input type="radio" id="inputEuroPercPosa2" style="display:none" name="euroPercPosa" class="" value="%">
+                                <label for="inputEuroPercPosa2" style="display:none" class="radioLabel">%</label>
+                            </td>
+
+
+
+
+                        </tr>
+                    </table>
+
+                </div>
+
+
+                <div id="tabellaContainer3" style="display:none">
+                    <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                            <th colspan="3" class="oldPageCell"><a  class="fa fa-angle-double-left"></a><label>Sconti</label></th>
+                            <th colspan="3"><label>Pagamenti</label></th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th> Standard </th>
+                            <th> Extra 1 </th>
+                            <th> Extra 2 </th>
+                            <th> Giorni </th>
+                            <th> Modalità </th>
+                            <th> Tipologia </th>
+
+                        </tr>
+                        <tr class="sezioneTabella dimensionaTabella">
+                            <th colspan="6"></th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="giorni pagamento..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="modalità pagamento..." >
+
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="tipologia..." >
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+        <datalist id="listaSettori">
+            <option>sanitari</option>
+            <option>interni</option>
+        </datalist>
+
+        <datalist id="listaTempiConsegna">
+            <option>10 anni</option>
+            <option>2 mesi</option>
+        </datalist>
+
+        <datalist id="listaGiorniPagamento">
+            <option>10 anni</option>
+            <option>2 mesi</option>
+        </datalist>
+
+        <datalist id="listaModalitaPagamento">
+            <option>10 anni</option>
+            <option>2 mesi</option>
+        </datalist>
+
+        <datalist id="listaTipologiaPagamento">
+            <option>10 anni</option>
+            <option>2 mesi</option>
+        </datalist>
+
+
+    </div>
+
+    <script>
+
+
+        $('td.hiddenInput').click( function(){
+            $(this).children('label').hide();
+            $(this).children('input').show();
+            $(this).children('.radioLabel').show();
+            $(this).children('.simpleAfterInputLabel').show();
+
+        });
+
+        $('.primaCol').unbind('click');
+
+        $('.newPageCell a').click(function(){
+            $('#tabellaContainer3').show();
+            $('#tabellaContainer2').animate({"right": '+=55%'});
+            $('#tabellaContainer3').animate({"right": '+=46%'});
+        });
+
+        $('.oldPageCell a').click(function(){
+            $('#tabellaContainer2').animate({"right": '-=55%'});
+            $('#tabellaContainer3').animate({"right": '-=46%'}, function(){$('#tabellaContainer3').hide()});
+
+        });
+
+        $('.newPageCell.newRow a').unbind().click(function(){
+            $('#tabellaContainerNewRow3').show();
+            $('#tabellaContainerNewRow2').animate({"left": '-=46%'});
+            $('#tabellaContainerNewRow3').animate({"left": '-=46%'});
+        });
+
+        $('.oldPageCell.newRow a').unbind().click(function(){
+            $('#tabellaContainerNewRow2').animate({"left": '+=46%'});
+            $('#tabellaContainerNewRow3').animate({"left": '+=46%'}, function(){$('#tabellaContainerNewRow3').hide()});
+
+        });
+
+
+
+        $('#delNewRow').click(function(){
+            $('#headerNewRow').animate({'margin-top': '-=6%'});
+
+            $('#addRow').click(function(){
+                $(this).unbind('click');
+                $('#headerNewRow').animate({'margin-top': '+=6%'});
+
+            });
+
+            $('#headerNewRow input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                    $(this).attr('checked', '' );
+                else
+                    $(this).val('');
+            });
+        });
+
+
+        $('#addRow').click(function(){
+            $(this).unbind('click');
+            $('#headerNewRow').animate({'margin-top': '+=6%'});
+
+        });
+
+    </script>
+{% endblock %}

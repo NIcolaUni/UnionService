@@ -1,0 +1,167 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+
+        <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+        <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+        <div id="schedaFornitori" class="scheda">
+
+            <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
+
+                <div class="filterInputContainer">
+                    <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
+                    <datalist id="listMansioni">
+                      <option>prova</option>
+                    </datalist>
+
+
+                </div>
+
+                <div class="filterInputContainer">
+                    <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
+                    <datalist id="listArtigiani">
+                          <option>prova</option>
+                    </datalist>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="fc-view-container viewContainer">
+
+                <div id="tabellaContainer1">
+                    <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                           <th class="primaCol"></th>
+                            <th class="secondaCol" colspan="5" >Dati prodotto</th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                            <th class="secondaCol"> Nome prodotto </th>
+                            <th> Marchio </th>
+                            <th> Modello </th>
+                            <th> Codice  </th>
+                            <th> Fornitore </th>
+                        </tr>
+                        <tr class="sezioneTabella dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th class="secondaCol" colspan="5">Tipologia: sanitari</th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+                            <td class="primaCol">
+                                <a class="fa fa-warning primaColIcon"></a>
+                                <a class="fa fa-trash primaColIcon centralIcon"></a>
+                            </td>
+
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="nome prodotto..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="marchio prodotto..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="modello prodotto..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="codice prodotto..." >
+                            </td>
+
+                            <td class="hiddenInput"><label class="cellaDato">Cambielli</label>
+                                <select style="display:none" >
+                                    <option>Cambielli</option>
+                                    <option>Rossi & co.</option>
+                                </select>
+                                <a class="fa fa-info-circle"></a>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="tabellaContainer2">
+                    <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                            <th colspan="7">Costi</a></th>
+
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th> &euro; listino (F+P) </th>
+                            <th> &euro; listino (P) </th>
+                            <th> &euro; US (P) <a class="fa fa-info-circle"></a></th>
+                            <th> &euro; US (F+P) </th>
+                            <th> Posa </th>
+                            <th> Rincaro </th>
+                            <th> Totale </th>
+
+                        </tr>
+                        <tr class="sezioneTabella dimensionaTabella">
+                            <th colspan="7"></th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+
+        $('td.hiddenInput').click( function(){
+            $(this).children('label').hide();
+            $(this).children('input').show();
+            $(this).children('select').show();
+
+        });
+
+        $('.primaCol').unbind('click');
+
+        $('.newPageCell a').click(function(){
+            $('#tabellaContainer3').show();
+            $('#tabellaContainer2').animate({"right": '+=55%'});
+            $('#tabellaContainer3').animate({"right": '+=46%'});
+        });
+
+        $('.oldPageCell a').click(function(){
+            $('#tabellaContainer2').animate({"right": '-=55%'});
+            $('#tabellaContainer3').animate({"right": '-=46%'}, function(){$('#tabellaContainer3').hide()});
+
+        });
+
+    </script>
+
+{% endblock %}

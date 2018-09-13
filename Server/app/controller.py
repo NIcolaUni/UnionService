@@ -91,6 +91,24 @@ def prezzarioProdotti():
                                 tipoProdotto=tipoProdotto, tipoToSel=None, prodotti=prodotti, modelli=modelli,
                                 fornitori=fornitori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
 
+@server.route('/prezzarioProdotti2')
+@login_required
+def prezzarioProdotti2():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    colleghi = Dipendente.query.all()
+
+    return render_template('prezzarioProdotti2.html', dipendente=dip, colleghi=colleghi, scheda=True,
+                           prezzario_prodotti=True)
+
+@server.route('/schedaFornitori2', methods=['GET', 'POST'])
+@login_required
+def schedaFornitori2():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    colleghi = Dipendente.query.all()
+
+    return render_template('schedaFornitori2.html', dipendente=dip, colleghi=colleghi, scheda=True, scheda_fornitori=True)
+
+
 @server.route('/schedaFornitori', methods=['GET', 'POST'])
 @login_required
 def schedaFornitori():
@@ -115,7 +133,7 @@ def schedaFornitori():
             tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
 
 
-            return render_template("schedaFornitori-rifatta.html", dipendente=dip,
+            return render_template("schedaFornitori.html", dipendente=dip,
                                    schedaFornitoriCss=True,
                                    giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
                                    listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
@@ -196,7 +214,7 @@ def schedaFornitori():
         allerta = True
         app.rigaPresente = False
 
-    return render_template("schedaFornitori-rifatta.html", dipendente=dip,
+    return render_template("schedaFornitori.html", dipendente=dip,
                            rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente, schedaFornitoriCss=True,
                            giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
                            listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
@@ -337,9 +355,10 @@ def modificaFornitore(nomeFornitore, primoGruppo, nomeRappresentante):
 @server.route('/agendaClientePag/<dipUsername>')
 @login_required
 def agendaClientePag(dipUsername):
+    dip = Dipendente.query.filter_by(username=dipUsername).first()
 
     agenda = Agenda.query.filter_by(dipendente=dipUsername)
-    return render_template('paginaCliente_agenda.html', agenda=agenda)
+    return render_template('paginaCliente_agenda.html', agenda=agenda, dipendente=dip)
 
 @server.route('/gestioneDip', methods=['GET','POST'])
 @login_required
@@ -698,6 +717,14 @@ def sidebarLeft():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     return render_template('sidebar-left.html', dipendente=dip)
 
+@server.route('/schedaArtigiani')
+@login_required
+def schedaArtigiani():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    colleghi = Dipendente.query.all()
+
+    return render_template('schedaArtigiani.html', dipendente=dip, colleghi=colleghi, scheda=True, scheda_artigiani=True)
+
 @server.route('/header')
 @login_required
 def header():
@@ -987,9 +1014,15 @@ def handle_registraImpegno(message):
     else:
         numeroETipologia = Impegni.registraImpegni(dipendente=message['dip'], testo=message['testo'], dirigente=message['dir'])
 
+        dir = Dipendente.query.filter_by(username=message['dir']).first()
+
+        emit('conferma_impegno_inviato', namespace='/impegni', room=dir.session_id )
+
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
     emit('aggiungiImpegno', {'testo': message['testo'], 'numero': numeroETipologia[0], 'tipologia': numeroETipologia[1]}, namespace='/impegni', room=dip.session_id)
+
+
 
 @socketio.on('checkaImpegno', namespace='/impegni')
 def handle_checkaImpegno(message):
@@ -1620,6 +1653,48 @@ def handle_stampa_preventivo(message):
 
     emit('procediADownload', namespace='/preventivoEdile', room=dip.session_id)
 
+@socketio.on('imposta appuntamento', namespace='/agenda')
+def handle_imposta_appuntamento(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+
+    returnVal =Agenda.registraAppuntamento(dipendente=dip.username, titolo=message['titolo'], giorno=message['giorno'],
+                          inizio_ora=message['inizio_ora'], fine_ora=message['fine_ora'])
+
+    emit('responso_imposta_appuntamento', {'risposta': returnVal, 'giorno': message['giorno'], 'titolo': message['titolo'],
+                                           'inizioH': message['inizio_ora'],'fineH': message['fine_ora']}, namespace='/agenda', room=dip.session_id )
+
+
+@socketio.on('cambia_orario_inizio', namespace='/agenda')
+def handle_cambia_orario_inizio(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+    old_start=message['old_inizio'].split(':')[0]+':'+message['old_inizio'].split(':')[1]
+    app.server.logger.info('\n\n\n1n1n1nJJJJqqua entrp! {} \n {} \n\n\n'.format( old_start, message['new_inizio']))
+
+    retVal = Agenda.cambiaOrarioInizioEvento(dipendente=message['dip'], giorno=message['giorno'],
+                                             old_inizio_ora=old_start, new_inizio_ora=message['new_inizio'])
+
+    emit('responso_modifica_inizioOra', {'risposta': retVal}, namespace='/agenda', room=dip.session_id )
+
+@socketio.on('cambia_orario_fine', namespace='/agenda')
+def handle_cambia_orario_fine(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    retVal = Agenda.cambiaOrarioInizioEvento(dipendente=message['dip'], giorno=message['giorno'],
+                                             old_fine_ora=message['old_fine'], new_fine_ora=message['new_fine'])
+
+    emit('responso_modifica_inizioOra', namespace='/agenda', room=dip.session_id)
+
+@socketio.on('elimina_appuntamento', namespace='/agenda')
+def handle_elimina_appuntamento(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    Agenda.eliminaAppuntamento(dipendente=message['dip'], giorno=message['giorno'], inizio_ora=message['inizio_ora'])
+
+    emit('responso_elimina_appuntamento', namespace='/agenda', room=dip.session_id)
+
+
+'''
 @socketio.on('imposta_sopraluogo', namespace='/agenda')
 def handle_imposta_sopraluogo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
@@ -1631,7 +1706,7 @@ def handle_imposta_sopraluogo(message):
                           start_hour=message['ora'], durata_ore=message['durata'],
                           accompagnatore_sopraluogo=message['accompagnatore'], cliente_sopraluogo=message['cliente'],
                           sopraluogo=True, luogo_sopraluogo=message['luogo'])
-
+'''
 @socketio.on('modifica_profilo', namespace='/profilo')
 def handle_modifica_profilo(message):
 
@@ -1703,14 +1778,27 @@ def handle_modifica_ferie(message):
 
     emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
 
-@socketio.on('aggiungi_evento', namespace='/calendario')
-def handle_aggiungi_evento(message):
+@socketio.on('imposta_evento_calendario', namespace='/calendario')
+def handle_imposta_evento_calendario(message):
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
     Calendario.registraEvento(dipendente=dip.username, titolo=message['titolo'],
                               start_date=message['start_date'], end_date=message['end_date'],
-                              luogo=message['luogo'], tipologia=True)
+                              tipologia=True, descrizione=message['descrizione'])
+
+    emit('conferma_registrazione_evento', namespace='/calendario', room=dip.session_id)
+
+@socketio.on('elimina_evento_calendario', namespace='/calendario')
+def handle_elimina_evento_calendario(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+
+    Calendario.eliminaEvento(dipendente=message['dipendente_generatore'], titolo=message['titolo'],
+                              start_date=message['start_date'], tipologia=True )
+
+    emit('conferma_eliminazione_evento', namespace='/calendario', room=dip.session_id)
 
 
 @socketio.on('chat_message', namespace='/chat')

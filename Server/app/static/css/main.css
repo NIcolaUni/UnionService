@@ -243,7 +243,8 @@ h1, h2, h3, h4, h5 {
   top: 0;
   left: 0;
   z-index: 1;
-  background: rgba(92, 100, 100, 0.4);
+  /* background: rgba(92, 100, 100, 0.4); Old*/
+  background: rgba(88, 77, 103, 0.4);
 }
 
 
@@ -349,7 +350,7 @@ h1, h2, h3, h4, h5 {
   font-size: 35px;
   font-family: 'robotolight';
   margin-bottom: 30px;
-  color: white;
+  color: #271515;
   font-weight: bold;
 
 }
@@ -409,6 +410,7 @@ h1, h2, h3, h4, h5 {
   color: white;
   font-size: 18px;
   margin: 0 auto;
+  border-radius: 50%;
 }
 
 
@@ -426,25 +428,25 @@ h1, h2, h3, h4, h5 {
 
 
 .homebutton {
-  background: #004200;
+  background: #08021b;
 }
 
 .calendarButton {
-  background: #008000;
+  background: #251163;
 
 }
 
 .agendaButton {
-    background: #008092;
+    background: #110633;
 }
 
 .gestioneDipButton {
   /*background: #5c9faf;*/
-  background: #00603C;
+  background: #3b19a5;
 }
 
 .accoglienzaButton{
-  background: #002041;
+  background: #674abf;
 }
 
 .profiloDipButton{
@@ -644,6 +646,7 @@ a#addImpegno {
     margin-right: 4px;
 }
 
-.rigaImpegni {
-    padding-bottom: 10px;
+.sweet-alert {
+    top: 17% !important;
+    left: 51% !important;
 }
