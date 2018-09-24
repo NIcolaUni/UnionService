@@ -46,10 +46,10 @@
 
         socketHome.on('connect', function() {
 
-            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-        });
+           socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+       });
 
-        var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
+       var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
 
        socketFornitore.on('aggiornaGiorniPagamento', function(message){
             $('#listaGiorniPagamento').children().remove();

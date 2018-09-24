@@ -1,0 +1,45 @@
+.note{
+   // width: 20% !important;
+}
+
+div#headerNewRow {
+    margin-top: -14%;
+    width: 82%;
+}
+
+.sezioneTabella.newRow input{
+    width: 40%;
+}
+
+
+.viewContainer {
+    position: absolute;
+    margin-left: -2%;
+}
+
+.headerDelHeader {
+    height: 45px;
+}
+
+.primaCol{
+    width: 4% !important;
+    cursor: unset !important;
+    border-right-color: #ffffff00 !important;
+}
+
+.numCell {
+    width: 3% !important;
+}
+
+div#tabellaContainer {
+    width: 94%;
+}
+
+.hiddenInput textarea {
+    width: 90%;
+
+}
+
+.inputScheda.numInput {
+    width: 70% !important;
+}

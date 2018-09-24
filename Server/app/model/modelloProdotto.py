@@ -76,36 +76,44 @@ class ModelloProdotto(ModelloProdottoDBmodel):
                     versoDiLettura=None,
                     daVerificare=None):
 
-        newModello = ModelloProdotto(nome=nome, prodotto=prodotto, tipologia=tipologia, marchio=marchio, codice=codice,
-                                       fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
-                                        prezzoListinoFornitura=prezzoListinoFornitura, prezzoListinoFornituraPosa=prezzoListinoFornituraPosa,
-                                        rincaroAzienda=rincaroAzienda, trasportoAzienda=trasportoAzienda, imballoAzienda=imballoAzienda,
-                                        trasportoAziendaUnitaMisura=trasportoAziendaUnitaMisura,
-                                        imballoAziendaUnitaMisura=imballoAziendaUnitaMisura,
-                                        posa=posa,
-                                        nettoUsFornitura=nettoUsFornitura,
-                                        nettoUsFornituraPosa=nettoUsFornituraPosa,
-                                        rincaroCliente=rincaroCliente, versoDiLettura=versoDiLettura,
-                                        daVerificare=daVerificare)
+        toTest = ModelloProdotto.query.filter_by(nome=nome, tipologia=tipologia, prodotto=prodotto, marchio=marchio).first()
 
+        if toTest is None:
 
-        try:
+            newModello = ModelloProdotto(nome=nome, prodotto=prodotto, tipologia=tipologia, marchio=marchio, codice=codice,
+                                           fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
+                                            prezzoListinoFornitura=prezzoListinoFornitura, prezzoListinoFornituraPosa=prezzoListinoFornituraPosa,
+                                            rincaroAzienda=rincaroAzienda, trasportoAzienda=trasportoAzienda, imballoAzienda=imballoAzienda,
+                                            trasportoAziendaUnitaMisura=trasportoAziendaUnitaMisura,
+                                            imballoAziendaUnitaMisura=imballoAziendaUnitaMisura,
+                                            posa=posa,
+                                            nettoUsFornitura=nettoUsFornitura,
+                                            nettoUsFornituraPosa=nettoUsFornituraPosa,
+                                            rincaroCliente=rincaroCliente, versoDiLettura=versoDiLettura,
+                                            daVerificare=daVerificare)
+
             ModelloProdottoDBmodel.addRow(newModello)
-        except exc.SQLAlchemyError as e:
-            app.server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
-            ModelloProdottoDBmodel.rollback()
-            raise RigaPresenteException("Il prodotto inserito è già presente")
 
 
-    def eliminaModello(nome, prodotto, tipologia):
 
-        toDel = ModelloProdotto.query.filter_by( nome=nome, prodotto=prodotto, tipologia=tipologia ).first()
+    def eliminaModello(nome, prodotto, tipologia, marchio):
+
+        toDel = ModelloProdotto.query.filter_by( nome=nome, prodotto=prodotto, tipologia=tipologia, marchio=marchio ).first()
         ModelloProdottoDBmodel.delRow(toDel)
 
-    def modificaModello( modifica, nome, prodotto, tipologia ):
+    def modificaModello( modifica, nome, prodotto, tipologia, marchio ):
+
+        toTest = ModelloProdotto.query.filter_by(nome=nome, prodotto=prodotto, tipologia=tipologia, marchio=marchio).first()
+
+        if toTest is None:
+            app.server.logger.info('\n\nWei sono nullo!! {} - {} - {} - {}\n\n'.format(nome, prodotto, tipologia, marchio))
+        else:
+            app.server.logger.info('\n\nWei non sono nullo!!\n\n')
 
 
-        ModelloProdotto.query.filter_by(nome=nome, prodotto=prodotto, tipologia=tipologia).update( modifica )
+
+
+        ModelloProdotto.query.filter_by(nome=nome, prodotto=prodotto, tipologia=tipologia, marchio=marchio).update( modifica )
 
         ModelloProdottoDBmodel.commit()
 

@@ -30,6 +30,16 @@
             $(this).addClass('fa-arrow-right');
             $('#chat-title').css('margin-left', '22%');
 
+            setTimeout( function(){
+                $(document).click(function(){
+                    if( $('.chat-div:hover').length == 0){
+                        $('.open-chat').trigger('click');
+                        $(this).unbind('click')
+                    }
+                });
+
+            }, 1000);
+
         }
 
 

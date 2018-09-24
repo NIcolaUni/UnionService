@@ -46,9 +46,9 @@ class DipendenteFittizio(DipFittizioDBmodel):
                     è stato autorizzato il suo accesso al gestionale UnionService.
                     Le sue credenziali sono:
                     username: {}
-                    password: {}.
+                    password: {}
 
-                    Completi la registrazione all'indirizzo: http://debtux
+                    Completi la registrazione all'indirizzo: http://192.168.1.135
 
                     '''.format(self.username, self.password)
 

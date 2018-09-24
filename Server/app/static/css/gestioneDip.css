@@ -98,3 +98,7 @@ div#nuovoDipendenteBar {
     position: relative;
     vertical-align: middle;
 }
+
+input#email_dip {
+    color: black;
+}

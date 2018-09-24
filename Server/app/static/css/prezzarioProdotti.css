@@ -4,6 +4,31 @@
     overflow-y: unset;
 }
 
+div#headerNewRow {
+    margin-left: 0% !important;
+}
+
+div#tabellaContainerNewRow1 {
+    width: 44%;
+    display: inline-block;
+}
+
+div#tabellaContainerNewRow2 {
+    display: inline-block;
+    width: 45%;
+    z-index: 3;
+    position: absolute;
+}
+
+div#tabellaContainerNewRow3 {
+    display: inline-block;
+    position: absolute;
+    width: 22%;
+    margin-top: 0%;
+    right: 23%;
+    z-index: 2;
+}
+
 div#tabellaContainer1 {
     display: inline-block;
     width: 51%;
@@ -18,4 +43,29 @@ div#tabellaContainer2 {
 
 .headerDelHeader {
     height: 40px;
+}
+
+.sezioneTabella.newRow input{
+    width: 40%;
+}
+
+.primaCol{
+    width: 7% !important;
+    cursor: unset !important;
+    border-right-color: #ffffff00 !important;
+}
+
+select, input {
+    color: black !important;
+}
+
+input#setCapitolato {
+    width: 4%;
+    float: right;
+    cursor: pointer;
+}
+
+label#labelSetCapitolato {
+    float: right;
+    cursor: pointer;
 }

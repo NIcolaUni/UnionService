@@ -1,0 +1,222 @@
+{% extends "paginaBase.html" %}
+
+{% block content %}
+
+    <div id="page-wrapper">
+
+        <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+        <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+        <div id="schedaArtigiani" class="scheda">
+
+            <div id="headerNewRow">
+                <div id="tabellaContainerNewRow1">
+                    <table class="tabella">
+                        <tr class="sezioneTabella dimensionaTabella newRow">
+                            <th class="primaCol"><a class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
+                            <th class="secondaCol" colspan="10">
+                                <label>Selezionale/digitare il settore di lavorazione: </label>
+                                <input list="listaSettori" class="inputScheda" placeholder="settore di lavorazione..">
+                            </th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella newRow">
+                            <th class="primaCol"></th>
+                            <th> Tipologia lavorazione </th>
+                            <th> Pertinenza </th>
+                            <th class="numCell"> Unità </th>
+                            <th class="numCell"> Fornitura </th>
+                            <th class="numCell"> Posa </th>
+                            <th class="numCell"> Costo (F+P) </th>
+                            <th class="numCell"> Prezzo min </th>
+                            <th class="numCell"> Prezzo max </th>
+                            <th> Dimensioni </th>
+                            <th class="note"> Note </th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella newRow">
+                            <td class="primaCol"><a class="fa fa-warning primaColIcon"></a></td>
+                            <td>
+                                <input class="inputScheda" value="" placeholder="tipologia lavorazione..." >
+                            </td>
+                            <td>
+                                <input class="inputScheda" value="" placeholder="pertinenza..." >
+                            </td>
+                            <td class="numCell">
+                                <select>
+                                    <option>cad</option>
+                                    <option>ml</option>
+                                    <option>mq</option>
+                                    <option>mc</option>
+
+                                </select>
+                            </td>
+                            <td class="numCell">
+                                <input type="number" class="inputScheda numInput"  value="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="numCell">
+                                <input type="number" class="inputScheda numInput" value="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="numCell">
+                                <input type="number" class="inputScheda numInput" value="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="numCell">
+                                <input type="number" class="inputScheda numInput" value="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="numCell">
+                                <input type="number" class="inputScheda numInput" value="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td>
+                                <input class="inputScheda" value="" placeholder="dimensioni (L x H x P)..." >
+                            </td>
+                            <td>
+                               <textarea></textarea>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
+
+                <div class="filterInputContainer">
+                    <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
+                    <datalist id="listMansioni">
+                      <option>prova</option>
+                    </datalist>
+
+
+                </div>
+
+                <div class="filterInputContainer">
+                    <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
+                    <datalist id="listArtigiani">
+                          <option>prova</option>
+                    </datalist>
+
+                </div>
+
+
+            </div>
+
+            <div class="fc-view-container viewContainer">
+                <div id="tabellaContainer">
+                    <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th colspan="10" class="secondaCol"></th>
+
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella">
+                            <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                            <th> Tipologia lavorazione </th>
+                            <th> Pertinenza </th>
+                            <th class="numCell"> Unità </th>
+                            <th class="numCell"> Fornitura </th>
+                            <th class="numCell"> Posa </th>
+                            <th class="numCell"> Costo (F+P) </th>
+                            <th class="numCell"> Prezzo min </th>
+                            <th class="numCell"> Prezzo max </th>
+                            <th> Dimensioni </th>
+                            <th class="note"> Note </th>
+                        </tr>
+                        <tr class="sezioneTabella dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th colspan="11">Settore di lavorazione: idraulico</th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+                            <td class="primaCol"><a class="fa fa-warning primaColIcon"></a><a class="fa fa-trash primaColIcon"></a></td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="tipologia lavorazione..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="pertinenza..." >
+                            </td>
+                            <td class="numCell"><label class="cellaDato"></label>
+                                <select>
+                                    <option>cad</option>
+                                    <option>ml</option>
+                                    <option>mq</option>
+                                    <option>mc</option>
+
+                                </select>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput"  value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="dimensioni (lxhxp)..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                               <textarea style="display:none"></textarea>
+                            </td>
+
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <datalist id="listaSettori">
+            <option>Edile</option>
+        </datalist>
+
+    </div>
+
+    <script>
+
+
+        $('td.hiddenInput').click( function(){
+            $(this).children('label').hide();
+            $(this).children('input').show();
+            $(this).children('select').show();
+            $(this).children('textarea').show();
+            $(this).children('label.simpleAfterInputLabel').show();
+
+        });
+
+        $('.primaCol').unbind('click');
+
+        $('#delNewRow').click(function(){
+            $('#headerNewRow').animate({'margin-top': '-=10%'});
+
+            $('#addRow').click(function(){
+                $(this).unbind('click');
+                $('#headerNewRow').animate({'margin-top': '+=10%'});
+
+            });
+
+            $('#headerNewRow input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                    $(this).attr('checked', '' );
+                else if($(this).hasClass('numInput'))
+                    $(this).val(0);
+                else
+                {
+                    $(this).val('');
+
+                }
+            });
+        });
+
+
+        $('#addRow').click(function(){
+            $(this).unbind('click');
+            $('#headerNewRow').animate({'margin-top': '+=10%'});
+
+        });
+
+    </script>
+{% endblock%}

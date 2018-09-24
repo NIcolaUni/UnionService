@@ -194,6 +194,8 @@
 
     {% if scheda %}
         <link rel="stylesheet" href="{{url_for('static', filename='css/schedeArtForPro.css')}}">
+        <link href="{{url_for('static', filename='usPopup/usPopup.css')}}" media="all" rel="stylesheet" type="text/css">
+        <script src="{{url_for('static', filename='usPopup/usPopup.js')}}"></script>
     {% endif %}
     {% if scheda_artigiani %}
        <link rel="stylesheet" href="{{url_for('static', filename='css/schedaArtigiani.css')}}">
@@ -203,6 +205,9 @@
     {% endif %}
     {% if prezzario_prodotti %}
         <link rel="stylesheet" href="{{url_for('static', filename='css/prezzarioProdotti.css')}}">
+    {% endif %}
+    {% if prezzario_edile %}
+        <link rel="stylesheet" href="{{url_for('static', filename='css/prezzarioEdile.css')}}">
     {% endif %}
 
 </head>
@@ -343,7 +348,7 @@
                             "testo": msg
 
                          } );
-
+                        $('#msgToSend').val('');
                     }
 
                  });
@@ -378,6 +383,7 @@
                 else
                 {
                     $('.mittente').addClass('blink');
+                    $('#ulListColleghi label.'+msg['mittente']).addClass('blink');
                     $('#openCloseChat a').addClass('blink');
 
                     $('.blink').click(function(){

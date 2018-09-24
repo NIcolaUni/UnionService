@@ -24,20 +24,16 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
             newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, capitolato_modello = capitolato_modello,
                                                 capitolato_marchio= capitolato_marchio)
 
+            ProdottoPrezzarioDBmodel.addRow(newProdotto)
 
-            try:
-                ProdottoPrezzarioDBmodel.addRow(newProdotto)
-            except exc.SQLAlchemyError as e:
-                app.server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
-                ProdottoPrezzarioDBmodel.rollback()
-                raise RigaPresenteException("Il prodotto inserito è già presente")
 
-        elif capitolato_modello is not None:
-            ProdottoPrezzario.query.filter_by(nome=nome, tipologia=tipologia).update(
+            if capitolato_modello is not None:
+                ProdottoPrezzario.query.filter_by(nome=nome, tipologia=tipologia).update(
                     {
                         'capitolato_modello': capitolato_modello,
                         'capitolato_marchio': capitolato_marchio
                     })
+                ProdottoPrezzarioDBmodel.commit()
 
 
     def eliminaProdotto(nome, tipologia):
@@ -45,12 +41,10 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
         toDel = ProdottoPrezzario.query.filter_by( nome=nome, tipologia=tipologia ).first()
         ProdottoPrezzarioDBmodel.delRow(toDel)
 
-    def modificaProdotto( modifica ):
+    def modificaProdotto( nome, tipologia, modifica ):
 
-        oldNome =modifica.pop('oldNome')
-        tipologia=modifica.pop('tipologia')
 
-        ProdottoPrezzario.query.filter_by(nome=oldNome, tipologia=tipologia).update( modifica )
+        ProdottoPrezzario.query.filter_by(nome=nome, tipologia=tipologia).update( modifica )
 
         ProdottoPrezzarioDBmodel.commit()
 

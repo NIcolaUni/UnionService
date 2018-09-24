@@ -9,6 +9,130 @@
 
         <div id="schedaFornitori" class="scheda">
 
+            <div id="headerNewRow">
+                <div id="tabellaContainerNewRow1">
+                    <table class="tabella">
+                        <tr class="sezioneTabella dimensionaTabella newRow">
+                            <th class="primaCol"><a  id="regNewRow" class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
+                            <th class="secondaCol" colspan="5">
+                                <label>Selezionale/digitare la tipologia prodotto: </label>
+                                <input list="listaTipologia" class="tipologia inputScheda" placeholder="tipologia prodotto..">
+                            </th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella newRow">
+                            <th class="primaCol"></th>
+                            <th class="secondaCol"> Nome prodotto </th>
+                            <th> Marchio </th>
+                            <th> Modello </th>
+                            <th> Codice  </th>
+                            <th> Fornitore </th>
+                        </tr>
+
+                        <tr class="datiScheda dimensionaTabella newRow">
+                            <td class="primaCol"></td>
+
+                            <td class="nome_prodotto">
+                                <input class="inputScheda" value="" placeholder="nome prodotto..." >
+                            </td>
+                            <td class="marchio">
+                                <input class="inputScheda" value="" placeholder="marchio prodotto..." >
+                            </td>
+                            <td class="nome_modello">
+                                <input class="inputScheda" value="" placeholder="modello prodotto..." >
+                            </td>
+                            <td class="codice">
+                                <input class="codice inputScheda" value="" placeholder="codice prodotto..." >
+                            </td>
+
+                            <td  class="fornitore">
+                                <select class="fornitoreSelectNewRow">
+                                    {% for fornitore in fornitori %}
+                                    <option>{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}</option>
+                                    {% endfor %}
+                                </select>
+                                <a class="fa fa-info-circle"></a>
+                            </td>
+
+                        </tr>
+
+                    </table>
+                </div>
+
+                 <div id="tabellaContainerNewRow2">
+                    <table class="tabella">
+                        <tr class="sezioneTabella dimensionaTabella newRow">
+                            <th colspan="7">
+                                <input type="checkbox" id="setCapitolato" value="si">
+                                <label id="labelSetCapitolato" for="setCapitolato">Imposta come capitolato</label>
+                            </th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella newRow">
+                            <th> &euro; listino (F+P) </th>
+                            <th> &euro; listino (P) </th>
+                            <th> &euro; US (P) </th>
+                            <th> &euro; US (F+P) </th>
+                            <th> Posa </th>
+                            <th> Rincaro </th>
+                            <th> Totale </th>
+
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+
+                            <td class="prezzoListinoFornituraPosa">
+                                <label class="simpleAfterInputLabel">-</label>
+                                <input type="number" style="display:none" val="0">
+                            </td>
+                            <td class="prezzoListinoFornitura">
+                                <input type="number" class="inputScheda numInput" val="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="nettoUsFornitura">
+                                <input type="number" class="inputScheda numInput aggiungiRincariAzienda"  val="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="nettoUsFornituraPosa">
+                                <label class="simpleAfterInputLabel">-</label>
+                                <input type="number" style="display:none" val="0">
+                            </td>
+                            <td class="posa">
+                                <input type="number" class="inputScheda numInput" val=0> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="rincaroCliente">
+                                <input type="number" class="inputScheda numInput" val=0> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="totale">
+                                <label class="simpleAfterInputLabel">-</label>
+                                <input type="number" style="display:none" val="0">
+                            </td>
+                        </tr>
+
+                    </table>
+                 </div>
+
+                <div id="tabellaContainerNewRow3">
+                    <table class="tabella">
+                        <tr class="sezioneTabella dimensionaTabella newRow">
+                            <th colspan="3">Azienda</th>
+                        </tr>
+                        <tr class="headerTabella dimensionaTabella newRow">
+                            <th> (+%) </th>
+                            <th> Trasporto </th>
+                            <th> Imballlo </th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+                            <td>
+                                <input type="number" class="inputScheda numInput" val="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td>
+                                <input type="number" class="inputScheda numInput" val="0"> <label class="simpleAfterInputLabel">%</label>
+                            </td>
+                            <td>
+                                <input type="number" class="inputScheda numInput" val="0"> <label class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
             <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
 
                 <div class="filterInputContainer">
@@ -37,97 +161,107 @@
 
                 <div id="tabellaContainer1">
                     <table class="tabella">
-                        <tr class="headerDelHeader dimensionaTabella">
-                           <th class="primaCol"></th>
-                            <th class="secondaCol" colspan="5" >Dati prodotto</th>
-                        </tr>
-                        <tr class="headerTabella dimensionaTabella">
-                            <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
-                            <th class="secondaCol"> Nome prodotto </th>
-                            <th> Marchio </th>
-                            <th> Modello </th>
-                            <th> Codice  </th>
-                            <th> Fornitore </th>
-                        </tr>
-                        <tr class="sezioneTabella dimensionaTabella">
-                            <th class="primaCol"></th>
-                            <th class="secondaCol" colspan="5">Tipologia: sanitari</th>
-                        </tr>
-                        <tr class="datiScheda dimensionaTabella">
-                            <td class="primaCol">
-                                <a class="fa fa-warning primaColIcon"></a>
-                                <a class="fa fa-trash primaColIcon centralIcon"></a>
-                            </td>
+                        <thead>
+                            <tr class="headerDelHeader dimensionaTabella">
+                               <th class="primaCol"></th>
+                                <th class="secondaCol" colspan="5" >Dati prodotto</th>
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                                <th class="secondaCol"> Nome prodotto </th>
+                                <th> Marchio </th>
+                                <th> Modello </th>
+                                <th> Codice  </th>
+                                <th> Fornitore </th>
+                            </tr>
+                        </thead>
+                        <tbody class="prv">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th class="primaCol"></th>
+                                <th class="secondaCol" colspan="5">Tipologia: sanitari</th>
+                            </tr>
+                            <tr class="datiScheda dimensionaTabella">
+                                <td class="primaCol">
+                                    <a class="fa fa-warning primaColIcon"></a>
+                                    <a class="fa fa-trash primaColIcon centralIcon"></a>
+                                </td>
 
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input style="display:none" class="inputScheda" value="" placeholder="nome prodotto..." >
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input style="display:none" class="inputScheda" value="" placeholder="marchio prodotto..." >
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input style="display:none" class="inputScheda" value="" placeholder="modello prodotto..." >
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input style="display:none" class="inputScheda" value="" placeholder="codice prodotto..." >
-                            </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="nome prodotto..." >
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="marchio prodotto..." >
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="modello prodotto..." >
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="codice prodotto..." >
+                                </td>
 
-                            <td class="hiddenInput"><label class="cellaDato">Cambielli</label>
-                                <select style="display:none" >
-                                    <option>Cambielli</option>
-                                    <option>Rossi & co.</option>
-                                </select>
-                                <a class="fa fa-info-circle"></a>
-                            </td>
+                                <td class="hiddenInput"><label class="cellaDato">Cambielli</label>
+                                    <select style="display:none" >
+                                        <option>Cambielli</option>
+                                        <option>Rossi & co.</option>
+                                    </select>
+                                    <a class="fa fa-info-circle"></a>
+                                </td>
 
-                        </tr>
+                            </tr>
+                        </tbody>
+
                     </table>
                 </div>
 
                 <div id="tabellaContainer2">
                     <table class="tabella">
-                        <tr class="headerDelHeader dimensionaTabella">
-                            <th colspan="7">Costi</a></th>
+                        <thead>
+                            <tr class="headerDelHeader dimensionaTabella">
+                                <th colspan="7">Costi</a></th>
 
-                        </tr>
-                        <tr class="headerTabella dimensionaTabella">
-                            <th> &euro; listino (F+P) </th>
-                            <th> &euro; listino (P) </th>
-                            <th> &euro; US (P) <a class="fa fa-info-circle"></a></th>
-                            <th> &euro; US (F+P) </th>
-                            <th> Posa </th>
-                            <th> Rincaro </th>
-                            <th> Totale </th>
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th> &euro; listino (F+P) </th>
+                                <th> &euro; listino (P) </th>
+                                <th> &euro; US (P) <a class="fa fa-info-circle"></a></th>
+                                <th> &euro; US (F+P) </th>
+                                <th> Posa </th>
+                                <th> Rincaro </th>
+                                <th> Totale </th>
 
-                        </tr>
-                        <tr class="sezioneTabella dimensionaTabella">
-                            <th colspan="7"></th>
-                        </tr>
-                        <tr class="datiScheda dimensionaTabella">
+                            </tr>
 
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
-                            </td>
-                            <td class="hiddenInput"><label class="cellaDato"></label>
-                                <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
-                            </td>
-                        </tr>
+                        </thead>
+                        <tbody class="prv">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th colspan="7"></th>
+                            </tr>
+                            <tr class="datiScheda dimensionaTabella">
 
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                            </tr>
+
+                        </tbody>
                     </table>
                 </div>
 
@@ -136,31 +270,730 @@
 
         </div>
 
+        <datalist id="listaTipologia">
+            <option>sanitari</option>
+        </datalist>
+
     </div>
 
     <script>
+        var socketHome = io.connect("{{sockUrl}}"+'/home');
 
 
-        $('td.hiddenInput').click( function(){
-            $(this).children('label').hide();
-            $(this).children('input').show();
-            $(this).children('select').show();
+        socketHome.on('connect', function() {
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
+
+        var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
+
+
+
+        $('#delNewRow').click(function(){
+            $('#headerNewRow').animate({'margin-top': '-=6%'});
+
+            $('#addRow').click(function(){
+                $(this).unbind('click');
+                $('#headerNewRow').animate({'margin-top': '+=6%'});
+
+            });
+
+            $('#headerNewRow input').each(function(){
+
+                if( $('#setCapitolato').is(':checked') )
+                {
+                    $('#setCapitolato').trigger('click');
+                }
+
+                if($(this).attr('type') == 'number')
+                    $(this).val('0');
+                else
+                {
+                    $(this).val('');
+
+                }
+            });
+        });
+
+
+        $('#addRow').click(function(){
+            $(this).unbind('click');
+            $('#headerNewRow').animate({'margin-top': '+=6%'});
 
         });
 
-        $('.primaCol').unbind('click');
+        var divAziendaAssente=true;
 
-        $('.newPageCell a').click(function(){
-            $('#tabellaContainer3').show();
-            $('#tabellaContainer2').animate({"right": '+=55%'});
-            $('#tabellaContainer3').animate({"right": '+=46%'});
+        $('.aggiungiRincariAzienda').change(function(){
+            if( $(this).val() > 0 ){
+                if( divAziendaAssente ){
+                    divAziendaAssente=false;
+                    $('#tabellaContainerNewRow3').animate({'margin-top': '+=5.8%'});
+                }
+
+            }
+            else if( $(this).val() == 0 ){
+                divAziendaAssente=true;
+                $('#tabellaContainerNewRow3').animate({'margin-top': '-=5.8%'});
+                $('#tabellaContainerNewRow2 .numInput').val(0);
+                $('#tabellaContainerNewRow3 .numInput').val(0);
+           }
         });
 
-        $('.oldPageCell a').click(function(){
-            $('#tabellaContainer2').animate({"right": '-=55%'});
-            $('#tabellaContainer3').animate({"right": '-=46%'}, function(){$('#tabellaContainer3').hide()});
+        $('#regNewRow').click(function(){
+
+            $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+            $tbodyNewRow3=$('#tabellaContainerNewRow3').children('table').children('tbody');
+
+            $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+            $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+            $datiScheda3=$tbodyNewRow3.children('.datiScheda');
+
+            var $tipologiaProdotto=$sezioneTabella1.children('th.primaCol').next('th').children('input');
+
+            var $nome_prodotto=$datiScheda1.children('td.nome_prodotto').children('input');
+            var $nome_modello=$datiScheda1.children('td.nome_modello').children('input');
+            var $marchio=$datiScheda1.children('td.marchio').children('input');
+            var $codice=$datiScheda1.children('td.codice').children('input');
+
+            var $fornitore=$datiScheda1.children('td.fornitore').children('select');
+
+            var $prezzoListinoFornituraPosa=$datiScheda2.children('td.prezzoListinoFornituraPosa').children('input');
+            var $prezzoListinoFornitura=$datiScheda2.children('td.prezzoListinoFornitura').children('input');
+            var $nettoUsFornituraPosa=$datiScheda2.children('td.nettoUsFornituraPosa').children('input');
+            var $nettoUsFornitura=$datiScheda2.children('td.nettoUsFornitura').children('input');
+            var $posa=$datiScheda2.children('td.posa').children('input');
+            var $rincaroCliente=$datiScheda2.children('td.rincaroCliente').children('input');
+            var $totale=$datiScheda2.children('td.totale').children('input');
+
+            var capitolato=$('#setCapitolato').is(':checked');
+
+
+            if( $tipologiaProdotto.val() == "" ){
+                swal({
+                    title: 'Assegnare una tipologia al nuovo prodotto',
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $nome_prodotto.val() == "" ){
+                swal({
+                    title: "Il campo 'Nome prodotto' non può essere lasciato vuoto",
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $nome_modello.val() == "" ){
+                swal({
+                    title: "Il campo 'Modello' non può essere lasciato vuoto",
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $prezzoListinoFornitura.val() == "" ){
+                $prezzoListinoFornitura=0;
+            }
+            else{
+                $prezzoListinoFornitura=$prezzoListinoFornitura.val()
+            }
+
+            if( $prezzoListinoFornituraPosa.val() == "" ){
+                $prezzoListinoFornituraPosa=0;
+            }
+            else{
+                $prezzoListinoFornituraPosa=$prezzoListinoFornituraPosa.val();
+            }
+
+            if( $nettoUsFornituraPosa.val() == "" ){
+                $nettoUsFornituraPosa=0;
+            }
+            else{
+                $nettoUsFornituraPosa=$nettoUsFornituraPosa.val();
+            }
+
+            if( $nettoUsFornitura.val() == "" ){
+                $nettoUsFornitura=0;
+            }
+            else{
+                $nettoUsFornitura=$nettoUsFornitura.val();
+            }
+
+            if( $posa.val() == "" ){
+                $posa=0;
+            }
+            else{
+                $posa=$posa.val();
+            }
+
+            if( $rincaroCliente.val() == "" ){
+                $rincaroCliente=0;
+            }
+            else{
+                $rincaroCliente=$rincaroCliente.val();
+            }
+
+
+
+            socketProdotto.emit("registra_prodotto", {
+                'dip': '{{dipendente.username}}',
+                'nome': $nome_prodotto.val(),
+                'tipologia': $tipologiaProdotto.val(),
+                'modello': $nome_modello.val(),
+                'marchio': $marchio.val(),
+                'codice': $codice.val(),
+                'fornitore_primo_gruppo': $fornitore.val().split(' - ')[0],
+                'fornitore_sotto_gruppo':  $fornitore.val().split(' - ')[1],
+                'prezzoListinoFornitura': $prezzoListinoFornitura,
+                'prezzoListinoFornituraPosa': $prezzoListinoFornituraPosa,
+                'nettoUsFornituraPosa': $nettoUsFornituraPosa,
+                'nettoUsFornitura': $nettoUsFornitura,
+                'posa': $posa,
+                'rincaroCliente': $rincaroCliente,
+                'versoDiLettura': true,
+                'capitolato': capitolato
+
+
+            });
+
+
 
         });
+
+        socketProdotto.on('confermaRegistrazioneProdotto', function(){
+
+            swal({
+                    title: "Prodotto registrato correttamente",
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+            });
+
+
+
+            aggiungiRiga();
+
+            if( $('#setCapitolato').is(':checked') )
+            {
+                $('#setCapitolato').trigger('click');
+            }
+
+            $('#headerNewRow input').each(function(){
+                if($(this).attr('type') == 'number')
+                    $(this).val('0');
+                else
+                {
+                    $(this).val('');
+
+                }
+            });
+        });
+
+
+        var aggiungiRiga= function(){
+
+            /* costruisce nel documento la nuova riga registrata nel db */
+
+            var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            var $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+
+            var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+
+            var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            var $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+
+            var $tipologiaProdotto=$sezioneTabella1.children('th.primaCol').next('th').children('input');
+
+            var $nome_prodotto=$datiScheda1.children('td.nome_prodotto').children('input');
+            var $nome_modello=$datiScheda1.children('td.nome_modello').children('input');
+            var $marchio=$datiScheda1.children('td.marchio').children('input');
+            var $codice=$datiScheda1.children('td.codice').children('input');
+
+            var $fornitore=$datiScheda1.children('td.fornitore').children('select');
+
+            var $prezzoListinoFornituraPosa=$datiScheda2.children('td.prezzoListinoFornituraPosa').children('input');
+            var $prezzoListinoFornitura=$datiScheda2.children('td.prezzoListinoFornitura').children('input');
+            var $nettoUsFornituraPosa=$datiScheda2.children('td.nettoUsFornituraPosa').children('input');
+            var $nettoUsFornitura=$datiScheda2.children('td.nettoUsFornitura').children('input');
+            var $posa=$datiScheda2.children('td.posa').children('input');
+            var $rincaroCliente=$datiScheda2.children('td.rincaroCliente').children('input');
+            var $totale=$datiScheda2.children('td.totale').children('input');
+
+
+            var $table1=$('#tabellaContainer1').children('table');
+            var $table2=$('#tabellaContainer2').children('table');
+
+
+            var tipoEsistente=false;
+
+            $table1.children('tbody').each(function(){
+                if( $(this).attr('class') == $tipologiaProdotto.val() ){
+                    tipoEsistente = true;
+                }
+            });
+
+            if( !tipoEsistente ){
+                $table1.append(
+                    '<tbody class="'+$tipologiaProdotto.val()+'"> \
+                        <tr class="sezioneTabella dimensionaTabella""> \
+                            <th class="primaCol"></th> \
+                            <th class="secondaCol" colspan="5">Tipologia prodotto: '+$tipologiaProdotto.val()+'</th> \
+                        </tr> \
+                    <tbody>'
+                );
+
+                $table2.append(
+                    '<tbody class="'+$tipologiaProdotto.val()+'">  \
+                        <tr class="sezioneTabella dimensionaTabella"> \
+                            <th colspan="7"></th> \
+                        </tr> \
+                    </tbody>'
+                );
+
+
+            }
+
+
+            var $tbodyToExpand1=null;
+            var $tbodyToExpand2=null;
+
+            $table1.children('tbody').each(function(){
+                if( $(this).attr('class') == $tipologiaProdotto.val() ){
+                    $tbodyToExpand1=$(this);
+                }
+            });
+
+            $table2.children('tbody').each(function(){
+                if( $(this).attr('class') == $tipologiaProdotto.val() ){
+                    $tbodyToExpand2=$(this);
+                }
+            });
+
+            var selectToAdd= '<select style="display:none" >';
+
+            {% for fornitore in fornitori %}
+
+                if('{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}' == $fornitore.val())
+                    selectToAdd+='<option selected>{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}</option>';
+                else
+                    selectToAdd+='<option>{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}</option>';
+
+            {% endfor %}
+            selectToAdd+='</select>';
+
+
+            $tbodyToExpand1.append(
+                '<tr class="datiScheda dimensionaTabella newRow_tab1"> \
+                    <td class="nome_prodotto" style="display:none"><label>'+$nome_prodotto.val()+'</label></td> \
+                    <td class="nome_modello" style="display:none"><label>'+$nome_modello.val()+'</label></td> \
+                    <td class="tipologia" style="display:none"><label>'+$tipologiaProdotto.val()+'</label></td> \
+                    <td class="marchio" style="display:none"><label>'+$marchio.val()+'</label></td> \
+                    <td class="primaCol"> \
+                        <a class="segnalaProdotto fa fa-warning primaColIcon"></a> \
+                        <a class="delProdotto fa fa-trash primaColIcon centralIcon"></a> \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$nome_prodotto.val()+'</label> \
+                        <input style="display:none" class="nome_prodotto inputScheda" value="'+$nome_prodotto.val()+'" placeholder="nome prodotto..." > \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$marchio.val()+'</label> \
+                        <input style="display:none" class="marchio inputScheda" value="'+$marchio.val()+'" placeholder="marchio prodotto..." > \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$nome_modello.val()+'</label> \
+                        <input style="display:none" class="nome_modello inputScheda" value="'+$nome_modello.val()+'" placeholder="modello prodotto..." > \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$codice.val()+'</label> \
+                        <input style="display:none" class="codice inputScheda" value="'+$codice.val()+'" placeholder="codice prodotto..." > \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$fornitore.val()+'</label>'+
+                        selectToAdd +
+                        '<a class="fa fa-info-circle"></a> \
+                    </td> \
+                </tr>'
+
+            );
+
+            $tbodyToExpand2.append(
+                '<tr class="datiScheda dimensionaTabella newRow_tab2"> \
+                    <td class="nome_prodotto" style="display:none"><label>'+$nome_prodotto.val()+'</label></td> \
+                    <td class="nome_modello" style="display:none"><label>'+$nome_modello.val()+'</label></td> \
+                    <td class="tipologia" style="display:none"><label>'+$tipologiaProdotto.val()+'</label></td> \
+                    <td class="marchio" style="display:none"><label>'+$marchio.val()+'</label></td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$prezzoListinoFornituraPosa.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$prezzoListinoFornituraPosa.val()+'" class="prezzoListinoFornituraPosa inputScheda numInput" > <label  class="simpleAfterInputLabel">&euro;</label> \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$prezzoListinoFornitura.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$prezzoListinoFornitura.val()+'" class="prezzoListinoFornitura inputScheda numInput" > <label class="simpleAfterInputLabel">&euro;</label> \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$nettoUsFornitura.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$nettoUsFornitura.val()+'" class="nettoUsFornitura inputScheda numInput" > <label class="simpleAfterInputLabel">&euro;</label> \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$nettoUsFornituraPosa.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$nettoUsFornituraPosa.val()+'" class="nettoUsFornituraPosa inputScheda numInput" > <label  class="simpleAfterInputLabel">&euro;</label> \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$posa.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$posa.val()+'" class="posa inputScheda numInput" > <label  class="simpleAfterInputLabel">&euro;</label> \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$rincaroCliente.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$rincaroCliente.val()+'" class="rincaroCliente inputScheda numInput" > <label class="simpleAfterInputLabel">%</label> \
+                    </td> \
+                    <td class="hiddenInput"><label class="cellaDato">'+$totale.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$totale.val()+'" class="totale inputScheda numInput" > <label class="simpleAfterInputLabel">&euro;</label> \
+                    </td> \
+                </tr>'
+
+            );
+
+
+            $tbodyToExpand2.children('tr.newRow_tab2').css('height',  $tbodyToExpand1.children('tr.newRow_tab1').height());
+
+
+
+            $('td.hiddenInput').click( function(){
+                $(this).children('label').hide();
+                $(this).children('input').show();
+                $(this).children('select').show();
+                $(this).children('label.simpleAfterInputLabel').show();
+
+            });
+
+            $('.primaCol').unbind('click');
+
+            socketProdotto.on('modificaOldValue', function(msg){
+
+
+                var modificaOldValueFunct = function($this){
+                    $this.children('td.nome_prodotto').each(function(){
+                        if($(this).children('label').text() == msg['prodotto']){
+
+                            if( $(this).next().children('label').text() ==  msg['modello'] ){
+
+                                if( $(this).next().next().children('label').text() ==  msg['tipologia'] ){
+
+                                        if(msg['toEdit'] == 'nome_prodotto' ){
+                                            $(this).children('label').text( msg['value'] )
+
+                                        }
+                                        else if( msg['toEdit'] == 'nome_modello' )
+                                            $(this).next().children('label').text(msg['value'] )
+                                        else if( msg['toEdit'] == 'tipologia' )
+                                            $(this).next().next().children('label').text(msg['value'] )
+                                        else if( msg['toEdit'] == 'marchio' )
+                                            $(this).next().next().next().children('label').text(msg['value'] )
+
+                                }
+                            }
+                        }
+
+                    });
+
+                }
+
+
+                $('#tabellaContainer1 tr').each(function(){
+
+                    modificaOldValueFunct($(this));
+
+
+                });
+
+                $('#tabellaContainer2 tr').each(function(){
+
+                     modificaOldValueFunct($(this));
+
+                });
+
+
+            });
+
+            var changeValueProdotto = function($this){
+
+                var modello = "";
+                var prodotto = "";
+                var marchio = "";
+                var tipologia = "";
+
+                var $tdContainer=$this.parent().parent();
+
+                var $setTdObj=$tdContainer.children('td');
+
+
+                $setTdObj.each(function(){
+                    if( $(this).hasClass('nome_modello') )
+                    {
+                        modello=$(this).children('label').text();
+                    }
+                    else if($(this).hasClass('nome_prodotto')){
+                        prodotto=$(this).children('label').text();
+                    }
+                    else if($(this).hasClass('tipologia')){
+                        tipologia=$(this).children('label').text();
+                    }
+                    else if($(this).hasClass('marchio')){
+                        marchio=$(this).children('label').text();
+                    }
+
+                });
+
+
+                var attributoToEdit=$this.attr('class').split(' ')[0];
+                var valore=$this.val();
+
+                socketProdotto.emit('modifica_prodotto', {
+                    'dip': '{{dipendente.username}}',
+                    'prodotto': prodotto,
+                    'modello': modello,
+                    'tipologia': tipologia,
+                    'marchio': marchio,
+                    'toEdit': attributoToEdit,
+                    'value': valore
+                });
+
+            }
+
+
+            $('#tabellaContainer1 input').unbind('change').change(function(){
+                changeValueProdotto($(this));
+            });
+
+            $('#tabellaContainer2 input').unbind('change').change(function(){
+                changeValueProdotto($(this));
+            });
+
+            $('.delProdotto').unbind('click').click(function(){
+
+                var $thisRow=$(this).parent().parent();
+                var prodotto=$thisRow.children('td.nome_prodotto').children('label').text();
+                var modello=$thisRow.children('td.nome_modello').children('label').text();
+                var tipologia=$thisRow.children('td.tipologia').children('label').text();
+                var marchio=$thisRow.children('td.marchio').children('label').text();
+
+
+                socketProdotto.emit('elimina_prodotto', {
+                    'prodotto': prodotto,
+                    'modello': modello,
+                    'tipologia': tipologia,
+                    'marchio': marchio
+                });
+
+
+                $thisRow.remove();
+
+                var removeRow=function($this){
+                    if( $this.children('td.nome_prodotto').children('label').text() == prodotto ){
+                        if( $this.children('td.nome_modello').children('label').text() == modello )
+                            if( $this.children('td.tipologia').children('label').text() == tipologia )
+                                if( $this.children('td.marchio').children('label').text() == marchio )
+                                    $this.remove();
+
+                    }
+
+                }
+
+                $('#tabellaContainer2 tr').each(function(){
+                   removeRow($(this));
+                });
+
+
+                /*se una sezione rimane senza fornitori elimino il settoreMerceologico */
+                var elimnaSettore= function($this){
+                   var counter = 0;
+
+                   $this.children('tr').each(function(){
+                        counter++;
+
+                   });
+
+
+                   if( counter == 1 ){
+
+                    $this.remove();
+                   }
+
+                }
+
+                $('#tabellaContainer1 tbody').each(function(){
+                   elimnaSettore($(this));
+                });
+
+
+                $('#tabellaContainer2 tbody').each(function(){
+                   elimnaSettore($(this));
+                });
+
+
+
+            });
+
+            $('.segnalaProdotto').unbind('click').click(function(){
+                var $thisRow=$(this).parent().parent();
+                var prodotto=$thisRow.children('td.nome_prodotto').children('label').text();
+                var modello=$thisRow.children('td.nome_modello').children('label').text();
+                var tipologia=$thisRow.children('td.tipologia').children('label').text();
+                var marchio=$thisRow.children('td.marchio').children('label').text();
+
+                var valore=false;
+
+
+                if( $thisRow.hasClass('daVerificare') ){
+                    $thisRow.removeClass('daVerificare');
+                     $thisRow.css('background', 'white');
+                }
+                else{
+                    $thisRow.addClass('daVerificare');
+                    $thisRow.css('background', 'yellow');
+                    valore=true;
+                }
+
+                socketProdotto.emit('settaProdottoDaVerificare', {
+                    'prodotto': prodotto,
+                    'modello': modello,
+                    'tipologia': tipologia,
+                    'marchio': marchio,
+                    'valore': valore
+                });
+            });
+
+        }
+
+
+        {% for prodotto in prodotti %}
+
+            var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            var $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+
+            var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+
+            var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            var $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+
+            $sezioneTabella1.children('th.primaCol').next('th').children('input').val('{{prodotto.tipologia}}');
+
+            $datiScheda1.children('td.nome_prodotto').children('input').val('{{prodotto.prodotto}}');
+            $datiScheda1.children('td.nome_modello').children('input').val('{{prodotto.nome}}');
+            $datiScheda1.children('td.marchio').children('input').val('{{prodotto.marchio}}');
+            $datiScheda1.children('td.codice').children('input').val('{{prodotto.codice}}');
+
+            $datiScheda1.children('td.fornitore').children('select').val('{{prodotto.fornitore_primo_gruppo}} - {{prodotto.fornitore_sotto_gruppo}}');
+
+            $datiScheda2.children('td.prezzoListinoFornituraPosa').children('input').val('{{prodotto.prezzoListinoFornituraPosa}}');
+            $datiScheda2.children('td.prezzoListinoFornitura').children('input').val('{{prodotto.prezzoListinoFornitura}}');
+            $datiScheda2.children('td.nettoUsFornituraPosa').children('input').val('{{prodotto.nettoUsFornituraPosa}}');
+            $datiScheda2.children('td.nettoUsFornitura').children('input').val('{{prodotto.nettoUsFornitura}}');
+            $datiScheda2.children('td.posa').children('input').val('{{prodotto.posa}}');
+            $datiScheda2.children('td.rincaroCliente').children('input').val('{{prodotto.rincaroCliente}}');
+            $datiScheda2.children('td.totale').children('input').val('0');
+
+            $datiScheda1.children('td.fornitore').children('select').change();
+           /* alert($datiScheda1.children('td.fornitore').children('select').val())
+            alert('{{prodotto.fornitore_primo_gruppo}} - {{prodotto.fornitore_sotto_gruppo}}')*/
+
+            aggiungiRiga();
+
+            if( '{{prodotto.daVerificare}}' == 'True' ){
+                $table1= $('#tabellaContainer1').children('table');
+                $table2= $('#tabellaContainer2').children('table');
+
+                $table1.children('tbody').each(function(){
+                    $(this).children('tr').each(function(){
+                        if( $(this).children('td.nome_prodotto').children('label').text() == '{{prodotto.prodotto}}' )
+                        {
+                            if( $(this).children('td.nome_modello').children('label').text() == '{{prodotto.nome}}' )
+                            {
+                                if( $(this).children('td.tipologia').children('label').text() == '{{prodotto.tipologia}}' )
+                                {
+                                    if( $(this).children('td.marchio').children('label').text() == '{{prodotto.marchio}}' )
+                                    {
+
+                                        $(this).children('td.prima_col').children('a.segnalaProdotto').addClass('daVerificare')
+
+                                        $(this).css('background-color', 'yellow');
+
+
+                                    }
+
+                                }
+
+
+                            }
+
+                        }
+                    });
+                });
+            }
+
+            if( $('#setCapitolato').is(':checked') )
+            {
+                $('#setCapitolato').trigger('click');
+            }
+
+            $('#headerNewRow input').each(function(){
+                if($(this).attr('type') == 'number')
+                    $(this).val('0');
+                else
+                {
+                    $(this).val('');
+
+                }
+            });
+        {% endfor %}
+
+        /*se nella è stata generata qualche sezione 'settoreMerceologico' a cui non appartengono fornitori la elimino*/
+        $table1=$('#tabellaContainer1').children('table');
+        $table2=$('#tabellaContainer2').children('table');
+
+
+        $table1.children('tbody').each(function(){
+            var countChildren=0;
+
+            $(this).children('tr').each(function(){
+                countChildren++;
+            });
+
+            if( countChildren == 1 )
+            {
+                $(this).remove();
+            }
+        });
+
+        $table2.children('tbody').each(function(){
+            var countChildren=0;
+
+            $(this).children('tr').each(function(){
+                countChildren++;
+            });
+
+            if( countChildren == 1 )
+            {
+                $(this).remove();
+            }
+        });
+
+
+        /**********************************************************************************/
+
+
 
     </script>
 

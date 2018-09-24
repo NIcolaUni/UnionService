@@ -129,7 +129,7 @@
                   <div id="todo-lists" data-ng-controller="todoCtrl as tctrl">
                     <div class="tl-header">
 
-                        <small id="titleMemorandum">Memorandum degli impegni di lavoro</small>
+                        <small id="titleMemorandum">Impegni di Lavoro</small>
 
                     </div>
 
@@ -270,7 +270,7 @@
 
 
     if( msg['risposta'] ){
-        titolo='Appuntamento impostato correttamento';
+        titolo='Appuntamento impostato correttamente';
 
           var start_moment =  $.fullCalendar.moment(msg['giorno']+'T'+msg['inizioH']);
           var end_moment = $.fullCalendar.moment(msg['giorno']+'T'+msg['fineH']);

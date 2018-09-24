@@ -11,14 +11,12 @@ class TipologiaProdotto(TipologiaProdottoDBmodel):
 
     def registraTipologiaProdotto(nome):
 
-        newTipo = TipologiaProdotto(nome)
+        toTest = TipologiaProdotto.query.filter_by(nome=nome).first()
 
-        try:
+        if toTest is None:
+            newTipo = TipologiaProdotto(nome)
             TipologiaProdottoDBmodel.addRow(newTipo)
-        except exc.SQLAlchemyError as e:
-            app.server.logger.info("\n\n\nci sono probelmi:\n {}\n\n\n".format(e))
-            TipologiaProdottoDBmodel.rollback()
-            raise RigaPresenteException("Tipologia prodotto già presente")
+
 
     def modificaTipologiaProdotto(nome, oldNome):
 

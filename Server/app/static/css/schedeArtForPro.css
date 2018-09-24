@@ -7,6 +7,14 @@ div#page-wrapper {
     bottom: 0;
 }
 
+div#headerNewRow {
+    position: absolute;
+    margin-left: 4%;
+    z-index: 11;
+    margin-top: -10%;
+    width: 100%;
+}
+
 div.scheda {
     height: 98%;
     width: 90%;
@@ -94,11 +102,6 @@ input.filterInput::placeholder {
     display: inline;
 }
 
-.primaCol{
-    width: 7% !important;
-    cursor: unset !important;
-    border-right-color: #ffffff00 !important;
-}
 
 
 th.primaCol {

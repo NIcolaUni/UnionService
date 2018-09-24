@@ -7,3 +7,9 @@
 .headerDelHeader {
     height: 45px;
 }
+
+.primaCol{
+    width: 7% !important;
+    cursor: unset !important;
+    border-right-color: #ffffff00 !important;
+}

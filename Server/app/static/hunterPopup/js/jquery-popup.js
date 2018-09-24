@@ -45,6 +45,7 @@
             event.preventDefault();
             event.stopPropagation();
 
+            alert('Wow')
             $('.Hunter-pop-up').remove();
             var _this = $(this);
             var offset = _this.offset();

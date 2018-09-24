@@ -66,7 +66,7 @@ class ClienteAccoltoForm(FlaskForm):
 class ApriPaginaClienteForm(FlaskForm):
     nome_cognome_indirizzo = StringField("Nome cognome indirizzo")
 
-
+'''
 class AggiungiFornitoreForm(FlaskForm):
     nomeFornitore = StringField("Sottogruppo fornitore")
     gruppo_azienda = StringField("Primo gruppo")
@@ -93,4 +93,5 @@ class AggiungiFornitoreForm(FlaskForm):
     nomeRappresentante =  StringField("Nome e cognome rappresentante")
     telefonoRappresentante =  StringField(widget=NumberInput())
     emailRappresentante =  StringField("Email rappresentante")
+'''
 

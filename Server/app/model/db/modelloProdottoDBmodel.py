@@ -9,7 +9,7 @@ class ModelloProdottoDBmodel(DbUSinterface, DbUSinterface.db.Model):
                                  ['prodotto_prezzario.nome', 'prodotto_prezzario.tipologia'],
                                  onupdate="CASCADE", ondelete="CASCADE"),
             ForeignKeyConstraint(['fornitore_primo_gruppo', 'fornitore_sotto_gruppo'],
-                                 ['sotto_gruppo_fornitori.gruppo_azienda', 'sotto_gruppo_fornitori.nome'],
+                                 ['fornitore.primo_gruppo', 'fornitore.sotto_gruppo'],
                                  onupdate="CASCADE", ondelete="CASCADE"),
 
              )
