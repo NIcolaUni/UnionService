@@ -7,6 +7,8 @@ class FornitoreDBmodel(DbUSinterface, DbUSinterface.db.Model ):
         PrimaryKeyConstraint('primo_gruppo', 'sotto_gruppo' ),
         ForeignKeyConstraint(['settoreMerceologico'], ['settore_merceologico.nome'],
                              ondelete='CASCADE', onupdate='CASCADE'),
+        ForeignKeyConstraint(['tempiDiConsegna'], ['tempi_di_consegna.nome'],
+                             onupdate="CASCADE", ondelete="CASCADE"),
         ForeignKeyConstraint(['giorniPagamenti'], ['giorni_pagamento_fornitore.nome'],
                              onupdate="CASCADE", ondelete="CASCADE"),
         ForeignKeyConstraint(['modalitaPagamenti'], ['modalita_pagamento_fornitore.nome'],
@@ -23,7 +25,7 @@ class FornitoreDBmodel(DbUSinterface, DbUSinterface.db.Model ):
     prezziNetti = Column(String(5))
     scontoStandard = Column(Integer())
     scontoExtra1 = Column(Integer())
-    scontroExtra2 = Column(Integer(), default=0)
+    scontoExtra2 = Column(Integer(), default=0)
     trasporto = Column(Float())
     imballo = Column(Float())
     montaggio = Column(Float())

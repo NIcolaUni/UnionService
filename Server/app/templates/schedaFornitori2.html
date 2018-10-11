@@ -16,9 +16,9 @@
                         <tbody>
                             <tr class="sezioneTabella dimensionaTabella newRow">
                                 <th class="primaCol"><a id="regNewRow" class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
-                                <th colspan="3">
+                                <th colspan="3" class="settore">
                                     <label>Selezionare/digitare il settore merceologico: </label>
-                                    <input list="listaSettori" class="inputScheda"  value="ciao" placeholder="settore di lavorazione...">
+                                    <input list="listaSettori" class="inputScheda inputLista"  value="" placeholder="settore merceologico...">
                                 </th>
                             </tr>
                             <tr class="headerTabella dimensionaTabella">
@@ -29,10 +29,10 @@
                             </tr>
                             <tr class="datiScheda dimensionaTabella newRow">
                                 <td class="primaCol">
-                                    <a class="fa fa-address-card primaColIcon"></a>
-                                    <a class="fa fa-users primaColIcon centralIcon"></a>
+
+
                                 </td>
-                                <td class="secondaCol hiddenInput primo_gruppo"><input class="inputScheda" placeholder="Primo gruppo..." ></td>
+                                <td class="secondaCol primo_gruppo"><input class="inputScheda" placeholder="Primo gruppo..." ></td>
                                 <td class="sotto_gruppo"><input class="inputScheda"  placeholder="Sotto gruppo..." ></td>
                                 <td class="radioContainer stato">
                                         <input id="inputCollaboraNewRow1" type="radio" name="collaboraNewRow" class="" value="Collabora" checked="checked">
@@ -61,7 +61,7 @@
                             </tr>
                             <tr class="datiScheda dimensionaTabella newRow">
                                 <td class="tempi_di_consegna">
-                                    <input  list="listaTempiConsegna"  class="inputScheda" value="" placeholder="tempi di consegna..." >
+                                    <input  list="listaTempiConsegna"  class="inputScheda inputLista" value="" placeholder="tempi di consegna..." >
                                 </td>
                                 <td class="radioContainer prezzi_netti">
                                     <input type="radio" id="inputPrezziNettiNewRow1"  name="prezziNettiNewRow" class="" value="si" checked="checked">
@@ -123,13 +123,13 @@
                                     <input type="number" value="0" step="0.01"  class="inputScheda numInput" ><label class="simpleAfterInputLabel">%</label>
                                 </td>
                                 <td class="giorni">
-                                    <input class="inputScheda" value="" placeholder="giorni pagamento..." >
+                                    <input list="listaGiorniPagamento" class="inputScheda inputLista" value="" placeholder="giorni pagamento..." >
                                 </td>
                                 <td class="modalita">
-                                    <input class="inputScheda" value="" placeholder="modalità pagamento..." >
+                                    <input list="listaModalitaPagamento" class="inputScheda inputLista" value="" placeholder="modalità pagamento..." >
                                 </td>
                                 <td class="tipologia">
-                                    <input class="inputScheda" value="" placeholder="tipologia..." >
+                                    <input list="listaTipologiaPagamento" class="inputScheda inputLista" value="" placeholder="tipologia..." >
                                 </td>
                             </tr>
 
@@ -140,27 +140,92 @@
 
             <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
 
-                <div class="filterInputContainer">
-                    <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
-                    <datalist id="listMansioni">
-                      <option>prova</option>
-                    </datalist>
+                <div class="searchSection headerSection" >
 
 
-                </div>
-
-                <div class="filterInputContainer">
-                    <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
-                    <datalist id="listArtigiani">
+                    <div class="filterInputContainer">
+                        <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
+                        <datalist id="listMansioni">
                           <option>prova</option>
-                    </datalist>
+                        </datalist>
+
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
+                        <datalist id="listArtigiani">
+                              <option>prova</option>
+                        </datalist>
+
+                    </div>
 
                 </div>
 
-                 <div id="balloon1" class="opener box" data-balloon= "To close me you've to click on the x" data-position="up" data-addclose="true" data-bgcolor="#f0f0f0" data-bordercolor="#999" data-textcolor="#333" style="">
-                    <h3>click me</h3>
-                    (with overlay - custom color - close button)
+                <div class="delModLists headerSection">
+                    <div class="filterInputContainer">
+                        <label for="modDelSettore">Settore Merceologico</label><br/>
+                        <select id="modDelSettore" class="delModList">
+                            {% for settore in settore_merceologico %}
+                            <option>{{settore.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelTempiConsegna">Tempi di consegna</label><br/>
+                        <select id="modDelTempiConsegna" class="delModList">
+                            {% for tempi in tempiDiConsegna %}
+                            <option>{{tempi.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelTipologiaPagamento">Tipologia pagamento</label><br/>
+                        <select id="modDelTipologiaPagamento" class="delModList">
+                            {% for tipologia in tipologiaPagamento %}
+                            <option>{{tipologia.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelModalitaPagamento">Modalità pagamento</label><br/>
+                        <select id="modDelModalitaPagamento" class="delModList">
+                            {% for modalita in modalitaPagamento %}
+                            <option>{{modalita.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelGiorniPagamento">Giorni pagamento</label><br/>
+                        <select id="modDelGiorniPagamento" class="delModList">
+                            {% for giorni in giorniPagamento %}
+                            <option>{{giorni.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+
                 </div>
+
 
             </div>
 
@@ -354,8 +419,9 @@
         </div>
 
         <datalist id="listaSettori">
-            <option>sanitari</option>
-            <option>interni</option>
+            {% for settore in settore_merceologico %}
+                <option>{{settore.nome}}</option>
+            {% endfor %}
         </datalist>
 
         <datalist id="listaTempiConsegna">
@@ -377,7 +443,7 @@
         </datalist>
 
         <datalist id="listaTipologiaPagamento">
-            {% for tipologia in tipologiaaPagamento %}
+            {% for tipologia in tipologiaPagamento %}
                 <option>{{tipologia.nome}}</option>
             {% endfor %}
         </datalist>
@@ -399,6 +465,12 @@
         var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
 
 
+
+        $('input.inputScheda').click(function(){
+           $(this).val('');
+           $(this).focus();
+
+        });
 
         $('.newPageCell a').click(function(){
             $('#tabellaContainer3').show();
@@ -550,7 +622,6 @@
             $standard=$datiScheda3.children('td.standard').children('input');
             $extra1=$datiScheda3.children('td.extra1').children('input');
             $extra2=$datiScheda3.children('td.extra2').children('input');
-            alert('sono quaaaa ' + $extra2.val())
             $giorni=$datiScheda3.children('td.giorni').children('input');
             $modalita=$datiScheda3.children('td.modalita').children('input');
             $tipologia=$datiScheda3.children('td.tipologia').children('input');
@@ -620,14 +691,76 @@
 
         var hiddenInputAction = function($this){
 
+            $('.inModifica').each(function(){
+                $(this).removeClass('inModifica');
+                $(this).children('label').show();
+                $(this).children('input').hide();
+                $(this).children('.radioLabel').hide();
+                $(this).children('.checked').show();
+                $(this).children('.simpleAfterInputLabel').show();
+            });
+
 
             $this.addClass('inModifica');
             $this.children('label').hide();
             $this.children('input').show();
+
             $this.children('.radioLabel').show();
             $this.children('.simpleAfterInputLabel').show();
 
+            $this.children('input.inputScheda').focus();
+
+            $this.children('input.inputScheda').click(function(){
+               $(this).val('');
+
+            });
         }
+
+        $('.inputLista').change(function(){
+
+            var registraLista = function(listaHtml, selectHtml, toAdd ){
+                //socketFornitore.emit(segnale_to_emit, { 'nome' : toAdd });
+
+                var toAppend=true;
+                $('#'+listaHtml).children('option').each(function(){
+                    if( $(this).val() == toAdd ){
+                        toAppend=false;
+                    }
+                });
+
+                if( toAppend ){
+
+                    $('#'+listaHtml).append('<option>'+toAdd+'</option>');
+                    $('#'+selectHtml).append('<option>'+toAdd+'</option>');
+
+                }
+            }
+
+
+            var attributoToAdd=$(this).parent().attr('class')
+
+            if( attributoToAdd == 'tempi_di_consegna' ){
+                    registraLista( 'listaTempiConsegna', 'modDelTempiConsegna', $(this).val() );
+
+            }
+            else if( attributoToAdd == 'modalita'  ){
+                registraLista(  'listaModalitaPagamento', 'modDelModalitaPagamento', $(this).val() );
+
+            }
+            else if( attributoToAdd == 'giorni' ){
+                registraLista( 'listaGiorniPagamento', $(this).val() );
+
+            }
+            else if( attributoToAdd ==  'tipologia' ){
+                registraLista( 'listaTipologiaPagamento', 'modDelTipologiaPagamento', $(this).val()  );
+
+            }
+            else if( attributoToAdd ==  'settore' ){
+                registraLista( 'listaSettori', 'modDelSettore', $(this).val()  );
+
+            }
+        });
+
 
         var listaFornitoriCancellati=[];
 
@@ -824,7 +957,7 @@
             if( $trasporto_unita.val() == 'euro' ){
 
                 checkboxTrasporto='<input style="display:none" type="radio" id="inputEuroPercTrasporto1-'+numOfAddedRow+'" name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="euro" checked="checked"> \
-                                   <label for="inputEuroPercTrasporto1-'+numOfAddedRow+'" class="radioLabel">&euro;</label> \
+                                   <label for="inputEuroPercTrasporto1-'+numOfAddedRow+'" class="radioLabel checked">&euro;</label> \
                                    <input style="display:none" type="radio" id="inputEuroPercTrasporto2-'+numOfAddedRow+'"  name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="%"> \
                                    <label style="display:none" for="inputEuroPercTrasporto2-'+numOfAddedRow+'" class="radioLabel">%</label>';
             }
@@ -833,14 +966,14 @@
                 checkboxTrasporto='<input style="display:none" type="radio" id="inputEuroPercTrasporto1-'+numOfAddedRow+'" name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="euro"> \
                                    <label  style="display:none" for="inputEuroPercTrasporto1-'+numOfAddedRow+'" class="radioLabel">&euro;</label> \
                                    <input  style="display:none" type="radio" id="inputEuroPercTrasporto2-'+numOfAddedRow+'" name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="%" checked="checked"> \
-                                   <label for="inputEuroPercTrasporto2-'+numOfAddedRow+'" class="radioLabel">%</label>';
+                                   <label for="inputEuroPercTrasporto2-'+numOfAddedRow+'" class="radioLabel checked">%</label>';
 
             }
 
             if( $imballo_unita.val() == 'euro' ){
 
                 checkboxImballo='<input style="display:none" type="radio" id="inputEuroPercImballo1-'+numOfAddedRow+'" name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="euro" checked="checked"> \
-                                 <label for="inputEuroPercImballo1-'+numOfAddedRow+'" class="radioLabel">&euro;</label> \
+                                 <label for="inputEuroPercImballo1-'+numOfAddedRow+'" class="radioLabel checked">&euro;</label> \
                                  <input  style="display:none" type="radio" id="inputEuroPercImballo2-'+numOfAddedRow+'" name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="%"> \
                                  <label style="display:none" for="inputEuroPercImballo2-'+numOfAddedRow+'"  class="radioLabel">%</label>';
             }
@@ -849,14 +982,14 @@
                 checkboxImballo='<input style="display:none" type="radio" id="inputEuroPercImballo1-'+numOfAddedRow+'"  name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="euro"> \
                                  <label style="display:none" for="inputEuroPercImballo1-'+numOfAddedRow+'" class="radioLabel">&euro;</label> \
                                  <input style="display:none" type="radio" id="inputEuroPercImballo2-'+numOfAddedRow+'" name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="%" checked="checked"> \
-                                 <label for="inputEuroPercImballo2-'+numOfAddedRow+'"  class="radioLabel">%</label>';
+                                 <label for="inputEuroPercImballo2-'+numOfAddedRow+'"  class="radioLabel checked">%</label>';
 
             }
 
             if( $montaggio_unita.val() == 'euro' ){
 
                 checkboxPosa='<input style="display:none" type="radio" id="inputEuroPercPosa1-'+numOfAddedRow+'"  name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="euro" checked="checked"> \
-                              <label for="inputEuroPercPosa1-'+numOfAddedRow+'"  class="radioLabel">&euro;</label> \
+                              <label for="inputEuroPercPosa1-'+numOfAddedRow+'"  class="radioLabel checked">&euro;</label> \
                               <input style="display:none" type="radio" id="inputEuroPercPosa2-'+numOfAddedRow+'"  name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="%"> \
                               <label style="display:none" for="inputEuroPercPosa2-'+numOfAddedRow+'"  class="radioLabel">%</label>';
             }
@@ -865,7 +998,7 @@
                 checkboxPosa='<input style="display:none" type="radio" id="inputEuroPercPosa1-'+numOfAddedRow+'" name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="euro"> \
                               <label style="display:none" for="inputEuroPercPosa1-'+numOfAddedRow+'"  class="radioLabel">&euro;</label> \
                               <input style="display:none" type="radio" id="inputEuroPercPosa2-'+numOfAddedRow+'"  name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="%" checked="checked"> \
-                              <label for="inputEuroPercPosa2-'+numOfAddedRow+'" class="radioLabel">%</label>';
+                              <label for="inputEuroPercPosa2-'+numOfAddedRow+'" class="radioLabel checked">%</label>';
 
             }
 
@@ -911,13 +1044,13 @@
                         <input type="number" step="0.01" style="display:none" value="'+$extra2.val()+'" class="scontoExtra2 inputScheda numInput" > <label  class="simpleAfterInputLabel">%</label> \
                     </td> \
                     <td class="hiddenInput"><label class="cellaDato">'+$giorni.val()+'</label> \
-                        <input style="display:none" class="giorniPagamenti inputScheda" value="'+$giorni.val()+'" placeholder="giorni pagamento..." > \
+                        <input style="display:none" list="listaGiorniPagamento" class="giorniPagamenti inputScheda" value="'+$giorni.val()+'" placeholder="giorni pagamento..." > \
                     </td> \
                     <td class="hiddenInput"><label class="cellaDato">'+$modalita.val()+'</label> \
-                        <input style="display:none" class="modalitaPagamenti inputScheda" value="'+$modalita.val()+'" placeholder="modalità pagamento..." > \
+                        <input style="display:none" list="listaModalitaPagamento" class="modalitaPagamenti inputScheda" value="'+$modalita.val()+'" placeholder="modalità pagamento..." > \
                     </td> \
                     <td class="hiddenInput"><label class="cellaDato">'+$tipologia.val()+'</label> \
-                        <input style="display:none" class="tipologiaPagamenti inputScheda" value="'+$tipologia.val()+'" placeholder="tipologia..." > \
+                        <input style="display:none" list="listaTipologiaPagamento" class="tipologiaPagamenti inputScheda" value="'+$tipologia.val()+'" placeholder="tipologia..." > \
                     </td> \
                 </tr>'
 
@@ -943,28 +1076,12 @@
                     $(this).val('');
             });
 
-            var registraLista = function(segnale_to_emit, toAdd, listaHtml ){
-                socketFornitore.emit(segnale_to_emit, { 'nome' : toAdd });
+            var registraLista = function(listaHtml, selectHtml, toAdd ){
+                //socketFornitore.emit(segnale_to_emit, { 'nome' : toAdd });
 
                 $('#'+listaHtml).append('<option>'+toAdd+'</option>');
+                $('#'+selectHtml).append('<option>'+toAdd+'</option>');
             }
-
-            $('.tempiDiConsegna').change(function(){
-                registraLista( 'registra_tempi_di_consegna', $(this).val());
-            });
-
-            $('.giorniPagamenti').change(function(){
-                registraLista( 'registra_giorni_pagamenti', $(this).val());
-            });
-
-            $('.modalitaPagamenti').change(function(){
-                registraLista( 'registra_modalita_pagamenti', $(this).val());
-            });
-
-            $('.tipologiaPagamenti').change(function(){
-                registraLista( 'registra_tipologia_pagamenti', $(this).val());
-            });
-
 
 
             var changeValueFornitore = function($this){
@@ -993,6 +1110,24 @@
                 var valore=$this.val();
 
 
+                if( attributoToEdit == 'tempiDiConsegna' ){
+                    registraLista( 'listaTempiConsegna', 'modDelTempiConsegna', valore);
+
+                }
+                else if( attributoToEdit == 'modalitaPagamenti'  ){
+                    registraLista(  'listaModalitaPagamento', 'modDelModalitaPagamento', valore);
+
+                }
+                else if( attributoToEdit == 'giorniPagamenti' ){
+                    registraLista( 'listaGiorniPagamento',  'modDelGiorniPagamento', valore);
+
+                }
+                else if( attributoToEdit ==  'tipologiaPagamenti' ){
+                    registraLista( 'listaTipologiaPagamento', 'modDelTipologiaPagamento', valore );
+
+                }
+
+
                 socketFornitore.emit('modificaFornitore', {
                     'dip': '{{dipendente.username}}',
                     'primo_gruppo': primo_gruppo,
@@ -1000,6 +1135,10 @@
                     'toEdit': attributoToEdit,
                     'value': valore
                 });
+
+
+
+
 
             }
 
@@ -1600,14 +1739,16 @@
 
             usPopupPrezzari(parametriPopup);
 
+            $('input').unbind('mouseover').mouseover(function(){
+                $(this).focus();
+            });
+
             numOfAddedRow++;
 
 
 
 
-        }
-
-
+        } //FINE AGGIUNGI RIGA
 
         socketFornitore.on('rispostaRegistraFornitore', function(message){
 
@@ -1766,9 +1907,9 @@
             var $standard=$datiScheda3.children('td.standard').children('input').val('{{fornitore.scontoStandard}}');
             var $extra1=$datiScheda3.children('td.extra1').children('input').val('{{fornitore.scontoExtra1}}');
             var $extra2=$datiScheda3.children('td.extra2').children('input').val('{{fornitore.scontoExtra2}}');
-            var $giorni=$datiScheda3.children('td.giorni').children('input').val('{{fornitore.giorni}}');
-            var $modalita=$datiScheda3.children('td.modalita').children('input').val('{{fornitore.modalita}}');
-            var $tipologia=$datiScheda3.children('td.tipologia').children('input').val('{{fornitore.tipologia}}');
+            var $giorni=$datiScheda3.children('td.giorni').children('input').val('{{fornitore.giorniPagamenti}}');
+            var $modalita=$datiScheda3.children('td.modalita').children('input').val('{{fornitore.modalitaPagamenti}}');
+            var $tipologia=$datiScheda3.children('td.tipologia').children('input').val('{{fornitore.tipologiaPagamenti}}');
 
             aggiungiRiga();
 
@@ -1834,10 +1975,20 @@
         socketFornitore.on('confermaModifica', function(msg){
 
             $('.inModifica').each(function(){
-                $(this).children('label.cellaDato').text(msg['value']);
+
+                if( !(msg['toEdit'] == 'trasportoUnitaMisura' ||
+                     msg['toEdit'] == 'montaggioUnitaMisura' ||
+                      msg['toEdit'] == 'imballoUnitaMisura')){
+
+                    $(this).children('label.cellaDato').text(msg['value']);
+                }
+
+
+
                 $(this).children('label').show();
                 $(this).children('input').hide();
                 $(this).children('.radioLabel').hide();
+                $(this).children('.checked').show();
                 $(this).children('.simpleAfterInputLabel').hide();
                 $(this).removeClass('inModifica');
             });
@@ -1888,7 +2039,171 @@
 
         });
 
+        $('.iconLista').click(function(){
+            var $selectEl=$(this).parent().children('select');
+            var selectedVal=$(this).parent().children('select').val();
+            var lista=$(this).parent().children('select').attr('id');
 
+            var delEditListe = function( idSelect, azione, oldValore, valoreEditato ){
+
+                if( idSelect == 'modDelSettore' ){
+
+                    if( azione == 'edit' ){
+                        $('#listaSettori').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+
+                        });
+
+                        socketFornitore.emit('modifica_settore_merceologico', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaSettori').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_settore_merceologico', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelTempiConsegna' ){
+                    if( azione == 'edit' ){
+                        $('#listaTempiConsegna').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_tempi_di_consegna', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaTempiConsegna').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_tempi_di_consegna', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelModalitaPagamento' ){
+                    if( azione == 'edit' ){
+                        $('#listaModalitaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_modalita_pagamento', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaModalitaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_modalita_pagamento', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelTipologiaPagamento' ){
+                    if( azione == 'edit' ){
+                        $('#listaTipologiaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_tipologia_pagamento', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaTipologiaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_tipologia_pagamento', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelGiorniPagamento' ){
+                    if( azione == 'edit' ){
+                        $('#listaGiorniPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_giorno_pagamento', {'oldNome': oldValore, 'newNome': valoreEditato});
+
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaGiorniPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_giorno_pagamento', {'nome': oldValore});
+                    }
+                }
+
+
+            }
+
+            if( $(this).hasClass('editLista') ){
+
+                swal.withFormAsync({
+                    title: 'Modifica valore "'+selectedVal+'"',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+                        { id: 'valore', name: 'valore', value: selectedVal},
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+                      $selectEl.children('option').each(function(){
+                        if($(this).val() == selectedVal ){
+                            $(this).val(context.swalForm['valore'] );
+                            $(this).text(context.swalForm['valore']);
+                        }
+                      });
+
+                      delEditListe(lista, 'edit', selectedVal, context.swalForm['valore'])
+                    }
+
+                });
+
+
+            }
+            else if( $(this).hasClass('delLista') ){
+                swal({
+                    title: 'Stai per eliminare "'+selectedVal+'" ',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                }, function(isConfirm){
+                    if( isConfirm ){
+
+                        $selectEl.children('option').each(function(){
+
+                            if($(this).val() == selectedVal )
+                                $(this).remove();
+                        });
+
+                        delEditListe(lista, 'del', selectedVal, '')
+
+                    }
+
+
+                });
+
+            }
+        });
 
     </script>
 {% endblock %}

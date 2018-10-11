@@ -153,15 +153,7 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/util.css') }}">
 	<!--<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/css/main.css') }}">-->
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/prezzario.css') }}">
 
-    {% if prezzarioEdileCss %}
-     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/prezzarioEdile.css') }}">
-    {% elif prezzarioProdottiCss %}
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/prezzarioProdotti.css') }}">
-    {% elif schedaFornitoriCss %}
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/schedaFornitori.css') }}">
-    {% endif %}
 <!--===============================================================================================-->
      <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
      <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">

@@ -43,3 +43,13 @@ div#tabellaContainer {
 .inputScheda.numInput {
     width: 70% !important;
 }
+
+.tabella select {
+    width: 88%;
+    color: black;
+}
+
+.tabella textarea {
+    color: black;
+    resize: none;
+}

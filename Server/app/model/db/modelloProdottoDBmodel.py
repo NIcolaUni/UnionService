@@ -12,6 +12,9 @@ class ModelloProdottoDBmodel(DbUSinterface, DbUSinterface.db.Model):
                                  ['fornitore.primo_gruppo', 'fornitore.sotto_gruppo'],
                                  onupdate="CASCADE", ondelete="CASCADE"),
 
+            ForeignKeyConstraint(['tipologia'], ['tipologia_prodotto_prezzario.nome'],
+                                 onupdate="CASCADE", ondelete="CASCADE")
+
              )
 
     nome = Column(String(100))
@@ -23,7 +26,6 @@ class ModelloProdottoDBmodel(DbUSinterface, DbUSinterface.db.Model):
     fornitore_primo_gruppo = Column(String(150))
     fornitore_sotto_gruppo = Column(String(150))
 
-    prezzoListinoFornituraPosa = Column(Float())
     prezzoListinoFornitura = Column(Float())
 
 
@@ -31,11 +33,11 @@ class ModelloProdottoDBmodel(DbUSinterface, DbUSinterface.db.Model):
     trasportoAzienda = Column(Float())
     imballoAzienda = Column(Float())
     posa = Column(Float())
+    posaPerc=Column(Integer())
 
     trasportoAziendaUnitaMisura = Column(String(8))
     imballoAziendaUnitaMisura = Column(String(8))
 
-    nettoUsFornituraPosa = Column(Float())
     nettoUsFornitura = Column(Float())
 
 

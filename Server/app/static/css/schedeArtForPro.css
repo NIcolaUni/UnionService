@@ -72,7 +72,11 @@ tr.sezioneTabella {
 .datiScheda td:hover{
     background: #ab85b5;
     cursor: pointer;
-    color: #eaeaea;
+    color: #8b8a89;
+}
+
+td.note {
+    color: red;
 }
 
 input.filterInput {
@@ -98,10 +102,30 @@ input.filterInput::placeholder {
 }
 
 .filterInputContainer{
-    width: 10%;
-    display: inline;
+   // width: 10%;
+    display: inline-block;
+    margin-right: 5%;
 }
 
+.filterInputContainer label{
+    float: left;
+    padding-left: 8%;
+}
+
+.iconLista {
+    color: #3a1d4e;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+.iconLista:hover {
+    color: white;
+}
+
+.filterZoneScheda {
+    margin-left: 3%;
+    width: 106%;
+}
 
 
 th.primaCol {
@@ -200,3 +224,33 @@ input.inputScheda:hover{
     width: 40%;
 }
 
+.delModList {
+    background: #444;
+    border: 0 none;
+    font: bold 12px Arial,Helvetica,Sans-serif;
+    color: #d7d7d7;
+    /* width: 200px; */
+    height: 38%;
+    padding: 6px 15px 6px 35px;
+    border-radius: 20px;
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+    transition: all 0.7s ease 0s;
+    width: 181px;
+}
+
+.headerSection {
+    height: 50%;
+    width: 100%;
+    display: block;
+}
+
+.no_cursor {
+    cursor: initial !important;
+}
+
+.daVerificare {
+    background: yellow;
+}

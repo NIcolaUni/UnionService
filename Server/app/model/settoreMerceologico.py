@@ -18,3 +18,7 @@ class SettoreMerceologico(SettoreMerceologicoDBmodel):
     def eliminaSettore(nome):
         toDel = SettoreMerceologico.query.filter_by(nome=nome).first()
         SettoreMerceologicoDBmodel.delRow(toDel)
+
+    def modificaSettore(newNome, oldNome):
+        SettoreMerceologico.query.filter_by(nome=oldNome).update({'nome': newNome})
+        SettoreMerceologico.commit()

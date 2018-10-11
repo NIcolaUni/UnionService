@@ -16,6 +16,7 @@ from .model.personaleFornitore import PersonaleFornitore
 from .model.tipologiaProdotto import TipologiaProdotto
 from .model.modelloProdotto import ModelloProdotto
 from .model.prodottoPrezzario import ProdottoPrezzario
+from .model.capitolatoProdotto import CapitolatoProdotto
 from .model.giorniPagamentoFornitore import GiorniPagamentoFornitore
 from .model.modalitaPagamentoFornitore import ModalitaPagamentoFornitore
 from .model.tipologiaPagamentoFornitore import TipologiaPagamentoFornitore
@@ -67,7 +68,7 @@ def prezzarioEdile():
 def prezzarioProdotti():
     dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
     tipoProdotto = TipologiaProdotto.query.all()
-    fornitori = SottoGruppoFornitori.query.all()
+    fornitori = Fornitore.query.all()
     prodotti =ProdottoPrezzario.query.all()
     modelli = ModelloProdotto.query.all()
 
@@ -99,9 +100,11 @@ def prezzarioProdotti2():
     colleghi = Dipendente.query.all()
     fornitori = Fornitore.query.all()
     prodotti = ModelloProdotto.query.all()
+    capitolati = CapitolatoProdotto.query.all()
+    tipologia = TipologiaProdotto.query.all()
 
     return render_template('prezzarioProdotti2.html', dipendente=dip, colleghi=colleghi, scheda=True,
-                           prezzario_prodotti=True, fornitori=fornitori, prodotti=prodotti)
+                           prezzario_prodotti=True, fornitori=fornitori, prodotti=prodotti, capitolati=capitolati, tipologia=tipologia)
 
 @server.route('/schedaFornitori2', methods=['GET', 'POST'])
 @login_required
@@ -127,253 +130,13 @@ def schedaFornitori2():
 @login_required
 def prezzarioEdile2():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    colleghi = Dipendente.query.all()
-
-    return render_template('prezzarioEdile2.html', dipendente=dip, colleghi=colleghi, scheda=True, prezzario_edile=True)
-
-'''
-@server.route('/schedaFornitori', methods=['GET', 'POST'])
-@login_required
-def schedaFornitori():
-
-    form = AggiungiFornitoreForm(request.form)
-    errorVar = False
-    errorMessage = ""
-
-    if request.method == 'POST':
-    #registrazione nuovo fornitore
-        server.logger.info("\n\nEntrato in Post {}\n\n".format(form.gruppo_azienda.data))
-
-        #se non viene inserito nemmeno il nome del primo gruppo
-        #la registrazione abortisce
-        if form.gruppo_azienda.data == '':
-            dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-            fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
-            fornitori_sotto_gruppo = SottoGruppoFornitori.query.order_by(SottoGruppoFornitori.nome).all()
-            listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
-            giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
-            modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
-            tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
+    #colleghi = Dipendente.query.all()
+    SettoreLavorazione.inizializza()
+    settori = SettoreLavorazione.query.all()
+    prezzario = PrezzarioEdile.query.all()
 
 
-            return render_template("schedaFornitori.html", dipendente=dip,
-                                   schedaFornitoriCss=True,
-                                   giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
-                                   listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
-                                   listaFornitoriSottoGruppo=fornitori_sotto_gruppo,
-                                   listaRappresentanti=listaRappresentanti,
-                                   tipologiaPagamento=tipologiaPagamento, form=form, sockUrl=app.appUrl, error=True, errorMessage="Inserire almeno il nome del primo gruppo")
-
-        fornitore = Fornitore.query.filter_by(nome_gruppo=form.gruppo_azienda.data).first()
-
-        #registro fornitore ovvero primo gruppo solo se non e' gia registrato
-        if fornitore is not None:
-            if not fornitore.has_sottoGruppo:
-                Fornitore.setHas_sottoGruppi(fornitore=form.gruppo_azienda.data, value=True)
-        else:
-            try:
-                Fornitore.registraFornitore(nome_gruppo=form.gruppo_azienda.data, has_sottoGruppo=True)
-            except RigaPresenteException as e:
-                server.logger.info("\n\n\n\n {} ".format(e))
-
-        GiorniPagamentoFornitore.registraGiorniPagamento(nome=form.giorniPagamenti.data)
-        ModalitaPagamentoFornitore.registraModalitaPagamento(nome=form.modalitaPagamenti.data)
-        TipologiaPagamentoFornitore.registraTipologiaPagamento(nome=form.tipologiaPagamenti.data)
-
-        #registro sottogruppo
-        try:
-            SottoGruppoFornitori.registraSottoGruppoFornitori(nome=form.nomeFornitore.data,
-                                                              gruppo_azienda=form.gruppo_azienda.data,
-                                                              settoreMerceologico=form.settoreMerceologico.data,
-                                                              stato=form.stato.data,
-                                                              tempiDiConsegna=form.tempiDiConsegna.data,
-                                                              prezziNetti=form.prezziNetti.data,
-                                                              scontoStandard=form.scontoStandard.data,
-                                                              scontoExtra1=form.scontoExtra1.data,
-                                                              scontroExtra2=form.scontroExtra2.data,
-                                                              trasporto=form.trasporto.data,
-                                                              imballo=form.imballo.data,
-                                                              montaggio=form.montaggio.data,
-                                                              trasportoUnitaMisura=form.trasportoUnitaMisura.data,
-                                                              imballoUnitaMisura=form.imballoUnitaMisura.data,
-                                                              montaggioUnitaMisura=form.montaggioUnitaMisura.data,
-                                                              giorniPagamenti=form.giorniPagamenti.data,
-                                                              modalitaPagamenti=form.modalitaPagamenti.data,
-                                                              tipologiaPagamenti=form.tipologiaPagamenti.data,
-                                                              provincia=form.provincia.data,
-                                                              indirizzo=form.indirizzo.data,
-                                                              telefono=form.telefono.data,
-                                                              sito=form.sito.data)
-
-        except RigaPresenteException as e:
-            server.logger.info("\n\n\n\n {} ".format(e))
-            app.rigaPresente=True
-            app.tabellaRigaPresente="Sottogruppo fornitori"
-
-        #se e' stato specificato un rappresentate, lo registro.
-        if form.nomeRappresentante.data != '' and form.nomeRappresentante.data != ' ':
-            try:
-                Rappresentante.registraRappresentante(nome=form.nomeRappresentante.data, azienda=form.gruppo_azienda.data,
-                                                      telefono=form.telefonoRappresentante.data,
-                                                      email=form.emailRappresentante.data)
-            except RigaPresenteException as e:
-                server.logger.info("\n\n\n\n {} ".format(e))
-                errorVar =True
-                errorMessage = "Fornitore già registrato"
-
-
-
-    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
-    fornitori_sotto_gruppo = SottoGruppoFornitori.query.order_by(SottoGruppoFornitori.nome).all()
-    listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
-    giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
-    modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
-    tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
-
-    allerta = False
-
-    if app.rigaPresente:
-        allerta = True
-        app.rigaPresente = False
-
-    return render_template("schedaFornitori.html", dipendente=dip,
-                           rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente, schedaFornitoriCss=True,
-                           giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
-                           listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
-                           listaFornitoriSottoGruppo=fornitori_sotto_gruppo, listaRappresentanti = listaRappresentanti,
-                           tipologiaPagamento=tipologiaPagamento, form=form, error=errorVar, errorMessage=errorMessage, sockUrl=app.appUrl)
-
-
-
-@server.route('/cancellaFornitore/<nomeFornitore>/<primoGruppo>', methods=['GET', 'POST'])
-@login_required
-def cancellaFornitore(nomeFornitore, primoGruppo):
-
-    if nomeFornitore == 'spazio':
-        nomeFornitore = ''
-
-
-    SottoGruppoFornitori.eliminaSottoGruppoFornitori(nome=nomeFornitore, gruppo_azienda=primoGruppo)
-    return redirect("/schedaFornitori")
-
-@server.route('/modificaFornitore/<nomeFornitore>/<primoGruppo>/<nomeRappresentante>')
-@login_required
-def modificaFornitore(nomeFornitore, primoGruppo, nomeRappresentante):
-
-    if nomeFornitore == 'spazio':
-        nomeFornitore = ''
-
-    if nomeRappresentante == 'spazio':
-        nomeRappresentante = ''
-
-    form = AggiungiFornitoreForm(request.form)
-    errorVar = False
-    errorMessage = ""
-
-    if request.method == 'POST':
-    #modifica fornitore
-        server.logger.info("\n\nEntrato in Post {}\n\n".format(form.gruppo_azienda.data))
-
-        #se non viene inserito nemmeno il nome del primo gruppo
-        #la registrazione abortisce
-        if form.gruppo_azienda.data == '':
-            dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-            fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
-            fornitori_sotto_gruppo = SottoGruppoFornitori.query.filter_by(nome=nomeFornitore).first()
-            listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
-            giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
-            modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
-            tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
-
-
-            return render_template("modificaFornitore.html", dipendente=dip,
-                                   schedaFornitoriCss=True,
-                                   giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
-                                   listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
-                                   sottoGruppoSelected=fornitori_sotto_gruppo,
-                                   listaRappresentanti=listaRappresentanti,
-                                   tipologiaPagamento=tipologiaPagamento, form=form, sockUrl=app.appUrl, error=True, errorMessage="Non è stato inserito alcun primo gruppo")
-
-        fornitore = Fornitore.query.filter_by(nome_gruppo=form.gruppo_azienda.data).first()
-
-        #registro fornitore ovvero primo gruppo solo se non e' gia registrato
-        if fornitore is not None:
-            if not fornitore.has_sottoGruppo:
-                Fornitore.setHas_sottoGruppi(fornitore=form.gruppo_azienda.data, value=True)
-        #se il fornitore e' cambiato e non esiste ancora
-        else:
-            try:
-                Fornitore.registraFornitore(nome_gruppo=form.gruppo_azienda.data, has_sottoGruppo=True)
-            except RigaPresenteException as e:
-                server.logger.info("\n\n\n\n {} ".format(e))
-
-        GiorniPagamentoFornitore.registraGiorniPagamento(nome=form.giorniPagamenti.data)
-        ModalitaPagamentoFornitore.registraModalitaPagamento(nome=form.modalitaPagamenti.data)
-        TipologiaPagamentoFornitore.registraTipologiaPagamento(nome=form.tipologiaPagamenti.data)
-
-        #modifico sottogruppo
-        try:
-            SottoGruppoFornitori.modificaSottoGruppoFornitori(nome=form.nomeFornitore.data,
-                                                              gruppo_azienda=form.gruppo_azienda.data,
-                                                              settoreMerceologico=form.settoreMerceologico.data,
-                                                              stato=form.stato.data,
-                                                              tempiDiConsegna=form.tempiDiConsegna.data,
-                                                              prezziNetti=form.prezziNetti.data,
-                                                              scontoStandard=form.scontoStandard.data,
-                                                              scontoExtra1=form.scontoExtra1.data,
-                                                              scontroExtra2=form.scontroExtra2.data,
-                                                              trasporto=form.trasporto.data,
-                                                              trasportoUnitaMisura=form.trasportoUnitaMisura.data,
-                                                              giorniPagamenti=form.giorniPagamenti.data,
-                                                              modalitaPagamenti=form.modalitaPagamenti.data,
-                                                              tipologiaPagamenti=form.tipologiaPagamenti.data,
-                                                              provincia=form.provincia.data,
-                                                              indirizzo=form.indirizzo.data,
-                                                              telefono=form.telefono.data,
-                                                              sito=form.sito.data)
-
-        except RigaPresenteException as e:
-            server.logger.info("\n\n\n\n {} ".format(e))
-            app.rigaPresente=True
-            app.tabellaRigaPresente="Sottogruppo fornitori"
-
-        #se e' stato specificato un rappresentate, lo modifico.
-        if form.nomeRappresentante.data != '' and form.nomeRappresentante.data != ' ':
-            try:
-                Rappresentante.modificaRappresentante(oldNome=nomeRappresentante, nome=form.nomeRappresentante.data,
-                                                      azienda=form.gruppo_azienda.data,
-                                                      telefono=form.telefonoRappresentante.data,
-                                                      email=form.emailRappresentante.data)
-            except RigaPresenteException as e:
-                server.logger.info("\n\n\n\n {} ".format(e))
-                errorVar =True
-                errorMessage = "Rappresentante già registrato"
-
-
-
-    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    fornitori_primo_gruppo = Fornitore.query.order_by(Fornitore.nome_gruppo).all()
-    fornitori_sotto_gruppo = SottoGruppoFornitori.query.filter_by(nome=nomeFornitore).first()
-    listaRappresentanti = Rappresentante.query.order_by(Rappresentante.nome).all()
-    giorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
-    modalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
-    tipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
-
-    allerta = False
-
-    if app.rigaPresente:
-        allerta = True
-        app.rigaPresente = False
-
-    return render_template("modificaFornitore.html", dipendente=dip,
-                           rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente, schedaFornitoriCss=True,
-                           giorniPagamento=giorniPagamento, modalitaPagamento=modalitaPagamento,
-                           listaFornitoriPrimoGruppo=fornitori_primo_gruppo,
-                           sottoGruppoSelected=fornitori_sotto_gruppo, listaRappresentanti = listaRappresentanti,
-                           tipologiaPagamento=tipologiaPagamento, form=form, error=errorVar, errorMessage=errorMessage, sockUrl=app.appUrl)
-
-'''
+    return render_template('prezzarioEdile2.html', dipendente=dip, prezzario=prezzario, scheda=True, prezzario_edile=True, settori=settori)
 
 
 @server.route('/agendaClientePag/<dipUsername>')
@@ -960,72 +723,49 @@ def handle_declina_ferie(message):
     Notifica.eliminaNotificaFerie(richiedente_ferie=richiedente_ferie.username, start_date=notifica.start_date)
 
 
-@socketio.on('registra_settore', namespace="/prezzario")
-def handle_registra_settore(message):
-
-  #verifico che il settore non sia gia presente
-
-  dip = Dipendente.query.filter_by(username=message['dip']).first()
-
-  if SettoreLavorazione.query.filter_by(nome=message['settore'] ).first() is None:
-      SettoreLavorazione.registraSettore(nome=message['settore'] )
-      emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
-
-  else:
-      emit('abortAggiorna',  {'what': 'Settore'}, namespace='/prezzario', room=dip.session_id)
-
-
-@socketio.on('elimina_settore', namespace="/prezzario")
+@socketio.on('elimina_settore_lavorazione', namespace="/prezzario")
 def handle_elimina_settore(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    SettoreLavorazione.eliminaSettore(nome=message['settore'])
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+    SettoreLavorazione.eliminaSettore(nome=message['nome'])
+
+@socketio.on('modifica_settore_lavorazione', namespace="/prezzario")
+def handle_elimina_settore(message):
+    SettoreLavorazione.modificaSettore(oldNome=message['oldNome'], newNome=message['newNome'])
 
 @socketio.on('registra_lavorazione', namespace="/prezzario")
 def handle_registra_lavorazione(message):
-    server.logger.info("\n\n\nWei sono il dip: {}\n\n\n".format(message['dip']))
     dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+
+    SettoreLavorazione.registraSettore(nome=message['settore'])
+
     PrezzarioEdile.registraLavorazione(settore=message["settore"], tipologia_lavorazione=message["tipologia"],
                                         pertinenza=message["pertinenza"], unitaMisura=message["unita"],
-                                         costo=message["costo"], prezzoMin=message["pMin"], prezzoMax=message["pMax"],
+                                         prezzoMin=message["pMin"], prezzoMax=message["pMax"],
                                           dimensione=message["dimensione"], fornitura=message["fornitura"], posa=message["posa"],
                                             note=message["note"])
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+    emit('confermaRegistrazioneLavorazione', namespace='/prezzario', room=dip.session_id)
 
 @socketio.on('modifica_lavorazione', namespace="/prezzario")
 def handle_modifica_lavorazione(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    PrezzarioEdile.modificaLavorazione(settore=message["settore"], oldTipologia=message['oldTipologia'], tipologia_lavorazione=message["tipologia"],
-                                        pertinenza=message["pertinenza"], unitaMisura=message["unita"],
-                                         costo=message["costo"], prezzoMin=message["pMin"], prezzoMax=message["pMax"],
-                                          dimensione=message["dimensione"], fornitura=message["fornitura"], posa=message["posa"],
-                                            note=message["note"])
+    PrezzarioEdile.modificaLavorazione(settore=message["settore"], tipologia_lavorazione=message["tipologia"],
+                                        modifica={message['toEdit'] : message['valore']})
 
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+    emit('conferma_modifica_lavorazione', namespace='/prezzario', room=dip.session_id)
 
 
-@socketio.on('cambia_settore_prezzario', namespace='/prezzario')
-def handle_cambia_settore_prezzario(message):
-    app.prezzarioEdileSettoreCorrente=message['settore']
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
 
-
-@socketio.on('setta_daVerificare', namespace='/prezzario')
+@socketio.on('settaLavorazioneDaVerificare', namespace='/prezzario')
 def handle_setta_daVerificare(message):
-    server.logger.info("\n\n\nMi è arrivato da registrare  {} {} {} \n\n\n".format(message['settore'], message['tipologia'], message['valore']))
     PrezzarioEdile.setDaVerificare(settore=message['settore'], tipologia_lavorazione=message['tipologia'], valore=message['valore'])
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
 
 @socketio.on('elimina_lavorazione', namespace='/prezzario')
 def handle_elimina_lavorazione(message):
     PrezzarioEdile.eliminaLavorazione(settore=message['settore'], tipologia_lavorazione=message['tipologia'])
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzario', room=dip.session_id)
+    emit('conferma_elimina_lav', namespace='/prezzario', room=dip.session_id)
 
 
 @socketio.on('registraImpegno', namespace='/impegni')
@@ -1082,6 +822,12 @@ def handle_elimina_personale_fornitore(message):
 def handle_registraFornitore(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
+    SettoreMerceologico.registraSettore(nome=message['settoreMerceologico'])
+    TempiDiConsegnaFornitore.registraTempiDiConsegna(nome=message['tempiDiConsegna'])
+    TipologiaPagamentoFornitore.registraTipologiaPagamento(nome=message['tipologiaPagamenti'])
+    ModalitaPagamentoFornitore.registraModalitaPagamento(nome=message['modalitaPagamenti'])
+    GiorniPagamentoFornitore.registraGiorniPagamento(nome=message['giorniPagamenti'])
+
     returnStatus = Fornitore.registraFornitore(primo_gruppo=message['primo_gruppo'],   sotto_gruppo=message['sotto_gruppo'],
                             settoreMerceologico = message['settoreMerceologico'], stato=message['stato'],
                             tempiDiConsegna = message['tempiDiConsegna'], prezziNetti = message['prezziNetti'],
@@ -1099,8 +845,19 @@ def handle_registraFornitore(message):
 @socketio.on('modificaFornitore', namespace='/fornitore')
 def handle_modificaFornitore(message):
 
-
+    app.server.logger.info('chiamato {}\n\n\n'.format(message['toEdit']))
     dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    if message['toEdit'] == 'tempiDiConsegna':
+        TempiDiConsegnaFornitore.registraTempiDiConsegna(nome=message['value'])
+    elif message['toEdit'] == 'tipologiaPagamenti':
+        TipologiaPagamentoFornitore.registraTipologiaPagamento(nome=message['value'])
+    elif message['toEdit'] == 'modalitaPagamenti':
+        ModalitaPagamentoFornitore.registraModalitaPagamento(nome=message['value'])
+    elif message['toEdit'] == 'giorniPagamenti':
+        GiorniPagamentoFornitore.registraGiorniPagamento(nome=message['value'])
+
+
 
     Fornitore.modificaFornitore(primo_gruppo=message['primo_gruppo'], sotto_gruppo=message['sotto_gruppo'],
                                 modifica={message['toEdit']: message['value']})
@@ -1117,273 +874,92 @@ def handle_eliminaFornitore(message):
 
     Fornitore.eliminaFornitore(primo_gruppo=message['primo_gruppo'], sotto_gruppo=message['sotto_gruppo'])
 
-@socketio.on('registra_giorno_pagamento', namespace="/fornitore")
+@socketio.on('modifica_giorno_pagamento', namespace="/fornitore")
 def handle_registra_giorno_pagamento(message):
-
-    GiorniPagamentoFornitore.registraGiorniPagamento(nome=message['nome'])
-
-@socketio.on('registra_modalita_pagamento', namespace="/fornitore")
-def handle_registra_modalita_pagamento(message):
-    ModalitaPagamentoFornitore.registraModalitaPagamento(nome=message['nome'])
-
-@socketio.on('registra_tipologia_pagamento', namespace="/fornitore")
-def handle_registra_tipologia_pagamento(message):
-    TipologiaPagamentoFornitore.registraTipologiaPagamento(nome=message['nome'])
-
-@socketio.on('registra_tempi_di_consegna', namespace="/fornitore")
-def handle_registra_tempi_di_consegna(message):
-    TempiDiConsegnaFornitore.registraTempiDiConsegna(nome=message['nome'])
-
-@socketio.on('modifica_giornoPagamento', namespace="/fornitore")
-def handle_modifica_giornoPagamento(message):
     GiorniPagamentoFornitore.modificaGiorniPagamento(newNome=message['newNome'], oldNome=message['oldNome'])
 
-    listaGiorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
-    newListToSend = dict()
-    counter=0
-    for giorno in listaGiorniPagamento:
-        newListToSend[str(counter)]=giorno.nome
-        counter+=1
 
-    newListToSend['length']=counter
+@socketio.on('elimina_giorno_pagamento', namespace="/fornitore")
+def handle_elimina_giorno_pagamento(message):
+    GiorniPagamentoFornitore.eliminaGiorniPagamento(nome=message['nome'])
 
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaGiorniPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
-
-@socketio.on('elimina_giornoPagamento', namespace="/fornitore")
-def handle_elimina_giornoPagamento(message):
-    GiorniPagamentoFornitore.eliminaGiorniPagamento(message['nome'])
-
-    listaGiorniPagamento = GiorniPagamentoFornitore.query.order_by(GiorniPagamentoFornitore.nome).all()
-    newListToSend = dict()
-    counter=0
-    for giorno in listaGiorniPagamento:
-        newListToSend[str(counter)]=giorno.nome
-        counter+=1
-
-    newListToSend['length']=counter
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaGiorniPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
-
-@socketio.on('modifica_modalitaPagamento', namespace="/fornitore")
-def handle_modifica_modalitaPagamento(message):
+@socketio.on('modifica_modalita_pagamento', namespace="/fornitore")
+def handle_modifica_modalita_pagamento(message):
     ModalitaPagamentoFornitore.modificaModalitaPagamento(newNome=message['newNome'], oldNome=message['oldNome'])
 
-    listaModalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
-    newListToSend = dict()
-    counter=0
-    for giorno in listaModalitaPagamento:
-        newListToSend[str(counter)]=giorno.nome
-        counter+=1
 
-    newListToSend['length']=counter
+@socketio.on('elimina_modalita_pagamento', namespace="/fornitore")
+def handle_elimina_modalita_pagamento(message):
+    ModalitaPagamentoFornitore.eliminaModalitaPagamento(nome=message['nome'])
 
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaModalitaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
 
-@socketio.on('elimina_modalitaPagamento', namespace="/fornitore")
-def handle_elimina_modalitaPagamento(message):
-    ModalitaPagamentoFornitore.eliminaModalitaPagamento(message['nome'])
-
-    listaModalitaPagamento = ModalitaPagamentoFornitore.query.order_by(ModalitaPagamentoFornitore.nome).all()
-    newListToSend = dict()
-    counter=0
-    for giorno in listaModalitaPagamento:
-        newListToSend[str(counter)]=giorno.nome
-        counter+=1
-
-    newListToSend['length']=counter
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaModalitaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
-
-@socketio.on('modifica_tipologiaPagamento', namespace="/fornitore")
-def handle_modifica_tipologiaPagamento(message):
+@socketio.on('modifica_tipologia_pagamento', namespace="/fornitore")
+def handle_modifica_tipologia_pagamento(message):
     TipologiaPagamentoFornitore.modificaTipologiaPagamento(newNome=message['newNome'], oldNome=message['oldNome'])
 
-    listTipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
-    newListToSend = dict()
-    counter=0
-    for giorno in listTipologiaPagamento:
-        newListToSend[str(counter)]=giorno.nome
-        counter+=1
 
-    newListToSend['length']=counter
+@socketio.on('elimina_tipologia_pagamento', namespace="/fornitore")
+def handle_elimina_tipologia_pagamento(message):
+    TipologiaPagamentoFornitore.eliminaTipologiaPagamento(nome=message['nome'])
 
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaTipologiaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
-
-@socketio.on('elimina_tipologiaPagamento', namespace="/fornitore")
-def handle_elimina_tipologiaPagamento(message):
-    TipologiaPagamentoFornitore.eliminaTipologiaPagamento(message['nome'])
-
-    listTipologiaPagamento = TipologiaPagamentoFornitore.query.order_by(TipologiaPagamentoFornitore.nome).all()
-    newListToSend = dict()
-    counter=0
-    for giorno in listTipologiaPagamento:
-        newListToSend[str(counter)]=giorno.nome
-        counter+=1
-
-    newListToSend['length']=counter
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaTipologiaPagamento', newListToSend, namespace='/fornitore', room=dip.session_id)
+@socketio.on('modifica_tempi_di_consegna', namespace="/fornitore")
+def handle_modifica_tempi_di_consegna(message):
+    TempiDiConsegnaFornitore.modificaTempiDiConsegna(newNome=message['newNome'], oldNome=message['oldNome'])
 
 
-@socketio.on('modifica_tipologiaProdotto', namespace="/prezzarioProdotti")
-def handle_modifica_tipologiaProdotto(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
+@socketio.on('elimina_tempi_di_consegna', namespace="/fornitore")
+def handle_elimina_tempi_di_consegna(message):
+    TempiDiConsegnaFornitore.eliminaTempiDiConsegna(nome=message['nome'])
 
-    TipologiaProdotto.modificaTipologiaProdotto(oldNome=message['oldTipologia'], nome=message['newTipologia'])
-
-
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
-
-@socketio.on('elimina_tipologiaProdotto', namespace="/prezzarioProdotti")
-def handle_elimina_tipologiaProdotto(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-
-    TipologiaProdotto.eliminaTipologiaProdotto(nome=message['tipologia'])
-
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
-
-'''
-@socketio.on('registra_tipologiaProdotto', namespace="/prezzarioProdotti")
-def handle_registra_tipologiaProdotto(message):
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-
-    try:
-
-    except RigaPresenteException as e:
-        server.logger.info("\n\n\n\n {} ".format(e))
-        app.rigaPresente=True
-        app.tabellaRigaPresente="Tipologia prodotto"
-     #   emit('waitForSwallClose', {"who": "Tipologia prodotto"}, namespace='/prezzarioProdotti', room=dip.session_id)
+@socketio.on('modifica_settore_merceologico', namespace="/fornitore")
+def handle_modifica_settore_merceologico(message):
+    SettoreMerceologico.modificaSettore(newNome=message['newNome'], oldNome=message['oldNome'])
 
 
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
-'''
+@socketio.on('elimina_settore_merceologico', namespace="/fornitore")
+def handle_elimina_settore_merceologico(message):
+    SettoreMerceologico.eliminaSettore(nome=message['nome'])
 
-@socketio.on('cambia_tipologia_prezzario', namespace='/prezzarioProdotti')
-def handle_cambia_settore_prezzario(message):
-    app.prezzarioProdottiTipoCorrente = message['tipologia']
-
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
 @socketio.on('registra_prodotto', namespace='/prezzarioProdotti')
 def handle_registra_prodotto(message):
+
+
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
     TipologiaProdotto.registraTipologiaProdotto(nome=message['tipologia'])
 
+
+    ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'])
+
+    ModelloProdotto.registraModello(nome=message['modello'],
+                                    prodotto=message['nome'], tipologia=message['tipologia'],
+                                    marchio=message['marchio'],
+                                    codice=message['codice'],
+
+                                    fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
+                                    fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
+
+                                    prezzoListinoFornitura=message['prezzoListinoFornitura'],
+                                    nettoUsFornitura=message['nettoUsFornitura'],
+                                    posa=message['posa'],
+                                    posaPerc=message['posaPerc'],
+                                    rincaroCliente=message['rincaroCliente'],
+                                    versoDiLettura=message['versoDiLettura'],
+                                    rincaroAzienda=message['rincaroAzienda'],
+                                    trasportoAzienda=message['trasportoAzienda'],
+                                    imballoAzienda=message['imballoAzienda'],
+                                    trasportoAziendaUnitaMisura=message['trasportoAziendaUnita'],
+                                    imballoAziendaUnitaMisura=message['imballoAziendaUnita']
+
+                                    )
+
     if message['capitolato']:
-        ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'],
-                                       capitolato_modello=message['modello'], capitolato_marchio=message['marchio'])
-    else:
-        ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'])
+        CapitolatoProdotto.registraCapitolato(nome=message['nome'], modello=message['modello'],
+                                              tipologia=message['tipologia'], marchio=message['marchio'])
 
-
-    if message['versoDiLettura']:
-        ModelloProdotto.registraModello(nome=message['modello'],
-                                        prodotto=message['nome'], tipologia=message['tipologia'],
-                                        marchio=message['marchio'],
-                                        codice=message['codice'],
-
-                                        fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
-                                        fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
-
-                                        prezzoListinoFornitura=message['prezzoListinoFornitura'],
-                                        prezzoListinoFornituraPosa=message['prezzoListinoFornituraPosa'],
-                                        nettoUsFornituraPosa=message['nettoUsFornituraPosa'],
-                                        nettoUsFornitura=message['nettoUsFornitura'],
-                                        posa=message['posa'],
-                                        rincaroCliente=message['rincaroCliente'],
-                                        versoDiLettura=message['versoDiLettura'])
-    '''
-    else:
-        ModelloProdotto.registraModello(nome=message['modello'],
-                                        prodotto=message['nome'], tipologia=message['tipologia'],
-                                        marchio=message['marchio'],
-                                        codice=message['codice'],
-
-                                        fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
-                                        fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
-                                        prezzoListinoFornitura=message['prezzoListinoFornitura'],
-                                        prezzoListinoFornituraPosa=message['prezzoListinoFornituraPosa'],
-                                        rincaroAzienda=message['rincaroAzienda'],
-                                        trasportoAzienda=message['trasportoAzienda'],
-                                        imballoAzienda=message['imballoAzienda'],
-                                        posa=message['posa'],
-                                        nettoUsFornitura=message['nettoUsFornitura'],
-                                        nettoUsFornituraPosa=message['nettoUsFornituraPosa'],
-                                        rincaroCliente=message['rincaroCliente'],
-                                        versoDiLettura=message['versoDiLettura'])
-    '''
     emit( 'confermaRegistrazioneProdotto',  namespace='/prezzarioProdotti', room=dip.session_id)
 
-'''
-@socketio.on('registra_prodotto', namespace='/prezzarioProdotti')
-def handle_registra_prodotto(message):
-
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-
-
-    try:
-        if message['capitolato']:
-            ProdottoPrezzario.registraProdotto( nome=message['nome'], tipologia=message['tipologia'],
-                                                    capitolato_modello=message['modello'], capitolato_marchio=message['marchio'])
-
-        else:
-            ProdottoPrezzario.registraProdotto(nome=message['nome'], tipologia=message['tipologia'])
-
-        if message['versoDiLettura']:
-
-                ModelloProdotto.registraModello(   nome=message['modello'],
-                                                   prodotto=message['nome'], tipologia=message['tipologia'],
-                                                   marchio=message['marchio'],
-                                                   codice=message['codice'],
-
-                                                   fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
-                                                   fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
-
-                                                   prezzoListinoFornitura=message['prezzoListinoFornitura'],
-                                                   prezzoListinoFornituraPosa=message['prezzoListinoFornituraPosa'],
-                                                   nettoUsFornituraPosa=message['nettoUsFornituraPosa'],
-                                                   nettoUsFornitura=message['nettoUsFornitura'],
-                                                   posa=message['posa'],
-                                                   rincaroCliente=message['rincaroCliente'],
-                                                   versoDiLettura=message['versoDiLettura'])
-
-        else:
-                ModelloProdotto.registraModello(   nome=message['modello'],
-                                                   prodotto=message['nome'], tipologia=message['tipologia'],
-                                                   marchio=message['marchio'],
-                                                   codice=message['codice'],
-
-                                                   fornitore_primo_gruppo=message['fornitore_primo_gruppo'],
-                                                   fornitore_sotto_gruppo=message['fornitore_sotto_gruppo'],
-                                                   prezzoListinoFornitura=message['prezzoListinoFornitura'],
-                                                   prezzoListinoFornituraPosa=message['prezzoListinoFornituraPosa'],
-                                                   rincaroAzienda=message['rincaroAzienda'],
-                                                   trasportoAzienda=message['trasportoAzienda'],
-                                                   imballoAzienda=message['imballoAzienda'],
-                                                   posa=message['posa'],
-                                                   nettoUsFornitura=message['nettoUsFornitura'],
-                                                   nettoUsFornituraPosa=message['nettoUsFornituraPosa'],
-                                                   rincaroCliente=message['rincaroCliente'],
-                                                   versoDiLettura=message['versoDiLettura'])
-
-
-    except  RigaPresenteException as e:
-        server.logger.info("\n\n\n\n {} ".format(e))
-        app.rigaPresente = True
-        app.tabellaRigaPresente = "Prodotto"
-
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
-'''
 
 @socketio.on('elimina_prodotto', namespace='/prezzarioProdotti')
 def handle_elimina_prodotto(message):
@@ -1392,109 +968,93 @@ def handle_elimina_prodotto(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
-@socketio.on('modifica_prodotto', namespace='/prezzarioProdotti')
-def handle_modifica_prodotto(message):
+@socketio.on('modifica_prodotto_dati', namespace='/prezzarioProdotti')
+def handle_modifica_prodotto_dati(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
     if message['toEdit'] == "nome_modello":
         message['toEdit']="nome"
     elif message['toEdit'] == 'nome_prodotto':
-        app.server.logger.info('\n\n\n\nEntro quaaaa1\n\n\n')
         ProdottoPrezzario.modificaProdotto(nome=message['prodotto'], tipologia=message['tipologia'], modifica={'nome': message['value']})
         message['toEdit'] = "prodotto"
     elif message['toEdit'] == 'tipologia':
-        app.server.logger.info('\n\n\n\nEntro quaaaa2\n\n\n\n')
         TipologiaProdotto.modificaTipologiaProdotto(nome=message['value'], oldNome=message['tipologia'] )
 
 
-    ModelloProdotto.modificaModello(nome=message['modello'], prodotto=message['prodotto'],
+    if message['toEdit'] == 'fornitore':
+        if  message['value'].endswith('-'):
+            ModelloProdotto.modificaModello(nome=message['modello'], prodotto=message['prodotto'],
+                                            tipologia=message['tipologia'], marchio=message['marchio'],
+                                            modifica={'fornitore_primo_gruppo': message['value'].split(' -')[0] })
+        elif message['value'].startswith('-'):
+            ModelloProdotto.modificaModello(nome=message['modello'], prodotto=message['prodotto'],
+                                            tipologia=message['tipologia'], marchio=message['marchio'],
+                                            modifica={
+                                                      'fornitore_sotto_gruppo': message['value'].split('- ')[1] })
+        else:
+
+            ModelloProdotto.modificaModello(nome=message['modello'], prodotto=message['prodotto'],
+                                            tipologia=message['tipologia'], marchio=message['marchio'],
+                                            modifica={ 'fornitore_primo_gruppo': message['value'].split(' - ')[0],
+                                                       'fornitore_sotto_gruppo': message['value'].split(' - ')[1],
+                                                   })
+    else:
+        ModelloProdotto.modificaModello(nome=message['modello'], prodotto=message['prodotto'],
                                         tipologia=message['tipologia'], marchio=message['marchio'],
                                         modifica={message['toEdit'] : message['value']})
 
 
 
-    emit('modificaOldValue', { 'modello': message['modello'], 'prodotto': message['prodotto'],
+    emit('confermaModificaProdotto', { 'modello': message['modello'], 'prodotto': message['prodotto'],
                                'tipologia':message['tipologia'],
                                'marchio': message['marchio'], 'toEdit': message['toEdit'], 'value': message['value']},namespace='/prezzarioProdotti', room=dip.session_id)
 
-'''
-@socketio.on('modifica_prodotto', namespace='/prezzarioProdotti')
-def handle_modifica_prodotto(message):
+
+@socketio.on('modifica_prodotto_calcoli', namespace='/prezzarioProdotti')
+def handle_modifica_prodotto_calcoli(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-
-    try:
-
-        if message['versoDiLettura']:
-
-                ProdottoPrezzario.modificaProdotto({ 'nome':message['nome'],
-                                                     'oldNome': message['old_nome'],
-                                                     'tipologia': message['tipologia'],
-                                                   'marchio':message['marchio'],
-                                                   'codice':message['codice'],
-                                                    'modello' : message['modello'],
-                                                   'fornitore_primo_gruppo':message['fornitore_primo_gruppo'],
-                                                   'fornitore_sotto_gruppo':message['fornitore_sotto_gruppo'],
-                                                   'prezzoListinoFornitura' :message['prezzoListinoFornitura'],
-                                                   'prezzoListinoFornituraPosa' :message['prezzoListinoFornituraPosa'],
-                                                   'posa' : message['posa'],
-                                                   'nettoUsFornituraPosa':message['nettoUsFornituraPosa'],
-                                                   'nettoUsFornitura':message['nettoUsFornitura'],
-                                                   'rincaroCliente':message['rincaroCliente'],
-                                                   'versoDiLettura':message['versoDiLettura']})
-
-        else:
-                ProdottoPrezzario.modificaProdotto(
-                                                   {'nome': message['nome'],
-                                                   'oldNome': message['old_nome'],
-                                                   'tipologia': message['tipologia'],
-                                                   'marchio': message['marchio'],
-                                                   'codice': message['codice'],
-                                                    'modello': message['modello'],
-                                                   'fornitore_primo_gruppo': message['fornitore_primo_gruppo'],
-                                                   'fornitore_sotto_gruppo': message['fornitore_sotto_gruppo'],
-                                                   'prezzoListinoFornitura': message['prezzoListinoFornitura'],
-                                                   'prezzoListinoFornituraPosa': message['prezzoListinoFornituraPosa'],
-                                                   'rincaroAzienda': message['rincaroAzienda'],
-                                                   'trasportoAzienda': message['trasportoAzienda'],
-                                                   'imballoAzienda': message['imballoAzienda'],
-                                                   'posa': message['posa'],
-                                                   'nettoUsFornitura': message['nettoUsFornitura'],
-                                                   'nettoUsFornituraPosa' : message['nettoUsFornituraPosa'],
-                                                   'rincaroCliente': message['rincaroCliente'],
-                                                   'versoDiLettura': message['versoDiLettura']})
+    ModelloProdotto.modificaModello(nome=message['modello'], prodotto=message['prodotto'],
+                                    tipologia=message['tipologia'], marchio=message['marchio'],
+                                    modifica={
+                                        'prezzoListinoFornitura': message['listinoProdotto'],
+                                        'nettoUsFornitura': message['usProdotto'],
+                                        'posa': message['posa'],
+                                        'posaPerc': message['posaPerc'],
+                                        'rincaroCliente': message['rincaroCliente'],
+                                        'rincaroAzienda': message['rincaroAzienda'],
+                                        'trasportoAzienda': message['trasportoAzienda'],
+                                        'trasportoAziendaUnitaMisura': message['trasportoAziendaUnita'],
+                                        'imballoAzienda': message['imballoAzienda'],
+                                        'imballoAziendaUnitaMisura': message['imballoAziendaUnita']
 
 
-    except  RigaPresenteException as e:
-        server.logger.info("\n\n\n\n {} ".format(e))
-        app.rigaPresente = True
-        app.tabellaRigaPresente = "Prodotto"
 
+                                    })
 
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
-'''
+@socketio.on( 'modifica_capitolato', namespace='/prezzarioProdotti')
+def handle_modifica_capitolato(message):
+    CapitolatoProdotto.registraCapitolato(nome=message['nome_prodotto'], modello=message['modello'],
+                                           tipologia=message['tipologia'], marchio=message['marchio'])
+
 
 @socketio.on('settaProdottoDaVerificare', namespace='/prezzarioProdotti')
 def handle_settaProdottoDaVerificare(message):
+    app.server.logger.info('ook\n\n\n')
     ModelloProdotto.setDaVerificare(tipologia=message['tipologia'], prodotto=message['prodotto'],
                                     marchio=message['marchio'], modello=message['modello'], valore=message['valore'])
 
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
 @socketio.on('modifica_tipologia_prodotto', namespace='/prezzarioProdotti')
 def handle_modifica_tipologia_prodotto(message):
-    TipologiaProdotto.modificaTipologiaProdotto(nome=message['tipologia'], oldNome=message['oldTipologia'])
+    TipologiaProdotto.modificaTipologiaProdotto(nome=message['newNome'], oldNome=message['oldNome'])
 
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
 @socketio.on('elimina_tipologia_prodotto', namespace='/prezzarioProdotti')
 def handle_elimina_tipologia_prodotto(message):
-    TipologiaProdotto.eliminaTipologiaProdotto(message['tipologia'])
+    TipologiaProdotto.eliminaTipologiaProdotto(message['nome'])
 
-    dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
+
 
 @socketio.on('aggiungi_modello_prodotto', namespace='/prezzarioProdotti')
 def handle_aggiungi_modello_prodotto(message):

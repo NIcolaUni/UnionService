@@ -14,14 +14,13 @@ class ModelloProdotto(ModelloProdottoDBmodel):
                     fornitore_sotto_gruppo=None,
 
                     prezzoListinoFornitura = None,
-                    prezzoListinoFornituraPosa = None,
                     rincaroAzienda = None,
                     trasportoAzienda = None,
                     imballoAzienda = None,
                     trasportoAziendaUnitaMisura = None,
                     imballoAziendaUnitaMisura = None,
                     posa = None,
-                    nettoUsFornituraPosa = None,
+                    posaPerc = 50,
                     nettoUsFornitura = None,
                     rincaroCliente = None,
                     versoDiLettura = None,
@@ -36,7 +35,7 @@ class ModelloProdotto(ModelloProdottoDBmodel):
         self.fornitore_sotto_gruppo = fornitore_sotto_gruppo
 
         self.prezzoListinoFornitura = prezzoListinoFornitura
-        self.prezzoListinoFornituraPosa = prezzoListinoFornituraPosa
+
 
         self.rincaroAzienda = rincaroAzienda
         self.trasportoAzienda = trasportoAzienda
@@ -44,7 +43,7 @@ class ModelloProdotto(ModelloProdottoDBmodel):
         self.trasportoAziendaUnitaMisura = trasportoAziendaUnitaMisura
         self.imballoAziendaUnitaMisura = imballoAziendaUnitaMisura
         self.posa = posa
-        self.nettoUsFornituraPosa = nettoUsFornituraPosa
+        self.posaPerc = posaPerc
         self.nettoUsFornitura = nettoUsFornitura
 
 
@@ -61,7 +60,6 @@ class ModelloProdotto(ModelloProdottoDBmodel):
                     fornitore_sotto_gruppo=None,
 
                     prezzoListinoFornitura=None,
-                    prezzoListinoFornituraPosa=None,
 
                     rincaroAzienda=None,
                     trasportoAzienda=None,
@@ -69,7 +67,7 @@ class ModelloProdotto(ModelloProdottoDBmodel):
                     trasportoAziendaUnitaMisura=None,
                     imballoAziendaUnitaMisura=None,
                     posa = None,
-                    nettoUsFornituraPosa=None,
+                    posaPerc = 50,
                     nettoUsFornitura=None,
 
                     rincaroCliente=None,
@@ -82,13 +80,12 @@ class ModelloProdotto(ModelloProdottoDBmodel):
 
             newModello = ModelloProdotto(nome=nome, prodotto=prodotto, tipologia=tipologia, marchio=marchio, codice=codice,
                                            fornitore_primo_gruppo=fornitore_primo_gruppo, fornitore_sotto_gruppo=fornitore_sotto_gruppo,
-                                            prezzoListinoFornitura=prezzoListinoFornitura, prezzoListinoFornituraPosa=prezzoListinoFornituraPosa,
+                                            prezzoListinoFornitura=prezzoListinoFornitura,
                                             rincaroAzienda=rincaroAzienda, trasportoAzienda=trasportoAzienda, imballoAzienda=imballoAzienda,
                                             trasportoAziendaUnitaMisura=trasportoAziendaUnitaMisura,
                                             imballoAziendaUnitaMisura=imballoAziendaUnitaMisura,
-                                            posa=posa,
+                                            posa=posa, posaPerc=posaPerc,
                                             nettoUsFornitura=nettoUsFornitura,
-                                            nettoUsFornituraPosa=nettoUsFornituraPosa,
                                             rincaroCliente=rincaroCliente, versoDiLettura=versoDiLettura,
                                             daVerificare=daVerificare)
 
@@ -122,7 +119,7 @@ class ModelloProdotto(ModelloProdottoDBmodel):
 
     def setDaVerificare(modello, prodotto, marchio, tipologia, valore):
 
-        app.server.logger.info('il modello {} prodotto {} marchio {} tipologia {}\n\n\n'.format(modello, prodotto, marchio, tipologia))
+        app.server.logger.info('il modello {} prodotto {} marchio {} tipologia {} val {}\n\n\n'.format(modello, prodotto, marchio, tipologia, valore))
 
         ModelloProdottoDBmodel.query.filter_by(nome=modello, prodotto=prodotto, marchio=marchio, tipologia=tipologia).update({'daVerificare': valore})
         ModelloProdottoDBmodel.commit()

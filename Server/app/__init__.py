@@ -35,7 +35,7 @@ accoglienzaForm = None
 accoglienzaOk = False
 formCercaCliente =None
 appUrl="http://debtux:80"
-prezzarioEdileSettoreCorrente = None
+
 clienteSelezionato=None
 preventivoEdileSelezionato=None
 preventivoFinitureSelezionato=None

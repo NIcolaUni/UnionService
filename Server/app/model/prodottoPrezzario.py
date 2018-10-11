@@ -6,34 +6,22 @@ class ProdottoPrezzario(ProdottoPrezzarioDBmodel):
 
     def __init__(self,
                     nome,
-                    tipologia, capitolato_modello = None, capitolato_marchio = None ):
+                    tipologia ):
 
         self.nome=nome
         self.tipologia=tipologia
-        self.capitolato_modello =capitolato_modello
-        self.capitolato_marchio=capitolato_marchio
 
 
 
-
-    def registraProdotto( nome, tipologia, capitolato_modello = None, capitolato_marchio=None ):
+    def registraProdotto( nome, tipologia ):
 
         prodotto = ProdottoPrezzario.query.filter_by(nome=nome, tipologia=tipologia).first()
 
         if prodotto is None:
-            newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia, capitolato_modello = capitolato_modello,
-                                                capitolato_marchio= capitolato_marchio)
+            newProdotto = ProdottoPrezzario(nome=nome, tipologia=tipologia)
 
             ProdottoPrezzarioDBmodel.addRow(newProdotto)
 
-
-            if capitolato_modello is not None:
-                ProdottoPrezzario.query.filter_by(nome=nome, tipologia=tipologia).update(
-                    {
-                        'capitolato_modello': capitolato_modello,
-                        'capitolato_marchio': capitolato_marchio
-                    })
-                ProdottoPrezzarioDBmodel.commit()
 
 
     def eliminaProdotto(nome, tipologia):

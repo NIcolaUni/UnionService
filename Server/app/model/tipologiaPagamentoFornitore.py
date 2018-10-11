@@ -1,4 +1,5 @@
 from .db.tipologiaPagamentoFornitoreDBmodel import TipologiaPagamentoFornitoreDBmodel
+import app
 
 class TipologiaPagamentoFornitore(TipologiaPagamentoFornitoreDBmodel):
 
@@ -8,7 +9,8 @@ class TipologiaPagamentoFornitore(TipologiaPagamentoFornitoreDBmodel):
 
     def registraTipologiaPagamento(nome):
         if TipologiaPagamentoFornitore.query.filter_by(nome=nome).first() is None:
-            newRow = TipologiaPagamentoFornitore(nome)
+            app.server.logger.info('\n\n\nwho {}\n\n'.format(nome))
+            newRow = TipologiaPagamentoFornitore(nome=nome)
             TipologiaPagamentoFornitoreDBmodel.addRow(newRow)
 
     def eliminaTipologiaPagamento(nome):
