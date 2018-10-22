@@ -34,7 +34,7 @@
 				    {{form.email}}
 				</div>
 
-                <div class="radioLeft wrap-contact100-form-radio">
+                <div style="display:none" class="radioLeft wrap-contact100-form-radio">
                     {{form.difficolta}}
 
                 </div>
@@ -204,18 +204,18 @@
                   showCancelButton: true,
                   confirmButtonColor: '#3085d6',
                   cancelButtonColor: '#d33',
-                  confirmButtonText: "procedere col preventivo",
-                  cancelButtonText: "registra soltanto",
+                  confirmButtonText: "registra",
+                  cancelButtonText: "annulla",
              }, function(isConfirm) {
 
                 if( isConfirm ){
-                    procedere_con_preventivo=true;
-                    form.submit();
-                }
-                else{
                     procedere_con_preventivo=false;
                     form.submit();
                 }
+              /*  else{
+                    procedere_con_preventivo=false;
+                    form.submit();
+                }*/
 
              })
 

@@ -3,7 +3,7 @@
 }
 
 div#headerNewRow {
-    margin-top: -14%;
+    margin-top: -17%;
     width: 82%;
 }
 
@@ -52,4 +52,8 @@ div#tabellaContainer {
 .tabella textarea {
     color: black;
     resize: none;
+}
+
+.filterInputContainer.settori {
+    margin-right: 21%;
 }

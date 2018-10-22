@@ -2,51 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4999c9fa-5806-41a3-81f8-712d990408b1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/app/model/capitolatoProdotto.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/model/db/capitolatoProdottoDBmodel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/old_prezzarioProdotti2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/db/fornitoreDBmodel.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/db/fornitoreDBmodel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/db/modelloProdottoDBmodel.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/db/modelloProdottoDBmodel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/db/prezzarioEdileDBmodel.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/db/prezzarioEdileDBmodel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/db/prodottoPrezzarioDBmodel.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/db/prodottoPrezzarioDBmodel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/db/settoreLavorazioneDBmodel.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/db/settoreLavorazioneDBmodel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/modelloProdotto.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/modelloProdotto.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/prezzarioEdile.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/prezzarioEdile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/prodottoPrezzario.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/prodottoPrezzario.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/settoreLavorazione.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/settoreLavorazione.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/settoreMerceologico.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/settoreMerceologico.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/tempiDiConsegnaFornitore.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/tempiDiConsegnaFornitore.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/tipologiaPagamentoFornitore.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/tipologiaPagamentoFornitore.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/css/prezzarioEdile.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/css/prezzarioEdile.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/css/prezzarioProdotti.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/css/prezzarioProdotti.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/css/schedaFornitori.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/css/schedaFornitori.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/css/schedeArtForPro.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/css/schedeArtForPro.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/paginaBase.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/paginaBase.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/prezzarioEdile2.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/prezzarioEdile2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/prezzarioProdotti2.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/prezzarioProdotti2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/schedaFornitori2.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/schedaFornitori2.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log/gunicorn.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/gunicorn.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/01545762bd51_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/017ecbad2ceb_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/079a16070cce_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/166c3ebb9897_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/1cf69bfd0494_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/2d86ed6bad6a_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/5f2c408f334b_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/8b93720020af_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/abf3ee893622_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/e0f591c58102_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/e18120394b9f_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/e4d402282e60_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/e8855f77cd65_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/ec8303dc1d2a_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/ed19c0e4d600_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/f3b3352e3673_.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/versions/fc8c38ef0a85_.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -300,6 +256,14 @@
       <option name="presentableId" value="Default" />
       <updated>1524861148187</updated>
     </task>
+    <task id="LOCAL-00001" summary="prezzari quasi sistemati">
+      <created>1539259189714</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1539259189715</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -326,6 +290,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="prezzari quasi sistemati" />
+    <option name="LAST_COMMIT_MESSAGE" value="prezzari quasi sistemati" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/model/tipologiaProdotto.py">

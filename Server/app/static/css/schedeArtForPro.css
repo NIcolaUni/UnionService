@@ -11,7 +11,7 @@ div#headerNewRow {
     position: absolute;
     margin-left: 4%;
     z-index: 11;
-    margin-top: -10%;
+   // margin-top: -10%;
     width: 100%;
 }
 
@@ -23,12 +23,12 @@ div.scheda {
 
 .filterZoneScheda {
     //background: violet;
-    height: 20%;
+    height: 30%;
 }
 
 .viewContainer {
     //background: #a75353;
-    height: 78%;
+    height: 65%;
 }
 
 table.tabella {
@@ -104,7 +104,8 @@ input.filterInput::placeholder {
 .filterInputContainer{
    // width: 10%;
     display: inline-block;
-    margin-right: 5%;
+    //margin-right: 5%;
+    //width: 100%;
 }
 
 .filterInputContainer label{
@@ -254,3 +255,39 @@ input.inputScheda:hover{
 .daVerificare {
     background: yellow;
 }
+
+.fc-toolbar.fc-header-toolbar.filterZoneScheda {
+    width: 100%;
+   // border: 4px solid black;
+    margin-left: -1%;
+    padding: 0;
+    background: #6f536dc2;
+}
+
+div#filtersContainer {
+    width: 100%;
+   // border: 1px solid;
+    height: 42%;
+    display: inline-block;
+}
+
+.delModLists {
+    width: 100%;
+    //border: 1px solid;
+    display: inline-block;
+    height: 50%;
+}
+
+.containerTitle {
+    display: inline-block;
+    width: 100%;
+    height: 50%;
+}
+
+div#filters {
+    display: inline-block;
+    width: 100%;
+}
+
+
+

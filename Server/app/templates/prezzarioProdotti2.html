@@ -154,25 +154,23 @@
 
             <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
 
-                <!--
-                <div class="filterInputContainer">
-                    <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
-                    <datalist id="listMansioni">
-                      <option>prova</option>
-                    </datalist>
+                <div id="filtersContainer">
+                    <div class="containerTitle"><h2>Filtri di Ricerca</h2></div>
+                    <div id="filters">
+                        <div class="filterInputContainer tipologia">
+                            <input id="filtraTipologie" list="listaTipologia" autocomplete="off" class="filterInput" placeholder="Selezionare la tipologia...">
 
+                        </div>
 
+                        <div class="filterInputContainer prodotto">
+                            <input id="filtraProdotti" list="listaProdotti" autocomplete="off" class="filterInput" placeholder="Selezionare il prodotto...">
+
+                        </div>
+                    </div>
                 </div>
 
-                <div class="filterInputContainer">
-                    <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
-                    <datalist id="listArtigiani">
-                          <option>prova</option>
-                    </datalist>
-
-                </div> -->
-
                 <div class="delModLists headerSection">
+                    <div class="containerTitle"><h2>Modifica/cancella</h2></div>
                     <div class="filterInputContainer">
                         <label for="modDelTipologia">Tipologia Prodotto</label><br/>
                         <select id="modDelTipologia" class="delModList">
@@ -309,6 +307,9 @@
             {% endfor %}
         </datalist>
 
+         <datalist id="listaProdotti">
+         </datalist>
+
     </div>
 
     <script>
@@ -323,6 +324,20 @@
 
         var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
 
+        var prodottiInListaProdotti = function(prodotto){
+
+            var toAdd = true;
+
+            $('#listaProdotti').children('option').each(function(){
+                if( $(this).val() == prodotto ){
+                    toAdd = false;
+                }
+            });
+
+            if( toAdd ){
+                $('#listaProdotti').append('<option>'+prodotto+'</option>');
+            }
+        }
 
         $('input.inputScheda').click(function(){
            $(this).focus();
@@ -422,7 +437,7 @@
 
         $('#addRow').click(function(){
             $(this).unbind('click');
-            $('#headerNewRow').animate({'margin-top': '+=6%'});
+            $('#headerNewRow').animate({'margin-top': '+=10%'});
             $('#tabellaContainerNewRow1 .datiScheda').children('.nome_prodotto').children('input').focus();
 
         });
@@ -516,12 +531,16 @@
 
         $('#delNewRow').click(function(){
 
-
-            $('#headerNewRow').animate({'margin-top': '-=6%'});
+            $('#headerNewRow').animate({'margin-top': '-=10%'});
 
             if( $('#tabellaContainerNewRow2 .datiScheda').hasClass('azienda') ){
                $('#tabellaContainerNewRow2 .datiScheda').removeClass('azienda')
-               $('#tabellaContainerNewRow3').animate({'margin-top': '-=5.8%'});
+
+
+               var altezzaHeaderNewRow = $('#tabellaContainerNewRow2 tbody').height()
+               var incremento = altezzaHeaderNewRow*6/100;
+               $('#tabellaContainerNewRow3').animate({'margin-top': '-='+incremento+'%'});
+
                divAziendaAssente=true;
             }
             else if( $('#tabellaContainerNewRow2 .datiScheda').hasClass('fornitore') ){
@@ -535,7 +554,7 @@
 
             $('#addRow').click(function(){
                 $(this).unbind('click');
-                $('#headerNewRow').animate({'margin-top': '+=6%'});
+                $('#headerNewRow').animate({'margin-top': '+=10%'});
 
             });
 
@@ -668,7 +687,7 @@
 
                 if( trasportoAziendaUnita == 'perc' ){
                     trasportoAzienda=(usFornitura*trasportoAzienda)/100;
-                    
+
                 }
 
                 if( imballoAziendaUnita == 'perc' )
@@ -838,11 +857,13 @@
 
         $('#nettoUsFornituraInput').change(function(){
             $riga = $(this).parent().parent();
+            var altezzaHeaderNewRow = $('#tabellaContainerNewRow2 tbody').height()
+            var incremento = altezzaHeaderNewRow*6/100;
 
             if( $(this).val() > 0 ){
                 if( divAziendaAssente ){
                     divAziendaAssente=false;
-                    $('#tabellaContainerNewRow3').animate({'margin-top': '+=5.8%'});
+                    $('#tabellaContainerNewRow3').animate({'margin-top': '+='+incremento+'%'});
                 }
 
                 if( !$riga.hasClass('azienda') ){
@@ -854,7 +875,7 @@
             }
             else if( $(this).val() == 0 ){
                 divAziendaAssente=true;
-                $('#tabellaContainerNewRow3').animate({'margin-top': '-=5.8%'});
+                $('#tabellaContainerNewRow3').animate({'margin-top': '-='+incremento+'%'});
                 $('#tabellaContainerNewRow2 .inputScheda').val(0);
                 $('#tabellaContainerNewRow2 .printedCalc').html('&euro; 0');
 
@@ -1576,6 +1597,7 @@
 
             }
 
+            prodottiInListaProdotti($nome_prodotto.val());
 
             var $tbodyToExpand1=null;
             var $tbodyToExpand2=null;
@@ -2182,7 +2204,10 @@
             setFieldToComplete($('#tabellaContainerNewRow2 .datiScheda'), 0);
 
             $('#tabellaContainerNewRow3 input').val(0);
-            $('#tabellaContainerNewRow3').animate({'margin-top': '-=5.8%'});
+
+            var altezzaHeaderNewRow = $('#tabellaContainerNewRow2 tbody').height()
+            var incremento = altezzaHeaderNewRow*6/100;
+            $('#tabellaContainerNewRow3').animate({'margin-top': '-='+incremento+'%'});
             divAziendaAssente=true;
 
         });
@@ -2321,6 +2346,173 @@
 
 
             {% endfor %}
+
+        });
+
+        var equalizzaAltezzaHeaderTabella = function(){
+
+
+            /*trovo la riga più alta*/
+            var tallerRow=0;
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            tallerRow = 0;
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            equalizzaAltezzaRighe();
+
+        }
+
+        window.addEventListener('resize', equalizzaAltezzaHeaderTabella);
+
+        equalizzaAltezzaHeaderTabella();
+
+        var filtraTbody = function($tabella, classe){
+
+            if( classe != '' ){
+                $tabella.children('table').children('tbody').each(function(){
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+
+                        if( !tbodyClass.startsWith(classe) ){
+                            $(this).hide();
+                        }
+                        else if( tbodyClass.startsWith(classe) ){
+                            $(this).show();
+                        }
+
+                    }
+                });
+            }
+            else{
+                $tabella.children('table').children('tbody').each(function(){
+                    $(this).show();
+                });
+
+            }
+        }
+
+        var filtraRighe = function($tabella, nome_prodotto){
+
+            if( nome_prodotto != '' ){
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+                        var hideTbody = false;
+                        var countRow = 0;
+                        var countHiddenRow = 0;
+
+
+                        $(this).children('tr.datiScheda').each( function(){
+                            var trProdotto = $(this).children('td.nome_prodotto').children('label').text();
+
+                            countRow++;
+
+                            if( trProdotto.startsWith(nome_prodotto) ){
+                                $(this).show();
+                            }
+                            else{
+                                countHiddenRow++;
+                                $(this).hide();
+                            }
+
+                        });
+
+                        if( countRow == countHiddenRow ){
+                            $(this).hide();
+
+                        }
+                    }
+                });
+
+            }
+            else{
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    $(this).show();
+
+                    $(this).children('tr.datiScheda').each( function(){
+                        $(this).show();
+                    });
+
+
+                });
+
+
+            }
+
+        }
+
+
+
+        $('#filtraTipologie').change(function(){
+
+            filtraTbody( $('#tabellaContainer1'), $(this).val());
+            filtraTbody( $('#tabellaContainer2'), $(this).val());
+        });
+
+        $('#filtraTipologie').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
+
+        $('#filtraProdotti').change(function(){
+
+            filtraRighe( $('#tabellaContainer1'), $(this).val());
+            filtraRighe( $('#tabellaContainer2'), $(this).val());
+        });
+
+        $('#filtraProdotti').keydown(function(){
+
+
+            $(this).trigger('change');
 
         });
 

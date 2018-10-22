@@ -35,7 +35,7 @@
                         <tr class="datiScheda dimensionaTabella newRow">
                             <td class="primaCol"></td>
                             <td class="tipologia_lavorazione no_cursor">
-                                <input class="inputScheda" value="" placeholder="tipologia lavorazione..." >
+                                <textarea class="inputScheda" value="" placeholder="tipologia lavorazione..." ></textarea>
                             </td>
                             <td class="pertinenza no_cursor">
                                 <select id="selectPertinenzaNewRow">
@@ -46,6 +46,7 @@
                             </td>
                             <td class="unitaMisura numCell no_cursor">
                                 <select>
+                                    <option>a corpo</option>
                                     <option>cad</option>
                                     <option>ml</option>
                                     <option>mq</option>
@@ -82,25 +83,23 @@
 
             <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
 
-              <!--
-                <div class="filterInputContainer">
-                    <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
-                    <datalist id="listMansioni">
-                      <option>prova</option>
-                    </datalist>
+                <div id="filtersContainer">
+                    <div class="containerTitle"><h2>Filtri di Ricerca</h2></div>
+                    <div id="filters">
+                        <div class="filterInputContainer settori">
+                            <input id="filtraSettori" list="listaSettori" autocomplete="off" class="filterInput" placeholder="Selezionare il settore...">
 
+                        </div>
 
+                        <div class="filterInputContainer lavorazione">
+                            <input id="filtraLavorazioni" list="listaLavorazioni" autocomplete="off" class="filterInput" placeholder="Selezionare la lavorazione...">
+
+                        </div>
+                    </div>
                 </div>
 
-                <div class="filterInputContainer">
-                    <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
-                    <datalist id="listArtigiani">
-                          <option>prova</option>
-                    </datalist>
-
-                </div> -->
-
                 <div class="delModLists headerSection">
+                    <div class="containerTitle"><h2>Modifica/cancella</h2></div>
                     <div class="filterInputContainer">
                         <label for="modDelSettore">Settore di lavorazione</label><br/>
                         <select id="modDelSettore" class="delModList">
@@ -110,6 +109,7 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
+                        <a class="fa fa-plus addLista iconLista"></a>
                         <a class="fa fa-edit editLista iconLista"></a>
                         <a class="fa fa-trash delLista iconLista"></a>
 
@@ -196,6 +196,10 @@
             {% endfor %}
         </datalist>
 
+        <datalist id="listaLavorazioni">
+
+        </datalist>
+
     </div>
 
     <script>
@@ -210,6 +214,21 @@
 
         var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
 
+        var lavorazioneInListaLavorazioni = function(lavorazione){
+
+            var toAdd = true;
+
+            $('#listaLavorazioni').children('option').each(function(){
+                if( $(this).val() == lavorazione ){
+                    toAdd = false;
+                }
+            });
+
+            if( toAdd ){
+                $('#listaLavorazioni').append('<option>'+lavorazione+'</option>');
+            }
+        }
+
         var pulisciHeaderNewRow = function(){
 
             $('#headerNewRow input').each(function(){
@@ -223,6 +242,8 @@
 
                 }
             });
+
+            $('#headerNewRow td.fornituraPosa').children('label').html('&euro; 0');
 
             $('#headerNewRow textarea').each(function(){
 
@@ -244,11 +265,11 @@
         $('.primaCol').unbind('click');
 
         $('#delNewRow').click(function(){
-            $('#headerNewRow').animate({'margin-top': '-=10%'});
+            $('#headerNewRow').animate({'margin-top': '-=13%'});
 
             $('#addRow').click(function(){
                 $(this).unbind('click');
-                $('#headerNewRow').animate({'margin-top': '+=10%'});
+                $('#headerNewRow').animate({'margin-top': '+=13%'});
 
             });
 
@@ -259,7 +280,7 @@
 
         $('#addRow').click(function(){
             $(this).unbind('click');
-            $('#headerNewRow').animate({'margin-top': '+=10%'});
+            $('#headerNewRow').animate({'margin-top': '+=13%'});
 
         });
 
@@ -386,18 +407,40 @@
                 });
 
             }
+            else if($(this).hasClass('addLista')){
+
+                swal.withFormAsync({
+                    title: 'Nuovo settore di lavorazione',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+                        { id: 'valore', name: 'valore', placeholder: 'settore di lavorazione...'},
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+
+                        socketPrezzario.emit('registra_settore_lavorazione', {'settore': context.swalForm['valore'] });
+                        verificaSettorePresente(context.swalForm['valore'])
+                    }
+
+                });
+           }
         });
         
         var verificaSettorePresente = function(settore, optionClass){
         
-            var tipologiaPresente=false;
+            var settorePresente=false;
 
             $('#listaSettori').children('option').each(function(){
                 if( $(this).text() == settore )
-                    tipologiaPresente = true;
+                    settorePresente = true;
             });
 
-            if( !tipologiaPresente ){
+            if( !settorePresente ){
 
                 if( settore != '' ){
                     $('#selectPertinenzaNewRow').children('.tmpOption').remove();
@@ -418,14 +461,14 @@
 
             $('#tabellaContainer td.pertinenza').each(function(){
 
-                tipologiaPresente=false;
+                settorePresente=false;
 
                 $(this).children('select').children('option').each(function(){
                     if( $(this).text() == settore )
-                        tipologiaPresente = true;
+                        settorePresente = true;
                 });
 
-                if( !tipologiaPresente )
+                if( !settorePresente )
                     $(this).children('select').append('<option>'+settore+'</option>');
             });
            
@@ -441,7 +484,7 @@
 
             var $settore=$sezioneTabella1.children('th.primaCol').next('th').children('input');
 
-            var $tipologia=$datiScheda1.children('td.tipologia_lavorazione').children('input');
+            var $tipologia=$datiScheda1.children('td.tipologia_lavorazione').children('textarea');
             var $pertinenza=$datiScheda1.children('td.pertinenza').children('select');
             var $unita=$datiScheda1.children('td.unitaMisura').children('select');
             var $fornitura=$datiScheda1.children('td.fornitura').children('input');
@@ -454,6 +497,19 @@
             if( $settore.val() == "" ){
                 swal({
                     title: 'Il campo "settore di lavorazione" non può essere lasciato vuoto',
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $tipologia.val() == "" ){
+                swal({
+                    title: 'Il campo "tipologia lavorazione" non può essere lasciato vuoto',
                     showCancelButton: false,
                     confirmButtonColor: '#DD6B55',
                     confirmButtonText: 'Ok',
@@ -484,6 +540,7 @@
         });
 
         socketPrezzario.on('confermaRegistrazioneLavorazione', function(){
+
             aggiungiRiga(false);
 
             pulisciHeaderNewRow();
@@ -562,7 +619,7 @@
         var cancellaRiga = function($row){
 
             var settore=$row.parent().attr('class');
-            var tipo_lav=$row.children('td.tipologia_lavorazione').children('input').val();
+            var tipo_lav=$row.children('td.tipologia_lavorazione').children('textarea').val();
 
             socketPrezzario.emit('elimina_lavorazione', {
 
@@ -585,7 +642,7 @@
         var segnalaRiga = function($row){
 
                 var settore = $row.parent().attr('class');
-                var tipologia = $row.children('td.tipologia_lavorazione').children('input').val();
+                var tipologia = $row.children('td.tipologia_lavorazione').children('textarea').val();
                 var valore=false;
 
 
@@ -617,7 +674,7 @@
 
             var $settore=$sezioneTabella1.children('th.primaCol').next('th').children('input');
 
-            var $tipologia=$datiScheda1.children('td.tipologia_lavorazione').children('input');
+            var $tipologia=$datiScheda1.children('td.tipologia_lavorazione').children('textarea');
             var $pertinenza=$datiScheda1.children('td.pertinenza').children('select');
             var $unita=$datiScheda1.children('td.unitaMisura').children('select');
             var $fornitura=$datiScheda1.children('td.fornitura').children('input');
@@ -666,13 +723,14 @@
                                     <input class="inputScheda" value="'+$tipologia.val()+'"> \
                                 </td> \
                                 <td class="tipologia_lavorazione hiddenInput"><label class="cellaDato">'+$tipologia.val()+'</label> \
-                                    <input style="display:none" class="inputScheda" value="'+$tipologia.val()+'" placeholder="tipologia lavorazione..." > \
+                                    <textarea style="display:none" class="inputScheda" placeholder="tipologia lavorazione..." >'+$tipologia.val()+'</textarea>\
                                 </td> \
                                 <td class="pertinenza hiddenInput"> \
                                     <select></select> \
                                 </td> \
                                 <td class="unitaMisura numCell">\
                                     <select> \
+                                        <option>a corpo</option> \
                                         <option>cad</option> \
                                         <option>ml</option> \
                                         <option>mq</option> \
@@ -695,12 +753,14 @@
                                     <label style="display:none" class="simpleAfterInputLabel">&euro;</label> <input type="number" step="0.01"style="display:none" class="inputScheda numInput" value="'+ $prezzoMax.val()+'"> \
                                 </td> \
                                 <td class="dimensione hiddenInput"><label class="cellaDato">'+$dimensioni.val()+'</label> \
-                                    <input style="display:none" class="inputScheda" value="'+$dimensioni.val()+'" placeholder="dimensioni (lxhxp)..." > \
+                                    <input style="display:none" class="inputScheda" value="'+$dimensioni.val()+'" placeholder="dimensioni (LXHXP)..." > \
                                 </td> \
                                 <td class="note hiddenInput"><label class="cellaDato">'+$note.val()+'</label> \
                                    <textarea style="display:none">'+$note.val()+'</textarea> \
                                 </td> \
                             </tr>').appendTo($tbodyToExpand);
+
+            lavorazioneInListaLavorazioni($tipologia.val());
 
             datiSchedaNewRow.children('td.unitaMisura').children('select').children('option').each(function(){
                 if( $(this).text() == $unita.val() )
@@ -838,7 +898,7 @@
 
             $sezioneTabella1.children('th.primaCol').next('th').children('input').val('{{lavorazione.settore}}');
 
-            $datiScheda1.children('td.tipologia_lavorazione').children('input').val('{{lavorazione.tipologia_lavorazione}}');
+            $datiScheda1.children('td.tipologia_lavorazione').children('textarea').val('{{lavorazione.tipologia_lavorazione}}');
             $datiScheda1.children('td.pertinenza').children('select').val('{{lavorazione.pertinenza}}');
             $datiScheda1.children('td.unitaMisura').children('select').val('{{lavorazione.unitaMisura}}');
             $datiScheda1.children('td.fornitura').children('input').val('{{lavorazione.fornitura}}');
@@ -848,8 +908,6 @@
             $datiScheda1.children('td.dimensione').children('input').val('{{lavorazione.dimensione}}');
 
             $datiScheda1.children('td.note').children('textarea').val('{{lavorazione.note}}');
-
-            //$datiScheda1.children('td.pertinenza').children('select').children('option[value="{{lavorazione.settore}}"]').attr('selected', 'selected');
 
             calcolaCostoFornituraPosa($datiScheda1)
 
@@ -895,6 +953,110 @@
             verificaSettorePresente(newVal, 'tmpOption');
         });
 
+        var filtraTbody = function($tabella, classe){
+
+            if( classe != '' ){
+                $tabella.children('table').children('tbody').each(function(){
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+
+                        if( !tbodyClass.startsWith(classe) ){
+                            $(this).hide();
+                        }
+                        else if( tbodyClass.startsWith(classe) ){
+                            $(this).show();
+                        }
+
+                    }
+                });
+            }
+            else{
+                $tabella.children('table').children('tbody').each(function(){
+                    $(this).show();
+                });
+
+            }
+        }
+
+        var filtraRighe = function($tabella, tipologia){
+
+            if( tipologia != '' ){
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+                        var hideTbody = false;
+                        var countRow = 0;
+                        var countHiddenRow = 0;
+
+
+                        $(this).children('tr.datiScheda').each( function(){
+                            var trTipologia= $(this).children('td.tipologia').children('input').val();
+
+                            countRow++;
+
+                            if( trTipologia.startsWith(tipologia) ){
+                                $(this).show();
+                            }
+                            else{
+                                countHiddenRow++;
+                                $(this).hide();
+                            }
+
+                        });
+
+                        if( countRow == countHiddenRow ){
+                            $(this).hide();
+
+                        }
+                    }
+                });
+
+            }
+            else{
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    $(this).show();
+
+                    $(this).children('tr.datiScheda').each( function(){
+                        $(this).show();
+                    });
+
+
+                });
+
+
+            }
+
+        }
+
+        $('#filtraSettori').change(function(){
+
+            filtraTbody( $('#tabellaContainer'), $(this).val());
+        });
+
+        $('#filtraSettori').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
+
+        $('#filtraLavorazioni').change(function(){
+
+            filtraRighe( $('#tabellaContainer'), $(this).val());
+        });
+
+        $('#filtraLavorazioni').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
 
     </script>
 {% endblock%}

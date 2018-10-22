@@ -54,12 +54,33 @@
 									{{form.dataNascita}}
 								</div>
 
+								<div class="wrap-input100 residenzaDiv">
+									<h4>RESIDENZA</h4>
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">Via<span class="asteriscoRosso">*</span></span>
+										{{form.residenzaVia}}
+									</div>
 
-								<div class="wrap-input100  bg1 ">
-									<span class="label-input100">Indirizzo<span class="asteriscoRosso">*</span></span>
-									{{form.residenza}}
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">Num.<span class="asteriscoRosso">*</span></span>
+										{{form.residenzaNum}}
+									</div>
+
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">Città<span class="asteriscoRosso">*</span></span>
+										{{form.residenzaCitta}}
+									</div>
+
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">CAP<span class="asteriscoRosso">*</span></span>
+										{{form.residenzaCap}}
+									</div>
+
+									<div class="wrap-input100  bg1 ">
+										<span class="label-input100">Regione<span class="asteriscoRosso">*</span></span>
+										{{form.residenzaRegione}}
+									</div>
 								</div>
-
 								<div class="wrap-contact100-form-check">
 									<div class="contact100-form-check m-t-15">
 										{{form.resEDomUguali}}
@@ -69,11 +90,33 @@
 									</div>
 								</div>
 
-								<div class="wrap-input100  bg1">
-									<span class="label-input100">Domicilio</span>
-									{{form.domicilio}}
-								</div>
+								<div class="wrap-input100 domicilioDiv">
+									<h4>DOMICILIO</h4>
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">Via</span>
+										{{form.domicilioVia}}
+									</div>
 
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">Num</span>
+										{{form.domicilioNum}}
+									</div>
+
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">Città</span>
+										{{form.domicilioCitta}}
+									</div>
+
+									<div class="wrap-input100  bg1 rs1-wrap-input100">
+										<span class="label-input100">CAP</span>
+										{{form.domicilioCap}}
+									</div>
+
+									<div class="wrap-input100  bg1">
+										<span class="label-input100">Regione</span>
+										{{form.domicilioRegione}}
+									</div>
+								</div>
 
 								<div class="wrap-input100  bg1 rs1-wrap-input100">
 									<span class="label-input100">Telefono<span class="asteriscoRosso">*</span></span>
@@ -209,17 +252,25 @@
 		// (di default viene assegnato value y alla checkbox non cliccata
 		$('input#resEDomUguali').click(function(){
 			if($('input#resEDomUguali').attr('value') == 'y'){
-				$('input#domicilio').hide();
+				$('div.domicilioDiv').hide();
 				$('input#resEDomUguali').attr('value', 'n')
+				$('#domicilioNum').val('0')
+				$('#domicilioCap').val('0')
 
 			}
 			else{
-				$('input#domicilio').show();
+				$('div.domicilioDiv').show();
 				$('input#resEDomUguali').attr('value', 'y')
 
 			}
 		});
 
+		if ($('input#resEDomUguali').is(':checked')) {
+			$('div.domicilioDiv').hide();
+			$('input#resEDomUguali').attr('value', 'n')
+			$('#domicilioNum').val('0')
+			$('#domicilioCap').val('0')
+		}
 
 	</script>
 
@@ -324,36 +375,6 @@
 		}
 		$("div:has(> input#dataNascita)").attr("data-validate", "{{error}}");
 		showValidate($("input#dataNascita"));
-
-		{% endfor %}
-
-/*====================================================================================================================*/
-/*=================================Imposta stampa errore residenza=====================================================*/
-
-		notValidated=true;
-		{% for error in form.residenza.errors %}
-
-		if(notValidated){
-			$("div:has(> input#residenza)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#residenza)").attr("data-validate", "{{error}}");
-		showValidate($("input#residenza"));
-
-		{% endfor %}
-
-/*====================================================================================================================*/
-/*=================================Imposta stampa errore domicilio=====================================================*/
-
-		notValidated=true;
-		{% for error in form.domicilio.errors %}
-
-		if(notValidated){
-			$("div:has(> input#domicilio)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#domicilio)").attr("data-validate", "{{error}}");
-		showValidate($("input#domicilio"));
 
 		{% endfor %}
 

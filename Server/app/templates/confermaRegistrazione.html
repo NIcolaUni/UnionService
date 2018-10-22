@@ -7,13 +7,13 @@
         var socket = io.connect("{{sockUrl}}"+'/notifica');
 
         $(window).on('load', function(){
-
+            alert('ok')
             swal({
                 title: "Operazione completata",
                 html: "username: {{username}}<br/>password: {{password}}",
                 type: "success",
                 confirmButtonText: "Ok",
-            }).then((result) => {
+            }, function(isConfirm) {
 
                     window.location.href = "{{url_for('login')}}"
                     {% if creatoreCredenziali %}

@@ -140,29 +140,28 @@
 
             <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
 
-                <div class="searchSection headerSection" >
+                <div id="filtersContainer">
+                    <div class="containerTitle"><h2>Filtri di Ricerca</h2></div>
+                    <div id="filters">
+                        <div class="filterInputContainer tipologia">
+                            <input id="filtraSettori" list="listaSettori" autocomplete="off" class="filterInput" placeholder="Selezionare il settore...">
 
+                        </div>
 
-                    <div class="filterInputContainer">
-                        <input list="listMansioni" autocomplete="off" id="cercaMansione" class="filterInput" placeholder="Selezionare la mansione...">
-                        <datalist id="listMansioni">
-                          <option>prova</option>
-                        </datalist>
+                        <div class="filterInputContainer primoG">
+                            <input id="filtraFornitoriPrimoG" list="listaFornitoriPrimoG" autocomplete="off" class="filterInput" placeholder="Selezionare primo gruppo...">
 
+                        </div>
 
+                        <div class="filterInputContainer secondoG">
+                            <input id="filtraFornitoriSecondoG" list="listaFornitoriSecondoG" autocomplete="off" class="filterInput" placeholder="Selezionare secondo gruppo...">
+
+                        </div>
                     </div>
-
-                    <div class="filterInputContainer">
-                        <input list="listArtigiani" autocomplete="off" id="cercaArtigiano" class="filterInput" placeholder="Selezionare l'artigiano...">
-                        <datalist id="listArtigiani">
-                              <option>prova</option>
-                        </datalist>
-
-                    </div>
-
                 </div>
 
                 <div class="delModLists headerSection">
+                    <div class="containerTitle"><h2>Modifica/cancella</h2></div>
                     <div class="filterInputContainer">
                         <label for="modDelSettore">Settore Merceologico</label><br/>
                         <select id="modDelSettore" class="delModList">
@@ -448,6 +447,14 @@
             {% endfor %}
         </datalist>
 
+        <datalist id="listaFornitoriPrimoG">
+
+        </datalist>
+
+        <datalist id="listaFornitoriSecondoG">
+
+        </datalist>
+
 
     </div>
 
@@ -464,6 +471,36 @@
 
         var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
 
+
+        var fornitoriInListaFornitoriPrimoGruppo = function(fornitore){
+
+            var toAdd = true;
+
+            $('#listaFornitoriPrimoG').children('option').each(function(){
+                if( $(this).val() == fornitore ){
+                    toAdd = false;
+                }
+            });
+
+            if( toAdd ){
+                $('#listaFornitoriPrimoG').append('<option>'+fornitore+'</option>');
+            }
+        }
+
+        var fornitoriInListaFornitoriSecondoGruppo = function(fornitore){
+
+            var toAdd = true;
+
+            $('#listaFornitoriSecondoG').children('option').each(function(){
+                if( $(this).val() == fornitore ){
+                    toAdd = false;
+                }
+            });
+
+            if( toAdd ){
+                $('#listaFornitoriSecondoG').append('<option>'+fornitore+'</option>');
+            }
+        }
 
 
         $('input.inputScheda').click(function(){
@@ -496,13 +533,51 @@
 
         });
 
+        var equalizzaAltezzaRighe = function(){
+
+            /*trovo la riga più alta*/
+            var tallerRow=0;
+
+            $('#tabellaContainer1 .datiScheda').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer2 .datiScheda').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer3 .datiScheda').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer1 .datiScheda').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainer2 .datiScheda').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            $('#tabellaContainer3 .datiScheda').each(function(){
+                $(this).height(tallerRow);
+            });
+
+
+        }
 
         $('#delNewRow').click(function(){
-            $('#headerNewRow').animate({'margin-top': '-=6%'});
+            $('#headerNewRow').animate({'margin-top': '-=10%'});
 
             $('#addRow').click(function(){
                 $(this).unbind('click');
-                $('#headerNewRow').animate({'margin-top': '+=6%'});
+                $('#headerNewRow').animate({'margin-top': '+=10%'});
 
             });
 
@@ -526,7 +601,7 @@
 
         $('#addRow').click(function(){
             $(this).unbind('click');
-            $('#headerNewRow').animate({'margin-top': '+=6%'});
+            $('#headerNewRow').animate({'margin-top': '+=10%'});
 
         });
 
@@ -909,6 +984,9 @@
 
             }
 
+            fornitoriInListaFornitoriPrimoGruppo( $primoGruppo.val()  )
+
+            fornitoriInListaFornitoriSecondoGruppo( $sottoGruppo.val()  )
 
             $tbodyToExpand1.append(
                 '<tr class="datiScheda dimensionaTabella"> \
@@ -1254,13 +1332,13 @@
                                 </li> \
                                 <li class="telefono"> \
                                     <label class="major"> Telefono: </label> \
-                                    <label class="datiFornitoreLabel labelPopup"> 3395213283 </label> \
+                                    <label class="datiFornitoreLabel labelPopup"></label> \
                                     <input class="contattiInput"  style="display:none" value=""> \
                                     <a class="fa fa-edit editIconPopup datiFornitoreEdit"></a> \
                                 </li> \
                                 <li class="sito"> \
                                     <label class="major"> Sito web: </label> \
-                                    <label class="datiFornitoreLabel labelPopup"> www.tuamamma.com </label> \
+                                    <label class="datiFornitoreLabel labelPopup"> </label> \
                                     <input class="contattiInput"  style="display:none" value=""> \
                                     <a class="fa fa-edit editIconPopup datiFornitoreEdit"></a> \
                                 </li> \
@@ -1746,7 +1824,7 @@
             numOfAddedRow++;
 
 
-
+            equalizzaAltezzaRighe();
 
         } //FINE AGGIUNGI RIGA
 
@@ -2203,6 +2281,214 @@
                 });
 
             }
+        });
+
+        var equalizzaAltezzaHeaderTabella = function(){
+
+            /*trovo la riga più alta*/
+            var tallerRow=0;
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                  //  alert( ' 1 sono piu alto ' );
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                   // alert( ' 2 sono piu alto ' );
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer3.headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                   // alert( ' 3 sono piu alto ' );
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            $('#tabellaContainer3 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+
+            tallerRow = 0;
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow3 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            $('#tabellaContainerNewRow3 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            equalizzaAltezzaRighe();
+
+        }
+
+        window.addEventListener('resize', equalizzaAltezzaHeaderTabella);
+
+        equalizzaAltezzaHeaderTabella();
+
+
+
+        var filtraTbody = function($tabella, classe){
+
+            if( classe != '' ){
+                $tabella.children('table').children('tbody').each(function(){
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+
+                        if( !tbodyClass.startsWith(classe) ){
+                            $(this).hide();
+                        }
+                        else if( tbodyClass.startsWith(classe) ){
+                            $(this).show();
+                        }
+
+                    }
+                });
+            }
+            else{
+                $tabella.children('table').children('tbody').each(function(){
+                    $(this).show();
+                });
+
+            }
+        }
+
+        var filtraRighe = function($tabella, fornitore, class_td){
+
+            if( fornitore != '' ){
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+                        var hideTbody = false;
+                        var countRow = 0;
+                        var countHiddenRow = 0;
+
+
+                        $(this).children('tr.datiScheda').each( function(){
+                            var trFornitore = $(this).children('td.'+class_td).children('label').text();
+
+                            countRow++;
+
+                            if( trFornitore.startsWith(fornitore) ){
+                                $(this).show();
+                            }
+                            else{
+                                countHiddenRow++;
+                                $(this).hide();
+                            }
+
+                        });
+
+                        if( countRow == countHiddenRow ){
+                            $(this).hide();
+
+                        }
+                    }
+                });
+
+            }
+            else{
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    $(this).show();
+
+                    $(this).children('tr.datiScheda').each( function(){
+                        $(this).show();
+                    });
+
+
+                });
+
+
+            }
+
+        }
+
+
+
+        $('#filtraSettori').change(function(){
+
+            filtraTbody( $('#tabellaContainer1'), $(this).val());
+            filtraTbody( $('#tabellaContainer2'), $(this).val());
+            filtraTbody( $('#tabellaContainer3'), $(this).val());
+        });
+
+        $('#filtraSettori').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
+
+        $('#filtraFornitoriPrimoG').change(function(){
+
+            filtraRighe( $('#tabellaContainer1'), $(this).val(), 'primo_gruppo');
+            filtraRighe( $('#tabellaContainer2'), $(this).val(), 'primo_gruppo' );
+            filtraRighe( $('#tabellaContainer3'), $(this).val(), 'primo_gruppo' );
+        });
+
+        $('#filtraFornitoriPrimoG').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
+
+        $('#filtraFornitoriSecondoG').change(function(){
+
+            filtraRighe( $('#tabellaContainer1'), $(this).val(), 'sotto_gruppo');
+            filtraRighe( $('#tabellaContainer2'), $(this).val(), 'sotto_gruppo');
+            filtraRighe( $('#tabellaContainer3'), $(this).val(), 'sotto_gruppo');
+        });
+
+        $('#filtraFornitoriSecondoG').keydown(function(){
+
+
+            $(this).trigger('change');
+
         });
 
     </script>

@@ -11,3 +11,11 @@
 }
 
 input.upper { text-transform: uppercase; }
+
+.residenzaDiv > div{
+    display: inline-block;
+}
+
+.domicilioDiv > div{
+    display: inline-block;
+}

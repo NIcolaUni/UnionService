@@ -9,7 +9,9 @@ import app
 class Dipendente(DipendenteDBmodel):
 
     def __init__(self, cf, nome, cognome, username, password, dataNascita,
-                 residenza, domicilio, telefono, email_aziendale, email_personale,
+                 residenzaVia, residenzaNum, residenzaCitta, residenzaCap, residenzaRegione,
+                 domicilioVia, domicilioNum, domicilioCitta, domicilioCap, domicilioRegione,
+                 telefono, email_aziendale, email_personale,
                  iban, partitaIva, classe, dirigente, session_id=None):
         self.cf = cf
         self.nome = nome
@@ -17,8 +19,16 @@ class Dipendente(DipendenteDBmodel):
         self.username = username
         self.password = password
         self.dataNascita = dataNascita
-        self.residenza = residenza
-        self.domicilio = domicilio
+        self.residenzaVia = residenzaVia
+        self.residenzaNum = residenzaNum
+        self.residenzaCitta= residenzaCitta
+        self.residenzaCap = residenzaCap
+        self.residenzaRegione = residenzaRegione
+        self.domicilioVia = domicilioVia
+        self.domicilioNum = domicilioNum
+        self.domicilioCitta = domicilioCitta
+        self.domicilioCap = domicilioCap
+        self.domicilioRegione = domicilioRegione
         self.telefono = telefono
         self.email_aziendale = email_aziendale
         self.email_personale = email_personale
@@ -33,9 +43,11 @@ class Dipendente(DipendenteDBmodel):
  #       return "<Dipendente - {0} {1}>".format(self.nome, self.cognome)
 
     def registraDipendente(dipFitUsername, nome, cognome, cf, dataNascita,
-                                residenza, domicilio, telefono,
-                                password, email_aziendale,
-                                email_personale, iban, partitaIva):
+                           residenzaVia, residenzaNum, residenzaCitta, residenzaCap, residenzaRegione,
+                           domicilioVia, domicilioNum, domicilioCitta, domicilioCap, domicilioRegione,
+                           telefono,
+                            password, email_aziendale,
+                            email_personale, iban, partitaIva):
 
 
         dipFittizio = DipendenteFittizio.query.filter_by(username=dipFitUsername).first();
@@ -59,7 +71,10 @@ class Dipendente(DipendenteDBmodel):
 
         newDip = Dipendente(nome=nome, cognome=cognome, cf=cf,
                             dataNascita=dataNascita,
-                            residenza=residenza, domicilio=domicilio, telefono=telefono,
+                            residenzaVia=residenzaVia, residenzaNum=residenzaNum, residenzaCitta=residenzaCitta,
+                            residenzaCap=residenzaCap, residenzaRegione=residenzaRegione,
+                            domicilioVia=domicilioVia, domicilioNum=domicilioNum, domicilioCitta=domicilioCitta,
+                            domicilioCap=domicilioCap, domicilioRegione=domicilioRegione, telefono=telefono,
                             username=dip.username, password=dip.password, email_aziendale=email_aziendale,
                             email_personale=email_personale, iban=iban,
                             partitaIva=partitaIva,

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, Boolean, ForeignKeyConstraint
+from sqlalchemy import Column, String, Date, Boolean, ForeignKeyConstraint, Integer
 from .dbUSinterface import DbUSinterface
 from app import database
 
@@ -14,8 +14,16 @@ class DipendenteDBmodel(DbUSinterface, DbUSinterface.db.Model):
     nome = Column(String(30), nullable=False)
     cognome = Column(String(30), nullable=False)
     dataNascita = Column(Date(), nullable=False)
-    residenza = Column(String(120), nullable=False)
-    domicilio = Column(String(120))
+    residenzaVia = Column(String(120), nullable=False)
+    residenzaNum = Column(Integer(), nullable=False)
+    residenzaCitta = Column(String(120), nullable=False)
+    residenzaCap = Column(Integer())
+    residenzaRegione = Column(String(120), nullable=False)
+    domicilioVia = Column(String(120))
+    domicilioNum = Column(Integer())
+    domicilioCitta = Column(String(120))
+    domicilioCap = Column(Integer())
+    domicilioRegione = Column(String(120))
     telefono = Column(String(12), nullable=False)
     email_aziendale = Column(String(50), nullable=False)
     email_personale = Column(String(50))

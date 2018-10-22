@@ -48,7 +48,7 @@ class DipendenteFittizio(DipFittizioDBmodel):
                     username: {}
                     password: {}
 
-                    Completi la registrazione all'indirizzo: http://192.168.1.135
+                    Completi la registrazione all'indirizzo: http://192.168.1.131
 
                     '''.format(self.username, self.password)
 

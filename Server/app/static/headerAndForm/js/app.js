@@ -8,7 +8,7 @@ var materialAdmin = angular.module('materialAdmin', [
     'nouislider',
     'ngTable'
 ]).factory('socketNotifica', function ($rootScope) {
-  var socket =  io.connect('http://debtux:80/notifica');
+  var socket =  io.connect('http://192.168.1.131:80/notifica');
   return {
     on: function (eventName, callback) {
       socket.on(eventName, function () {

@@ -8,6 +8,8 @@ from .model.dirigente import Dirigente
 from .model.notifica import Notifica
 from .model.settoreLavorazione import SettoreLavorazione
 from .model.prezzarioEdile import PrezzarioEdile
+from .model.impiegoArtigiano import ImpiegoArtigiano
+from .model.artigiano import Artigiano
 from .model.clienteAccolto import ClienteAccolto
 from .model.impegni import Impegni
 from .model.fornitore import Fornitore
@@ -509,8 +511,11 @@ def sidebarLeft():
 def schedaArtigiani():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     colleghi = Dipendente.query.all()
+    artigiani = Artigiano.query.all()
+    impieghi = ImpiegoArtigiano.query.all()
 
-    return render_template('schedaArtigiani.html', dipendente=dip, colleghi=colleghi, scheda=True, scheda_artigiani=True)
+    return render_template('schedaArtigiani.html', dipendente=dip, colleghi=colleghi, artigiani=artigiani,
+                                impieghi=impieghi, scheda=True, scheda_artigiani=True)
 
 @server.route('/header')
 @login_required
@@ -522,14 +527,8 @@ def header():
 
     listaClienti = []
 
-    if dip.classe == 'commerciale':
-        listaClienti = ClienteAccolto.query.filter_by(commerciale=current_user.get_id()).order_by(ClienteAccolto.cognome, ClienteAccolto.nome).all()
 
-    elif dip.classe == 'commerciale':
-        listaClienti = ClienteAccolto.query.filter_by(tecnico=current_user.get_id()).order_by(ClienteAccolto.cognome, ClienteAccolto.nome).all()
-
-    elif dip.classe == 'capocantiere':
-        listaClienti = ClienteAccolto.query.filter_by(capocantiere=current_user.get_id()).order_by(ClienteAccolto.cognome, ClienteAccolto.nome).all()
+    listaClienti = ClienteAccolto.query.order_by(ClienteAccolto.cognome, ClienteAccolto.nome).all()
 
 
 
@@ -547,15 +546,35 @@ def registraDipendente():
             return render_template("registrazioneDip.html", form=form, fittizio=True, errCf=True)
 
         domicilioDip = form.resEDomUguali.data
+        domicilioVia = ''
+        domicilioNum = ''
+        domicilioCitta = ''
+        domicilioCap = ''
+        domicilioRegione = ''
+
+
 
         if domicilioDip:
-            domicilioDip = form.residenza.data
+            domicilioVia = form.residenzaVia.data
+            domicilioNum = form.residenzaNum.data
+            domicilioCitta = form.residenzaCitta.data
+            domicilioCap = form.residenzaCap.data
+            domicilioRegione = form.residenzaRegione.data
         else:
-            domicilioDip = form.domicilio.data
+
+            domicilioVia = form.domicilioVia.data
+            domicilioNum = form.domicilioNum.data
+            domicilioCitta = form.domicilioCitta.data
+            domicilioCap = form.domicilioCap.data
+            domicilioRegione = form.domicilioRegione.data
 
         ( username, password, creatoreCredenziali ) = Dipendente.registraDipendente(dipFitUsername=current_user.get_id(), nome=form.nome.data, cognome=form.cognome.data,
-                                cf=form.cf.data, dataNascita=form.dataNascita.data, residenza=form.residenza.data,
-                                domicilio=domicilioDip, telefono=form.telefono.data,
+                                cf=form.cf.data, dataNascita=form.dataNascita.data,
+                                residenzaVia=form.residenzaVia.data, residenzaNum=form.residenzaNum.data, residenzaCitta=form.residenzaCitta.data,
+                                residenzaCap=form.residenzaCap.data, residenzaRegione=form.residenzaRegione.data,
+                                domicilioVia=domicilioVia, domicilioNum=domicilioNum, domicilioCitta=domicilioCitta,
+                                domicilioCap=domicilioCap,
+                                domicilioRegione=domicilioRegione, telefono=form.telefono.data,
                                 password=form.password.data, email_aziendale=form.email_aziendale.data,
                                 email_personale=form.email_personale.data, iban=form.iban.data, partitaIva=form.partitaIva.data )
 
@@ -722,6 +741,9 @@ def handle_declina_ferie(message):
     # elimino la nota del dirigente
     Notifica.eliminaNotificaFerie(richiedente_ferie=richiedente_ferie.username, start_date=notifica.start_date)
 
+@socketio.on('registra_settore_lavorazione', namespace="/prezzario")
+def handle_registra_settore(message):
+    SettoreLavorazione.registraSettore(nome=message['settore'])
 
 @socketio.on('elimina_settore_lavorazione', namespace="/prezzario")
 def handle_elimina_settore(message):
@@ -920,6 +942,51 @@ def handle_modifica_settore_merceologico(message):
 def handle_elimina_settore_merceologico(message):
     SettoreMerceologico.eliminaSettore(nome=message['nome'])
 
+@socketio.on('registra_artigiano', namespace="/artigiani")
+def handle_registra_artigiano(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    ImpiegoArtigiano.registraImpiego(nome=message['impiego'])
+
+    Artigiano.registraArtigiano( nominativo=message['nominativo'], impiego=message['impiego'],
+                                 valutazione=message['valutazione'], contatti1=message['contatti1'],
+                                 contatti2=message['contatti2'], email=message['email'],
+                                 note=message['note'])
+
+    emit('confermaRegistrazioneArtigiano', namespace='/artigiani', room=dip.session_id)
+
+@socketio.on('modifica_artigiano', namespace="/artigiani")
+def handle_modifica_artigiano(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    Artigiano.modificaArtigiano(nominativo=message['nominativo'], impiego=message['impiego'],
+                                modifica={message['toEdit'] : message['valore']})
+
+    emit('conferma_modifica_artigiano', namespace='/artigiani', room=dip.session_id)
+
+@socketio.on('modifica_colore_artigiano', namespace="/artigiani")
+def handle_modifica_artigiano(message):
+
+    Artigiano.modificaColore(nominativo=message['nominativo'], impiego=message['impiego'], colore=message['colore'])
+
+@socketio.on('elimina_artigiano', namespace='/artigiani')
+def handle_elimina_artigiano(message):
+
+    Artigiano.eliminaArtigiano(nominativo=message['nominativo'], impiego=message['impiego'])
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    emit('conferma_elimina_artigiano', namespace='/artigiani', room=dip.session_id)
+
+@socketio.on('modifica_impiego', namespace="/artigiani")
+def handle_modifica_impiego(message):
+
+    ImpiegoArtigiano.modificaImpiego(oldNome=message['oldNome'], newNome=message['newNome'])
+
+@socketio.on('elimina_impiego', namespace='/artigiani')
+def handle_elimina_impiego(message):
+
+    ImpiegoArtigiano.eliminaImpiego(nome=message['nome'])
 
 @socketio.on('registra_prodotto', namespace='/prezzarioProdotti')
 def handle_registra_prodotto(message):
@@ -966,7 +1033,6 @@ def handle_elimina_prodotto(message):
     ProdottoPrezzario.eliminaProdotto(nome=message['prodotto'], tipologia=message['tipologia'])
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
-    emit('aggiornaPagina', namespace='/prezzarioProdotti', room=dip.session_id)
 
 @socketio.on('modifica_prodotto_dati', namespace='/prezzarioProdotti')
 def handle_modifica_prodotto_dati(message):
@@ -1592,28 +1658,32 @@ def error_handler(e):
 
 @socketio.on_error('/notifica')
 def error_handler_notifica(e):
-    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+    server.logger.info("\n\n\nnotifica: ci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/prezzario')
 def error_handler(e):
-    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+    server.logger.info("\n\n\nprezzario edile: ci sono probelmi {}\n\n\n".format(e))
+
+@socketio.on_error('/artigiani')
+def error_handler(e):
+    server.logger.info("\n\n\nartigiani: ci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/fornitore')
 def error_handler(e):
-    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+    server.logger.info("\n\n\nfornitore: ci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/prezzarioProdotti')
 def error_handler(e):
-    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+    server.logger.info("\n\n\nprezzario prodotti: ci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/preventivoEdile')
 def error_handler(e):
-    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+    server.logger.info("\n\n\npreventivo edile: ci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/preventivoFiniture')
 def error_handler(e):
-    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+    server.logger.info("\n\n\npreventivo finiture: ci sono probelmi {}\n\n\n".format(e))
 
 @socketio.on_error('/preventivoVarianti')
 def error_handler(e):
-    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+    server.logger.info("\n\n\npreventivo varianti: ci sono probelmi {}\n\n\n".format(e))

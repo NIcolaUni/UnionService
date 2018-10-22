@@ -11,7 +11,7 @@ class PrezzarioEdileDBmodel(database.Model):
     tipologia_lavorazione = Column(String(500))
     settore = Column(String(200),  ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="CASCADE"))
     pertinenza = Column(String(100), ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="SET DEFAULT"), server_default="Non definito")
-    unitaMisura = Column(String(5))
+    unitaMisura = Column(String(10))
     prezzoMin = Column(Float())
     prezzoMax = Column(Float())
     dimensione = Column(String(100))

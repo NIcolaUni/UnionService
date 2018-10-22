@@ -1,7 +1,7 @@
 
 .viewContainer {
     position: absolute;
-    margin-left: 4%;
+    margin-left: 1%;
 }
 
 .viewContainer tr.headerTabella {
@@ -226,3 +226,7 @@ button.confermaRegistrazione {
     margin-bottom: 6px;
 }
 
+div#headerNewRow {
+    margin-top: -14%;
+    margin-left: 1% !important;
+}

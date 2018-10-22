@@ -387,3 +387,15 @@ input[type="checkbox"] + label:before, input[type="radio"] + label:before {
 #ui-id-1{
     display: none;
 }
+
+label {
+
+    word-wrap: break-word !important;
+    display: inline-block;
+    width: 100%;
+    white-space: normal;
+}
+
+button.elementFattura{
+    height: unset !important;
+}

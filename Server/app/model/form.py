@@ -11,9 +11,18 @@ class RegistraDipendenteForm(FlaskForm):
     cognome = StringField("Cognome del dipendente", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
     cf = StringField("Codice Fiscale", validators=[DataRequired("Campo obbligatorio!"), Length(min= 10, max=16)])
     dataNascita = DateField("Data di nascita", validators=[DataRequired("Campo obbligatorio!")])
-    residenza = StringField("Indirizzo residenza", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+    residenzaVia = StringField("Via residenza", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+    residenzaNum = IntegerField(widget=NumberInput(), validators=[DataRequired("Campo obbligatorio!")])
+    residenzaCitta = StringField("Citta residenza", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+    residenzaCap = IntegerField(widget=NumberInput(), validators=[DataRequired("Campo obbligatorio!")])
+    residenzaRegione = StringField("Regione residenza", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+    domicilioVia = StringField("Via domicilio")
+    domicilioNum = IntegerField()
+    domicilioCitta = StringField("Citta domicilio")
+    domicilioCap = IntegerField()
+    domicilioRegione = StringField("Regione domicilio")
+
     resEDomUguali = BooleanField("Residenza e domicilio coincidono")
-    domicilio = StringField("Indirizzo domicilio", validators=[Length(max=120)])
     telefono = StringField("Telefono", validators=[DataRequired("Campo obbligatorio!"), Length(min= 8, max=12)])
     password = PasswordField("Impostare la password che si usareà all'accesso", validators=[DataRequired("Campo obbligatorio!"), Length(min= 6, max=30)])
     email_aziendale = StringField("Email di lavoro", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=50)])
@@ -38,7 +47,7 @@ class DipFittizioForm(FlaskForm):
 
     def assegnaUserEPass(self):
         random.seed(datetime.datetime.today())
-        self.username.data = "fittizio"+"".join(random.choice(['_','-','/']))+"".join(random.choice(string.digits) for n in range(5))
+        self.username.data = "primo_accesso"+"".join(random.choice(['_','-','/']))+"".join(random.choice(string.digits) for n in range(5))
         self.password.data = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
 
 class ClienteAccoltoForm(FlaskForm):
