@@ -1,0 +1,78 @@
+.note{
+   // width: 20% !important;
+}
+
+div#headerNewRow {
+    width: 82%;
+}
+
+.sezioneTabella.newRow input{
+    width: 40%;
+}
+
+
+.viewContainer {
+    position: absolute;
+    margin-left: -2%;
+}
+
+.headerDelHeader {
+    height: 45px;
+}
+
+.primaCol{
+   // width: 4% !important;
+    cursor: unset !important;
+    border-right-color: #ffffff00 !important;
+}
+
+.numCell {
+    //width: 3% !important;
+}
+
+div#tabellaContainer {
+    width: 94%;
+}
+
+.hiddenInput textarea {
+    width: 90%;
+
+}
+
+.inputScheda.numInput {
+    width: 70% !important;
+}
+
+.tabella select {
+    width: 88%;
+    color: black;
+}
+
+.tabella textarea {
+    color: black;
+    resize: none;
+}
+
+.filterInputContainer.settori {
+    margin-right: 21%;
+}
+
+input#ricarico {
+    width: 34%;
+    float: left;
+}
+
+.filterInputContainer.ricaricoContainer {
+    float: right;
+    width: 31%;
+    /* position: absolute; */
+    margin: 0 9% 0 -22%;
+}
+
+td.primaColNewRow {
+    display: none;
+}
+
+th.primaColNewRow {
+    display: none;
+}

@@ -7,20 +7,18 @@
         var socket = io.connect("{{sockUrl}}"+'/notifica');
 
         $(window).on('load', function(){
-            alert('ok')
             swal({
                 title: "Operazione completata",
                 html: "username: {{username}}<br/>password: {{password}}",
                 type: "success",
                 confirmButtonText: "Ok",
-            }, function(isConfirm) {
+            }).then((result) => {
+                window.location.href = "{{url_for('login')}}"
+                {% if creatoreCredenziali %}
 
-                    window.location.href = "{{url_for('login')}}"
-                    {% if creatoreCredenziali %}
+                    socket.emit('registrazione_effettuata',   {'dipendente_registrato': '{{username}}', 'responsabile': '{{creatoreCredenziali}}'} );
 
-                        socket.emit('registrazione_effettuata',   {'dipendente_registrato': '{{username}}', 'responsabile': '{{creatoreCredenziali}}'} );
-
-                    {% endif %}
+                {% endif %}
             });
 
          });

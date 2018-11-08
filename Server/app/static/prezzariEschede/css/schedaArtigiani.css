@@ -1,0 +1,79 @@
+
+
+.noteArtigiano{
+    width: 20% !important;
+}
+
+.headerDelHeader {
+    height: 45px;
+}
+
+.primaCol{
+    width: 7% !important;
+    cursor: unset !important;
+    border-right-color: #ffffff00 !important;
+}
+
+.sezioneTabella.newRow input {
+    width: 40%;
+}
+
+#headerNewRow{
+    width: 82% !important;
+    margin-top: -15%;
+}
+
+input.inputNum {
+    width: 40%;
+}
+
+.numCell {
+    width: 3% !important;
+}
+
+.viewContainer {
+    position: absolute;
+    margin-left: -2%;
+}
+
+div#tabellaContainer {
+    width: 93%;
+}
+
+.divColorChoose input{
+    display: none;
+}
+
+span.spanColorChoose {
+    /* width: 10%; */
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid #908d8d;
+}
+
+.spanColorChoose.yellow {
+    background: yellow;
+}
+
+.spanColorChoose.gray {
+    background: gray;
+}
+
+.spanColorChoose.blue {
+    background: blue;
+}
+
+.spanColorChoose.green {
+    background: green;
+}
+
+.spanColorChoose.white {
+    background: white;
+}
+
+.filterInputContainer.mansioni {
+    margin-right: 21%;
+}

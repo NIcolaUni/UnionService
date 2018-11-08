@@ -34,5 +34,10 @@ class ClienteAccolto(ClienteAccoltoDBmodel):
                                  sopraluogo=sopraluogo, lavorazione=lavorazione,
                                  commerciale=commerciale)
 
-        ClienteAccoltoDBmodel.commitClienteAccolto(cliente)
+        ClienteAccoltoDBmodel.addRow(cliente)
+
+    def modificaDifficolta(nome, cognome, indirizzo, valore):
+
+        ClienteAccolto.query.filter_by(nome=nome, cognome=cognome, indirizzo=indirizzo).update({'difficolta':valore})
+        ClienteAccoltoDBmodel.commit()
 

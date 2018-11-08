@@ -155,6 +155,7 @@
 		<!--[if lte IE 8]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie8.css') }}" /><![endif]-->
 
 		<link rel="stylesheet" href="{{url_for('static', filename='css/agenda.css') }}">
+		<script src="{{url_for('static', filename='paginaCliente/assets/js/my_main.js') }}"></script>
 
 	</head>
 	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
@@ -191,11 +192,14 @@
 							<h1 id="nomeCliente">{{cliente.nome}} {{cliente.cognome}}</h1>
 							<a id="showDifficolta" class="fa fa-user"></a>
 							{% if cliente.difficolta == "facile" %}
-								<span class="difficolta" style="display:none">Livello: 1</span>
+								<span class="difficolta" style="display:none">Livello: </span>
+								<input style="display:none" class="inputLivelloCliente" type="number" min=1 max=3 value=1>
 							{% elif  cliente.difficolta == "media" %}
-								<span class="difficolta" style="display:none">Livello: 2</span>
+								<span class="difficolta" style="display:none">Livello: </span>
+								<input style="display:none" class="inputLivelloCliente" type="number" min=1 max=3 value=2>
 							{% elif  cliente.difficolta == "alta" %}
-								<span class="difficolta" style="display:none">Livello: 3</span>
+								<span class="difficolta" style="display:none">Livello: </span>
+								<input style="display:none" class="inputLivelloCliente" type="number" min=1 max=3 value=3>
 							{% endif %}
 
 							<span id="tipologiaCliente">	Tipologia: {{cliente.tipologia}} </span>
@@ -225,7 +229,7 @@
 												<span>{{cliente.lavorazione}}</span>
 										</li>
 										<li id="sopralluogoLiEl">
-											<h3 class="titoloDatoCliente">Sopraluogo:</h3>
+											<h3 class="titoloDatoCliente">Sopralluogo:</h3>
 											{% if not cliente.sopraluogo %}
 												<span>Non necessario</span>
 											{% else %}
@@ -318,6 +322,7 @@
 				var socketPreventivoFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 				var socketPreventivoVarianti= io.connect("{{sockUrl}}"+'/preventivoVarianti');
 				var socketAgenda= io.connect("{{sockUrl}}"+'/agenda');
+				var socketCliente= io.connect("{{sockUrl}}"+'/cliente');
 
                 socketHome.on('connect', function() {
                     console.log('connected listino');
@@ -326,6 +331,9 @@
                     socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
                 });
 
+				$('.inputLivelloCliente').change(function(){
+					modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', $(this).val());
+    			});
 
 				socketPreventivoEdile.on('aggiornaAnteprimaPreventivoEdile', function(){
     				$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
@@ -679,10 +687,12 @@
 
 					if( difficoltaNascosta ){
 						$('.difficolta').show();
+						$('.inputLivelloCliente').show();
 						difficoltaNascosta=false;
 					}
 					else{
 						$('.difficolta').hide();
+						$('.inputLivelloCliente').hide();
 						difficoltaNascosta=true;
 					}
 				});

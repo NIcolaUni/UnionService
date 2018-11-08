@@ -1,597 +1,529 @@
 {% extends "paginaBase.html" %}
 
 {% block content %}
-
-    <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
-    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
-
-    <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
-
-
-
-    <div id="paginaPrezzario">
-
-        <div id="divIntestazione" class="row">
-            <span class="contact100-form-title">
-               Prezzario Edile
-            </span>
-
-
-
-            <form   class="contact100-form validate-form">
-
-                <div class="row divFormContainer">
-                    <div id="buttonsSelect" class="col-md-2 ">
-                        <a id="addSettore" class="fa fa-plus"></a>
-                    </div>
-
-                    <div id="selectSettori" class="wrap-form input100-select bg1 fieldSelect col-md-10">
-                        <span class="label-input100">Settore di Lavorazione</span>
-                        <div>
-                            <select id="settoriDisponibili" class="js-select2" name="settoriDisponibili">
-                                {% for settore in settori %}
-
-                                    {% if settore.nome == settoreToSel %}
-                                        <option selected="selected">{{settore.nome}}</option>
-                                    {% else %}
+    <div id="headerNewRow">
+        <div id="tabellaContainerNewRow1">
+            <table class="tabella">
+                <tr class="sezioneTabella dimensionaTabella newRow">
+                    <th class="primaCol"><a id="regNewRow" class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
+                    <th class="secondaCol" colspan="10">
+                        <label>Selezionare/digitare il settore di lavorazione: </label>
+                        <input id="impostaSettore" list="listaSettori" class="inputScheda" placeholder="settore di lavorazione..">
+                    </th>
+                </tr>
+                <tr class="headerTabella dimensionaTabella newRow">
+                    <th class="primaColNewRow"></th>
+                    <th style="width:17%"> Tipologia lavorazione </th>
+                    <th style="width:14%" > Pertinenza </th>
+                    <th style="width:6%" > Unità </th>
+                    <th style="width:6%" > Fornitura </th>
+                    <th style="width:5%" > Posa </th>
+                    <th style="width:5%" > Costo (F+P) </th>
+                    <th style="width:5%" > Prezzo min </th>
+                    <th style="width:5%" > Prezzo max </th>
+                    <th style="width:14%" > Dimensioni </th>
+                    <th style="width:17%" class="note"> Note </th>
+                </tr>
+                <tr class="datiScheda dimensionaTabella newRow">
+                    <td class="primaColNewRow"></td>
+                    <td style="width:17%" class="tipologia_lavorazione no_cursor">
+                        <textarea class="inputScheda" value="" placeholder="tipologia lavorazione..." ></textarea>
+                    </td>
+                    <td style="width:14%" class="pertinenza no_cursor">
+                        <select id="selectPertinenzaNewRow">
+                            {% for settore in settori %}
                                 <option>{{settore.nome}}</option>
-                                    {% endif %}
-                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td style="width:6%" class="unitaMisura numCellBig no_cursor">
+                        <select>
+                            <option>a corpo</option>
+                            <option>cad</option>
+                            <option>ml</option>
+                            <option>mq</option>
+                            <option>mc</option>
 
-                            </select>
-                           <div id="dropDownSettori" class="dropDownSelect2 row"></div>
+                        </select>
+                    </td>
+                    <td style="width:6%" class="fornitura numCellBig no_cursor">
+                        <label class="simpleAfterInputLabel">&euro;</label><input step="0.01" type="number" class="inputScheda numInput"  value="0">
+                    </td>
+                    <td style="width:5%" class="posa numCellSmall no_cursor">
+                        <label class="simpleAfterInputLabel">&euro;</label><input step="0.01" type="number" class="inputScheda numInput" value="0">
+                    </td>
+                    <td style="width:5%" class="fornituraPosa numCellSmall no_cursor">
+                        <label class="printedCalc">&euro; 0</label>
+                    </td>
+                    <td style="width:5%" class="prezzoMin numCellSmall no_cursor">
+                        <label class="simpleAfterInputLabel">&euro;</label> <input step="0.01" type="number" class="inputScheda numInput" value="0">
+                    </td>
+                    <td style="width:5%" class="prezzoMax numCellSmall no_cursor">
+                        <label class="simpleAfterInputLabel">&euro;</label> <input step="0.01" type="number" class="inputScheda numInput" value="0">
+                    </td>
+                    <td style="width:14%" class="dimensione no_cursor">
+                        <input class="inputScheda" value="" placeholder="dimensioni (L x H x P)..." >
+                    </td>
+                    <td style="width:17%" class="note no_cursor">
+                       <textarea></textarea>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="page-wrapper">
+
+        <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+        <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+
+
+        <div id="schedaArtigiani" class="scheda">
+
+            <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
+                <div id="openCloseFilterSearch"><a class="fa fa-angle-double-up"></a></div>
+                <div id="filtersContainer">
+                    <div class="containerTitle"><h2>Filtri di Ricerca</h2></div>
+                    <div id="filters">
+                        <div class="filterInputContainer settori">
+                            <input id="filtraSettori" list="listaSettori" autocomplete="off" class="filterInput" placeholder="Selezionare il settore...">
+
+                        </div>
+
+                        <div class="filterInputContainer lavorazione">
+                            <input id="filtraLavorazioni" list="listaLavorazioni" autocomplete="off" class="filterInput" placeholder="Selezionare la lavorazione...">
 
                         </div>
                     </div>
-
                 </div>
-            </form>
 
-        </div>
+                <div class="delModLists headerSection">
+                    <div class="containerTitle"><h2>Modifica/cancella</h2></div>
 
-        <div id="tabellaContainer" class="row">
+                    <div class="filterInputContainer settoreModContainer">
+                        <label for="modDelSettore">Settore di lavorazione</label><br/>
+                        <select id="modDelSettore" class="delModList">
+                            {% for settore in settori %}
+                                {% if settore.nome != 'Non definito' %}
+                                    <option>{{settore.nome}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-plus addLista iconLista"></a>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
 
+                    </div>
 
-                <table id="prezzario">
-                    <thead id="headPrezzario">
-                       <tr id="trIntestazione">
-                            <th id="primaColonnaIntestazione" class="tableIntestazione" data-column="column1"><a id="showForm" class="fa fa-plus"></a></th>
-                            <th  class="tableIntestazione firstCol" colspan="2"  data-column="column2">Tipologia lavorazione</th>
-                            <th  class="tableIntestazione" data-column="column4">Pertinenza</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column5">Unità</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column6">Fornitura</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column7">Posa</th>
-                           <th  class="tableIntestazione numColMedium" data-column="column8"> <span> Costo <br/><span class="toLower">(fornitura+posa) </span></span></th>
-                            <th  class="tableIntestazione numColSmall" data-column="column9">Prezzo min</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column10">Prezzo max</th>
-                           <th  class="tableIntestazione" data-column="column11"> <span> Dimensione <br/> <span class="toLower"> (cm) </span></span></th>
-                            <th  class="tableIntestazione" data-column="column12">Note</th>
-                            <th  class="tableIntestazione" colspan="2" data-column="column13"> </th>
+                    <div class="filterInputContainer ricaricoContainer">
+                        <label id="ricaricoLabel" for="ricarico">Ricarico azienda</label><br/>
+                        <input type="number" id="ricarico" class="filterInput" value="{{prezzario.ricaricoAzienda}}">
+                        <label class="percSimbol">%</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="headerTableContainer_1">
+                 <div id="divHeaderTabella">
+                    <table class="tabella">
+                        <tr class="headerDelHeader dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th colspan="10" class="secondaCol"></th>
 
                         </tr>
-                        <tr id="trForm">
-                            <th id="primaColonnaForm" class="tableForm" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a></th>
-                            <th  class="tableForm firstCol" colspan="2"  data-column="column2"><textarea maxlength="200"  id="tipologiaTextarea"></textarea></th>
-                            <th  class="tableForm" data-column="column4">
-                                <select id="pertinenzaSelect" name="pertinenza">
-                                {% for settore in settori %}
+                        <tr class="headerTabella dimensionaTabella">
+                            <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                            <th class="tipologia_lavorazione"> Tipologia lavorazione </th>
+                            <th  class="pertinenza"> Pertinenza </th>
+                            <th class="numCellBig"> Unità </th>
+                            <th class="numCellBig"> Fornitura </th>
+                            <th class="numCellSmall"> Posa </th>
+                            <th class="numCellSmall"> Costo (F+P) </th>
+                            <th class="numCellSmall"> Prezzo min </th>
+                            <th class="numCellSmall"> Prezzo max </th>
+                            <th class="dimensione"> Dimensioni </th>
+                            <th class="note"> Note </th>
+                        </tr>
+                    </table>
+                 </div>
 
-                                    {% if settore.nome == settoreToSel %}
-                                        <option selected="selected">{{settore.nome}}</option>
-                                    {% else %}
-                                    <option>{{settore.nome}}</option>
-                                    {% endif %}
-                                {% endfor %}
+            </div>
 
-                                </select>
-                            </th>
-                            <th  class="tableForm numColSmall" data-column="column5">
+            <div class="fc-view-container viewContainer">
+                <div id="tabellaContainer">
+                    <table class="tabella">
 
-                                <select id="unitaSelect" name="unita">
+                       <!-- <tr class="sezioneTabella dimensionaTabella">
+                            <th class="primaCol"></th>
+                            <th colspan="11">Settore di lavorazione: idraulico</th>
+                        </tr>
+                        <tr class="datiScheda dimensionaTabella">
+                            <td class="primaCol"><a class="fa fa-warning primaColIcon"></a><a class="fa fa-trash primaColIcon"></a></td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="tipologia lavorazione..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="pertinenza..." >
+                            </td>
+                            <td class="numCell"><label class="cellaDato"></label>
+                                <select>
                                     <option>cad</option>
                                     <option>ml</option>
                                     <option>mq</option>
                                     <option>mc</option>
+
                                 </select>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" step="0.01" style="display:none" class="inputScheda numInput"  value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" step="0.01" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" step="0.01" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" step="0.01" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput numCell"><label class="cellaDato"></label>
+                                <input type="number" step="0.01" style="display:none" class="inputScheda numInput" value="0"> <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                                <input style="display:none" class="inputScheda" value="" placeholder="dimensioni (lxhxp)..." >
+                            </td>
+                            <td class="hiddenInput"><label class="cellaDato"></label>
+                               <textarea style="display:none"></textarea>
+                            </td>
 
-                            </th>
-                            <th  class="tableForm numColSmall" data-column="column6">&euro; <input id="fornituraInput" class="numberInput" type="number" step="0.01" name="fornitura" placeholder="fornitura" value=0.00></th>
-                            <th  class="tableForm numColSmall" data-column="column7">&euro; <input id="posaInput" class="numberInput" type="number" step="0.01" name="posa" placeholder="posa" value=0.00></th>
-                            <th  class="tableForm numColMedium" data-column="column8">&euro; <input id="costoInput" class="numberInput" type="number" step="0.01" name="costo" placeholder="costo" value=0.00></th>
-                            <th  class="tableForm numColSmall" data-column="column9">&euro; <input id="pMinInput" class="numberInput" type="number" step="0.01" name="prezzoMin" placeholder="prezzo min" value=0.00></th>
-                            <th  class="tableForm numColSmall" data-column="column10">&euro; <input id="pMaxInput" class="numberInput" type="number" step="0.01" name="prezzoMax" placeholder="prezzo max" value=0.00></th>
-                            <th  class="tableForm" data-column="column11"><input id="dimensioneInput" type="text" name="dimensione" placeholder="dimensione" value="0x0x0"></th>
-                            <th  class="tableForm" data-column="column12"><textarea maxlength="500" id="noteTextarea"></textarea></th>
-                            <th  class="tableForm" colspan="2" data-column="column13"><button  onclick="registraLavorazione()" class="buttonPrezzario" type="button">Inserisci</button></th>
+                        </tr>-->
+                    </table>
 
-                        </tr>
-
-                    </thead>
-                    <tbody id="bodyPrezzario">
-                 <!--  <tr>
-                        <td colspan="2" data-column="column1">C'era una volta un re seduto su un sofa che disse al</td>
-                    </tr>-->
-
-
-                    </tbody>
-
-                </table>
-
+                </div>
+            </div>
         </div>
+
+        <datalist id="listaSettori">
+            {% for settore in settori %}
+                <option>{{settore.nome}}</option>
+            {% endfor %}
+        </datalist>
+
+        <datalist id="listaLavorazioni">
+
+        </datalist>
 
     </div>
 
-   <script>
-           /* console.log("il settore selezionato è: {{settoreToSel}}");*/
-
-           //Script necessario per renderizzare corretamente il tag select di "settore"
-            $.getScript("{{url_for('static', filename='form/js/main.js')}}");
-
-            /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
-            $('#trForm').hide();
-
-            $('#hideForm').click(function(){
-                $('#trForm').hide();
-                $(showForm).addClass('fa');
-                $(showForm).addClass('fa-plus');
-                $('#bodyPrezzario').css('height', '88%');
-                modificaAttiva=false;
-
-            });
-
-            $('#showForm').click(function(){
-                $('#trForm').show();
-                $(this).removeClass('fa');
-                $(this).removeClass('fa-plus');
-                $('#bodyPrezzario').css('height', '81%');
-
-            });
-
-
-            //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
-            function stampaValore(valore, colonna, unita,   classValues){
-
-                 var where="column"+colonna
-
-                 if( valore == 0 )
-                    return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
-                 else
-                    if( unita == "%" )
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
-                    else
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
-
-
-            }
-
-            //codice per riempire il #bodyPrezzario
-            {% for lavorazione in lavorazioni %}
-                console.log("{{lavorazione.tipologia_lavorazione}}");
-                if( "{{lavorazione.settore}}" == $("#settoriDisponibili").val()) {
-
-                    {% if lavorazione.daVerificare %}
-                        var classiTr="rowBodyTab daVerificare" ;
-                    {% else %}
-                        var classiTr="rowBodyTab";
-
-                    {% endif %}
-
-                    $("#bodyPrezzario").append(
-                          '<tr class="'+ classiTr +'">'+
-                                '<td class="controlCol" data-column="column1">'+
-
-                                      '<div class="iconsDiv row">'+
-                                          '<div class="col-md-4 iconContainer firstIconContainer" >'+
-                                            '<a class="fa fa-trash iconsTab delLavorazione"></a>'+
-                                          '</div>'+
-                                          '<div class="col-md-4 iconContainer">'+
-                                            '<a  class="fa fa-edit iconsTab modLavorazione"></a>'+
-                                          '</div>'+
-                                          '<div class="col-md-4 iconContainer">'+
-                                            '<a  class="fa fa-warning iconsTab segnalaLavorazione"></a>'+
-                                          '</div>'+
-                                      '</div>'+
-
-                                '</td>'+
-                                '<td class="doubleCol firstCol tipologia tdToLeft" colspan="2" data-column="column2">{{lavorazione.tipologia_lavorazione}}</td>'+
-
-                                '<td  data-column="column4">{{lavorazione.pertinenza}}</td>'+
-                                '<td class="numColSmall" data-column="column5">{{lavorazione.unitaMisura}}</td>'+
-
-                                stampaValore("{{lavorazione.fornitura}}", 6, "&euro;", "numColSmall")+
-                                stampaValore("{{lavorazione.posa}}", 7, "&euro;", "numColSmall")+
-                                stampaValore("{{lavorazione.costo}}", 8, "&euro;", "numColMedium")+
-                                stampaValore("{{lavorazione.prezzoMin}}", 9, "&euro;", "numColSmall")+
-                                stampaValore("{{lavorazione.prezzoMax}}", 10, "&euro;", "numColSmall")+
-
-
-
-                                '<td  data-column="column11">{{lavorazione.dimensione}}</td>'+
-                                '<td  class="noteColumn"  colspan="2" data-column="column12"> {{lavorazione.note}}</td>'+
-                               /* '<td  class="controlCol" data-column="column13">'+*/
-
-
-                               '</td>'+
-
-                           '</tr>'
-                    );
-                }
-            {% endfor %}
-
-           /*Codice per aggiungere il cancella e il modifica alle opzioni del select #settoriDisponibili */
-
-          var firstTime = true;
-
-
-          $('#selectSettori').click(function(){
-
-                if( $('li.select2-results__message').text() != 'No results found' ){
-                    if( firstTime )
-                    {
-                        firstTime = false;
-                        $('.select2-results').addClass('resizedResults');
-
-                        $('.select2-dropdown').addClass('dropDownEffettivo');
-
-
-                        $('.select2-dropdown').append(
-                            '<span class="delModResults"><ul class="controlSelectUl"></ul></span>'
-                        );
-
-                        $('ul.select2-results__options').addClass('togliOverflowUlSelect');
-
-                        $('.select2-results li').each(function(){
-
-
-                                $('.delModResults ul').append(
-
-                                    '<li val="'+$(this).text() +'" class="controlSelectLi"><a class="fa fa-trash delSettore" ></a><a class="fa fa-edit leftIcon modSettore" ></a></li>'
-                                );
-
-
-                        });
-
-
-                        $('.modSettore').click(function() {
-
-                              var oldNome=$(this).parent().attr('val');
-
-                              swal.withForm({
-                                title: 'Modifica nome settore',
-                                text: 'Inserire il nome modificato: ',
-                                showCancelButton: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'annulla',
-                                closeOnConfirm: true,
-                                formFields: [
-
-                                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore', value: oldNome }
-
-
-                                ]
-                              }, function (isConfirm) {
-
-                                      if (isConfirm) {
-                                            var form=this.swalForm
-                                            socketPrezzario.emit("registra_settore",
-                                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });
-
-                                      }
-
-                              })
-
-                        });
-
-                        $('.delSettore').click(function() {
-
-                                 var settoreSelezionato = $(this).parent().attr('val') //$('#settoriDisponibili').val();
-
-                                  swal({
-                                    title: 'Eliminazione settore '+ settoreSelezionato,
-                                    text: 'sicuro di voler procedere?',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#DD6B55',
-                                    confirmButtonText: 'Ok',
-                                    cancelButtonText: 'annulla',
-                                    closeOnConfirm: true,
-
-                                  }, function (isConfirm) {
-
-                                          if (isConfirm) {
-
-                                               socketPrezzario.emit("elimina_settore", {'dip': '{{dipendente.username}}', 'settore': settoreSelezionato});
-
-                                          }
-
-                                  })
-
-
-                            });
-
-
-                    }
-                }
-
-
-
-
-           });
-
-   </script>
-
-   <script>
-
-            var socketHome = io.connect("{{sockUrl}}"+'/home');
-
-
-            socketHome.on('connect', function() {
-                console.log('connected listino');
-
-
-                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-            });
-
-
-   </script>
-
     <script>
 
-        //variabili globale per il meccanismo di modifica delle lavorazioni
-        var modificaAttiva=false;
-        var oldTipologia="";
+        var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+
+        socketHome.on('connect', function() {
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
 
         var socketPrezzario= io.connect("{{sockUrl}}"+'/prezzario');
 
+        /*$('td.hiddenInput').click( function(){
+            $(this).children('label').hide();
+            $(this).children('input').show();
+            $(this).children('select').show();
+            $(this).children('textarea').show();
+            $(this).children('label.simpleAfterInputLabel').show();
 
-        socketPrezzario.on('aggiornaPagina', function() {
-            location.reload();
+        });*/
 
-        });
 
-        socketPrezzario.on('abortAggiorna', function(message) {
+
+        $('.iconLista').click(function(){
+
+            var $selectEl=$(this).parent().children('select');
+            var selectedVal=$(this).parent().children('select').val();
+            var lista=$(this).parent().children('select').attr('id');
+
+            if( $(this).hasClass('editLista') ){
+
+                swal.withFormAsync({
+                    title: 'Modifica valore "'+selectedVal+'"',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+                        { id: 'valore', name: 'valore', value: selectedVal},
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+                      $selectEl.children('option').each(function(){
+                        if($(this).val() == selectedVal ){
+                            $(this).val(context.swalForm['valore'] );
+                            $(this).text(context.swalForm['valore']);
+                        }
+                      });
+
+                      $('#listaSettori').children('option').each(function(){
+                            if($(this).text() == selectedVal ){
+                                $(this).val(context.swalForm['valore']);
+                                $(this).text('');
+                            }
+                      });
+
+                      $('#selectPertinenzaNewRow').children('option').each(function(){
+                            if($(this).text() == selectedVal ){
+                                $(this).val(context.swalForm['valore']);
+                                $(this).text(context.swalForm['valore']);
+                            }
+
+                      });
+
+
+
+                      $('#tabellaContainer tbody.'+selectedVal).each(function(){
+                        $(this).children('tr.sezioneTabella').children('.secondaCol').text('Tipologia lavorazione: '+context.swalForm['valore']);
+                      });
+
+                      $('#tabellaContainer td.pertinenza').children('select').children('option').each(function(){
+                            if($(this).text() == selectedVal ){
+                                $(this).text(context.swalForm['valore']);
+                            }
+                      });
+
+
+                      $('tbody.'+selectedVal).each(function(){
+                        $(this).removeClass(selectedVal);
+                        $(this).addClass(context.swalForm['valore'])
+                      });
+
+
+
+
+                      socketPrezzario.emit('modifica_settore_lavorazione', {'oldNome': selectedVal, 'newNome': context.swalForm['valore']});
+                    }
+
+                });
+
+
+            }
+            else if( $(this).hasClass('delLista') ){
                 swal({
-                      title: message["what"] + " già presente",
-                      type: 'error',
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: "Ok",
+                    title: 'Stai per eliminare "'+selectedVal+'" e le relative lavorazioni',
+                    text: 'vuoi continuare?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
 
-                 });
-        });
+                }, function(isConfirm){
+                    if( isConfirm ){
 
-        $('#settoriDisponibili').change( function() {
+                        $selectEl.children('option').each(function(){
 
-          socketPrezzario.emit('cambia_settore_prezzario', {"dip": "{{dipendente.username}}", "settore": $(this).val() })
+                            if($(this).val() == selectedVal )
+                                $(this).remove();
+                        });
 
-        });
-
-        $('#addSettore').click(function() {
-
-              swal.withForm({
-                title: 'Aggiungi un nuovo settore',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-                formFields: [
-
-                  { id: 'newSettore', placeholder: 'Inserire il nome del nuovo settore' }
-
-
-                ]
-              }, function (isConfirm) {
-
-                      if (isConfirm) {
-                            var form=this.swalForm
-                            socketPrezzario.emit("registra_settore",
-                               { 'dip': '{{dipendente.username}}', 'settore': form['newSettore'] });
-
-                      }
-
-              })
-
-        });
-
-
-
-
-       function registraLavorazione() {
-
-            var titleTxt="";
-
-            if(modificaAttiva)
-            {
-                titleTxt="Si sta per modificare una lavorazione già presente";
-            }else
-                titleTxt='Si sta per aggiungere una nuova lavorazione';
-
-          swal({
-            title: titleTxt,
-            text: 'Sicuro di voler continuare?',
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: 'Ok',
-            cancelButtonText: 'annulla',
-            closeOnConfirm: true
-
-          }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                        var textareaOfLavorazione = [];
-                        var inputOfLavorazione =  [];
-                        var selectOfLavorazione = [];
-
-                         $("#trForm textarea").each(function(index){
-                            textareaOfLavorazione.push($(this).val());
-
+                        $('#listaSettori').children('option').each(function(){
+                            if($(this).text() == selectedVal )
+                                $(this).remove();
                         });
 
 
-                        $("#trForm input").each(function(index){
-                            inputOfLavorazione.push($(this).val());
-
+                        $('#selectPertinenzaNewRow').children('option').each(function(){
+                            if($(this).text() == selectedVal )
+                                $(this).remove();
                         });
 
-                        $("#trForm select").each(function(index){
-                            selectOfLavorazione.push($(this).val());
-
+                        $('tbody.'+selectedVal).each(function(){
+                            $(this).remove();
                         });
 
-                         //se non è stato impostato il tipo di lavorazione non fare nulla
-                        if( textareaOfLavorazione[0] == "" )
-                            return;
+                        $('#tabellaContainer td.pertinenza').each(function(){
 
-                        // se forniture e posa vengono specificate setta costo come la loro somma
-                        if( inputOfLavorazione[0] != 0 || inputOfLavorazione[1] != 0 )
-                            inputOfLavorazione[2] = parseInt(inputOfLavorazione[0]) + parseInt(inputOfLavorazione[1]);
+                            $(this).children('select').children('option').each(function(){
+                                if( $(this).text() == selectedVal ){
+                                    $(this).parent().val('Non definito');
+                                    $(this).remove();
+                                }
+                            });
+                        });
 
-                        if(!modificaAttiva){
+                        socketPrezzario.emit('elimina_settore_lavorazione', {'nome': selectedVal});
 
-                            socketPrezzario.emit("registra_lavorazione", { "dip": "{{dipendente.username}}", "settore": $("#settoriDisponibili").val(),
-                                                                           "tipologia" : textareaOfLavorazione[0],
-                                                                            "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
-                                                                            "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
-                                                                             "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
-                                                                             "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
-                                                                              "note": textareaOfLavorazione[1]});
-                        }
-                        else{
-                             socketPrezzario.emit("modifica_lavorazione", { "dip": "{{dipendente.username}}", "oldTipologia": oldTipologia,
-                                                                                "settore": $("#settoriDisponibili").val(),
-                                                                               "tipologia" : textareaOfLavorazione[0],
-                                                                                "pertinenza": selectOfLavorazione[0], "unita": selectOfLavorazione[1],
-                                                                                "fornitura": inputOfLavorazione[0], "posa": inputOfLavorazione[1],
-                                                                                 "costo": inputOfLavorazione[2], "pMin" : inputOfLavorazione[3],
-                                                                                 "pMax": inputOfLavorazione[4], "dimensione": inputOfLavorazione[5],
-                                                                                  "note": textareaOfLavorazione[1]});
-                             modificaAttiva=false;
+                    }
 
 
-                        }
-                  }
-
-
-
-          })
-       }
-
-
-        $(".delLavorazione").click(function() {
-            var setDisp = $('#settoriDisponibili').val();
-            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
-            swal({
-                title: 'Eliminazione lavorazione '+ lavSel,
-                text: 'sicuro di voler procedere?',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-
-            }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                         socketPrezzario.emit('elimina_lavorazione', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                   'tipologia': lavSel });
-
-                  }
-
-            })
-
-
-        });
-
-        $(".segnalaLavorazione").click(function() {
-            var setDisp = $('#settoriDisponibili').val();
-            var lavSel = $(this).closest('.rowBodyTab').children('.tipologia').text();
-
-
-            if(!$(this).closest('tr').hasClass('daVerificare') ){
-
-                var setDisp = $('#settoriDisponibili').val();
-                console.log("sono checkkato " + setDisp);
-                socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                           'tipologia': lavSel,'valore': true});
-            }
-            else {
-              var setDisp = $('#settoriDisponibili').val();
-              socketPrezzario.emit('setta_daVerificare', {'dip': '{{dipendente.username}}', 'settore': setDisp,
-                                                       'tipologia': lavSel,'valore': false});
+                });
 
             }
+            else if($(this).hasClass('addLista')){
 
+                swal.withFormAsync({
+                    title: 'Nuovo settore di lavorazione',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+                        { id: 'valore', name: 'valore', placeholder: 'settore di lavorazione...'},
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+
+                        socketPrezzario.emit('registra_settore_lavorazione', {'settore': context.swalForm['valore'] });
+                        verificaSettorePresente(context.swalForm['valore'])
+                    }
+
+                });
+           }
         });
+        
 
+        $('#regNewRow').click(function(){
 
+            var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
 
-        $(".modLavorazione").click(function() {
+            var $settore=$sezioneTabella1.children('th.primaCol').next('th').children('input');
 
-           if( modificaAttiva ){
-                $('.inModifica').removeClass('inModifica');
+            var $tipologia=$datiScheda1.children('td.tipologia_lavorazione').children('textarea');
+            var $pertinenza=$datiScheda1.children('td.pertinenza').children('select');
+            var $unita=$datiScheda1.children('td.unitaMisura').children('select');
+            var $fornitura=$datiScheda1.children('td.fornitura').children('input');
+            var $posa=$datiScheda1.children('td.posa').children('input');
+            var $prezzoMin=$datiScheda1.children('td.prezzoMin').children('input');
+            var $prezzoMax=$datiScheda1.children('td.prezzoMax').children('input');
+            var $dimensioni=$datiScheda1.children('td.dimensione').children('input');
+            var $note=$datiScheda1.children('td.note').children('textarea');
 
+            if( $settore.val() == "" ){
+                swal({
+                    title: 'Il campo "settore di lavorazione" non può essere lasciato vuoto',
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
 
-           }
-            else {
+                });
 
-                modificaAttiva=true;
-                $('#trForm').show();
-                $('#showForm').removeClass('fa');
-                $('#showForm').removeClass('fa-plus');
-                /*$('#bodyPrezzario').css('height', '81%');*/
-           }
+                return;
+            }
 
+            if( $tipologia.val() == "" ){
+                swal({
+                    title: 'Il campo "tipologia lavorazione" non può essere lasciato vuoto',
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
 
-           $(this).closest('tr').addClass("inModifica");
+                });
 
+                return;
+            }
 
+            verificaSettorePresente($settore.val())
 
-
-
-            var datiLavorazione=[]
-            $(".inModifica td").each(function(index){
-                datiLavorazione.push($(this).text());
-
-            });
-
-            console.log(datiLavorazione);
-
-            oldTipologia = datiLavorazione[1];
-
-
-            {% for lavorazione in lavorazioni %}
-                if( "{{lavorazione.tipologia_lavorazione}}" == oldTipologia ){
-                    $("#tipologiaTextarea").val("{{lavorazione.tipologia_lavorazione}}"  );
-                    $("#pertinenzaSelect").val("{{lavorazione.pertinenza}}" );
-                    $("#unitaSelect").val("{{lavorazione.unitaMisura}}" );
-
-
-
-                    $( "#fornituraInput").val( parseFloat("{{lavorazione.fornitura}}" ) );
-
-
-                    $( "#posaInput").val( parseFloat("{{lavorazione.posa}}"));
-                    $( "#costoInput").val(  parseFloat("{{lavorazione.costo}}"));
-                    $( "#pMinInput").val(  parseFloat("{{lavorazione.prezzoMin}}"));
-                    $( "#pMaxInput").val(  parseFloat("{{lavorazione.prezzoMax}}"));
-                    $( "#dimensioneInput").val( "{{lavorazione.dimensione}}");
-                    $( "#noteTextarea").val(  "{{lavorazione.note}}");
-
+            socketPrezzario.emit("registra_lavorazione",
+                {  "dip": "{{dipendente.username}}",
+                   "settore": $settore.val(),
+                   "tipologia" : $tipologia.val().replace(/\n/g, ""),
+                   "pertinenza": $pertinenza.val(),
+                   "unita": $unita.val(),
+                   "fornitura": $fornitura.val(),
+                   "posa": $posa.val(),
+                   "pMin" : $prezzoMin.val(),
+                   "pMax": $prezzoMax.val(),
+                   "dimensione": $dimensioni.val(),
+                   "note": $note.val().replace(/\n/g, "")
                 }
-            {% endfor %}
-
-
-
-            $(this).closest('tr').removeClass("inModifica");
-
-
+            );
 
         });
 
+        socketPrezzario.on('confermaRegistrazioneLavorazione', function(){
+
+            aggiungiRiga(false, '{{dipendente.username}}');
+            regolaDimensioniForEachHeader();
+            pulisciHeaderNewRow();
+        })
+
+
+
+        {% for lavorazione in lavorazioni %}
+
+            var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+
+            var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+
+            var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+
+
+
+            $sezioneTabella1.children('th.primaCol').next('th').children('input').val('{{lavorazione.settore}}');
+
+            $datiScheda1.children('td.tipologia_lavorazione').children('textarea').val('{{lavorazione.tipologia_lavorazione}}');
+            $datiScheda1.children('td.pertinenza').children('select').val('{{lavorazione.pertinenza}}');
+            $datiScheda1.children('td.unitaMisura').children('select').val('{{lavorazione.unitaMisura}}');
+            $datiScheda1.children('td.fornitura').children('input').val('{{lavorazione.fornitura}}');
+            $datiScheda1.children('td.posa').children('input').val('{{lavorazione.posa}}');
+            $datiScheda1.children('td.prezzoMin').children('input').val('{{lavorazione.prezzoMin}}');
+            $datiScheda1.children('td.prezzoMax').children('input').val('{{lavorazione.prezzoMax}}');
+            $datiScheda1.children('td.dimensione').children('input').val('{{lavorazione.dimensione}}');
+
+            $datiScheda1.children('td.note').children('textarea').val('{{lavorazione.note}}');
+
+            calcolaCostoFornituraPosa($datiScheda1)
+
+            aggiungiRiga(false, '{{dipendente.username}}');
+
+            pulisciHeaderNewRow();
+
+            if( '{{lavorazione.daVerificare}}' == 'True' ){
+
+                $table1= $('#tabellaContainer').children('table');
+
+                $table1.children('tbody').each(function(){
+
+                    if( $(this).hasClass('{{lavorazione.settore}}') ){
+                        $(this).children('tr').each(function(){
+
+                            if( $(this).children('td.tipologia_lavorazione').children('label').text() == '{{lavorazione.tipologia_lavorazione}}' )
+                            {
+                                $(this).addClass('daVerificare')
+
+                                $(this).css('background-color', 'yellow');
+
+                            }
+                        });
+
+                    }
+
+
+                });
+
+            }
+
+
+
+        {% endfor %}
+
+        aggiungiEventListenerCalcolaCosto($('#tabellaContainerNewRow1 tr.datiScheda'));
+
+
+
+
+      //  regolaDimensioniHeader();
     </script>
-
-
-
-{% endblock %}
+{% endblock%}

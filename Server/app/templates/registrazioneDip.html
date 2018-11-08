@@ -129,10 +129,6 @@
 									{{form.email_personale}}
 								</div>
 
-								<div class="wrap-input100  bg1">
-								  <span class="label-input100">Email aziendale<span class="asteriscoRosso">*</span></span>
-								  {{form.email_aziendale}}
-								</div>
 
 								<div class="wrap-input100  bg1">
 									<span class="label-input100">Password<span class="asteriscoRosso">*</span></span>
@@ -208,7 +204,6 @@
 
 		$("input#telefono").attr("placeholder", "Inserire un recapito telefonico");
 
-		$("input#email_aziendale").attr("placeholder", "Inserire la propria email di lavoro");
 
 		$("input#email_personale").attr("placeholder", "Inserire la propria email personale" );
 
@@ -414,20 +409,6 @@
 
 /*====================================================================================================================*/
 
-
-/*=================================Imposta stampa errore email aziendale=====================================================*/
-
-		notValidated=true;
-		{% for error in form.email_aziendale.errors %}
-
-		if(notValidated){
-			$("div:has(> input#email_aziendale)").addClass("validate-input");
-			notValidated=false;
-		}
-		$("div:has(> input#email_aziendale)").attr("data-validate", "{{error}}");
-		showValidate($("input#email_aziendale"));
-
-		{% endfor %}
 
 
 /*====================================================================================================================*/

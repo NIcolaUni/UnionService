@@ -36,8 +36,8 @@
                         </div>
                           {% raw %}
                         <div id="corpoNote" class="lv-body">
-                            <a onclick="gestioneNotifica($(this));" class="lv-item" ng-href="" ng-repeat="w in hctrl.messageResult.list">
-                                <div class="media">
+                           <!-- <a onclick="gestioneNotifica($(this));" class="lv-item" ng-href="" ng-repeat="w in hctrl.messageResult.list">
+                                <div class="media media_notifica">
                                     <div class="pull-left">
                                         {% endraw %}
                                         <img class="lv-img-sm" ng-src="{{url_for('static', filename='images/sys_notifica.png') }}" alt="">
@@ -46,10 +46,11 @@
                                     </div>
                                     <div class="media-body {{ w.tipologia }} {{w.numero_nota}}">
                                         <div class="lv-title">{{ w.titolo }}</div>
-                                        <small class="lv-small">{{ w.contenuto }}</small>
+                                        <small class="lv-small">"{{ w.contenuto }}"</small>
                                     </div>
                                 </div>
-                            </a>
+                            </a>-->
+
                         </div>
 
                         <div class="clearfix"></div>
@@ -104,6 +105,11 @@
         });*/
 
         var socketNotifica = io.connect("{{sockUrl}}"+'/notifica');
+
+        socketNotifica.emit('richiedi_notifiche_dipendente', {
+
+            'dip': '{{dipendente.username}}'
+        });
 
         $("input#nome_cognome_indirizzo").attr("list", "clienti");
         $("input#nome_cognome_indirizzo").attr("placeholder", "Cerca qua i tuoi clienti...");

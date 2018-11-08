@@ -1,42 +1,52 @@
 from .db.prezzarioEdileDBmodel import PrezzarioEdileDBmodel
+from .lavorazioneEdile import LavorazioneEdile
+import app
 
 class PrezzarioEdile(PrezzarioEdileDBmodel):
 
-    def __init__(self, settore, tipologia_lavorazione, pertinenza, unitaMisura=None, prezzoMin=None, prezzoMax=None,
-                        dimensione=None, fornitura=None, posa=None, note=None, daVerificare=False):
-        self.settore = settore
-        self.tipologia_lavorazione = tipologia_lavorazione
-        self.pertinenza = pertinenza
-        self.unitaMisura = unitaMisura
-        self.prezzoMin = prezzoMin
-        self.prezzoMax = prezzoMax
-        self.dimensione = dimensione
-        self.fornitura = fornitura
-        self.posa = posa
-        self.note = note
-        self.daVerificare = daVerificare
+    def __init__(self, ricaricoAzienda):
+        self.ricaricoAzienda = ricaricoAzienda
+
+    def registraPrezzario(ricaricoAzienda):
+
+        oldPrez = PrezzarioEdile.query.first()
+
+        #Può esistere solo un istanza della classe PrezzarioEdile
+        if oldPrez is None:
+            newPrez = PrezzarioEdileDBmodel(ricaricoAzienda=ricaricoAzienda)
+            PrezzarioEdileDBmodel.addRow(newPrez)
+
+    def modificaRicaricoPrezzario(newValueRincaro):
+
+        PrezzarioEdile.registraPrezzario(50)
+
+        PrezzarioEdileDBmodel.query.update({'ricaricoAzienda': newValueRincaro})
+        PrezzarioEdileDBmodel.commit()
 
     def registraLavorazione(settore, tipologia_lavorazione, pertinenza, unitaMisura=None, prezzoMin=None, prezzoMax=None,
                         dimensione=None, fornitura=None, posa=None, note=None):
 
-        newLav = PrezzarioEdile(settore=settore, tipologia_lavorazione=tipologia_lavorazione, pertinenza=pertinenza,
-                                    unitaMisura=unitaMisura,prezzoMin=prezzoMin, prezzoMax=prezzoMax,
-                                    dimensione=dimensione, fornitura=fornitura, posa=posa, note=note)
+        PrezzarioEdile.registraPrezzario(50);
+        LavorazioneEdile.registraLavorazione(settore=settore, tipologia_lavorazione=tipologia_lavorazione,
+                                             pertinenza=pertinenza, unitaMisura=unitaMisura, prezzoMin=prezzoMin,
+                                             prezzoMax=prezzoMax, dimensione=dimensione, fornitura=fornitura,
+                                             posa=posa, note=note)
 
-        PrezzarioEdileDBmodel.commitLavorazione(newLav)
+    def modificaLavorazione(settore, tipologia_lavorazione, modifica):
 
-    def modificaLavorazione(settore, tipologia_lavorazione, modifica ):
+        LavorazioneEdile.modificaLavorazione(settore=settore, tipologia_lavorazione=tipologia_lavorazione, modifica=modifica)
 
-        PrezzarioEdile.query.filter_by(settore=settore, tipologia_lavorazione=tipologia_lavorazione).update(modifica)
-
-        PrezzarioEdileDBmodel.commit()
+    def modificaRicaricoLavorazione(settore, tipologia_lavorazione, valore):
+        LavorazioneEdile.modificaRicaricoLavorazione(settore=settore, tipologia_lavorazione=tipologia_lavorazione, valore=valore)
 
     def eliminaLavorazione(settore, tipologia_lavorazione):
 
-        toDel= PrezzarioEdile.query.filter_by(settore=settore, tipologia_lavorazione=tipologia_lavorazione).first()
-
-        PrezzarioEdileDBmodel.commitEliminaLavorazione(toDel)
+        LavorazioneEdile.eliminaLavorazione(settore=settore, tipologia_lavorazione=tipologia_lavorazione)
 
     def setDaVerificare(settore, tipologia_lavorazione, valore):
-        PrezzarioEdile.query.filter_by(settore=settore, tipologia_lavorazione=tipologia_lavorazione).update({'daVerificare': valore})
-        PrezzarioEdileDBmodel.commit()
+
+        LavorazioneEdile.setDaVerificare(settore=settore, tipologia_lavorazione=tipologia_lavorazione, valore=valore)
+
+    def returnLavorazioni():
+
+        return LavorazioneEdile.query.all()

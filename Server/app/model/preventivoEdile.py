@@ -2,6 +2,7 @@ from .db.preventivoDBmodel import PreventivoDBmodel
 from .db.commessaDBmodel import CommessaDBmodel
 from .db.dipendenteDBmodel import DipendenteDBmodel
 from .db.lavorazioniPreventivoEdile.lavorazionePreventivoDBmodel import LavorazionePreventivoDBmodel
+from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneCorpoDBmodel import SottolavorazioneCorpoDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneCadDBmodel import SottolavorazioneCadDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMlDBmodel import SottolavorazioneMlDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMqDBmodel import SottolavorazioneMqDBmodel
@@ -12,6 +13,14 @@ import datetime
 import app
 import os
 import math
+
+class __SottolavorazioneCorpoPreventivo__(SottolavorazioneCorpoDBmodel):
+    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione):
+        self.numero_preventivo=numero_preventivo
+        self.data = data
+        self.ordine = ordine
+        self.ordine_sottolavorazione = ordine_sottolavorazione
+        self.tipologia = 'edile'
 
 class __SottolavorazioneCadPreventivo__(SottolavorazioneCadDBmodel):
     def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero):
@@ -200,11 +209,16 @@ class PreventivoEdile(PreventivoDBmodel):
                                                                altezza=sottolav.altezza, profondita=sottolav.profondita)
                 returnList.append(newSottolav)
 
+        elif unitaMisura == 'corpo':
+            for sottolav in sottolavorazioni:
+                newSottolav = __SottolavorazioneCorpoPreventivo__(numero_preventivo=sottolav.numero_preventivo,
+                                                                data=sottolav.data, ordine=sottolav.ordine,
+                                                                ordine_sottolavorazione=sottolav.ordine_sottolavorazione)
+                returnList.append(newSottolav)
+
         return returnList
 
     def __duplicaLavorazioni__(lavorazioni):
-
-        app.server.logger.info("\n\nEntrato in duplica lav\n")
 
         returnList = []
         for lav in lavorazioni:
@@ -234,7 +248,6 @@ class PreventivoEdile(PreventivoDBmodel):
         '''
 
 
-        app.server.logger.info("\n\nwhat's your problem? {} {} {}\n".format(numero_preventivo, data, dipendente_generatore))
 
         lastPrev = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='edile').first()
         now = datetime.datetime.now()
@@ -287,7 +300,12 @@ class PreventivoEdile(PreventivoDBmodel):
 
         sottolavorazioniMc = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniMc, 'mc')
 
-        sottolavorazioni = sottolavorazioniCad + sottolavorazioniMl + sottolavorazioniMc + sottolavorazioniMq
+        sottolavorazioniCorpo = __SottolavorazioneCorpoPreventivo__.query.filter_by(
+            numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+
+        sottolavorazioniCorpo = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniCorpo, 'a corpo')
+
+        sottolavorazioni = sottolavorazioniCad + sottolavorazioniMl + sottolavorazioniMc + sottolavorazioniMq + sottolavorazioniCorpo
 
         for sottoLav in sottolavorazioni:
             sottoLav.data= oggi
@@ -335,6 +353,10 @@ class PreventivoEdile(PreventivoDBmodel):
                                                            ordine=ordine,
                                                            ordine_sottolavorazione=ordine_sottolavorazione,
                                                            numero=numero, larghezza=larghezza, altezza=altezza, profondita=profondita)
+        elif unitaMisura == 'a corpo':
+            lavorazione = __SottolavorazioneCorpoPreventivo__(numero_preventivo=numero_preventivo, data=data,
+                                                            ordine=ordine,
+                                                            ordine_sottolavorazione=ordine_sottolavorazione)
 
         PreventivoDBmodel.addRow(lavorazione)
 
@@ -375,6 +397,14 @@ class PreventivoEdile(PreventivoDBmodel):
                                                          ordine=ordine, ordine_sottolavorazione=last_sottolav_mc+1,
                                                          numero=1, larghezza=1, altezza=1, profondita=1)
 
+        elif unitaMisura == 'a corpo':
+            last_sottolav_corpo = __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
+                                                                                data=data, ordine=ordine).order_by(
+                desc(__SottolavorazioneCorpoPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data,
+                                                         unitaMisura=unitaMisura,
+                                                         ordine=ordine, ordine_sottolavorazione=last_sottolav_corpo + 1)
 
 
     def registraLavorazione( numero_preventivo, data, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario,
@@ -409,6 +439,11 @@ class PreventivoEdile(PreventivoDBmodel):
                 ordineSottolavorazione =PreventivoEdile.__calcolcaOrdineSottolavorazione__(queryClass=__SottolavorazioneMcPreventivo__.query,
                                                                    numero_preventivo=numero_preventivo, data=data,
                                                                    ordine=ordine)
+            elif unitaMisura == 'a corpo':
+                ordineSottolavorazione = PreventivoEdile.__calcolcaOrdineSottolavorazione__(
+                    queryClass=__SottolavorazioneCorpoPreventivo__.query,
+                    numero_preventivo=numero_preventivo, data=data,
+                    ordine=ordine)
 
         PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
                                                      ordine=ordine, ordine_sottolavorazione=ordineSottolavorazione,
@@ -443,7 +478,10 @@ class PreventivoEdile(PreventivoDBmodel):
         elif unitaMisura == 'mc':
             toDel = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
                                                                       ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione).first()
-
+        elif unitaMisura == 'a corpo':
+            toDel = __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                                     ordine=ordine,
+                                                                     ordine_sottolavorazione=ordine_sottolavorazione).first()
 
         PreventivoEdile.delRow(toDel)
 
@@ -503,7 +541,7 @@ class PreventivoEdile(PreventivoDBmodel):
         PreventivoDBmodel.commit()
 
     def __settaOrdineSottolavorazioneNegativo__(sottolavorazione, queryClass):
-        app.server.logger.info("sTo siordinando la sottolav nun: {}".format(sottolavorazione.ordine_sottolavorazione) )
+
         newOrdine = int(-sottolavorazione.ordine_sottolavorazione)
 
         queryClass.filter_by(numero_preventivo=sottolavorazione.numero_preventivo, data=sottolavorazione.data,
@@ -528,6 +566,9 @@ class PreventivoEdile(PreventivoDBmodel):
         elif unitaMisura == 'mc':
             queryClassSottolavorazione = __SottolavorazioneMcPreventivo__.query
 
+        elif unitaMisura == 'a corpo':
+            queryClassSottolavorazione = __SottolavorazioneCorpoPreventivo__.query
+
         sottolavPrev = queryClassSottolavorazione.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).all()
         iniziaNuovoRiordino = True
 
@@ -540,13 +581,11 @@ class PreventivoEdile(PreventivoDBmodel):
                 iniziaNuovoRiordino = False
 
         if iniziaNuovoRiordino:
-            app.server.logger.info("\n\nEntrato in Inizio riordino {} {}\n\n".format(ordine, unitaMisura))
             for lav in sottolavPrev:
                 PreventivoEdile.__settaOrdineSottolavorazioneNegativo__(lav, queryClassSottolavorazione)
 
             PreventivoDBmodel.commit()
 
-        app.server.logger.info('fine rinumerazione')
 
 
     def modificaOrdineSottolavorazione(numero_preventivo, data, ordine, old_ordine_sottolavorazione, unitaMisura,
@@ -577,6 +616,12 @@ class PreventivoEdile(PreventivoDBmodel):
                                                              ordine_sottolavorazione=old_ordine_sottolavorazione).update(
                 {'ordine_sottolavorazione': new_ordine_sottolavorazione})
 
+        elif unitaMisura == 'a corpo':
+            __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                             ordine=ordine,
+                                                             ordine_sottolavorazione=old_ordine_sottolavorazione).update(
+                {'ordine_sottolavorazione': new_ordine_sottolavorazione})
+
         PreventivoDBmodel.commit()
     def modificaSottolavorazione(modifica, numero_preventivo, data, ordine, ordine_sottolavorazione, unitaMisura):
 
@@ -594,6 +639,12 @@ class PreventivoEdile(PreventivoDBmodel):
         elif unitaMisura == 'mc':
             __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
                                             ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione  ).update(modifica)
+
+        elif unitaMisura == 'a corpo':
+            __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                             ordine=ordine,
+                                                             ordine_sottolavorazione=ordine_sottolavorazione).update(
+                modifica)
 
         PreventivoDBmodel.commit()
 
@@ -684,6 +735,21 @@ class PreventivoEdile(PreventivoDBmodel):
 
                 for sottolav in sottolavorazioni:
                     quantitaTotale += (sottolav.numero * sottolav.larghezza * sottolav.altezza * sottolav.profondita)
+
+                prezzoTotale = quantitaTotale * lav.prezzoUnitario
+
+                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
+
+            elif lav.unitaMisura == 'a corpo':
+                sottolavorazioni = __SottolavorazioneCorpoPreventivo__.query.filter_by(
+                                        numero_preventivo=numero_preventivo,
+                                        data=data, ordine=lav.ordine).order_by(
+                                        __SottolavorazioneCorpoPreventivo__.ordine_sottolavorazione).all()
+
+                quantitaTotale = 0
+
+                for sottolav in sottolavorazioni:
+                    quantitaTotale += 1
 
                 prezzoTotale = quantitaTotale * lav.prezzoUnitario
 

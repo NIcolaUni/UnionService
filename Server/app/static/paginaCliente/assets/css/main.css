@@ -4263,3 +4263,8 @@ button.elementPreventivo {
   .editDato{
     margin-left: 5%;
   }
+
+  .inputLivelloCliente {
+    color: black;
+    width: 3%;
+  }

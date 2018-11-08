@@ -2,6 +2,51 @@
 
 {% block content %}
 
+    <div id="headerNewRow">
+        <div id="tabellaContainerNewRow1">
+            <table class="tabella">
+                <tr class="sezioneTabella dimensionaTabella newRow">
+                    <th class="primaCol"><a id="regNewRow" class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
+                    <th class="secondaCol" colspan="6">
+                        <label>Selezionare/digitare l'impiego dell'artigiano: </label>
+                        <input id="impostaImpieghi" list="listaImpieghi" class="inputScheda" placeholder="impiego artigiano..">
+                    </th>
+                </tr>
+                <tr class="headerTabella dimensionaTabella newRow">
+                    <th class="primaCol"></th>
+                    <th > Nominativo </th>
+                    <th class="numCell"> Valutazione </th>
+                    <th> Contatti 1 </th>
+                    <th> Contatti 2 </th>
+                    <th> Email </th>
+                    <th> Note </th>
+                </tr>
+                 <tr class="datiScheda dimensionaTabella newRow">
+                    <td class="primaCol"></td>
+                    <td class="nominativo no_cursor">
+                        <input class="inputScheda" value="" placeholder="tipologia lavorazione..." >
+                    </td>
+                    <td class="valutazione no_cursor numCell">
+                        <input class="inputScheda inputNum" type="number" value=0 >
+                    </td>
+                    <td class="contatti1 no_cursor">
+                        <input class="inputScheda" value="" placeholder="contatti 1..." >
+                    </td>
+                    <td class="contatti2 no_cursor">
+                        <input class="inputScheda" value="" placeholder="contatti 2..." >
+                    </td>
+                    <td class="email no_cursor">
+                        <input class="inputScheda" value="" placeholder="email..." >
+                    </td>
+                    <td class="note no_cursor">
+                        <textarea class="inputScheda" value="" placeholder="note..." ></textarea>
+                    </td>
+                 </tr>
+
+            </table>
+        </div>
+    </div>
+
     <div id="page-wrapper">
 
         <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
@@ -9,53 +54,8 @@
 
         <div id="schedaArtigiani" class="scheda">
 
-            <div id="headerNewRow">
-                <div id="tabellaContainerNewRow1">
-                    <table class="tabella">
-                        <tr class="sezioneTabella dimensionaTabella newRow">
-                            <th class="primaCol"><a id="regNewRow" class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
-                            <th class="secondaCol" colspan="6">
-                                <label>Selezionare/digitare l'impiego dell'artigiano: </label>
-                                <input id="impostaImpieghi" list="listaImpieghi" class="inputScheda" placeholder="impiego artigiano..">
-                            </th>
-                        </tr>
-                        <tr class="headerTabella dimensionaTabella newRow">
-                            <th class="primaCol"></th>
-                            <th > Nominativo </th>
-                            <th class="numCell"> Valutazione </th>
-                            <th> Contatti 1 </th>
-                            <th> Contatti 2 </th>
-                            <th> Email </th>
-                            <th> Note </th>
-                        </tr>
-                         <tr class="datiScheda dimensionaTabella newRow">
-                            <td class="primaCol"></td>
-                            <td class="nominativo no_cursor">
-                                <input class="inputScheda" value="" placeholder="tipologia lavorazione..." >
-                            </td>
-                            <td class="valutazione no_cursor numCell">
-                                <input class="inputScheda inputNum" type="number" value=0 >
-                            </td>
-                            <td class="contatti1 no_cursor">
-                                <input class="inputScheda" value="" placeholder="contatti 1..." >
-                            </td>
-                            <td class="contatti2 no_cursor">
-                                <input class="inputScheda" value="" placeholder="contatti 2..." >
-                            </td>
-                            <td class="email no_cursor">
-                                <input class="inputScheda" value="" placeholder="email..." >
-                            </td>
-                            <td class="note no_cursor">
-                                <textarea class="inputScheda" value="" placeholder="note..." ></textarea>
-                            </td>
-                         </tr>
-
-                    </table>
-                </div>
-            </div>
-
             <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
-
+                <div id="openCloseFilterSearch"><a class="fa fa-angle-double-up"></a></div>
                 <div id="filtersContainer">
                     <div class="containerTitle"><h2>Filtri di Ricerca</h2></div>
                     <div id="filters">
@@ -90,8 +90,9 @@
 
 
             </div>
-            <div class="fc-view-container viewContainer">
-                <div id="tabellaContainer">
+
+            <div id="headerTableContainer_1">
+                 <div id="divHeaderTabella">
                     <table class="tabella">
                         <tr class="headerDelHeader dimensionaTabella">
                             <th class="primaCol"></th>
@@ -100,14 +101,22 @@
                         </tr>
                         <tr class="headerTabella dimensionaTabella">
                             <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
-                            <th> Nominativo </th>
-                            <th class="numCell"> Valutazione </th>
-                            <th> Contatti 1 </th>
-                            <th> Contatti 2 </th>
-                            <th> Email </th>
-                            <th> Note </th>
+                            <th class="normal_string"> Nominativo </th>
+                            <th class="numCellBig"> Valutazione </th>
+                            <th class="normal_string"> Contatti 1 </th>
+                            <th class="normal_string"> Contatti 2 </th>
+                            <th class="normal_string"> Email </th>
+                            <th class="note"> Note </th>
 
                         </tr>
+                    </table>
+                 </div>
+            </div>
+
+            <div class="fc-view-container viewContainer">
+                <div id="tabellaContainer">
+                    <table class="tabella">
+
                        <!--  <tr class="sezioneTabella dimensionaTabella">
                             <th class="primaCol"></th>
                             <th colspan="7">Impiego: idraulico</th>
@@ -149,28 +158,6 @@
         });
 
         var socketArtigiani = io.connect("{{sockUrl}}"+'/artigiani');
-
-        var artigianoInListaArtigiani = function(artigiano){
-
-            var toAdd = true;
-
-            $('#listArtigiani').children('option').each(function(){
-                if( $(this).val() == artigiano ){
-                    toAdd = false;
-                }
-            });
-
-            if( toAdd ){
-                $('#listArtigiani').append('<option>'+artigiano+'</option>');
-            }
-        }
-
-        $('.datiScheda td').click( function(){
-            $(this).children('label').hide();
-            $(this).children('input').show();
-        });
-
-        $('.primaCol').unbind('click');
 
 
         $('.iconLista').click(function(){
@@ -267,342 +254,6 @@
             }
         });
 
-        var pulisciHeaderNewRow = function(){
-
-            $('#headerNewRow input').each(function(){
-                if($(this).hasClass('inputNum'))
-                    $(this).val(0);
-                else
-                {
-                    $(this).val('');
-
-                }
-            });
-
-            $('#headerNewRow textarea').each(function(){
-
-                $(this).val('');
-
-            });
-
-        }
-
-        $('#delNewRow').click(function(){
-
-
-            $('#headerNewRow').animate({'margin-top': '-=11%'});
-
-            $('#addRow').click(function(){
-                $(this).unbind('click');
-                $('#headerNewRow').animate({'margin-top': '+=11%'});
-
-            });
-
-            pulisciHeaderNewRow();
-
-        });
-
-        $('#addRow').click(function(){
-            $(this).unbind('click');
-            $('#headerNewRow').animate({'margin-top': '+=11%'});
-
-        });
-
-        var hiddenInputAction = function($this){
-
-            $('.inModifica').each(function(){
-                $(this).removeClass('inModifica');
-                $(this).children('label').show();
-                $(this).children('input').hide();
-                $(this).children('textarea').hide();
-
-
-            });
-
-
-            $this.addClass('inModifica');
-            $this.children('label').hide();
-            $this.children('input').show();
-            $this.children('textarea').show();
-
-        }
-
-        var verificaImpiegoVuoto = function(){
-
-             /*se una sezione rimane senza artigiano elimino l'impiego*/
-                var eliminaImpiego= function($this){
-                   var counter = 0;
-
-                   $this.children('tr').each(function(){
-                        counter++;
-
-                   });
-
-
-                   if( counter == 1 ){
-
-                    $this.remove();
-                   }
-
-                }
-
-                $('#tabellaContainer tbody').each(function(){
-                   eliminaImpiego($(this));
-                });
-
-
-        }
-
-        var cancellaRiga = function($row){
-
-            var impiego=$row.parent().attr('class');
-            var nominativo=$row.children('td.nominativo_saved').children('input').val();
-
-            socketArtigiani.emit('elimina_artigiano', {
-
-                'dip': '{{dipendente.username}}',
-                'impiego': impiego,
-                'nominativo': nominativo
-
-            });
-
-            socketArtigiani.on('conferma_elimina_artigiano', function(){
-
-                $row.remove();
-
-                verificaImpiegoVuoto();
-
-            });
-
-        }
-
-        var aggiungiRiga = function(){
-
-            var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
-            var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
-            var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
-
-            var $impiego = $sezioneTabella1.children('th.primaCol').next('th').children('input');
-            var $nominativo = $datiScheda1.children('td.nominativo').children('input');
-            var $valutazione = $datiScheda1.children('td.valutazione').children('input');
-            var $contatti1 = $datiScheda1.children('td.contatti1').children('input');
-            var $contatti2 = $datiScheda1.children('td.contatti2').children('input');
-            var $email = $datiScheda1.children('td.email').children('input');
-            var $note = $datiScheda1.children('td.note').children('textarea');
-
-
-             var $table=$('#tabellaContainer').children('table');
-
-            var impiegoEsistente=false;
-
-            $table.children('tbody').each(function(){
-                if( $(this).attr('class') == $impiego.val() ){
-                    impiegoEsistente = true;
-                }
-            });
-
-            if( !impiegoEsistente ){
-                $table.append(
-                    '<tbody class="'+$impiego.val()+'"> \
-                        <tr class="sezioneTabella dimensionaTabella""> \
-                            <th class="primaCol"></th> \
-                            <th class="secondaCol" colspan="6">Impiego: '+$impiego.val()+'</th> \
-                        </tr> \
-                    <tbody>'
-                );
-
-            }
-            var $tbodyToExpand=null;
-
-            $table.children('tbody').each(function(){
-                if( $(this).attr('class') == $impiego.val() ){
-                    $tbodyToExpand=$(this);
-                }
-            });
-
-            artigianoInListaArtigiani($nominativo.val())
-
-            var datiSchedaNewRow=$(
-                        '<tr class="datiScheda dimensionaTabella"> \
-                            <td class="primaCol"> \
-                                <a class="fa fa-trash primaColIcon delRow"></a> \
-                                <div class="divColorChoose"> \
-                                    <input type="radio" name="colorChoose" class="yellow" value="yellow"> \
-                                    <input type="radio" name="colorChoose" class="blue" value="blue"> \
-                                    <input type="radio" name="colorChoose" class="green" value="green"> \
-                                    <input type="radio" name="colorChoose" class="gray" value="gray"> \
-                                    <input type="radio" name="colorChoose" class="white" value="white"> \
-                                    <span class="spanColorChoose yellow"> </span> \
-                                    <span class="spanColorChoose blue"> </span> \
-                                    <span class="spanColorChoose green"> </span> \
-                                    <span class="spanColorChoose gray"> </span> \
-                                    <span class="spanColorChoose white"> </span> \
-                                </div> \
-                            </td> \
-                            <td class="nominativo_saved" style="display:none"> \
-                                <input  class="inputScheda" value="'+$nominativo.val()+'" placeholder="nome artigiano..." > \
-                            </td> \
-                            <td class="nominativo hiddenInput"> \
-                                <label class="cellaDato">'+$nominativo.val()+'</label> \
-                                <input style="display:none" class="inputScheda" value="'+$nominativo.val()+'" placeholder="nome artigiano..." > \
-                            </td> \
-                            <td class="valutazione hiddenInput numCell"> \
-                                <label class="cellaDato">'+$valutazione.val()+'</label> \
-                                <input style="display:none" type="number" class="inputScheda inputNum" value="'+$valutazione.val()+'" placeholder="valutazione artigiano..." > \
-                            </td> \
-                            <td class="contatti1 hiddenInput"> \
-                                <label class="cellaDato">'+$contatti1.val()+'</label> \
-                                <input style="display:none" type="tel" class="inputScheda" value="'+$contatti1.val()+'" placeholder="contatto 1..." > \
-                            </td> \
-                            <td class="contatti2 hiddenInput"> \
-                                <label class="cellaDato">'+$contatti2.val()+'</label> \
-                                <input style="display:none" type="tel" class="inputScheda" value="'+$contatti2.val()+'" placeholder="contatto 2..." > \
-                            </td> \
-                            <td class="email hiddenInput"> \
-                                <label class="cellaDato">'+$email.val()+'</label> \
-                                <input style="display:none" type="email" class="inputScheda" value="'+$email.val()+'" placeholder="email artigiano..." > \
-                            </td> \
-                            <td class="note hiddenInput"> \
-                                <label class="cellaDato">'+$note.val()+'</label> \
-                                <input style="display:none" class="inputScheda" value="'+$note.val()+'" placeholder="note artigiano..." > \
-                            </td> \
-                        </tr>').appendTo($tbodyToExpand);
-
-
-            $('td.hiddenInput').click( function(){
-                hiddenInputAction($(this));
-
-            });
-
-
-            datiSchedaNewRow.children('td.primaCol').children('div').children('input').change(function(){
-
-
-
-                var color = $(this).attr('class');
-
-                datiSchedaNewRow.css('background', color);
-
-                if( color != 'yellow' && color != 'white' ){
-                    datiSchedaNewRow.css('color', 'white');
-                }
-                else
-                    datiSchedaNewRow.css('color', '#797877');
-
-
-                var $riga=$(this).parent().parent().parent();
-                var impiego= $riga.parent().attr('class');
-                var nominativo = $riga.children('td.nominativo_saved').children('input').val();
-
-                socketArtigiani.emit('modifica_colore_artigiano', {
-
-                    'impiego': impiego,
-                    'nominativo': nominativo,
-                    'colore': color
-
-                });
-
-            });
-
-            datiSchedaNewRow.children('td.primaCol').children('div').children('span.spanColorChoose').click(function(){
-
-                var color = $(this).attr('class').split(' ')[1];
-                $(this).parent().children('input.'+color).trigger('click');
-                $(this).parent().children('input.'+color).trigger('change');
-
-            });
-
-
-            datiSchedaNewRow.children('td.primaCol').children('a.delRow').click(function(){
-
-                cancellaRiga(datiSchedaNewRow);
-            });
-
-            $('input').unbind('mouseover').mouseover(function(){
-                $(this).focus();
-            });
-
-            $('textarea').unbind('mouseover').mouseover(function(){
-                $(this).focus();
-            });
-
-            var changeValueArtigiano = function($this){
-
-                var $container=$this.parent();
-                var $row = $container.parent();
-                var impiego = $row.parent().attr('class');
-                var nominativo=$row.children('td.nominativo_saved').children('input').val();
-
-                var attributoToEdit=$container.attr('class').split(' ')[0];
-                var valore = $this.val()
-
-                if( attributoToEdit == 'note' ){
-                    valore= $this.val().replace( /\r?\n/gi, '');
-
-                }
-
-                socketArtigiani.emit('modifica_artigiano',
-                    {
-                        'dip' : '{{dipendente.username}}',
-                        'impiego' : impiego,
-                        'nominativo' : nominativo,
-                        'toEdit' : attributoToEdit,
-                        'valore' : valore
-                    }
-                );
-
-                socketArtigiani.on('conferma_modifica_artigiano', function(){
-
-                    $('.inModifica').each(function(){
-
-                        $(this).children('label').show();
-                        $(this).children('input').hide();
-                        $(this).children('textarea').hide();
-
-                        $(this).removeClass('inModifica');
-                    });
-
-
-                    if( $container.hasClass('numCell') ){
-                        if($container.hasClass('fornitura') || $container.hasClass('posa') ){
-                            calcolaCostoFornituraPosa(datiSchedaNewRow);
-                        }
-                        $container.children('label.cellaDato').html('&euro; '+valore);
-                    }
-                    else{
-                        $container.children('label.cellaDato').html(valore);
-                    }
-
-
-                    if( attributoToEdit == 'nominativo' ){
-                        $row.children('td.nominativo_saved').children('input').val(valore);
-                    }
-
-                });
-
-
-            }
-
-            $('#tabellaContainer input').each(function(){
-
-                if( $(this).attr('type') != 'radio' ){
-                    $(this).unbind('change').change(function(){
-
-                        changeValueArtigiano($(this));
-                    });
-                }
-
-
-            });
-
-            $('#tabellaContainer textarea').unbind('change').change(function(){
-
-                changeValueArtigiano($(this));
-            });
-
-            return datiSchedaNewRow;
-
-        } //FINE AGGIUNGI RIGA
 
         $('#regNewRow').click(function(){
 
@@ -663,7 +314,7 @@
 
         socketArtigiani.on('confermaRegistrazioneArtigiano', function(){
 
-            aggiungiRiga();
+            aggiungiRiga('{{dipendente.username}}');
 
             pulisciHeaderNewRow();
 
@@ -687,7 +338,7 @@
             $datiScheda1.children('td.email').children('input').val('{{artigiano.email}}');
             $datiScheda1.children('td.note').children('textarea').val('{{artigiano.note}}');
 
-            var $riga= aggiungiRiga();
+            var $riga= aggiungiRiga('{{dipendente.username}}');
 
             $riga.children('td.primaCol').children('div').children('span.{{artigiano.colore}}').trigger('click');
 
@@ -696,110 +347,9 @@
 
         {% endfor %}
 
-        var filtraTbody = function($tabella, classe){
-
-            if( classe != '' ){
-                $tabella.children('table').children('tbody').each(function(){
-                    var tbodyClass = $(this).attr('class');
-
-                    if( tbodyClass !== undefined ){
-
-                        if( !tbodyClass.startsWith(classe) ){
-                            $(this).hide();
-                        }
-                        else if( tbodyClass.startsWith(classe) ){
-                            $(this).show();
-                        }
-
-                    }
-                });
-            }
-            else{
-                $tabella.children('table').children('tbody').each(function(){
-                    $(this).show();
-                });
-
-            }
-        }
-
-        var filtraRighe = function($tabella, nominativo){
-
-            if( nominativo != '' ){
-
-                $tabella.children('table').children('tbody').each(function(){
-
-                    var tbodyClass = $(this).attr('class');
-
-                    if( tbodyClass !== undefined ){
-                        var hideTbody = false;
-                        var countRow = 0;
-                        var countHiddenRow = 0;
 
 
-                        $(this).children('tr.datiScheda').each( function(){
-                            var trNominativo = $(this).children('td.nominativo_saved').children('input').val();
 
-                            countRow++;
-
-                            if( trNominativo.startsWith(nominativo) ){
-                                $(this).show();
-                            }
-                            else{
-                                countHiddenRow++;
-                                $(this).hide();
-                            }
-
-                        });
-
-                        if( countRow == countHiddenRow ){
-                            $(this).hide();
-
-                        }
-                    }
-                });
-
-            }
-            else{
-
-                $tabella.children('table').children('tbody').each(function(){
-
-                    $(this).show();
-
-                    $(this).children('tr.datiScheda').each( function(){
-                        $(this).show();
-                    });
-
-
-                });
-
-
-            }
-
-        }
-
-        $('#filtraImpieghi').change(function(){
-
-            filtraTbody( $('#tabellaContainer'), $(this).val());
-        });
-
-        $('#filtraImpieghi').keydown(function(){
-
-
-            $(this).trigger('change');
-
-        });
-
-        $('#filtraArtigiani').change(function(){
-
-            filtraRighe( $('#tabellaContainer'), $(this).val());
-        });
-
-        $('#filtraArtigiani').keydown(function(){
-
-
-            $(this).trigger('change');
-
-        });
 
     </script>
 {% endblock%}

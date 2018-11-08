@@ -60,15 +60,18 @@ materialAdmin
 
          socketNotifica.on('aggiornaNotifiche', function (msg) {
 
+             numNot = msg['numero'];
+
+
              angular.element('#corpoNote').append(
               " <a onclick=\"gestioneNotifica($(this));\"  class=\"lv-item\" ng-href=\"\" >" +
-                               " <div class=\"media\"> " +
+                               " <div class=\"media media_notifica\"> " +
                                   "  <div class=\"pull-left\"> " +
                                       "  <img class=\"lv-img-sm\" ng-src=\"/static/images/sys_notifica.png\" src=\"/static/images/sys_notifica.png\" alt=\"\"> " +
                                    " </div> "+
-                                    "<div class=\"media-body "+ msg['tipologia']+"\">"+
+                                    "<div class=\"media-body "+ msg['tipologia']+" "+ numNot +"\">"+
                                        " <div class=\"lv-title\">" + msg['titolo'] + "</div> " +
-                                     "   <small class=\"lv-small\">"+ msg['contenuto'] +"</small> " +
+                                     "   <small class=\"lv-small\"><label class=\"testo_nota\">"+ msg['contenuto'] +"</label></small> " +
                                    " </div> " +
                                 "</div>"+
                             "</a>"

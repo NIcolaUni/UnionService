@@ -1,40 +1,477 @@
 {% extends "paginaBase.html" %}
 
 {% block content %}
+    <div id="headerNewRow">
+        <div id="tabellaContainerNewRow1">
 
-    <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
-    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+            <table class="tabella">
+                <tbody>
+                    <tr class="sezioneTabella dimensionaTabella newRow">
+                        <th class="primaCol"><a id="regNewRow" class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
+                        <th colspan="3" class="settore">
+                            <label>Selezionare/digitare il settore merceologico: </label>
+                            <input list="listaSettori" class="inputScheda inputLista"  value="" placeholder="settore merceologico...">
+                        </th>
+                    </tr>
+                    <tr class="headerTabella dimensionaTabella">
+                        <th style="width:5%" class="primaCol"></th>
+                        <th style="width:45%" class="secondaCol"> Primo gruppo </th>
+                        <th style="width:25%"> Sotto gruppo </th>
+                        <th style="width:25%"> Stato  </th>
+                    </tr>
+                    <tr class="datiScheda dimensionaTabella newRow">
+                        <td class="primaCol">
 
-    <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-
-
-    <div id="paginaFornitori">
-
-        <div id="divIntestazione" >
-            <span class="contact100-form-title">
-               Scheda Fornitori
-            </span>
-            <form id="searchFornitore">
-              <div id="searchContainer">
-                 <span id="spanAddFornitore"><a id="addFornitore" class="fa fa-plus"></a></span>
-                  <input list="listFornitori" id="cercaFornitore" autocomplete="off" name="q" type="text" size="300" placeholder="Cerca fornitore..." />
-                  <datalist id="listFornitori">
-                      {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
-                      <option value="{{fornitoreSottoGruppo.gruppo_azienda}} - {{fornitoreSottoGruppo.nome}}"></option>
-                      {% endfor %}
-                  </datalist>
-              </div>
-            </form>
-
+                        </td>
+                        <td class="secondaCol primo_gruppo"><input class="inputScheda" placeholder="Primo gruppo..." ></td>
+                        <td class="sotto_gruppo"><input class="inputScheda"  placeholder="Sotto gruppo..." ></td>
+                        <td class="radioContainer stato">
+                                <input id="inputCollaboraNewRow1" type="radio" name="collaboraNewRow" class="" value="Collabora" checked="checked">
+                                <label for="inputCollaboraNewRow1" class="radioLabel">Collabora</label>
+                                <input id="inputCollaboraNewRow2" type="radio" name="collaboraNewRow" class="" value="Potenziale">
+                                <label for="inputCollaboraNewRow2" class="radioLabel">Potenziale</label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div id="tableSection" >
-            <div class="tabContainer">
+        <div id="tabellaContainerNewRow2">
+            <table class="tabella">
+                <tbody>
+                    <tr class="sezioneTabella dimensionaTabella newRow">
+                        <th colspan="5" class="newPageCell newRow"><a class="fa fa-angle-double-right"></a></th>
+                    </tr>
+                    <tr class="headerTabella dimensionaTabella">
+                        <th style="width:40%"> Tempi di consegna </th>
+                        <th style="width:15%"> Prezzi netti  </th>
+                        <th style="width:15%"> Trasporto </th>
+                        <th style="width:15%"> Imballo </th>
+                        <th style="width:15%"> Montaggio </th>
+
+                    </tr>
+                    <tr class="datiScheda dimensionaTabella newRow">
+                        <td class="tempi_di_consegna">
+                            <input  list="listaTempiConsegna"  class="inputScheda inputLista" value="" placeholder="tempi di consegna..." >
+                        </td>
+                        <td class="radioContainer prezzi_netti">
+                            <input type="radio" id="inputPrezziNettiNewRow1"  name="prezziNettiNewRow" class="" value="si" checked="checked">
+                            <label for="inputPrezziNettiNewRow1" class="radioLabel">Sì</label>
+                            <input type="radio" id="inputPrezziNettiNewRow2" name="prezziNettiNewRow" class="" value="no" >
+                            <label for="inputPrezziNettiNewRow2" class="radioLabel">No</label>
+                        </td>
+                        <td class="trasporto">
+                            <input type="number" class="inputScheda numInput" value="0"  placeholder="costi di trasporto..." >
+                            <input type="radio" id="inputEuroPercTrasportoNewRow1"  name="euroPercTrasportoNewRow" class="" value="euro" checked="checked">
+                            <label for="inputEuroPercTrasportoNewRow1"  class="radioLabel">&euro;</label>
+                            <input type="radio" id="inputEuroPercTrasportoNewRow2" name="euroPercTrasportoNewRow" class="" value="%">
+                            <label for="inputEuroPercTrasportoNewRow2" class="radioLabel">%</label>
+                        </td>
+                        <td class="imballo">
+                            <input type="number" class="inputScheda numInput"  value="0" placeholder="costi imballo..." >
+                            <input type="radio" id="inputEuroPercImballoNewRow1" name="euroPercImballoNewRow" class="" value="euro" checked="checked">
+                            <label for="inputEuroPercImballoNewRow1" class="radioLabel">&euro;</label>
+                            <input type="radio" id="inputEuroPercImballoNewRow2" name="euroPercImballoNewRow" class="" value="%">
+                            <label for="inputEuroPercImballoNewRow2" class="radioLabel">%</label>
+                        </td>
+                        <td class="montaggio">
+                            <input type="number" class="inputScheda numInput"  value="0" placeholder="costi posa..." >
+                            <input type="radio" id="inputEuroPercPosaNewRow1" name="euroPercPosaNewRow" class="" value="euro" checked="checked">
+                            <label for="inputEuroPercPosaNewRow1" class="radioLabel">&euro;</label>
+                            <input type="radio" id="inputEuroPercPosaNewRow2" name="euroPercPosaNewRow" class="" value="%">
+                            <label for="inputEuroPercPosaNewRow2" class="radioLabel">%</label>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div id="tabellaContainerNewRow3" style="display:none">
+            <table class="tabella">
+                <tbody>
+
+                    <tr class="sezioneTabella dimensionaTabella newRow">
+                        <th colspan="6" class="oldPageCell newRow"><a  class="fa fa-angle-double-left"></a></th>
+                    </tr>
+                    <tr class="headerTabella dimensionaTabella">
+                        <th style="width:10%"> Standard </th>
+                        <th style="width:10%"> Extra 1 </th>
+                        <th style="width:10%"> Extra 2 </th>
+                        <th style="width:23%"> Giorni </th>
+                        <th style="width:23%"> Modalità </th>
+                        <th style="width:23%"> Tipologia </th>
+
+                    </tr>
+                    <tr class="datiScheda dimensionaTabella newRow">
+                        <td class="standard">
+                            <input type="number" value="0" step="0.01" class="inputScheda numInput" ><label class="simpleAfterInputLabel">%</label>
+                        </td>
+                        <td class="extra1">
+                            <input type="number" value="0" step="0.01" class="inputScheda numInput" ><label class="simpleAfterInputLabel">%</label>
+                        </td>
+                        <td class="extra2">
+                            <input type="number" value="0" step="0.01"  class="inputScheda numInput" ><label class="simpleAfterInputLabel">%</label>
+                        </td>
+                        <td class="giorni">
+                            <input list="listaGiorniPagamento" class="inputScheda inputLista" value="" placeholder="giorni pagamento..." >
+                        </td>
+                        <td class="modalita">
+                            <input list="listaModalitaPagamento" class="inputScheda inputLista" value="" placeholder="modalità pagamento..." >
+                        </td>
+                        <td class="tipologia">
+                            <input list="listaTipologiaPagamento" class="inputScheda inputLista" value="" placeholder="tipologia..." >
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="page-wrapper">
+
+        <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+        <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+        <div id="schedaFornitori" class="scheda">
+
+            <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
+                <div id="openCloseFilterSearch"><a class="fa fa-angle-double-up"></a></div>
+                <div id="filtersContainer">
+                    <div class="containerTitle"><h2>Filtri di Ricerca</h2></div>
+                    <div id="filters">
+                        <div class="filterInputContainer tipologia">
+                            <input id="filtraSettori" list="listaSettori" autocomplete="off" class="filterInput" placeholder="Selezionare il settore...">
+
+                        </div>
+
+                        <div class="filterInputContainer primoG">
+                            <input id="filtraFornitoriPrimoG" list="listaFornitoriPrimoG" autocomplete="off" class="filterInput" placeholder="Selezionare primo gruppo...">
+
+                        </div>
+
+                        <div class="filterInputContainer secondoG">
+                            <input id="filtraFornitoriSecondoG" list="listaFornitoriSecondoG" autocomplete="off" class="filterInput" placeholder="Selezionare secondo gruppo...">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delModLists headerSection">
+                    <div class="containerTitle"><h2>Modifica/cancella</h2></div>
+                    <div class="filterInputContainer">
+                        <label for="modDelSettore">Settore Merceologico</label><br/>
+                        <select id="modDelSettore" class="delModList">
+                            {% for settore in settore_merceologico %}
+                            <option>{{settore.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelTempiConsegna">Tempi di consegna</label><br/>
+                        <select id="modDelTempiConsegna" class="delModList">
+                            {% for tempi in tempiDiConsegna %}
+                            <option>{{tempi.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelTipologiaPagamento">Tipologia pagamento</label><br/>
+                        <select id="modDelTipologiaPagamento" class="delModList">
+                            {% for tipologia in tipologiaPagamento %}
+                            <option>{{tipologia.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelModalitaPagamento">Modalità pagamento</label><br/>
+                        <select id="modDelModalitaPagamento" class="delModList">
+                            {% for modalita in modalitaPagamento %}
+                            <option>{{modalita.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+                    <div class="filterInputContainer">
+                        <label for="modDelGiorniPagamento">Giorni pagamento</label><br/>
+                        <select id="modDelGiorniPagamento" class="delModList">
+                            {% for giorni in giorniPagamento %}
+                            <option>{{giorni.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+
+
+                </div>
 
 
             </div>
+
+
+            <div id="sezioneHeader">
+                <div id="headerTableContainer_1">
+                     <div id="divHeaderTabella1">
+                        <table class="tabella">
+                            <tr class="headerDelHeader dimensionaTabella">
+                                <th class="primaCol"></th>
+                                <th class="secondaCol" colspan="3" >Dati fornitore</th>
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                                <th class="secondaCol long_string"> Primo gruppo </th>
+                                <th class="normal_string"> Sotto gruppo </th>
+                                <th class="normal_string"> Stato  </th>
+                            </tr>
+                        </table>
+                     </div>
+                </div>
+
+                <div id="headerTableContainer_2">
+                     <div id="divHeaderTabella2">
+                        <table class="tabella">
+                            <tr class="headerDelHeader dimensionaTabella">
+                                <th colspan="5" class="newPageCell"><a class="fa fa-angle-double-right"></a></th>
+
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th class="normal_string"> Tempi di consegna </th>
+                                <th class="numCell"> Prezzi netti  </th>
+                                <th class="numCell"> Trasporto </th>
+                                <th class="numCell"> Imballo </th>
+                                <th class="numCell"> Montaggio </th>
+
+                            </tr>
+                        </table>
+                     </div>
+                </div>
+
+                <div id="headerTableContainer_3">
+                     <div id="divHeaderTabella3">
+                        <table class="tabella">
+                            <tr class="headerDelHeader dimensionaTabella">
+                                <th colspan="3" class="oldPageCell"><a  class="fa fa-angle-double-left"></a><label>Sconti</label></th>
+                                <th colspan="3"><label>Pagamenti</label></th>
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th class="numCell"> Standard </th>
+                                <th class="numCell"> Extra 1 </th>
+                                <th class="numCell"> Extra 2 </th>
+                                <th class="normal_string"> Giorni </th>
+                                <th class="normal_string"> Modalità </th>
+                                <th class="normal_string"> Tipologia </th>
+                            </tr>
+                        </table>
+                     </div>
+                </div>
+            </div>
+
+            <div class="fc-view-container viewContainer">
+
+
+                <div id="tabellaContainer1">
+                     <table class="tabella">
+
+                       <!--  <tbody class="prv">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th class="primaCol"></th>
+                                <th class="secondaCol" colspan="3">Settore merceologico: sanitari</th>
+                            </tr>
+                            <tr class="datiScheda dimensionaTabella">
+                                <td class="primaCol">
+                                    <a class="fa fa-address-card primaColIcon"></a>
+                                    <a class="fa fa-users primaColIcon centralIcon"></a>
+                                    <a class="fa fa-trash primaColIcon finalIcon"></a>
+                                </td>
+                                <td class="secondaCol hiddenInput"><label class="cellaDato">Cambielli</label><input style="display:none" class="inputScheda" value="Cambielli" placeholder="Primo gruppo..." ></td>
+                                <td class="hiddenInput"><label class="cellaDato">Idel Standard</label><input style="display:none" class="inputScheda" value="Ideal Standard" placeholder="Sotto gruppo..." ></td>
+                                <td class="radioContainer">
+
+                                        <input id="inputCollabora1" type="radio" name="collabora" class="" value="Collabora" checked="checked">
+                                        <label for="inputCollabora1" class="radioLabel">Collabora</label>
+                                        <input id="inputCollabora2" type="radio" name="collabora" class="" value="Potenziale">
+                                        <label for="inputCollabora2" class="radioLabel">Potenziale</label>
+
+                                </td>
+
+                            </tr>
+                         </tbody>-->
+                         {% for settore in settore_merceologico %}
+                         <tbody class="{{settore.nome}}">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th class="primaCol"></th>
+                                <th class="secondaCol" colspan="3">Settore merceologico: {{settore.nome}}</th>
+                            </tr>
+                         </tbody>
+                         {% endfor %}
+
+                    </table>
+
+                </div>
+                <div id="tabellaContainer2">
+                    <table class="tabella">
+
+                       <!-- <tbody class="prv">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th colspan="5"></th>
+                            </tr>
+                            <tr class="datiScheda dimensionaTabella">
+
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input  list="listaTempiConsegna" style="display:none" class="inputScheda" value="" placeholder="tempi di consegna..." >
+
+                                </td>
+                                <td class="radioContainer">
+                                    <input type="radio" id="inputPrezziNetti1"  name="prezziNetti" class="" value="si" checked="checked">
+                                    <label for="inputPrezziNetti1" class="radioLabel">Sì</label>
+                                    <input type="radio" id="inputPrezziNetti2" name="prezziNetti" class="" value="no" >
+                                    <label for="inputPrezziNetti2" class="radioLabel">No</label>
+                                </td>
+
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput"  placeholder="costi di trasporto..." >
+
+                                    <input type="radio" id="inputEuroPercTrasporto1" style="display:none" name="euroPercTrasporto" class="" value="euro">
+                                    <label for="inputEuroPercTrasporto1" style="display:none" class="radioLabel">&euro;</label>
+                                    <input type="radio" id="inputEuroPercTrasporto2" style="display:none" name="euroPercTrasporto" class="" value="%">
+                                    <label for="inputEuroPercTrasporto2" style="display:none" class="radioLabel">%</label>
+                                </td>
+
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput"  placeholder="costi imballo..." >
+
+                                    <input type="radio" id="inputEuroPercImballo1" style="display:none" name="euroPercImballo" class="" value="euro">
+                                    <label for="inputEuroPercImballo1" style="display:none" class="radioLabel">&euro;</label>
+                                    <input type="radio" id="inputEuroPercImballo2" style="display:none" name="euroPercImballo" class="" value="%">
+                                    <label for="inputEuroPercImballo2" style="display:none" class="radioLabel">%</label>
+                                </td>
+
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput"  placeholder="costi posa..." >
+
+                                    <input type="radio" id="inputEuroPercPosa1" style="display:none" name="euroPercPosa" class="" value="euro">
+                                    <label for="inputEuroPercPosa1" style="display:none" class="radioLabel">&euro;</label>
+                                    <input type="radio" id="inputEuroPercPosa2" style="display:none" name="euroPercPosa" class="" value="%">
+                                    <label for="inputEuroPercPosa2" style="display:none" class="radioLabel">%</label>
+                                </td>
+
+                            </tr>
+                        </tbody>-->
+                        {% for settore in settore_merceologico %}
+                         <tbody class="{{settore.nome}}">
+                             <tr class="sezioneTabella dimensionaTabella">
+                                <th colspan="5"></th>
+                            </tr>
+                         </tbody>
+                         {% endfor %}
+                    </table>
+                </div>
+
+
+                <div id="tabellaContainer3" style="display:none">
+                    <table class="tabella">
+
+                       <!-- <tbody class="prv">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th colspan="6"></th>
+                            </tr>
+                            <tr class="datiScheda dimensionaTabella">
+
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="giorni pagamento..." >
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="modalità pagamento..." >
+
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="tipologia..." >
+                                </td>
+
+                            </tr>
+                        </tbody>-->
+
+                        {% for settore in settore_merceologico %}
+                         <tbody class="{{settore.nome}}">
+                             <tr class="sezioneTabella dimensionaTabella">
+                                <th colspan="6"></th>
+                            </tr>
+                         </tbody>
+                         {% endfor %}
+
+                    </table>
+                </div>
+
+            </div>
+
         </div>
+
+        <datalist id="listaSettori">
+            {% for settore in settore_merceologico %}
+                <option>{{settore.nome}}</option>
+            {% endfor %}
+        </datalist>
+
+        <datalist id="listaTempiConsegna">
+            {% for tempo in tempiDiConsegna %}
+                <option>{{tempo.nome}}</option>
+            {% endfor %}
+        </datalist>
+
+        <datalist id="listaGiorniPagamento">
+            {% for giorni in giorniPagamento %}
+                <option>{{giorni.nome}}</option>
+            {% endfor %}
+        </datalist>
+
+        <datalist id="listaModalitaPagamento">
+            {% for modalita in modalitaPagamento %}
+                <option>{{modalita.nome}}</option>
+            {% endfor %}
+        </datalist>
+
+        <datalist id="listaTipologiaPagamento">
+            {% for tipologia in tipologiaPagamento %}
+                <option>{{tipologia.nome}}</option>
+            {% endfor %}
+        </datalist>
+
+        <datalist id="listaFornitoriPrimoG">
+
+        </datalist>
+
+        <datalist id="listaFornitoriSecondoG">
+
+        </datalist>
+
 
     </div>
 
@@ -47,740 +484,1909 @@
         socketHome.on('connect', function() {
 
            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-       });
+        });
 
-       var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
+        var socketFornitore= io.connect("{{sockUrl}}"+'/fornitore');
 
-       socketFornitore.on('aggiornaGiorniPagamento', function(message){
-            $('#listaGiorniPagamento').children().remove();
-            for( i=0; i<parseInt(message['length']); i++){
-                $('#listaGiorniPagamento').append(
-                     '<option value="'+message[i.toString()]+'"></option>'
-                );
+
+        var fornitoriInListaFornitoriPrimoGruppo = function(fornitore){
+
+            var toAdd = true;
+
+            $('#listaFornitoriPrimoG').children('option').each(function(){
+                if( $(this).val() == fornitore ){
+                    toAdd = false;
+                }
+            });
+
+            if( toAdd ){
+                $('#listaFornitoriPrimoG').append('<option>'+fornitore+'</option>');
             }
+        }
 
-       });
+        var fornitoriInListaFornitoriSecondoGruppo = function(fornitore){
 
-       socketFornitore.on('aggiornaModalitaPagamento', function(message){
-            $('#listaModalitaPagamento').children().remove();
-            for( i=0; i<parseInt(message['length']); i++){
-                $('#listaModalitaPagamento').append(
-                     '<option value="'+message[i.toString()]+'"></option>'
-                );
+            var toAdd = true;
+
+            $('#listaFornitoriSecondoG').children('option').each(function(){
+                if( $(this).val() == fornitore ){
+                    toAdd = false;
+                }
+            });
+
+            if( toAdd ){
+                $('#listaFornitoriSecondoG').append('<option>'+fornitore+'</option>');
             }
-
-       });
-
-       socketFornitore.on('aggiornaTipologiaPagamento', function(message){
-            $('#listaTipologiaPagamento').children().remove();
-            for( i=0; i<parseInt(message['length']); i++){
-                $('#listaTipologiaPagamento').append(
-                     '<option value="'+message[i.toString()]+'"></option>'
-                );
-            }
-
-       });
+        }
 
 
-        //Seguono due metodi diversi per stampare l'alert "sottogruppo presente"
-        {% if rigaPresente %}
-              swal({
-                title: "Il {{tabellaRigaPresente}} inserito è già presente",
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                closeOnConfirm: true
+        $('#regNewRow').click(function(){
 
-              });
+            $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+            $tbodyNewRow3=$('#tabellaContainerNewRow3').children('table').children('tbody');
 
-        {% endif %}
+            $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+            $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+            $datiScheda3=$tbodyNewRow3.children('.datiScheda');
 
+            $settoreMerceologico=$sezioneTabella1.children('th.primaCol').next('th').children('input');
 
-        function viewPage(nomeFornitoreToPrint){
+            $primoGruppo=$datiScheda1.children('td.primo_gruppo').children('input');
+            $sottoGruppo=$datiScheda1.children('td.sotto_gruppo').children('input');
 
-            {% for fornitoreSottoGruppo in listaFornitoriSottoGruppo %}
+            $stato=null;
 
-                if( "{{fornitoreSottoGruppo.nome}}" == nomeFornitoreToPrint.split(' - ')[1]){
+            $datiScheda1.children('td.stato').children('input').each(function(){
 
-                    var strCancellaFornitore="";
-                    var strModificaFornitore="";
+                if( $(this).is(':checked') )
+                    $stato=$(this)
+            });
 
-                    var nomeFornitoreToSend = "{{fornitoreSottoGruppo.nome}}";
-                    var nomeRappresentanteToSend = "";
+            $
 
-                    {% for rappresentante in listaRappresentanti %}
-                        {% if fornitoreSottoGruppo.gruppo_azienda == rappresentante.azienda %}
-                            nomeRappresentanteToSend = "{{rappresentante.nome}}";
-                        {% endif %}
-                    {% endfor %}
+            $tempi_consegna=$datiScheda2.children('td.tempi_di_consegna').children('input');
 
-                    if( "{{fornitoreSottoGruppo.nome}}" == "" )
-                        nomeFornitoreToSend = "spazio";
+            $prezzi_netti=null;
 
+            $datiScheda2.children('td.prezzi_netti').children('input').each(function(){
 
+               if( $(this).is(':checked') )
+                    $prezzi_netti=$(this)
 
-                    nomeRappresentanteToSend= "cci";
-
-
-                   strCancellaFornitore='<a href="'+
-                                         '{{url_for("cancellaFornitore", nomeFornitore=nomeFornitoreToSend, primoGruppo=fornitoreSottoGruppo.gruppo_azienda)}}" class="ctrlBtn fa fa-trash"></a>';
-
-                   strModificaFornitore='<a href="modificaFornitore/'+nomeFornitoreToSend+'/{{fornitoreSottoGruppo.gruppo_azienda}}/'+nomeRappresentanteToSend+'" class="ctrlBtn fa fa-edit"></a>';
+            });
 
 
-                    $('.tabContainer').html(
+            $trasporto=null;
+            $trasporto_unita=null;
 
-                        '<div id="ctrlBtnContainer">'+
-                            '<span class="firstCtrlBtn">'+
-                               strCancellaFornitore +
-                               strModificaFornitore +
-                            '</span>'+
-
-                        '</div>'+
-
-
-                        '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th class="centerText" colspan="4">Dati Fornitore</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Primo gruppo</th>'+
-                                '<th>Sotto gruppo</th>'+
-                                '<th>Settore merceologico</th>'+
-                                '<th>Stato</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                              '<td >{{fornitoreSottoGruppo.gruppo_azienda}}</td>'+
-                               '<td >{{fornitoreSottoGruppo.nome}}</td>'+
-                               '<td >{{fornitoreSottoGruppo.settoreMerceologico}}</td>'+
-                               '<td>{{fornitoreSottoGruppo.stato}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="4">Recapito azienda</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Indirizzo</th>'+
-                                '<th>Provincia</th>'+
-                                '<th>Telefono</th>'+
-                                '<th>Sito</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{fornitoreSottoGruppo.indirizzo}}</td>'+
-                                '<td>{{fornitoreSottoGruppo.provincia}}</td>'+
-                                '<td>{{fornitoreSottoGruppo.telefono}}</td>'+
-                                '<td>{{fornitoreSottoGruppo.sito}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="3">Rappresentante</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Nominativo</th>'+
-                                '<th>Telefono</th>'+
-                                '<th>Email</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-
-                             {%for  rappresentante in listaRappresentanti%}
-                                    {% if rappresentante.azienda == fornitoreSottoGruppo.gruppo_azienda %}
-                                        '<tr>'+
-                                            '<td>{{rappresentante.nome}}</td>'+
-                                            '<td>{{rappresentante.telefono}}</td>'+
-                                            '<td>{{rappresentante.email}}</td>'+
-                                            '<td>{{rappresentante.stato}}</td>'+
-                                        '</tr>'+
-                                    {% endif %}
-                             {% endfor %}
-                        '</tbody>'+
-
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="3">Sconti</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Standard</th>'+
-                                '<th>Extra 1</th>'+
-                                '<th>Extra 2</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                                '<tr>'+
-
-                                    '<td  >{{fornitoreSottoGruppo.scontoStandard}} %</td>'+
-                                    '<td >{{fornitoreSottoGruppo.scontoExtra1}} %</td>'+
-                                    '<td >{{fornitoreSottoGruppo.scontoExtra2}} %</td>'+
-
-                                '</tr>'+
-                        '</tbody>'+
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="3">Pagamenti</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Giorni</th>'+
-                                '<th>Modalità</th>'+
-                                '<th>Tipologia</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{fornitoreSottoGruppo.giorniPagamenti}}</td>'+
-                                '<td>{{fornitoreSottoGruppo.modalitaPagamenti}}</td>'+
-                                '<td>{{fornitoreSottoGruppo.tipologiaPagamenti}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th>Tempi di consegna</th>'+
-                                '<th></th>'+
-                                '<th>Prezzi netti</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{fornitoreSottoGruppo.tempiDiConsegna}}</td>'+
-                                '<td></td>'+
-                                '<td>{{fornitoreSottoGruppo.prezziNetti}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th>Trasporto</th>'+
-                                '<th>Imballo</th>'+
-                                '<th>Montaggio</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>&euro; {{fornitoreSottoGruppo.trasporto}}</td>'+
-                                '<td>&euro; {{fornitoreSottoGruppo.imballo}}</td>'+
-                                '<td>&euro; {{fornitoreSottoGruppo.montaggio}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>' );
-
-
+            $datiScheda2.children('td.trasporto').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if( $(this).is(':checked') )
+                        $trasporto_unita=$(this)
 
                 }
                 else
-                    console.log("Che palle!:_{{fornitoreSottoGruppo.nome}}_"+ nomeFornitoreToPrint.split(' - ')[1] )
-            {% endfor %}
+                    $trasporto=$(this)
+
+            });
+
+            $imballo=null;
+            $imballo_unita=null;
+
+
+            $datiScheda2.children('td.imballo').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if( $(this).is(':checked') )
+                        $imballo_unita=$(this)
+
+                }
+                else
+                    $imballo=$(this)
+
+
+            });
+
+
+            $montaggio=null;
+            $montaggio_unita=null;
+
+
+            $datiScheda2.children('td.montaggio').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if( $(this).is(':checked') )
+                        $montaggio_unita=$(this)
+
+                }
+                else
+                    $montaggio=$(this)
+            });
+
+
+
+
+            $standard=$datiScheda3.children('td.standard').children('input');
+            $extra1=$datiScheda3.children('td.extra1').children('input');
+            $extra2=$datiScheda3.children('td.extra2').children('input');
+            $giorni=$datiScheda3.children('td.giorni').children('input');
+            $modalita=$datiScheda3.children('td.modalita').children('input');
+            $tipologia=$datiScheda3.children('td.tipologia').children('input');
+
+
+
+            if( $settoreMerceologico.val() == "" ){
+                swal({
+                    title: 'Assegnare un settore merceologico al nuovo fornitore',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $primoGruppo.val() == "" && $sottoGruppo.val() == "" ){
+                swal({
+                    title: "I campi 'Primo gruppo' e 'Sotto gruppo' non possono essere lasciati vuoti entrambi",
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+
+
+            socketFornitore.emit('registraFornitore', {
+                'dip' : '{{dipendente.username}}',
+                'primo_gruppo': $primoGruppo.val(),
+                'sotto_gruppo': $sottoGruppo.val(),
+                'settoreMerceologico': $settoreMerceologico.val(),
+                'stato': $stato.val(),
+                'tempiDiConsegna': $tempi_consegna.val(),
+                'prezziNetti': $prezzi_netti.val(),
+                'scontoStandard': $standard.val(),
+                'scontoExtra1': $extra1.val(),
+                'scontoExtra2': $extra2.val(),
+                'trasporto': $trasporto.val(),
+                'imballo': $imballo.val(),
+                'montaggio': $montaggio.val(),
+                'trasportoUnitaMisura': $trasporto_unita.val(),
+                'imballoUnitaMisura': $imballo_unita.val(),
+                'montaggioUnitaMisura': $montaggio_unita.val(),
+                'giorniPagamenti': $giorni.val(),
+                'modalitaPagamenti': $modalita.val(),
+                'tipologiaPagamenti': $tipologia.val(),
+                'provincia': '',
+                'indirizzo': '',
+                'telefono': '',
+                'sito': ''
+
+            });
+
+
+
+        });
+
+        var hiddenInputAction = function($this){
+
+            $('.inModifica').each(function(){
+                $(this).removeClass('inModifica');
+                $(this).children('label').show();
+                $(this).children('input').hide();
+                $(this).children('.radioLabel').hide();
+                $(this).children('.checked').show();
+                $(this).children('.simpleAfterInputLabel').show();
+            });
+
+
+            $this.addClass('inModifica');
+            $this.children('label').hide();
+            $this.children('input').show();
+
+            $this.children('.radioLabel').show();
+            $this.children('.simpleAfterInputLabel').show();
+
+            $this.children('input.inputScheda').focus();
+
+            $this.children('input.inputScheda').click(function(){
+               $(this).val('');
+
+            });
+        }
+
+        $('.inputLista').change(function(){
+
+            var registraLista = function(listaHtml, selectHtml, toAdd ){
+                //socketFornitore.emit(segnale_to_emit, { 'nome' : toAdd });
+
+                var toAppend=true;
+                $('#'+listaHtml).children('option').each(function(){
+                    if( $(this).val() == toAdd ){
+                        toAppend=false;
+                    }
+                });
+
+                if( toAppend ){
+
+                    $('#'+listaHtml).append('<option>'+toAdd+'</option>');
+                    $('#'+selectHtml).append('<option>'+toAdd+'</option>');
+
+                }
+            }
+
+
+            var attributoToAdd=$(this).parent().attr('class')
+
+            if( attributoToAdd == 'tempi_di_consegna' ){
+                    registraLista( 'listaTempiConsegna', 'modDelTempiConsegna', $(this).val() );
+
+            }
+            else if( attributoToAdd == 'modalita'  ){
+                registraLista(  'listaModalitaPagamento', 'modDelModalitaPagamento', $(this).val() );
+
+            }
+            else if( attributoToAdd == 'giorni' ){
+                registraLista( 'listaGiorniPagamento', $(this).val() );
+
+            }
+            else if( attributoToAdd ==  'tipologia' ){
+                registraLista( 'listaTipologiaPagamento', 'modDelTipologiaPagamento', $(this).val()  );
+
+            }
+            else if( attributoToAdd ==  'settore' ){
+                registraLista( 'listaSettori', 'modDelSettore', $(this).val()  );
+
+            }
+        });
+
+
+        var listaFornitoriCancellati=[];
+
+        var numOfAddedRow=0;
+
+        var aggiungiRiga= function(){
+            /* costruisce nel documento la nuova riga registrata nel db */
+
+            var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            var $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+            var $tbodyNewRow3=$('#tabellaContainerNewRow3').children('table').children('tbody');
+
+            var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+            var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            var $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+            var $datiScheda3=$tbodyNewRow3.children('.datiScheda');
+
+            var $settoreMerceologico=$sezioneTabella1.children('th.primaCol').next('th').children('input');
+
+            var $primoGruppo=$datiScheda1.children('td.primo_gruppo').children('input');
+            var $sottoGruppo=$datiScheda1.children('td.sotto_gruppo').children('input');
+
+            var $stato=null;
+
+            $datiScheda1.children('td.stato').children('input').each(function(){
+
+                if( $(this).is(':checked') )
+                    $stato=$(this)
+            });
+
+            $
+
+            var $tempi_consegna=$datiScheda2.children('td.tempi_di_consegna').children('input');
+
+            var $prezzi_netti=null;
+
+            $datiScheda2.children('td.prezzi_netti').children('input').each(function(){
+
+               if( $(this).is(':checked') )
+                    $prezzi_netti=$(this)
+
+            });
+
+
+            var $trasporto=null;
+            var $trasporto_unita=null;
+
+            $datiScheda2.children('td.trasporto').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if( $(this).is(':checked') )
+                        $trasporto_unita=$(this)
+
+                }
+                else
+                    $trasporto=$(this)
+
+            });
+
+            var $imballo=null;
+            var $imballo_unita=null;
+
+
+            $datiScheda2.children('td.imballo').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if( $(this).is(':checked') )
+                        $imballo_unita=$(this)
+
+                }
+                else
+                    $imballo=$(this)
+
+
+            });
+
+
+            var $montaggio=null;
+            var $montaggio_unita=null;
+
+
+            $datiScheda2.children('td.montaggio').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if( $(this).is(':checked') )
+                        $montaggio_unita=$(this)
+
+                }
+                else
+                    $montaggio=$(this)
+            });
+
+
+
+
+            var $standard=$datiScheda3.children('td.standard').children('input');
+            var $extra1=$datiScheda3.children('td.extra1').children('input');
+            var $extra2=$datiScheda3.children('td.extra2').children('input');
+            var $giorni=$datiScheda3.children('td.giorni').children('input');
+            var $modalita=$datiScheda3.children('td.modalita').children('input');
+            var $tipologia=$datiScheda3.children('td.tipologia').children('input');
+
+            var $table1=$('#tabellaContainer1').children('table');
+            var $table2=$('#tabellaContainer2').children('table');
+            var $table3=$('#tabellaContainer3').children('table');
+
+
+            var $tbodyToExpand1=null;
+            var $tbodyToExpand2=null;
+            var $tbodyToExpand3=null;
+
+
+            $table1.children('tbody').each(function(){
+                if( $(this).attr('class') == $settoreMerceologico.val() ){
+                    $tbodyToExpand1=$(this);
+                }
+            });
+
+            $table2.children('tbody').each(function(){
+                if( $(this).attr('class') == $settoreMerceologico.val() ){
+                    $tbodyToExpand2=$(this);
+                }
+            });
+
+            $table3.children('tbody').each(function(){
+                if( $(this).attr('class') == $settoreMerceologico.val() ){
+                    $tbodyToExpand3=$(this);
+                }
+            });
+
+
+
+            bodyRadioContainer='';
+            if( $stato.val()== 'Collabora' ){
+                bodyRadioContainer='<input id="inputCollabora1-'+numOfAddedRow+'" type="radio" name="collabora-'+numOfAddedRow+'" class="stato" value="Collabora" checked="checked"> \
+                                    <label for="inputCollabora1-'+numOfAddedRow+'" class="radioLabel">Collabora</label> \
+                                    <input id="inputCollabora2-'+numOfAddedRow+'" type="radio" name="collabora-'+numOfAddedRow+'" class="stato" value="Potenziale"> \
+                                    <label for="inputCollabora2-'+numOfAddedRow+'" class="radioLabel">Potenziale</label>';
+            }
+            else{
+
+                bodyRadioContainer='<input id="inputCollabora1-'+numOfAddedRow+'" type="radio" name="collabora-'+numOfAddedRow+'" class="stato" value="Collabora"> \
+                                    <label for="inputCollabora1-'+numOfAddedRow+'" class="radioLabel">Collabora</label> \
+                                    <input id="inputCollabora2-'+numOfAddedRow+'" type="radio" name="collabora-'+numOfAddedRow+'" class="stato" value="Potenziale" checked="checked"> \
+                                    <label for="inputCollabora2-'+numOfAddedRow+'" class="radioLabel">Potenziale</label>';
+
+            }
+
+            fornitoriInListaFornitoriPrimoGruppo( $primoGruppo.val()  )
+
+            fornitoriInListaFornitoriSecondoGruppo( $sottoGruppo.val()  )
+
+            $tbodyToExpand1.append(
+                '<tr class="datiScheda dimensionaTabella"> \
+                    <td class="primo_gruppo" style="display:none"><label>'+$primoGruppo.val()+'</label></td> \
+                    <td class="sotto_gruppo" style="display:none"><label>'+$sottoGruppo.val()+'</label></td> \
+                    <td class="primaCol"> \
+                        <a class="personaleFornitore fa fa-users primaColIcon"></a> \
+                        <a class="contattiFornitore fa fa-address-card primaColIcon centralIcon"></a> \
+                        <a class="delFornitore fa fa-trash primaColIcon finalIcon"></a> \
+                    </td> \
+                    <td class="secondaCol hiddenInput long_string">'+
+                        '<label class="cellaDato">'+$primoGruppo.val()+'</label>'+
+                        '<input style="display:none" class="primo_gruppo inputScheda" value="'+ $primoGruppo.val() + '" placeholder="Primo gruppo..." >'+
+                    '</td> \
+                    <td class="hiddenInput nirnal_string">'+
+                        '<label class="cellaDato">'+$sottoGruppo.val()+'</label>'+
+                        '<input style="display:none" class="sotto_gruppo inputScheda" value="'+$sottoGruppo.val()+'" placeholder="Sotto gruppo..." >'+
+                    '</td> \
+                    <td class="radioContainer normal_string">' +
+
+                        bodyRadioContainer +
+
+                    '</td> \
+                </tr>'
+            );
+
+            if( $prezzi_netti.val()== 'si' ){
+                bodyRadioContainer='<input type="radio" id="inputPrezziNetti1-'+numOfAddedRow+'"  name="prezziNetti-'+numOfAddedRow+'" class="prezziNetti" value="si" checked="checked"> \
+                                    <label for="inputPrezziNetti1-'+numOfAddedRow+'" class="radioLabel">Sì</label> \
+                                    <input type="radio" id="inputPrezziNetti2-'+numOfAddedRow+'" name="prezziNetti-'+numOfAddedRow+'" class="prezziNetti" value="no" > \
+                                    <label for="inputPrezziNetti2-'+numOfAddedRow+'" class="radioLabel">No</label>';
+            }
+            else{
+
+                bodyRadioContainer='<input type="radio" id="inputPrezziNetti1-'+numOfAddedRow+'"  name="prezziNetti-'+numOfAddedRow+'" class="prezziNetti" value="si"> \
+                                    <label for="inputPrezziNetti1-'+numOfAddedRow+'" class="radioLabel">Sì</label> \
+                                    <input type="radio" id="inputPrezziNetti2-'+numOfAddedRow+'" name="prezziNetti-'+numOfAddedRow+'" class="prezziNetti" value="no" checked="checked"> \
+                                    <label for="inputPrezziNetti2-'+numOfAddedRow+'" class="radioLabel">No</label>';
+
+            }
+
+            checkboxTrasporto='';
+            checkboxImballo='';
+            checkboxPosa='';
+
+            if( $trasporto_unita.val() == 'euro' ){
+
+                checkboxTrasporto='<input style="display:none" type="radio" id="inputEuroPercTrasporto1-'+numOfAddedRow+'" name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="euro" checked="checked"> \
+                                   <label for="inputEuroPercTrasporto1-'+numOfAddedRow+'" class="radioLabel checked">&euro;</label> \
+                                   <input style="display:none" type="radio" id="inputEuroPercTrasporto2-'+numOfAddedRow+'"  name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="%"> \
+                                   <label style="display:none" for="inputEuroPercTrasporto2-'+numOfAddedRow+'" class="radioLabel">%</label>';
+            }
+            else{
+
+                checkboxTrasporto='<input style="display:none" type="radio" id="inputEuroPercTrasporto1-'+numOfAddedRow+'" name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="euro"> \
+                                   <label  style="display:none" for="inputEuroPercTrasporto1-'+numOfAddedRow+'" class="radioLabel">&euro;</label> \
+                                   <input  style="display:none" type="radio" id="inputEuroPercTrasporto2-'+numOfAddedRow+'" name="euroPercTrasporto-'+numOfAddedRow+'" class="trasportoUnitaMisura" value="%" checked="checked"> \
+                                   <label for="inputEuroPercTrasporto2-'+numOfAddedRow+'" class="radioLabel checked">%</label>';
+
+            }
+
+            if( $imballo_unita.val() == 'euro' ){
+
+                checkboxImballo='<input style="display:none" type="radio" id="inputEuroPercImballo1-'+numOfAddedRow+'" name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="euro" checked="checked"> \
+                                 <label for="inputEuroPercImballo1-'+numOfAddedRow+'" class="radioLabel checked">&euro;</label> \
+                                 <input  style="display:none" type="radio" id="inputEuroPercImballo2-'+numOfAddedRow+'" name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="%"> \
+                                 <label style="display:none" for="inputEuroPercImballo2-'+numOfAddedRow+'"  class="radioLabel">%</label>';
+            }
+            else{
+
+                checkboxImballo='<input style="display:none" type="radio" id="inputEuroPercImballo1-'+numOfAddedRow+'"  name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="euro"> \
+                                 <label style="display:none" for="inputEuroPercImballo1-'+numOfAddedRow+'" class="radioLabel">&euro;</label> \
+                                 <input style="display:none" type="radio" id="inputEuroPercImballo2-'+numOfAddedRow+'" name="euroPercImballo-'+numOfAddedRow+'" class="imballoUnitaMisura" value="%" checked="checked"> \
+                                 <label for="inputEuroPercImballo2-'+numOfAddedRow+'"  class="radioLabel checked">%</label>';
+
+            }
+
+            if( $montaggio_unita.val() == 'euro' ){
+
+                checkboxPosa='<input style="display:none" type="radio" id="inputEuroPercPosa1-'+numOfAddedRow+'"  name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="euro" checked="checked"> \
+                              <label for="inputEuroPercPosa1-'+numOfAddedRow+'"  class="radioLabel checked">&euro;</label> \
+                              <input style="display:none" type="radio" id="inputEuroPercPosa2-'+numOfAddedRow+'"  name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="%"> \
+                              <label style="display:none" for="inputEuroPercPosa2-'+numOfAddedRow+'"  class="radioLabel">%</label>';
+            }
+            else{
+
+                checkboxPosa='<input style="display:none" type="radio" id="inputEuroPercPosa1-'+numOfAddedRow+'" name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="euro"> \
+                              <label style="display:none" for="inputEuroPercPosa1-'+numOfAddedRow+'"  class="radioLabel">&euro;</label> \
+                              <input style="display:none" type="radio" id="inputEuroPercPosa2-'+numOfAddedRow+'"  name="euroPercPosa-'+numOfAddedRow+'" class="montaggioUnitaMisura" value="%" checked="checked"> \
+                              <label for="inputEuroPercPosa2-'+numOfAddedRow+'" class="radioLabel checked">%</label>';
+
+            }
+
+
+
+            $tbodyToExpand2.append(
+                '<tr class="datiScheda dimensionaTabella"> \
+                    <td class="primo_gruppo" style="display:none"><label>'+$primoGruppo.val()+'</label></td> \
+                    <td class="sotto_gruppo" style="display:none"><label>'+$sottoGruppo.val()+'</label></td> \
+                    <td class="hiddenInput normal_string"><label class="cellaDato">'+$tempi_consegna.val()+'</label> \
+                        <input  list="listaTempiConsegna" style="display:none" class="tempiDiConsegna inputScheda" value="'+$tempi_consegna.val()+'" placeholder="tempi di consegna..." > \
+                    </td> \
+                    <td class="radioContainer numCell">' +
+                        bodyRadioContainer +
+                    '</td> \
+                    <td class="hiddenInput numCell"><label class="cellaDato">'+$trasporto.val()+'</label> \
+                        <input type="number" step="0.01" style="display:none" class="trasporto inputScheda numInput"  value="'+$trasporto.val()+'" placeholder="costi di trasporto..." >' +
+                        checkboxTrasporto +
+                    '</td> \
+                    <td class="hiddenInput numCell"><label class="cellaDato">'+$imballo.val()+'</label> \
+                        <input type="number" step="0.01" style="display:none" class="imballo inputScheda numInput"  value="'+$imballo.val()+'" placeholder="costi imballo..." >' +
+                        checkboxImballo +
+                    '</td> \
+                    <td class="hiddenInput numCell"><label class="cellaDato">'+$montaggio.val()+'</label> \
+                        <input type="number" step="0.01" style="display:none" class="montaggio inputScheda numInput" value="'+$montaggio.val()+'" placeholder="costi posa..." >' +
+                        checkboxPosa +
+                    '</td> \
+                </tr>'
+
+            );
+
+            $tbodyToExpand3.append(
+                '<tr class="datiScheda dimensionaTabella"> \
+                    <td class="primo_gruppo" style="display:none"><label>'+$primoGruppo.val()+'</label></td> \
+                    <td class="sotto_gruppo" style="display:none"><label>'+$sottoGruppo.val()+'</label></td> \
+                    <td class="hiddenInput numCell"><label class="cellaDato">'+$standard.val()+'</label> \
+                        <input type="number" style="display:none" value="'+$standard.val()+'" class="scontoStandardinputScheda numInput" > <label  class="simpleAfterInputLabel">%</label> \
+                    </td> \
+                    <td class="hiddenInput numCell"><label class="cellaDato">'+$extra1.val()+'</label> \
+                        <input type="number"  step="0.01" style="display:none" value="'+$extra1.val()+'" class="scontoExtra1 inputScheda numInput" > <label  class="simpleAfterInputLabel">%</label> \
+                    </td> \
+                    <td class="hiddenInput numCell"><label class="cellaDato">'+$extra2.val()+'</label> \
+                        <input type="number" step="0.01" style="display:none" value="'+$extra2.val()+'" class="scontoExtra2 inputScheda numInput" > <label  class="simpleAfterInputLabel">%</label> \
+                    </td> \
+                    <td class="hiddenInput normal_string"><label class="cellaDato">'+$giorni.val()+'</label> \
+                        <input style="display:none" list="listaGiorniPagamento" class="giorniPagamenti inputScheda" value="'+$giorni.val()+'" placeholder="giorni pagamento..." > \
+                    </td> \
+                    <td class="hiddenInput normal_string"><label class="cellaDato">'+$modalita.val()+'</label> \
+                        <input style="display:none" list="listaModalitaPagamento" class="modalitaPagamenti inputScheda" value="'+$modalita.val()+'" placeholder="modalità pagamento..." > \
+                    </td> \
+                    <td class="hiddenInput normal_string"><label class="cellaDato">'+$tipologia.val()+'</label> \
+                        <input style="display:none" list="listaTipologiaPagamento" class="tipologiaPagamenti inputScheda" value="'+$tipologia.val()+'" placeholder="tipologia..." > \
+                    </td> \
+                </tr>'
+
+            );
+
+            pulisciHeaderNewRow()
+
+            var registraLista = function(listaHtml, selectHtml, toAdd ){
+                //socketFornitore.emit(segnale_to_emit, { 'nome' : toAdd });
+
+                $('#'+listaHtml).append('<option>'+toAdd+'</option>');
+                $('#'+selectHtml).append('<option>'+toAdd+'</option>');
+            }
+
+
+            var changeValueFornitore = function($this){
+
+                var primo_gruppo = "";
+                var sotto_gruppo = "";
+
+                var $tdContainer=$this.parent().parent();
+
+                var $setTdObj=$tdContainer.children('td');
+
+
+                $setTdObj.each(function(){
+                    if( $(this).hasClass('primo_gruppo') )
+                    {
+                        primo_gruppo=$(this).children('label').text();
+                    }
+                    else if($(this).hasClass('sotto_gruppo')){
+                        sotto_gruppo=$(this).children('label').text();
+                    }
+
+                });
+
+
+                var attributoToEdit=$this.attr('class').split(' ')[0];
+                var valore=$this.val();
+
+
+                if( attributoToEdit == 'tempiDiConsegna' ){
+                    registraLista( 'listaTempiConsegna', 'modDelTempiConsegna', valore);
+
+                }
+                else if( attributoToEdit == 'modalitaPagamenti'  ){
+                    registraLista(  'listaModalitaPagamento', 'modDelModalitaPagamento', valore);
+
+                }
+                else if( attributoToEdit == 'giorniPagamenti' ){
+                    registraLista( 'listaGiorniPagamento',  'modDelGiorniPagamento', valore);
+
+                }
+                else if( attributoToEdit ==  'tipologiaPagamenti' ){
+                    registraLista( 'listaTipologiaPagamento', 'modDelTipologiaPagamento', valore );
+
+                }
+
+
+                socketFornitore.emit('modificaFornitore', {
+                    'dip': '{{dipendente.username}}',
+                    'primo_gruppo': primo_gruppo,
+                    'sotto_gruppo': sotto_gruppo,
+                    'toEdit': attributoToEdit,
+                    'value': valore
+                });
+
+
+
+
+
+            }
+
+
+            $('#tabellaContainer1 input').unbind('change').change(function(){
+                changeValueFornitore($(this));
+            });
+
+            $('#tabellaContainer2 input').unbind('change').change(function(){
+                changeValueFornitore($(this));
+            });
+
+            $('#tabellaContainer3 input').unbind('change').change(function(){
+                changeValueFornitore($(this));
+            });
+
+            $('.delFornitore').unbind('click').click(function(){
+
+                var $thisRow=$(this).parent().parent();
+                var primo_gruppo=$thisRow.children('td.primo_gruppo').children('label').text();
+                var sotto_gruppo=$thisRow.children('td.sotto_gruppo').children('label').text();
+
+
+                swal({
+                    title: 'Stai per eliminare un fornitore',
+                    text: 'Sicuro di voler procedere?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                },function(isConfirm){
+
+                    if( isConfirm ){
+                        socketFornitore.emit('eliminaFornitore', {
+                            'primo_gruppo': primo_gruppo,
+                            'sotto_gruppo': sotto_gruppo
+                        });
+
+
+                        $thisRow.remove();
+
+                        var removeRow=function($this){
+                            if( $this.children('td.primo_gruppo').children('label').text() == primo_gruppo ){
+                                if( $this.children('td.sotto_gruppo').children('label').text() == sotto_gruppo )
+                                    $this.remove();
+
+                            }
+
+                        }
+
+                        $('#tabellaContainer2 tr').each(function(){
+                           removeRow($(this));
+                        });
+
+                        $('#tabellaContainer3 tr').each(function(){
+                           removeRow($(this));
+                        });
+
+                        /*se una sezione rimane senza fornitori elimino il settoreMerceologico */
+                        var elimnaSettore= function($this){
+                           var counter = 0;
+
+                           $this.children('tr').each(function(){
+                                counter++;
+
+                           });
+
+
+                           if( counter == 1 ){
+
+                            $this.remove();
+                           }
+
+                        }
+
+                        $('#tabellaContainer1 tbody').each(function(){
+                           elimnaSettore($(this));
+                        });
+
+
+                        $('#tabellaContainer2 tbody').each(function(){
+                           elimnaSettore($(this));
+                        });
+
+                        $('#tabellaContainer3 tbody').each(function(){
+                           elimnaSettore($(this));
+                        });
+
+                    }
+
+                });
+
+
+
+
+            });
+
+
+            var bodyPopup='<ul class="datiFornitore"> \
+                                <li class="indirizzo"> \
+                                    <label class="major"> Indirizzo: </label> \
+                                    <label class="datiFornitoreLabel labelPopup"></label> \
+                                    <input class="contattiInput" style="display:none" value=""> \
+                                    <a class="fa fa-edit editIconPopup datiFornitoreEdit"></a> \
+                                </li> \
+                                <li class="provincia"> \
+                                    <label class="major"> Provincia: </label> \
+                                    <label class="datiFornitoreLabel labelPopup"></label> \
+                                    <input class="contattiInput"  style="display:none" value=""> \
+                                    <a class="fa fa-edit editIconPopup datiFornitoreEdit"></a> \
+                                </li> \
+                                <li class="telefono"> \
+                                    <label class="major"> Telefono: </label> \
+                                    <label class="datiFornitoreLabel labelPopup"></label> \
+                                    <input class="contattiInput"  style="display:none" value=""> \
+                                    <a class="fa fa-edit editIconPopup datiFornitoreEdit"></a> \
+                                </li> \
+                                <li class="sito"> \
+                                    <label class="major"> Sito web: </label> \
+                                    <label class="datiFornitoreLabel labelPopup"> </label> \
+                                    <input class="contattiInput"  style="display:none" value=""> \
+                                    <a class="fa fa-edit editIconPopup datiFornitoreEdit"></a> \
+                                </li> \
+                            </ul>';
+
+            var funzionePostPopup = function($buttonClicked){
+
+                $row=$buttonClicked.parent().parent();
+
+                var chiave1=$row.children('td.primo_gruppo').children('label').text();
+                var chiave2=$row.children('td.sotto_gruppo').children('label').text();
+
+                {% for fornitore in fornitori %}
+                    if( '{{fornitore.primo_gruppo}}' == chiave1 && '{{fornitore.sotto_gruppo}}' == chiave2 ){
+                        $('li.indirizzo').children('input').val('{{fornitore.indirizzo}}');
+                        $('li.indirizzo').children('label.datiFornitoreLabel').text('{{fornitore.indirizzo}}');
+
+                        $('li.provincia').children('input').val('{{fornitore.provincia}}');
+                        $('li.provincia').children('label.datiFornitoreLabel').text('{{fornitore.provincia}}');
+
+                        $('li.telefono').children('input').val('{{fornitore.telefono}}');
+                        $('li.telefono').children('label.datiFornitoreLabel').text('{{fornitore.telefono}}');
+
+                        $('li.sito').children('input').val('{{fornitore.sito}}');
+                        $('li.sito').children('label.datiFornitoreLabel').text('{{fornitore.sito}}');
+
+                    }
+
+                {% endfor %}
+
+                $('.datiFornitoreEdit').each(function(){
+                    $(this).parent().children('input').change(function(){
+
+                        var chiave1=$row.children('td.primo_gruppo').children('label').text();
+                        var chiave2=$row.children('td.sotto_gruppo').children('label').text();
+
+                        socketFornitore.emit('modificaFornitore', {
+                            'dip': '{{dipendente.username}}',
+                            'primo_gruppo': chiave1,
+                            'sotto_gruppo': chiave2,
+                            'toEdit': $(this).parent().attr('class').split(' ')[0],
+                            'value': $(this).val()
+                        });
+
+                        var $liParent=$(this).parent();
+
+                        $liParent.children('label.datiFornitoreLabel').text($(this).val());
+                        $liParent.removeClass('inModifica');
+                        $liParent.children('label.datiFornitoreLabel').show();
+                        $liParent.children('input.contattiInput').hide();
+                    });
+                });
+
+
+                $('.datiFornitoreEdit').unbind('click').click(function(){
+
+                    var $liParent=$(this).parent();
+
+                    if(  $liParent.hasClass('inModifica') ){
+                         $liParent.removeClass('inModifica');
+                         $liParent.children('label.datiFornitoreLabel').show();
+                         $liParent.children('input.contattiInput').hide();
+
+                    }
+                    else{
+
+                        $liParent.addClass('inModifica');
+                        $liParent.children('label.datiFornitoreLabel').hide();
+                        $liParent.children('input.contattiInput').show();
+                        $liParent.children('input.contattiInput').focus();
+
+
+                    }
+
+
+                });
+
+
+            }
+
+            var parametriPopup = {
+                'clicckedButton': $('a.contattiFornitore'),
+                'popupContainer': $('#schedaFornitori'),
+                'popupBodyContent': bodyPopup,
+                'popupTitle': 'Contatti:',
+                'popupFunction': funzionePostPopup,
+
+            };
+
+            usPopupPrezzari(parametriPopup);
+
+            bodyPopup='<div class="addPersonaleContainer"><a class="addPersonale fa fa-user-plus"></a></div>';
+
+
+
+            funzionePostPopup = function($buttonClicked){
+
+                $row=$buttonClicked.parent().parent();
+                var chiave1=$row.children('td.primo_gruppo').children('label').text();
+                var chiave2=$row.children('td.sotto_gruppo').children('label').text();
+
+
+                {% for persona in personale %}
+
+                    if('{{persona.azienda_primo_gruppo}}' == chiave1 && '{{persona.azienda_sotto_gruppo}}' == chiave2){
+
+
+
+                        var $newScheda=$('<div class="schedaPersonaleFornitore"> \
+                            <div class="delPersonaleContainer"><a class="delPersonale fa fa-close"></a></div> \
+                            <div class="divDatiPersonale"> \
+                                <ul class="datiPersonale"> \
+                                    <li class="nome"> \
+                                        <label class="major"> Nome: </label> \
+                                        <label class="labelPopup datiPersonaleLabel">{{persona.nome}}</label> \
+                                        <input class="personaleInput"  style="display:none" value="{{persona.nome}}"> \
+                                        <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                    </li> \
+                                    <li class="cognome"> \
+                                        <label class="major"> Cognome: </label> \
+                                        <label class="labelPopup datiPersonaleLabel">{{persona.cognome}}</label> \
+                                        <input class="personaleInput"  style="display:none" value="{{persona.cognome}}"> \
+                                        <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                    </li> \
+                                    <li class="ruolo"> \
+                                        <label class="major"> Ruolo: </label> \
+                                        <label class="labelPopup datiPersonaleLabel">{{persona.ruolo}}</label> \
+                                        <input class="personaleInput"  style="display:none" value="{{persona.ruolo}}"> \
+                                        <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                    </li> \
+                                    <li class="telefono"> \
+                                        <label class="major"> Telefono: </label> \
+                                        <label class="labelPopup datiPersonaleLabel">{{persona.telefono}}</label> \
+                                        <input class="personaleInput"  style="display:none" value="{{persona.telefono}}"> \
+                                        <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                    </li> \
+                                    <li class="email"> \
+                                        <label class="major"> Email: </label> \
+                                        <label class="labelPopup datiPersonaleLabel">{{persona.email}}</label> \
+                                        <input class="personaleInput"  style="display:none" value="{{persona.email}}"> \
+                                        <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                    </li> \
+                                </ul> \
+                            </div> \
+                        </div>').appendTo('.personale_fornitore_body');
+
+                        $newScheda.children('.delPersonaleContainer').children('.delPersonale').click(function(){
+                            swal({
+                                title: 'Stai per eliminare {{persona.nome}} {{persona.cognome}}',
+                                text: 'procedere alla cancellazione?',
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Ok',
+                                cancelButtonText: 'annulla',
+                                closeOnConfirm: true,
+
+                            }, function(isConfirm){
+
+                                if( isConfirm ){
+
+                                   var toRemove = {
+                                    'nome': '{{ persona.nome}}',
+                                    'cognome': '{{ persona.cognome}}',
+                                    'primo_gruppo': '{{persona.azienda_primo_gruppo}}',
+                                    'sotto_gruppo': '{{persona.azienda_sotto_gruppo}}'
+                                   }
+
+                                   $newScheda.remove();
+                                   listaFornitoriCancellati.push(toRemove);
+
+                                   socketFornitore.emit('elimina_personale_fornitore', toRemove);
+
+                                }
+                            });
+
+                        });
+
+
+
+
+                        for( var i in listaFornitoriCancellati ){
+
+
+                            if( listaFornitoriCancellati[i].nome == '{{persona.nome}}' ){
+                                if( listaFornitoriCancellati[i].cognome == '{{persona.cognome}}' ){
+
+                                    if( listaFornitoriCancellati[i].primo_gruppo == '{{persona.azienda_primo_gruppo}}' ){
+                                        if( listaFornitoriCancellati[i].sotto_gruppo == '{{persona.azienda_sotto_gruppo}}' )
+                                        {
+
+                                            $newScheda.remove();
+
+
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+
+
+
+
+                    }
+
+
+
+                {% endfor %}
+
+
+
+                $('.addPersonale').click(function(){
+                    if( !$(this).hasClass('bloccato') ){
+
+                        $(this).addClass('bloccato');
+
+                        var $schedaAddPersonale=$('<div class="schedaPersonaleFornitore"> \
+                                <div class="delPersonaleContainer"><button class="confermaRegistrazione">Conferma</button><a class="delPersonale fa fa-close"></a></div> \
+                                <div class="divDatiPersonale"> \
+                                    <ul class="datiPersonale"> \
+                                        <li class="nome"> \
+                                            <label class="major"> Nome: </label> \
+                                           <input class="personaleInput" value=""> \
+                                        </li> \
+                                        <li class="cognome"> \
+                                            <label class="major"> Cognome: </label> \
+                                            <input class="personaleInput" value=""> \
+                                        </li> \
+                                        <li class="ruolo"> \
+                                            <label class="major"> Ruolo: </label> \
+                                            <input class="personaleInput" value=""> \
+                                        </li> \
+                                        <li class="telefono"> \
+                                            <label class="major"> Telefono: </label> \
+                                            <input class="personaleInput" value=""> \
+                                        </li> \
+                                        <li class="email"> \
+                                            <label class="major"> Email: </label> \
+                                            <input class="personaleInput" value=""> \
+                                        </li> \
+                                    </ul> \
+                                </div> \
+                             </div>').appendTo('.personale_fornitore_body');
+
+                        $schedaAddPersonale.children('.divDatiPersonale').children(
+                                        '.datiPersonale').children('.nome').children('input').focus();
+
+                        $schedaAddPersonale.parent().animate({scrollTop: $schedaAddPersonale.parent().height()*2}, 0);
+
+
+
+
+                        $('.confermaRegistrazione').click(function(){
+                            $liElements=$schedaAddPersonale.children('.divDatiPersonale').children(
+                                        '.datiPersonale').children('li');
+
+                            var nome="";
+                            var cognome="";
+                            var ruolo="";
+                            var telefono="";
+                            var email="";
+
+                            $liElements.each(function(){
+                                if( $(this).hasClass('nome') ){
+                                    nome=$(this).children('input').val();
+                                }
+                                else if( $(this).hasClass('cognome') ){
+                                    cognome=$(this).children('input').val();
+                                }
+                                else if( $(this).hasClass('ruolo') ){
+                                    ruolo=$(this).children('input').val();
+                                }
+                                else if( $(this).hasClass('telefono') ){
+                                    telefono=$(this).children('input').val();
+                                }
+                                else if( $(this).hasClass('email') ){
+                                    email=$(this).children('input').val();
+                                }
+                            });
+
+
+                            socketFornitore.emit('registra_personale', {
+                                'dip': '{{dipendente.username}}',
+                                'nome': nome,
+                                'cognome': cognome,
+                                'primo_gruppo': chiave1,
+                                'sotto_gruppo': chiave2,
+                                'ruolo': ruolo,
+                                'telefono': telefono,
+                                'email': email
+
+
+                            });
+
+                            socketFornitore.on('rispostaRegistraPersonale', function(msg){
+
+                                if(msg['status'] == true ){
+
+                                    $('.addPersonale').removeClass('bloccato');
+                                    $schedaAddPersonale.remove();
+
+
+                                    $('<div class="schedaPersonaleFornitore"> \
+                                        <div class="delPersonaleContainer"><a class="delPersonale fa fa-close"></a></div> \
+                                        <div class="divDatiPersonale"> \
+                                            <ul class="datiPersonale"> \
+                                                <li class="nome"> \
+                                                    <label class="major"> Nome: </label> \
+                                                    <label class="labelPopup datiPersonaleLabel">'+nome+'</label> \
+                                                    <input class="personaleInput"  style="display:none" value="'+nome+'"> \
+                                                    <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                                </li> \
+                                                <li class="cognome"> \
+                                                    <label class="major"> Cognome: </label> \
+                                                    <label class="labelPopup datiPersonaleLabel">'+cognome+'</label> \
+                                                    <input class="personaleInput"  style="display:none" value="'+cognome+'"> \
+                                                    <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                                </li> \
+                                                <li class="ruolo"> \
+                                                    <label class="major"> Ruolo: </label> \
+                                                    <label class="labelPopup datiPersonaleLabel">'+ruolo+'</label> \
+                                                    <input class="personaleInput"  style="display:none" value="'+ruolo+'"> \
+                                                    <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                                </li> \
+                                                <li class="telefono"> \
+                                                    <label class="major"> Telefono: </label> \
+                                                    <label class="labelPopup datiPersonaleLabel">'+telefono+'</label> \
+                                                    <input class="personaleInput"  style="display:none" value="'+telefono+'"> \
+                                                    <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                                </li> \
+                                                <li class="email"> \
+                                                    <label class="major"> Email: </label> \
+                                                    <label class="labelPopup datiPersonaleLabel">'+email+'</label> \
+                                                    <input class="personaleInput"  style="display:none" value="'+email+'"> \
+                                                    <a class="fa fa-edit editIconPopup datiPersonaleEdit"></a> \
+                                                </li> \
+                                            </ul> \
+                                        </div> \
+                                    </div>').appendTo('.personale_fornitore_body');
+
+
+                                    $('.datiPersonaleEdit').each(function(){
+
+                                        var $liParent=$(this).parent();
+
+
+                                        $(this).parent().children('input.personaleInput').change(function(){
+                                            socketFornitore.emit('modificaPersonale', {
+                                                'dip': '{{dipendente.username}}',
+                                                'primo_gruppo': chiave1,
+                                                'sotto_gruppo': chiave2,
+                                                'toEdit': $(this).parent().attr('class').split(' ')[0],
+                                                'value': $(this).val()
+                                            });
+
+                                            $liParent.children('label.datiPersonaleLabel').text($(this).val());
+                                            $liParent.removeClass('inModifica');
+                                            $liParent.children('label.datiPersonaleLabel').show();
+                                            $liParent.children('input.personaleInput').hide();
+
+
+                                        });
+
+                                    });
+
+
+                                    $('.datiPersonaleEdit').unbind('click').click(function(){
+
+                                        var $liParent=$(this).parent();
+
+                                        if(  $liParent.hasClass('inModifica') ){
+                                             $liParent.removeClass('inModifica');
+                                             $liParent.children('label.datiPersonaleLabel').show();
+                                             $liParent.children('input.personaleInput').hide();
+
+                                        }
+                                        else{
+
+                                            $liParent.addClass('inModifica');
+                                            $liParent.children('label.datiPersonaleLabel').hide();
+                                            $liParent.children('input.personaleInput').show();
+                                            $liParent.children('input.personaleInput').focus();
+
+
+                                        }
+
+
+                                    });
+
+
+                                }else{
+
+                                    swal({
+                                        title: msg['risposta'],
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#DD6B55',
+                                        confirmButtonText: 'Ok',
+                                        cancelButtonText: 'annulla',
+                                        closeOnConfirm: true,
+
+                                    });
+
+
+                                }
+
+
+                            });
+
+                        });
+                    }
+
+
+                });
+
+                $('.datiPersonaleEdit').each(function(){
+
+                    var $liParent=$(this).parent();
+
+
+                    $(this).parent().children('input.personaleInput').change(function(){
+                        socketFornitore.emit('modificaPersonale', {
+                            'dip': '{{dipendente.username}}',
+                            'primo_gruppo': chiave1,
+                            'sotto_gruppo': chiave2,
+                            'toEdit': $(this).parent().attr('class').split(' ')[0],
+                            'value': $(this).val()
+                        });
+
+                        $liParent.children('label.datiPersonaleLabel').text($(this).val());
+                        $liParent.removeClass('inModifica');
+                        $liParent.children('label.datiPersonaleLabel').show();
+                        $liParent.children('input.personaleInput').hide();
+
+
+                    });
+
+                });
+
+
+                $('.datiPersonaleEdit').unbind('click').click(function(){
+
+                    var $liParent=$(this).parent();
+
+                    if(  $liParent.hasClass('inModifica') ){
+                         $liParent.removeClass('inModifica');
+                         $liParent.children('label.datiPersonaleLabel').show();
+                         $liParent.children('input.personaleInput').hide();
+
+                    }
+                    else{
+
+                        $liParent.addClass('inModifica');
+                        $liParent.children('label.datiPersonaleLabel').hide();
+                        $liParent.children('input.personaleInput').show();
+                        $liParent.children('input.personaleInput').focus();
+
+
+                    }
+
+
+                });
+            }
+
+            var parametriPopup = {
+                'clicckedButton': $('a.personaleFornitore'),
+                'popupContainer': $('#schedaFornitori'),
+                'popupBodyContent': bodyPopup,
+                'popupTitle': 'Personale fornitore',
+                'popupFunction': funzionePostPopup,
+                'content_popup_classes': 'personale_fornitore_content',
+                'body_popup_classes': 'personale_fornitore_body'
+
+            };
+
+
+            usPopupPrezzari(parametriPopup);
+
+            $('input').unbind('mouseover').mouseover(function(){
+                $(this).focus();
+            });
+
+            numOfAddedRow++;
+
+
+            equalizzaAltezzaRighe();
+
+        } //FINE AGGIUNGI RIGA
+
+        socketFornitore.on('rispostaRegistraFornitore', function(message){
+
+
+            if(message['status'] == true ){
+
+                settoreEsistente = false;
+
+                $table1=$('#tabellaContainer1').children('table');
+                $table2=$('#tabellaContainer2').children('table');
+                $table3=$('#tabellaContainer3').children('table');
+
+                $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+                $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+                $settoreMerceologico=$sezioneTabella1.children('th.primaCol').next('th').children('input');
+
+
+
+                $table1.children('tbody').each(function(){
+                    if( $(this).attr('class') == $settoreMerceologico.val() ){
+                        settoreEsistente = true;
+                    }
+                });
+
+                if( !settoreEsistente ){
+                    $table1.append(
+                        '<tbody class="'+$settoreMerceologico.val()+'"> \
+                            <tr class="sezioneTabella dimensionaTabella" settore="'+$settoreMerceologico.val()+'"> \
+                                <th class="primaCol"></th> \
+                                <th class="secondaCol" colspan="3">Settore merceologico: '+$settoreMerceologico.val()+'</th> \
+                            </tr> \
+                        <tbody>'
+                    );
+
+                    $table2.append(
+                        '<tbody class="'+$settoreMerceologico.val()+'">  \
+                            <tr class="sezioneTabella dimensionaTabella" settore="'+$settoreMerceologico.val()+'"> \
+                                <th colspan="5"></th> \
+                            </tr> \
+                        </tbody>'
+                    );
+
+                    $table3.append(
+                        '<tbody class="'+$settoreMerceologico.val()+'"> \
+                            <tr class="sezioneTabella dimensionaTabella" settore="'+$settoreMerceologico.val()+'"> \
+                                <th colspan="6"></th> \
+                            </tr> \
+                        </tbody>'
+
+                    );
+                }
+
+                aggiungiRiga();
+
+                $('td.hiddenInput').click( function(){
+                    hiddenInputAction($(this));
+
+                });
+
+                $('.primaCol').unbind('click');
+
+
+            }
+
+            swal({
+                title: message['risposta'],
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+
+            });
+
+
+
+        });
+
+        /* Popolo la tabella con i fornitori registrati nel db */
+
+
+        {% for fornitore in fornitori %}
+            /*per evitare di riscrivere la funzione aggiungiRiga() due volte, popolo la tabella addNewRow
+               e poi chiamo aggiungiRiga()*/
+
+            $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+            $tbodyNewRow3=$('#tabellaContainerNewRow3').children('table').children('tbody');
+
+            $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+            $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+            $datiScheda3=$tbodyNewRow3.children('.datiScheda');
+
+            $settoreMerceologico=$sezioneTabella1.children('th.primaCol').next('th').children('input');
+
+            $settoreMerceologico.val('{{fornitore.settoreMerceologico}}')  ;
+
+
+            $datiScheda1.children('td.primo_gruppo').children('input').val('{{fornitore.primo_gruppo}}');
+            $datiScheda1.children('td.sotto_gruppo').children('input').val('{{fornitore.sotto_gruppo}}');
+
+            $datiScheda1.children('td.stato').children('input').each(function(){
+
+                if( $(this).val() == '{{fornitore.stato}}' )
+                    $(this).trigger('click');
+            });
+
+            $datiScheda2.children('td.tempi_di_consegna').children('input').val('{{fornitore.tempiDiConsegna}}');
+
+            $datiScheda2.children('td.prezzi_netti').children('input').each(function(){
+
+               if( $(this).val() == '{{fornitore.prezziNetti}}'  )
+                     $(this).trigger('click');
+
+            });
+
+
+            $datiScheda2.children('td.trasporto').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if(  $(this).val() == '{{fornitore.trasportoUnitaMisura}}' )
+                        $(this).trigger('click');
+
+                }
+                else
+                    $(this).val('{{fornitore.trasporto}}')
+
+            });
+
+            $datiScheda2.children('td.imballo').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if( $(this).val() == '{{fornitore.imballoUnitaMisura}}' )
+                        $(this).trigger('click');
+
+                }
+                else
+                    $(this).val('{{fornitore.imballo}}')
+
+
+            });
+
+
+            $datiScheda2.children('td.montaggio').children('input').each(function(){
+                if( $(this).attr('type') == 'radio' )
+                {
+                    if(  $(this).val() == '{{fornitore.montaggioUnitaMisura}}' )
+                         $(this).trigger('click');
+
+                }
+                else
+                    $(this).val('{{fornitore.montaggio}}')
+            });
+
+            var $standard=$datiScheda3.children('td.standard').children('input').val('{{fornitore.scontoStandard}}');
+            var $extra1=$datiScheda3.children('td.extra1').children('input').val('{{fornitore.scontoExtra1}}');
+            var $extra2=$datiScheda3.children('td.extra2').children('input').val('{{fornitore.scontoExtra2}}');
+            var $giorni=$datiScheda3.children('td.giorni').children('input').val('{{fornitore.giorniPagamenti}}');
+            var $modalita=$datiScheda3.children('td.modalita').children('input').val('{{fornitore.modalitaPagamenti}}');
+            var $tipologia=$datiScheda3.children('td.tipologia').children('input').val('{{fornitore.tipologiaPagamenti}}');
+
+            aggiungiRiga();
+
+
+        {% endfor %}
+
+        /*se nella è stata generata qualche sezione 'settoreMerceologico' a cui non appartengono fornitori la elimino*/
+        $table1=$('#tabellaContainer1').children('table');
+        $table2=$('#tabellaContainer2').children('table');
+        $table3=$('#tabellaContainer3').children('table');
+
+
+        $table1.children('tbody').each(function(){
+            var countChildren=0;
+
+            $(this).children('tr').each(function(){
+                countChildren++;
+            });
+
+            if( countChildren == 1 )
+            {
+                $(this).remove();
+            }
+        });
+
+        $table2.children('tbody').each(function(){
+            var countChildren=0;
+
+            $(this).children('tr').each(function(){
+                countChildren++;
+            });
+
+            if( countChildren == 1 )
+            {
+                $(this).remove();
+            }
+        });
+
+        $table3.children('tbody').each(function(){
+            var countChildren=0;
+
+            $(this).children('tr').each(function(){
+                countChildren++;
+            });
+
+            if( countChildren == 1 )
+            {
+                $(this).remove();
+            }
+        });
+
+        /**********************************************************************************/
+
+        $('td.hiddenInput').click( function(){
+            hiddenInputAction($(this));
+
+        });
+
+        $('.primaCol').unbind('click');
+
+
+
+        socketFornitore.on('confermaModifica', function(msg){
+
+            $('.inModifica').each(function(){
+
+                if( !(msg['toEdit'] == 'trasportoUnitaMisura' ||
+                     msg['toEdit'] == 'montaggioUnitaMisura' ||
+                      msg['toEdit'] == 'imballoUnitaMisura')){
+
+                    $(this).children('label.cellaDato').text(msg['value']);
+                }
+
+
+
+                $(this).children('label').show();
+                $(this).children('input').hide();
+                $(this).children('.radioLabel').hide();
+                $(this).children('.checked').show();
+                $(this).children('.simpleAfterInputLabel').hide();
+                $(this).removeClass('inModifica');
+            });
+
+            if( msg['toEdit'] == 'primo_gruppo' || msg['toEdit'] == 'sotto_gruppo'){
+                var modificaOldValueFunct = function($this){
+                    $this.children('td.primo_gruppo').each(function(){
+                        if($(this).children('label').text() == msg['primo_gruppo']){
+                            if( $(this).next().children('label').text() ==  msg['sotto_gruppo'] ){
+                                if(msg['toEdit'] == 'primo_gruppo' ){
+                                    $(this).children('label').text( msg['value'] )
+
+                                }
+                                else if( msg['toEdit'] == 'sotto_gruppo' )
+                                    $(this).next().children('label').text(msg['value'] )
+                            }
+                        }
+
+                    });
+
+                }
+
+
+                $('#tabellaContainer1 tr').each(function(){
+
+                    modificaOldValueFunct($(this));
+
+
+                });
+
+                $('#tabellaContainer2 tr').each(function(){
+
+                     modificaOldValueFunct($(this));
+
+                });
+
+                $('#tabellaContainer3 tr').each(function(){
+
+                     modificaOldValueFunct($(this));
+
+                });
+            }
+
+
+
+
+
+
+        });
+
+        $('.iconLista').click(function(){
+            var $selectEl=$(this).parent().children('select');
+            var selectedVal=$(this).parent().children('select').val();
+            var lista=$(this).parent().children('select').attr('id');
+
+            var delEditListe = function( idSelect, azione, oldValore, valoreEditato ){
+
+                if( idSelect == 'modDelSettore' ){
+
+                    if( azione == 'edit' ){
+                        $('#listaSettori').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+
+                        });
+
+                        socketFornitore.emit('modifica_settore_merceologico', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaSettori').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_settore_merceologico', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelTempiConsegna' ){
+                    if( azione == 'edit' ){
+                        $('#listaTempiConsegna').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_tempi_di_consegna', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaTempiConsegna').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_tempi_di_consegna', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelModalitaPagamento' ){
+                    if( azione == 'edit' ){
+                        $('#listaModalitaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_modalita_pagamento', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaModalitaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_modalita_pagamento', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelTipologiaPagamento' ){
+                    if( azione == 'edit' ){
+                        $('#listaTipologiaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_tipologia_pagamento', {'oldNome': oldValore, 'newNome': valoreEditato});
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaTipologiaPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_tipologia_pagamento', {'nome': oldValore});
+                    }
+                }
+                else if( idSelect == 'modDelGiorniPagamento' ){
+                    if( azione == 'edit' ){
+                        $('#listaGiorniPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).val(valoreEditato);
+                                $(this).text('');
+                        });
+
+                        socketFornitore.emit('modifica_giorno_pagamento', {'oldNome': oldValore, 'newNome': valoreEditato});
+
+                    }
+                    else if( azione == 'del' ){
+                        $('#listaGiorniPagamento').children('option').each(function(){
+                            if($(this).text() == oldValore )
+                                $(this).remove();
+                        });
+
+                        socketFornitore.emit('elimina_giorno_pagamento', {'nome': oldValore});
+                    }
+                }
+
+
+            }
+
+            if( $(this).hasClass('editLista') ){
+
+                swal.withFormAsync({
+                    title: 'Modifica valore "'+selectedVal+'"',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+                        { id: 'valore', name: 'valore', value: selectedVal},
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+                      $selectEl.children('option').each(function(){
+                        if($(this).val() == selectedVal ){
+                            $(this).val(context.swalForm['valore'] );
+                            $(this).text(context.swalForm['valore']);
+                        }
+                      });
+
+                      delEditListe(lista, 'edit', selectedVal, context.swalForm['valore'])
+                    }
+
+                });
+
+
+            }
+            else if( $(this).hasClass('delLista') ){
+                swal({
+                    title: 'Stai per eliminare "'+selectedVal+'" ',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                }, function(isConfirm){
+                    if( isConfirm ){
+
+                        $selectEl.children('option').each(function(){
+
+                            if($(this).val() == selectedVal )
+                                $(this).remove();
+                        });
+
+                        delEditListe(lista, 'del', selectedVal, '')
+
+                    }
+
+
+                });
+
+            }
+        });
+
+        var equalizzaAltezzaHeaderTabella = function(){
+
+            /*trovo la riga più alta*/
+            var tallerRow=0;
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                  //  alert( ' 1 sono piu alto ' );
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                   // alert( ' 2 sono piu alto ' );
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer3.headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                   // alert( ' 3 sono piu alto ' );
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            $('#tabellaContainer3 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+
+            tallerRow = 0;
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow3 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            $('#tabellaContainerNewRow3 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            equalizzaAltezzaRighe();
 
         }
 
-        $('#cercaFornitore').change(function(){
-            viewPage($(this).val());
+        window.addEventListener('resize', equalizzaAltezzaHeaderTabella);
+
+        equalizzaAltezzaHeaderTabella();
+
+
+
+        var filtraTbody = function($tabella, classe){
+
+            if( classe != '' ){
+                $tabella.children('table').children('tbody').each(function(){
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+
+                        if( !tbodyClass.startsWith(classe) ){
+                            $(this).hide();
+                        }
+                        else if( tbodyClass.startsWith(classe) ){
+                            $(this).show();
+                        }
+
+                    }
+                });
+            }
+            else{
+                $tabella.children('table').children('tbody').each(function(){
+                    $(this).show();
+                });
+
+            }
+        }
+
+        var filtraRighe = function($tabella, fornitore, class_td){
+
+            if( fornitore != '' ){
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+                        var hideTbody = false;
+                        var countRow = 0;
+                        var countHiddenRow = 0;
+
+
+                        $(this).children('tr.datiScheda').each( function(){
+                            var trFornitore = $(this).children('td.'+class_td).children('label').text();
+
+                            countRow++;
+
+                            if( trFornitore.startsWith(fornitore) ){
+                                $(this).show();
+                            }
+                            else{
+                                countHiddenRow++;
+                                $(this).hide();
+                            }
+
+                        });
+
+                        if( countRow == countHiddenRow ){
+                            $(this).hide();
+
+                        }
+                    }
+                });
+
+            }
+            else{
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    $(this).show();
+
+                    $(this).children('tr.datiScheda').each( function(){
+                        $(this).show();
+                    });
+
+
+                });
+
+
+            }
+
+        }
+
+
+
+        $('#filtraSettori').change(function(){
+
+            filtraTbody( $('#tabellaContainer1'), $(this).val());
+            filtraTbody( $('#tabellaContainer2'), $(this).val());
+            filtraTbody( $('#tabellaContainer3'), $(this).val());
         });
 
+        $('#filtraSettori').keydown(function(){
 
-        $('#addFornitore').click(function(){
 
-            $('#searchFornitore').remove();
-            $('#divIntestazione').append(
-                '<div id="searchContainer">'+
-                    '<span id="spanBackTo"><a id="back" class="fa fa-reply"></a></span>'+
-                    '<button id="submitFormFornitore" class="button button--antiman button--text-thick button--text-upper button--size-s button--inverted-alt button--round-l button--border-thick"><i class="button__icon icon icon-plus"></i><span>Aggiungi</span></button>'+
-                '</div>'
-            );
-
-            $('#back').click(function(){
-                window.location="{{url_for('schedaFornitori')}}"
-            });
-
-            $('.tabContainer').html(
-
-                '<form id="formFornitore" method="post" action="schedaFornitori">'+
-                    '{{form.hidden_tag()}}'+
-
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th class="centerText" colspan="4">Dati Fornitore</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Primo gruppo</th>'+
-                                '<th>Sotto gruppo</th>'+
-                                '<th>Settore merceologico</th>'+
-                                '<th>Stato</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{form.gruppo_azienda(placeholder="primo gruppo", list="listaFornitori", autocomplete="nope")}}</td>'+
-                                  '<datalist id="listaFornitori">'+
-                                          {% for fornitore in listaFornitoriPrimoGruppo %}
-                                          '<option value="{{fornitore.nome_gruppo}}"></option>'+
-                                          {% endfor %}
-                                      '</datalist>'+
-                                '<td >{{form.nomeFornitore(placeholder="sotto gruppo")}}</td>'+
-                                '<td >{{form.settoreMerceologico( placeholder="settore")}}</td>'+
-                                '<td>{{form.stato}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="4">Recapito azienda</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Indirizzo</th>'+
-                                '<th>Provincia</th>'+
-                                '<th>Telefono</th>'+
-                                '<th>Sito</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{form.indirizzo(placeholder="indirizzo")}}</td>'+
-                                '<td>{{form.provincia(placeholder="provincia")}}</td>'+
-                                '<td>{{form.telefono(placeholder="telefono")}}</td>'+
-                                '<td>{{form.sito(placeholder="sito")}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="3">Rappresentante</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Nominativo</th>'+
-                                '<th>Telefono</th>'+
-                                '<th>Email</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{form.nomeRappresentante(placeholder="referente")}}</td>'+
-                                '<td>{{form.telefonoRappresentante(placeholder="telefono referente")}}</td>'+
-                                '<td>{{form.emailRappresentante(placeholder="email referente")}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="3">Sconti</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Standard</th>'+
-                                '<th>Extra 1</th>'+
-                                '<th>Extra 2</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{form.scontoStandard(placeholder="standard")}} %</td>'+
-                                '<td>{{form.scontoExtra1(placeholder="extra 1")}} %</td>'+
-                                '<td>{{form.scontroExtra2(placeholder="extra 2")}} %</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th colspan="3">Pagamenti</th>'+
-                            '</tr>'+
-
-                            '<tr>'+
-                                '<th>Giorni</th>'+
-                                '<th>Modalità</th>'+
-                                '<th>Tipologia</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>'+
-                                    '<a id="giorniPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
-                                    '{{form.giorniPagamenti(placeholder="giorni pagamento", list="listaGiorniPagamento", autocomplete="nope")}}'+
-                                    '<datalist id="listaGiorniPagamento">'+
-                                    {% for giorno in giorniPagamento %}
-                                    '<option value="{{giorno.nome}}"></option>'+
-                                    {% endfor %}
-                                    '</datalist>'+
-                                '</td>'+
-                                '<td>'+
-                                    '<a id="modalitaPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
-                                    '{{form.modalitaPagamenti( placeholder="modalita pagamento", list="listaModalitaPagamento", autocomplete="nope")}}'+
-                                        '<datalist id="listaModalitaPagamento">'+
-                                              {% for modalita in modalitaPagamento %}
-                                              '<option value="{{modalita.nome}}"></option>'+
-                                              {% endfor %}
-                                        '</datalist>'+
-                                '</td>'+
-                                '<td>'+
-                                    '<a id="tipologiaPagamentiBtn" class="modificaPagamenti fa fa-edit"></a>'+
-                                    '{{form.tipologiaPagamenti(placeholder="tipologia pagamento", list="listaTipologiaPagamento", autocomplete="nope")}}'+
-                                       '<datalist id="listaTipologiaPagamento">'+
-                                              {% for tipologia in tipologiaPagamento %}
-                                              '<option value="{{tipologia.nome}}"></option>'+
-                                              {% endfor %}
-                                       '</datalist>'+
-                                 '</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th>Tempi di consegna</th>'+
-                                '<th></th>'+
-                                '<th>Prezzi netti</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{form.tempiDiConsegna(placeholder="tempi di consegna")}}</td>'+
-                                '<td></td>'+
-                                '<td>{{form.prezziNetti}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-                    '<table class="tableFornitore">'+
-                        '<thead class="headFornitore">'+
-
-                            '<tr>'+
-                                '<th>Trasporto</th>'+
-                                '<th>Imballo</th>'+
-                                '<th>Montaggio</th>'+
-                            '</tr>'+
-
-                        '</thead>'+
-                        '<tbody class="bodyFornitore">'+
-                            '<tr>'+
-                                '<td>{{form.trasporto(placeholder="costo di trasporto")}} {{form.trasportoUnitaMisura}}</td>'+
-                                '<td>{{form.imballo(placeholder="costo di imballo")}} {{form.imballoUnitaMisura}}</td>'+
-                                '<td>{{form.montaggio(placeholder="costo di posa")}} {{form.montaggioUnitaMisura}}</td>'+
-                            '</tr>'+
-                        '</tbody>'+
-
-                    '</table>'+
-                '</form>'
-
-            );
-
-            $('#submitFormFornitore').click(function(){
-                $('#formFornitore').submit();
-            });
-
-            $('#giorniPagamentiBtn').click(function(){
-
-                 var giorniPagamentoOptions=[];
-                 $('#listaGiorniPagamento').children().each(function(){
-                    giorniPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
-                 });
-
-
-
-                 swal.withFormAsync({
-                    title: 'Modifica/elimina <br/> giorno pagamento',
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: 'Ok',
-                    cancelButtonText: 'annulla',
-                    closeOnConfirm: false,
-                    formFields: [
-
-                      {
-                        id: 'select',
-                        type: 'select',
-                        options: giorniPagamentoOptions
-
-                      },
-
-                     { name: 'modDel', value: 'modifica', type: 'radio' },
-                     { name: 'modDel', value: 'elimina', type: 'radio' },
-
-
-                    ]
-                 }).then(function (context) {
-
-                    var giornoSelected=context.swalForm['select'];
-
-                    if(context._isConfirm){
-
-                        if( context.swalForm['modDel'] == 'modifica' ){
-                            swal.withFormAsync({
-                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
-                                showCancelButton: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'annulla',
-                                closeOnConfirm: true,
-                                formFields: [
-
-                                 { name: 'toMod', value: giornoSelected, placeholder: 'Modifica campo: ' + giornoSelected },
-
-
-                                ]
-                            }).then(function (context) {
-                                if(context._isConfirm){
-                                    socketFornitore.emit("modifica_giornoPagamento", { "dip": "{{dipendente.username}}",
-                                                   "oldNome": giornoSelected, "newNome": context.swalForm['toMod'] } );
-
-                                }
-                            });
-                        }
-                        else if( context.swalForm['modDel'] == 'elimina' ) {
-                             socketFornitore.emit("elimina_giornoPagamento", { "dip": "{{dipendente.username}}",
-                                                   "nome": giornoSelected } );
-                             swal({
-                                title: 'Campo eliminato',
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                closeOnConfirm: true
-                             });
-
-                        }
-
-
-                    }
-
-                 });
-
-            });
-
-
-
-            $('#modalitaPagamentiBtn').click(function(){
-
-                 var modalitaPagamentoOptions=[];
-                 $('#listaModalitaPagamento').children().each(function(){
-                    modalitaPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
-                 });
-
-
-
-                 swal.withFormAsync({
-                    title: 'Modifica/elimina <br/> modalità pagamento',
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: 'Ok',
-                    cancelButtonText: 'annulla',
-                    closeOnConfirm: false,
-                    formFields: [
-
-                      {
-                        id: 'select',
-                        type: 'select',
-                        options: modalitaPagamentoOptions
-
-                      },
-
-                     { name: 'modDel', value: 'modifica', type: 'radio' },
-                     { name: 'modDel', value: 'elimina', type: 'radio' },
-
-
-                    ]
-                 }).then(function (context) {
-
-                    var modalitaSelected=context.swalForm['select'];
-
-                    if(context._isConfirm){
-
-                        if( context.swalForm['modDel'] == 'modifica' ){
-                            swal.withFormAsync({
-                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
-                                showCancelButton: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'annulla',
-                                closeOnConfirm: true,
-                                formFields: [
-
-                                 { name: 'toMod', value: modalitaSelected, placeholder: 'Modifica campo: ' + modalitaSelected },
-
-
-                                ]
-                            }).then(function (context) {
-                                if(context._isConfirm){
-                                    socketFornitore.emit("modifica_modalitaPagamento", { "dip": "{{dipendente.username}}",
-                                                   "oldNome": modalitaSelected, "newNome": context.swalForm['toMod'] } );
-
-                                }
-                            });
-                        }
-                        else if( context.swalForm['modDel'] == 'elimina' ) {
-                             socketFornitore.emit("elimina_modalitaPagamento", { "dip": "{{dipendente.username}}",
-                                                   "nome": modalitaSelected } );
-                             swal({
-                                title: 'Campo eliminato',
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                closeOnConfirm: true
-                             });
-
-                        }
-
-
-                    }
-
-                 });
-
-            });
-
-            $('#tipologiaPagamentiBtn').click(function(){
-
-                 var tipologiaPagamentoOptions=[];
-                 $('#listaTipologiaPagamento').children().each(function(){
-                    tipologiaPagamentoOptions.push( {value: $(this).attr('value'), text: $(this).attr('value')} );
-                 });
-
-
-
-                 swal.withFormAsync({
-                    title: 'Modifica/elimina <br/> tipologia pagamento',
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: 'Ok',
-                    cancelButtonText: 'annulla',
-                    closeOnConfirm: false,
-                    formFields: [
-
-                      {
-                        id: 'select',
-                        type: 'select',
-                        options: tipologiaPagamentoOptions
-
-                      },
-
-                     { name: 'modDel', value: 'modifica', type: 'radio' },
-                     { name: 'modDel', value: 'elimina', type: 'radio' },
-
-
-                    ]
-                 }).then(function (context) {
-
-                    var tipologiaSelected=context.swalForm['select'];
-
-                    if(context._isConfirm){
-
-                        if( context.swalForm['modDel'] == 'modifica' ){
-                            swal.withFormAsync({
-                                title: 'Apportare le dovute modifiche al campo selezionato e premere ok.',
-                                showCancelButton: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'annulla',
-                                closeOnConfirm: true,
-                                formFields: [
-
-                                 { name: 'toMod', value: tipologiaSelected, placeholder: 'Modifica campo: ' + tipologiaSelected },
-
-
-                                ]
-                            }).then(function (context) {
-                                if(context._isConfirm){
-                                    socketFornitore.emit("modifica_tipologiaPagamento", { "dip": "{{dipendente.username}}",
-                                                   "oldNome": tipologiaSelected, "newNome": context.swalForm['toMod'] } );
-
-                                }
-                            });
-                        }
-                        else if( context.swalForm['modDel'] == 'elimina' ) {
-                             socketFornitore.emit("elimina_tipologiaPagamento", { "dip": "{{dipendente.username}}",
-                                                   "nome": tipologiaSelected } );
-                             swal({
-                                title: 'Campo eliminato',
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                closeOnConfirm: true
-                             });
-
-                        }
-
-
-                    }
-
-                 });
-
-            });
-
-
+            $(this).trigger('change');
 
         });
 
+        $('#filtraFornitoriPrimoG').change(function(){
 
-        {% if error %}
-              swal({
-                title: "{{errorMessage}}",
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                closeOnConfirm: true
+            filtraRighe( $('#tabellaContainer1'), $(this).val(), 'primo_gruppo');
+            filtraRighe( $('#tabellaContainer2'), $(this).val(), 'primo_gruppo' );
+            filtraRighe( $('#tabellaContainer3'), $(this).val(), 'primo_gruppo' );
+        });
 
-              });
-               $('#addFornitore').trigger('click');
-        {% endif %}
+        $('#filtraFornitoriPrimoG').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
+
+        $('#filtraFornitoriSecondoG').change(function(){
+
+            filtraRighe( $('#tabellaContainer1'), $(this).val(), 'sotto_gruppo');
+            filtraRighe( $('#tabellaContainer2'), $(this).val(), 'sotto_gruppo');
+            filtraRighe( $('#tabellaContainer3'), $(this).val(), 'sotto_gruppo');
+        });
+
+        $('#filtraFornitoriSecondoG').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
 
     </script>
 {% endblock %}

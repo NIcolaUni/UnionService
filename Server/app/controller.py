@@ -40,64 +40,10 @@ import os
 
 ####################################### ROUTE HANDLER #################################################
 
-@server.route('/prezzarioEdile')
-@login_required
-def prezzarioEdile():
-    #server.logger.info("\n\nchiamato {}\n\n".format(app.prezzarioEdileSettoreCorrente))
-    dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-    settori = SettoreLavorazione.query.all()
-    #categorie = Categoria.query.all()
-   # pertinenze = Pertinenza.query.all()
-    lavorazioni = PrezzarioEdile.query.all()
-
-    if app.prezzarioEdileSettoreCorrente is None:
-        if len(lavorazioni) != 0:
-            app.prezzarioEdileSettoreCorrente = lavorazioni[0].settore
-
-    if app.prezzarioEdileSettoreCorrente is not None:
-
-        #server.logger.info("\n\nchiamato {} {} {}\n\n".format(settori, categorie, pertinenze))
-        return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, settoreToSel=app.prezzarioEdileSettoreCorrente,
-                                        lavorazioni=lavorazioni,
-                                        sockUrl=app.appUrl, prezzario=True, prezzarioEdileCss=True)
-    else:
-        return render_template('prezzarioEdile.html', dipendente=dip, settori=settori, settoreToSel=None,
-                                        lavorazioni=lavorazioni,
-                                        sockUrl=app.appUrl, prezzario=True, prezzarioEdileCss=True)
 
 @server.route('/prezzarioProdotti')
 @login_required
 def prezzarioProdotti():
-    dip=Dipendente.query.filter_by(username=current_user.get_id()).first()
-    tipoProdotto = TipologiaProdotto.query.all()
-    fornitori = Fornitore.query.all()
-    prodotti =ProdottoPrezzario.query.all()
-    modelli = ModelloProdotto.query.all()
-
-    if app.prezzarioProdottiTipoCorrente is None:
-        if len(tipoProdotto) != 0:
-            app.prezzarioProdottiTipoCorrente = tipoProdotto[0].nome
-
-    allerta = False
-
-    if app.rigaPresente:
-        allerta = True
-        app.rigaPresente = False
-
-
-    if app.prezzarioProdottiTipoCorrente is not None:
-
-        return render_template('modificaPrezzarioProdotti.html', dipendente=dip, rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente,
-                               tipoProdotto=tipoProdotto, tipoToSel=app.prezzarioProdottiTipoCorrente, modelli=modelli,
-                                fornitori=fornitori, prodotti=prodotti, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
-    else:
-        return render_template('modificaPrezzarioProdotti.html', dipendente=dip, rigaPresente=allerta, tabellaRigaPresente=app.tabellaRigaPresente,
-                                tipoProdotto=tipoProdotto, tipoToSel=None, prodotti=prodotti, modelli=modelli,
-                                fornitori=fornitori, prezzario=True, prezzarioProdottiCss=True, sockUrl=app.appUrl )
-
-@server.route('/prezzarioProdotti2')
-@login_required
-def prezzarioProdotti2():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     colleghi = Dipendente.query.all()
     fornitori = Fornitore.query.all()
@@ -105,12 +51,12 @@ def prezzarioProdotti2():
     capitolati = CapitolatoProdotto.query.all()
     tipologia = TipologiaProdotto.query.all()
 
-    return render_template('prezzarioProdotti2.html', dipendente=dip, colleghi=colleghi, scheda=True,
+    return render_template('prezzarioProdotti.html', dipendente=dip, colleghi=colleghi, scheda=True,
                            prezzario_prodotti=True, fornitori=fornitori, prodotti=prodotti, capitolati=capitolati, tipologia=tipologia)
 
-@server.route('/schedaFornitori2', methods=['GET', 'POST'])
+@server.route('/schedaFornitori', methods=['GET', 'POST'])
 @login_required
-def schedaFornitori2():
+def schedaFornitori():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     colleghi = Dipendente.query.all()
     fornitori = Fornitore.query.all()
@@ -123,22 +69,23 @@ def schedaFornitori2():
     giorniPagamento = GiorniPagamentoFornitore.query.all()
 
 
-    return render_template('schedaFornitori2.html', dipendente=dip, colleghi=colleghi, scheda=True,
+    return render_template('schedaFornitori.html', dipendente=dip, colleghi=colleghi, scheda=True,
                            scheda_fornitori=True, fornitori=fornitori, settore_merceologico=settore_merceologico,
                            personale=personale, tempiDiConsegna=tempiDiConsegna, modalitaPagamento=modalitaPagamento,
                            tipologiaPagamento=tipologiaPagamento, giorniPagamento=giorniPagamento)
 
-@server.route('/prezzarioEdile2', methods=['GET', 'POST'])
+@server.route('/PrezzarioEdile', methods=['GET', 'POST'])
 @login_required
-def prezzarioEdile2():
+def prezzarioEdile():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     #colleghi = Dipendente.query.all()
     SettoreLavorazione.inizializza()
     settori = SettoreLavorazione.query.all()
-    prezzario = PrezzarioEdile.query.all()
+    prezzario =PrezzarioEdile.query.first()
+    lavorazioni =  PrezzarioEdile.returnLavorazioni()
 
-
-    return render_template('prezzarioEdile2.html', dipendente=dip, prezzario=prezzario, scheda=True, prezzario_edile=True, settori=settori)
+    return render_template('prezzarioEdile.html', dipendente=dip, prezzario=prezzario, settori=settori, lavorazioni=lavorazioni,
+                           scheda=True, prezzario_edile=True )
 
 
 @server.route('/agendaClientePag/<dipUsername>')
@@ -190,13 +137,15 @@ def paginaProfilo():
 @login_required
 def newPreventivoEdile():
     settori = SettoreLavorazione.query.all()
-    prezzarioEdile = PrezzarioEdile.query.all()
+    prezzarioEdile = PrezzarioEdile.query.first()
+    lavorazioni = PrezzarioEdile.returnLavorazioni()
     preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
 
     return render_template('preventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
-                            preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile, preventivo=preventivo)
+                            preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
+                            lavorazioni=lavorazioni, preventivo=preventivo)
 
 
 @server.route('/apriPreventivoEdile')
@@ -204,14 +153,15 @@ def newPreventivoEdile():
 def apriPreventivoEdile():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     settori = SettoreLavorazione.query.all()
-    prezzarioEdile = PrezzarioEdile.query.all()
+    prezzarioEdile = PrezzarioEdile.query.first()
+    lavorazioni = PrezzarioEdile.returnLavorazioni()
     preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
     infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1])
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
 
     return render_template('preventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
-                            preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
+                            preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile, lavorazioni=lavorazioni,
                             preventivo=preventivo, infoPreventivo=infoPreventivo, dipendente=dip)
 
 @server.route('/downloadPreventivoEdile')
@@ -450,15 +400,15 @@ def accoglienza(error):
     la variabile accoglienzaForm viene sovrascritta con un form nuovo, ovvero quello
     richiamato dalla pagina stessa ritornata.
     '''
-    app.server.logger.info('\n\n\nCIAOOOOO {} {}\n\n'.format(error, app.accoglienzaOk))
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+
     if error == 1 or error == 2 :
 
         if app.accoglienzaOk:
-            app.server.logger.info('\n\n\ndaiiiii\n\n')
             app.accoglienzaOk=False
 
             if error == 1:
-                return render_template('confermaRegistrazioneCliente.html')
+                return render_template('confermaRegistrazioneCliente.html', dipendente=dip)
             else:
                 app.server.logger.info('\n\n\npreventivo apriti\n\n')
                 return redirect('/newPreventivoEdile')
@@ -478,7 +428,7 @@ def accoglienza(error):
                                            lavorazione=app.accoglienzaForm.lavorazione.data, commerciale=current_user.get_id())
 
             app.accoglienzaOk=True
-            return render_template('confermaRegistrazioneCliente.html')
+            return render_template('confermaRegistrazioneCliente.html', dipendente=dip)
 
     server.logger.info("\n\nAlternativa al post {}{}\n\n".format(app.accoglienzaForm.nome.errors, app.accoglienzaForm))
 
@@ -575,13 +525,18 @@ def registraDipendente():
                                 domicilioVia=domicilioVia, domicilioNum=domicilioNum, domicilioCitta=domicilioCitta,
                                 domicilioCap=domicilioCap,
                                 domicilioRegione=domicilioRegione, telefono=form.telefono.data,
-                                password=form.password.data, email_aziendale=form.email_aziendale.data,
+                                password=form.password.data,
                                 email_personale=form.email_personale.data, iban=form.iban.data, partitaIva=form.partitaIva.data )
 
 
         return render_template("confermaRegistrazione.html", username=username, password=password, creatoreCredenziali=creatoreCredenziali, sockUrl=app.appUrl )
 
     return render_template("registrazioneDip.html", form=form, fittizio=True)
+
+@server.route('/tmp')
+def tmp():
+    return render_template("confermaRegistrazione.html", username='paolo', password='tizio',
+                            sockUrl=app.appUrl)
 
 
 @server.route('/', methods=['GET','POST'])
@@ -620,7 +575,7 @@ def logout():
 def getNotifiche():
 
 
-    notiche = Notifica.query.filter_by(destinatario=current_user.get_id());
+    notiche = Notifica.getNotificheOrdinate(destinatario=current_user.get_id())
 
     returnList = ""
 
@@ -655,6 +610,18 @@ def handle_my_event(message):
 def handle_registra_sid(message):
     Dipendente.registraSid(message['username'], request.sid)
 
+@socketio.on('richiedi_notifiche_dipendente', namespace="/notifica")
+def handle_richiedi_notifiche_dipendente(message):
+    #usato inizialmente per recuperare le notifiche da mostrare
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    notifiche = Notifica.getNotificheOrdinate(message['dip'])
+
+    for notifica in notifiche:
+        emit('aggiornaNotifiche', {'titolo': notifica.titolo,
+                                   'contenuto': notifica.contenuto,
+                                   'tipologia': notifica.tipologia,
+                                   'numero': notifica.numero}, namespace='/notifica', room=dip.session_id)
 
 @socketio.on('registrazione_effettuata', namespace="/notifica")
 def handle_registrazione_effetuata(message):
@@ -662,12 +629,14 @@ def handle_registrazione_effetuata(message):
     nuovoDip = Dipendente.query.filter_by(username=message['dipendente_registrato']).first()
 
 
-    Notifica.registraNotifica(destinatario=responsabile.username, titolo="Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
+    num= Notifica.registraNotifica(destinatario=responsabile.username, titolo="Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
                               contenuto="Ricorda di completare la sua registrazione.")
 
     emit('aggiornaNotifiche', {'titolo': "Aggiunto dipendente {0} {1}".format(nuovoDip.nome, nuovoDip.cognome),
-                               'contenuto': "Ricorda di completare la sua registrazione.", 'tipologia' : "newDip"},
+                               'contenuto': "Ricorda di completare la sua registrazione.", 'tipologia' : "newDip",
+                               'numero': num},
                                 namespace='/notifica', room=responsabile.session_id)
+
 
 
 @socketio.on('elimina_nota', namespace="/notifica")
@@ -696,12 +665,13 @@ def handle_accetta_ferie(message):
     RichiestaFerie.accettaRichiesta(dipendente=notifica.richiedente_ferie, start_date=notifica.start_date)
 
     # invio la nota dell'accettazione al dipendente interessato
-    Notifica.registraNotifica(destinatario=richiedente_ferie.username,
+    num=Notifica.registraNotifica(destinatario=richiedente_ferie.username,
                               titolo="Richiesta ferie accettata da {} {}".format(dirigente.nome, dirigente.cognome),
                               contenuto="Commento del dirigente: {}".format(message['nota_dirigente']), tipologia="commonNote" )
 
     emit('aggiornaNotifiche', {'titolo': "Richiesta ferie accettata da {} {}".format(dirigente.nome, dirigente.cognome),
-                               'contenuto': "Commento del dirigente: {}".format(message['nota_dirigente']), 'tipologia': "commonNote"},
+                               'contenuto': "Commento del dirigente: {}".format(message['nota_dirigente']),
+                               'tipologia': "commonNote", 'numero': num},
          namespace='/notifica', room=richiedente_ferie.session_id)
 
 
@@ -730,12 +700,13 @@ def handle_declina_ferie(message):
 
 
     # invio la nota dell'accettazione al dipendente interessato
-    Notifica.registraNotifica(destinatario=richiedente_ferie.username,
+    num=Notifica.registraNotifica(destinatario=richiedente_ferie.username,
                               titolo="Richiesta ferie rifiutata da {} {}".format(dirigente.nome, dirigente.cognome),
                               contenuto="Commento del dirigente: {}".format(message['nota_dirigente']), tipologia="commonNote")
 
     emit('aggiornaNotifiche', {'titolo': "Richiesta ferie rifiutata da {} {}".format(dirigente.nome, dirigente.cognome),
-                               'contenuto': "Commento del dirigente: {}".format(message['nota_dirigente']), 'tipologia': "commonNote"},
+                               'contenuto': "Commento del dirigente: {}".format(message['nota_dirigente']),
+                               'tipologia': "commonNote", 'numero': num},
          namespace='/notifica', room=richiedente_ferie.session_id)
 
     # elimino la nota del dirigente
@@ -760,6 +731,7 @@ def handle_registra_lavorazione(message):
 
     SettoreLavorazione.registraSettore(nome=message['settore'])
 
+
     PrezzarioEdile.registraLavorazione(settore=message["settore"], tipologia_lavorazione=message["tipologia"],
                                         pertinenza=message["pertinenza"], unitaMisura=message["unita"],
                                          prezzoMin=message["pMin"], prezzoMax=message["pMax"],
@@ -777,6 +749,10 @@ def handle_modifica_lavorazione(message):
     emit('conferma_modifica_lavorazione', namespace='/prezzario', room=dip.session_id)
 
 
+@socketio.on('modifica_ricarico_prezzario', namespace='/prezzario')
+def handle_modifica_ricarico_all(message):
+
+    PrezzarioEdile.modificaRicaricoPrezzario(message['valore']);
 
 @socketio.on('settaLavorazioneDaVerificare', namespace='/prezzario')
 def handle_setta_daVerificare(message):
@@ -788,6 +764,20 @@ def handle_elimina_lavorazione(message):
 
     dip = Dipendente.query.filter_by(username=message['dip']).first()
     emit('conferma_elimina_lav', namespace='/prezzario', room=dip.session_id)
+
+
+@socketio.on('notifica_del_nota_imposta', namespace="/impegni")
+def handle_notifica_del_nota_imposta(message):
+    dir = Dipendente.query.filter_by(username=message['dir']).first()
+
+    num=Notifica.registraNotifica(destinatario=dir.username,
+                              titolo="Impegno svolto",
+                              contenuto= "{} ha svolto l'impegno:<br/> {}".format(message['dip'], message['impegno']),
+                              tipologia='commonNote')
+
+    emit('aggiornaNotifiche', {'titolo': "Impegno svolto",
+                               'contenuto': "{} ha svolto l'impegno:<br/> {}".format(message['dip'], message['impegno']),
+                               'tipologia': "commonNote", 'numero': num},  namespace='/notifica', room=dir.session_id)
 
 
 @socketio.on('registraImpegno', namespace='/impegni')
@@ -1167,7 +1157,7 @@ def handle_modifica_preventivo_finiture(message):
 @socketio.on('add_nuovo_prodotto', namespace='/preventivoFiniture')
 def handle_add_nuovo_prodotto(message):
 
-
+    app.server.logger.info('\n\n\nMAAAAA\n\n\n')
     PreventivoFiniture.registraProdotto(numero_preventivo=message['numero_preventivo'], data=message['data'],
                                         ordine=message['ordine'], tipologia=message['tipologia'], modello=message['modello'],
                                         marchio=message['marchio'], nome_prodotto=message['prodotto'], quantita=message['quantita'],
@@ -1378,11 +1368,10 @@ def handle_elimina_preventivo(message):
 def handle_modifica_preventivo_edile(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    app.server.logger.info('entrato in modifica')
+
     idPreventivo = PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], dipendente_generatore=dip.username)
     app.preventivoEdileSelezionato=idPreventivo
 
-    app.server.logger.info('modificato {}'.format(idPreventivo))
 
     emit('startModificaPreventivo', namespace='/preventivoEdile', room=dip.session_id)
 
@@ -1528,6 +1517,18 @@ def handle_modifica_profilo(message):
 
     emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
 
+@socketio.on('modifica_indirizzo_profilo', namespace='/profilo')
+def handle_modifica_profilo(message):
+
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    if message['campo'] == 'residenza':
+        Dipendente.modificaProfilo(username=dip.username, modifica={'residenzaVia': message['via'], 'residenzaNum': message['num'], 'residenzaCitta': message['citta'], 'residenzaRegione': message['regione']})
+    else:
+        Dipendente.modificaProfilo(username=dip.username, modifica={'domicilioVia': message['via'], 'domicilioNum': message['num'], 'domicilioCitta': message['citta'], 'domicilioRegione': message['regione']})
+
+    emit('aggiorna_pagina', namespace='/profilo', room=dip.session_id)
+
 @socketio.on('aggiungi_ferie', namespace='/profilo')
 def handle_aggiungi_ferie(message):
 
@@ -1550,7 +1551,7 @@ def handle_richiesta_ferie(message):
     for dirigente in dirigenti:
         dipDirigente = Dipendente.query.filter_by(username=dirigente.username).first()
 
-        Notifica.registraNotifica(destinatario=dipDirigente.username, titolo="Richiesta ferie di {0} {1}".format(dip.nome, dip.cognome),
+        num=Notifica.registraNotifica(destinatario=dipDirigente.username, titolo="Richiesta ferie di {0} {1}".format(dip.nome, dip.cognome),
                                   contenuto="{} {} ha richiesto delle ferie dal {} al {}".format(dip.nome, dip.cognome,
                                                                                                   message['start_date'], message['end_date']),
                                   tipologia='richiestaFerie', richiedente_ferie=dip.username, start_date=message['start_date'])
@@ -1558,7 +1559,7 @@ def handle_richiesta_ferie(message):
         emit('aggiornaNotifiche', {'titolo': "Richiesta ferie di {0} {1}".format(dip.nome, dip.cognome),
                                    'contenuto': "{} {} ha richiesto delle ferie dal {} al {}.".format(dip.nome, dip.cognome,
                                                                                                   message['start_date'], message['end_date']),
-                                   'tipologia' : "richiestaFerie"},
+                                   'tipologia' : "richiestaFerie", 'numero': num},
                                     namespace='/notifica', room=dipDirigente.session_id)
 
 @socketio.on('elimina_ferie', namespace='/profilo')
@@ -1628,6 +1629,17 @@ def handle_storico_messaggi(message):
     htmlChat = Messaggio.recuperaConversazioni(mittente=message['mittente'], destinatario=message['destinatario'])
 
     emit("stampaStorico", {'htmlChat': htmlChat}, namespace='/chat', room=mittente.session_id)
+
+@socketio.on('cambia_livello_difficolta', namespace="/cliente")
+def handle_cambia_livello_difficolta(message):
+
+    ClienteAccolto.modificaDifficolta(nome=message['nome'], cognome=message['cognome'],
+                                      indirizzo=message['indirizzo'], valore=message['valore'])
+
+@socketio.on_error('/cliente')
+def error_handler(e):
+    server.logger.info("\n\n\nci sono probelmi {}\n\n\n".format(e))
+
 
 @socketio.on_error('/chat')
 def error_handler(e):

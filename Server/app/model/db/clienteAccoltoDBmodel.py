@@ -1,8 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey, Date, Integer, Boolean, ForeignKeyConstraint, PrimaryKeyConstraint
-from app import database
+from .dbUSinterface import DbUSinterface
 
-
-class ClienteAccoltoDBmodel(database.Model):
+class ClienteAccoltoDBmodel(DbUSinterface, DbUSinterface.db.Model):
     __tablename__ = "cliente_accolto"
     __table_args__ = (
             PrimaryKeyConstraint('nome', 'cognome', 'indirizzo'),
@@ -21,7 +20,3 @@ class ClienteAccoltoDBmodel(database.Model):
     commerciale = Column(String(60), ForeignKey('dipendente_registrato.username', onupdate="CASCADE"), nullable=False)
     tecnico = Column(String(60), ForeignKey('dipendente_registrato.username',  onupdate="CASCADE", ondelete="SET NULL"))
     capocantiere = Column(String(60), ForeignKey('dipendente_registrato.username',  onupdate="CASCADE", ondelete="SET NULL"))
-
-    def commitClienteAccolto(cliente):
-        database.session.add(cliente)
-        database.session.commit()

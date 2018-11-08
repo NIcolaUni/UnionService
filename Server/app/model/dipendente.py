@@ -46,7 +46,7 @@ class Dipendente(DipendenteDBmodel):
                            residenzaVia, residenzaNum, residenzaCitta, residenzaCap, residenzaRegione,
                            domicilioVia, domicilioNum, domicilioCitta, domicilioCap, domicilioRegione,
                            telefono,
-                            password, email_aziendale,
+                            password,
                             email_personale, iban, partitaIva):
 
 
@@ -67,7 +67,7 @@ class Dipendente(DipendenteDBmodel):
             dip = DipendenteRegistrato(username="{0}{1}".format(username_candidato, counter),
                                        password=password, fittizio=False)
 
-
+        email_aziendale = '{}{}@servicegroup.biz'.format(nome, cognome)
 
         newDip = Dipendente(nome=nome, cognome=cognome, cf=cf,
                             dataNascita=dataNascita,

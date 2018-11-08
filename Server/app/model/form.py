@@ -25,7 +25,7 @@ class RegistraDipendenteForm(FlaskForm):
     resEDomUguali = BooleanField("Residenza e domicilio coincidono")
     telefono = StringField("Telefono", validators=[DataRequired("Campo obbligatorio!"), Length(min= 8, max=12)])
     password = PasswordField("Impostare la password che si usareà all'accesso", validators=[DataRequired("Campo obbligatorio!"), Length(min= 6, max=30)])
-    email_aziendale = StringField("Email di lavoro", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=50)])
+    #email_aziendale = StringField("Email di lavoro", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=50)])
     email_personale = StringField("Email personale", validators=[Length(max=50)])
     iban = StringField("IBAN", validators=[Length(max=30)])
     partitaIva = StringField("Partita Iva (lasciare vuoto in caso non si posieda)", validators=[Length(max=30)])

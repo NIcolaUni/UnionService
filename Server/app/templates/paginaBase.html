@@ -147,28 +147,6 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/impegni.css') }}">
 
 
-    {% if prezzario %}
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/util.css') }}">
-	<!--<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaListino/css/main.css') }}">-->
-
-<!--===============================================================================================-->
-     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
-     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
-    <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
-    <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
-
-    {% endif %}
-    {% if schedaFornitoriCss or prezzarioProdottiCss %}
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='modificaPrezzario/css/schedaFornitori2.css') }}">
-        <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
-        <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
-        <script src="{{url_for('static', filename='swal-forms/sweet-alert.js') }}"></script>
-        <script src="{{url_for('static', filename='swal-forms/swal-forms.js') }}"></script>
-
-    {% endif %}
 
     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">
@@ -185,21 +163,28 @@
     <script type="text/javascript" src="{{url_for('static', filename='hunterPopup/js/jquery-popup.js')}}"></script>
 
     {% if scheda %}
-        <link rel="stylesheet" href="{{url_for('static', filename='css/schedeArtForPro.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='prezzariEschede/css/schedeArtForPro.css')}}">
         <link href="{{url_for('static', filename='usPopup/usPopup.css')}}" media="all" rel="stylesheet" type="text/css">
         <script src="{{url_for('static', filename='usPopup/usPopup.js')}}"></script>
     {% endif %}
     {% if scheda_artigiani %}
-       <link rel="stylesheet" href="{{url_for('static', filename='css/schedaArtigiani.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='prezzariEschede/css/schedaArtigiani.css')}}">
+        <script src="{{url_for('static', filename='prezzariEschede/js/schedaArtigiani.js')}}"></script>
     {% endif %}
     {% if scheda_fornitori %}
-        <link rel="stylesheet" href="{{url_for('static', filename='css/schedaFornitori.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='prezzariEschede/css/schedaFornitori.css')}}">
+        <script src="{{url_for('static', filename='prezzariEschede/js/schedaFornitori.js')}}"></script>
     {% endif %}
     {% if prezzario_prodotti %}
-        <link rel="stylesheet" href="{{url_for('static', filename='css/prezzarioProdotti.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='prezzariEschede/css/prezzarioProdotti.css')}}">
+        <script src="{{url_for('static', filename='prezzariEschede/js/prezzarioProdotti.js')}}"></script>
     {% endif %}
     {% if prezzario_edile %}
-        <link rel="stylesheet" href="{{url_for('static', filename='css/prezzarioEdile.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='prezzariEschede/css/prezzarioEdile.css')}}">
+        <script src="{{url_for('static', filename='prezzariEschede/js/prezzarioEdile.js')}}"></script>
+    {% endif %}
+    {% if scheda %}
+        <script src="{{url_for('static', filename='prezzariEschede/js/main.js')}}"></script>
     {% endif %}
 
 </head>

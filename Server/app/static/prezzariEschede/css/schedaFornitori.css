@@ -1,0 +1,258 @@
+
+.viewContainer {
+    position: absolute;
+    margin-left: 1%;
+}
+
+.viewContainer tr.headerTabella {
+
+    height: 41px !important;
+
+}
+
+
+#tabellaContainer1 {
+    width: 45%;
+    display: inline-block;
+    position: absolute;
+    z-index: 7;
+}
+
+#tabellaContainer2 {
+    width: 46%;
+    display: inline-block;
+    position: absolute;
+    z-index: 6;
+    /*right: 9%;*/
+}
+
+div#tabellaContainer3 {
+    position: absolute;
+    display: initial;
+    width: 41%;
+    display: inline-block;
+    z-index: 5;
+  /*  right: -32%;*/
+
+}
+
+.centralIcon {
+    padding-left: 5% !important;
+}
+
+.viewContainer tr.dimensionaTabella th {
+    padding-top: 2% !important;
+
+}
+
+.sezioneTabella.newRow th{
+    padding-top: 2% !important;
+}
+
+tr.dimensionaTabella td {
+    height: 30px;
+    /* padding-bottom: 29%; */
+}
+
+
+div.scheda {
+
+    width: 93% !important;
+    margin-left: 2% !important;
+}
+
+.finalIcon {
+    margin-left: 7%;
+}
+
+.radioContainer{
+    cursor: unset !important;
+}
+
+.radioContainer input, label{
+    cursor: pointer;
+}
+
+tr.headerDelHeader {
+    height: 46px;
+}
+
+#tabellaContainer3 tr.dimensionaTabella td {
+    width: 16%;
+    height: 31px;
+
+}
+
+
+#tabellaContainer3 tr.dimensionaTabella th {
+
+    width: 16%;
+}
+
+tr.sezioneTabella {
+    height: 40px !important;
+}
+
+.sezioneTabella.newRow input{
+    width: 40%;
+}
+
+
+
+div#tabellaContainerNewRow1 {
+    display: inline-block;
+    width: 46%;
+    z-index: 4;
+    left: -1%;
+    position: absolute;
+}
+
+div#tabellaContainerNewRow2 {
+    display: inline-block;
+    width: 46%;
+    position: absolute;
+    z-index: 2;
+    left: 45%
+}
+
+
+div#tabellaContainerNewRow3 {
+    display: inline-block;
+    width: 46%;
+    position: absolute;
+    left: 91%;
+    z-index: 3;
+}
+
+.numInput {
+    width: 50%;
+}
+
+.primaCol {
+    width: 6% !important;
+    border-right-color: #ffffff00 !important;
+}
+
+input.contattiInput {
+    border: 1px solid #00000026;
+}
+
+input.contattiInput:focus {
+    border: 1px solid #00000026 !important;
+}
+
+input.personaleInput{
+    border: 1px solid #00000026;
+}
+
+input.personaleInput:focus{
+    border: 1px solid #00000026 !important;
+}
+
+.datiFornitore li{
+    margin-bottom: 2%;
+}
+
+.editIconPopup {
+    color: #5c5371;
+    font-size: 1.5em;
+    float: right;
+    cursor: pointer;
+}
+
+
+.editIconPopup:hover {
+    color: #beb8d4;;
+}
+
+.delPersonaleContainer {
+    display: inline-block;
+    width: 100%;
+}
+
+a.delPersonale{
+    float: right;
+    font-size: 17px;
+    color: #5c5371;
+    cursor: pointer;
+}
+
+a.delPersonale:hover{
+    color: #beb8d4;
+}
+
+.schedaPersonaleFornitore {
+    width: 100%;
+    background: #f5f5f5;
+    display: inline-block;
+    padding: 4px 3px 0px 3px;
+    border: 2px solid #00000033;
+    border-radius: 6px;
+    margin-bottom: 11px;
+}
+
+.divDatiPersonale {
+    background: white;
+    border-top: 1px solid #00000024;
+}
+
+.addPersonaleContainer{
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+a.addPersonale {
+    color: #5c5371;
+    font-size: 24px;
+    cursor: pointer
+}
+
+a.addPersonale:hover{
+    color: #beb8d4;
+}
+
+.personale_fornitore_body{
+    overflow-y: scroll;
+    max-height: 300px;
+}
+
+ul.datiPersonale {
+    padding: 8px;
+}
+
+button.confermaRegistrazione {
+    border: outset;
+    margin-bottom: 6px;
+}
+
+
+div#sezioneHeader {
+    height: 9%;
+    width: 100%;
+    position: absolute;
+    margin-left: 1%;
+}
+
+#headerTableContainer_1{
+    display: inline-block;
+    margin-left: 0;
+    position: absolute;
+}
+
+#headerTableContainer_2 {
+    display: inline-block;
+    position: absolute;
+    //right: 3.08%;
+}
+
+#headerTableContainer_3 {
+    display: inline-block;
+    position: absolute;
+   // right: 3.08%;
+}
+
+div#headerNewRow {
+    margin-left: 3% !important;
+    position: fixed !important;
+}

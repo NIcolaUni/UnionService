@@ -1,668 +1,2427 @@
 {% extends "paginaBase.html" %}
 
 {% block content %}
+    <div id="headerNewRow">
+        <div id="tabellaContainerNewRow1">
+            <table class="tabella">
+                <tr class="sezioneTabella dimensionaTabella newRow">
+                    <th class="primaCol"><a  id="regNewRow" class="fa fa-check primaColIcon"></a><a id="delNewRow" class="fa fa-close primaColIcon"></a></th>
+                    <th class="secondaCol" colspan="5">
+                        <label>Selezionale/digitare la tipologia prodotto: </label>
+                        <input list="listaTipologia" class="tipologia inputScheda" placeholder="tipologia prodotto..">
+                    </th>
+                </tr>
+                <tr class="headerTabella dimensionaTabella newRow">
+                    <th class="primaCol"></th>
+                    <th class="secondaCol"> Nome prodotto </th>
+                    <th> Marchio </th>
+                    <th> Modello </th>
+                    <th> Codice  </th>
+                    <th> Fornitore </th>
+                </tr>
 
-    <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
-    <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+                <tr class="datiScheda dimensionaTabella newRow">
+                    <td style="width:10%" class="primaCol no_cursor"></td>
 
-    <aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+                    <td style="width:30%" class="nome_prodotto no_cursor">
+                        <input class="inputScheda" value="" placeholder="nome prodotto..." >
+                    </td>
+                    <td style="width:15%" class="marchio no_cursor">
+                        <input class="inputScheda" value="" placeholder="marchio prodotto..." >
+                    </td>
+                    <td style="width:15%" class="nome_modello no_cursor">
+                        <input class="inputScheda" value="" placeholder="modello prodotto..." >
+                    </td>
+                    <td style="width:15%" class="codice no_cursor">
+                        <input class="codice inputScheda" value="" placeholder="codice prodotto..." >
+                    </td>
 
+                    <td  style="width:15%" class="fornitore no_cursor">
+                        <select class="fornitoreSelectNewRow shortSelect">
+                            {% for fornitore in fornitori %}
+                            <option>{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-info-circle infoFornitore"></a>
+                    </td>
 
+                </tr>
 
-    <div id="paginaPrezzario">
-
-        <div id="divIntestazione" class="row">
-            <span class="contact100-form-title">
-               Prezzario Prodotti
-            </span>
-
-
-
-            <form   class="contact100-form validate-form">
-
-                <div class="row divFormContainer">
-                    <div id="buttonsSelect" class="col-md-2 ">
-                        <a id="addTipologiaProdotto" class="fa fa-plus"></a>
-
-                    </div>
-
-                    <div id="divTipologia" class="wrap-form input100-select bg1 fieldSelect col-md-10">
-                        <span class="label-input100">Tipologia Prodotti</span>
-                        <div>
-                            <select id="selectTipologia" class="js-select2" name="settoriDisponibili">
-                                {% for tipo in tipoProdotto %}
-
-                                    {% if tipo.nome == tipoToSel %}
-                                        <option selected="selected">{{tipo.nome}}</option>
-                                    {% else %}
-                                <option>{{tipo.nome}}</option>
-                                    {% endif %}
-                                {% endfor %}
-
-                            </select>
-                           <div id="dropDownTipologia" class="dropDownSelect2 row"></div>
-
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-
+            </table>
         </div>
 
-        <div id="tabellaContainer" class="row">
+         <div id="tabellaContainerNewRow2">
+            <table class="tabella">
+                <tr class="sezioneTabella dimensionaTabella newRow">
+                    <th colspan="7">
+                        <input type="checkbox" id="setCapitolato" value="si">
+                        <label id="labelSetCapitolato" for="setCapitolato">Imposta come capitolato</label>
+                    </th>
+                </tr>
+                <tr class="headerTabella dimensionaTabella newRow">
+                    <th style="width:14%"> &euro; listino (F+P) </th>
+                    <th style="width:14%"> &euro; listino (P) </th>
+                    <th style="width:14%"> &euro; US (P) </th>
+                    <th style="width:14%"> &euro; US (F+P) </th>
+                    <th  style="width:14%" class="posaHeader"> Posa + <input type="number" class="inputScheda posaPerc" value="50">%</th>
+                    <th style="width:14%" > Rincaro </th>
+                    <th style="width:14%"> Totale </th>
 
-                <table id="prezzario">
-                    <thead id="headPrezzario">
+                </tr>
+                <tr class="datiScheda dimensionaTabella newRow">
 
-                       <tr id="headerIntestazioneProdotti">
-                            <th  class="tableIntestazione" data-column="column1"></th>
-                            <th  class="tableIntestazione "  data-column="column2"></th>
-                            <th  class="tableIntestazione numColMedium" data-column="column3"></th>
-                            <th  class="tableIntestazione numColMedium" data-column="column4"></th>
-                            <th  class="tableIntestazione colMedium" data-column="column5"></th>
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column6"> </th>
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column7"></th>
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column8"> </th>
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column9"></th>
-                            <th  class="tableIntestazione colMedium intestazioneRosso" data-column="column10">  </th>
-                            <th  class="tableIntestazione colMedium intestazioneRosso" data-column="column11">  </th>
-                            <th  class="tableIntestazione intestazioneBlu numColSmall" colspan="5" data-column="column12">Extra</th>
-                            <th  class="tableIntestazione numColSmall" data-column="column17"></th>
-                            <th  class="tableIntestazione numColMedium" data-column="column18"> </th>
-                       </tr>
-                       <tr id="trIntestazione">
-                            <th  class="tableIntestazione" data-column="column1"><a id="showForm" class="fa fa-plus"></a></th>
-                            <th  class="tableIntestazione "  data-column="column2">Nome prodotto</th>
-                            <th  class="tableIntestazione numColMedium" data-column="column3">Marchio</th>
-                            <th  class="tableIntestazione numColMedium" data-column="column4">Codice</th>
-                            <th  class="tableIntestazione colMedium" data-column="column5">Fornitore</th>
+                    <td class="prezzoListinoFornituraPosa no_cursor">
+                        <label class="printedCalc">&euro; 0</label>
+                        <input type="number" step="0.01" class="inputScheda" style="display:none" value="0">
+                    </td>
+                    <td class="prezzoListinoFornitura no_cursor">
+                        <label class="printedCalc" style="display:none" >&euro; 0</label>
+                        <label class="unita">&euro;</label>
+                        <input type="number"  step="0.01" id="listinoFornituraInput" class="inputScheda numInput" value="0">
+                    </td>
+                    <td class="nettoUsFornitura no_cursor">
 
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column6"> &euro; Listino<br/> (F+P)</th>
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column6"> &euro; Listino<br/> (F)</th>
+                        <label class="printedCalc" style="display:none" >&euro; 0</label>
+                        <label class="unita">&euro;</label>
+                        <input type="number"  step="0.01" id="nettoUsFornituraInput" class="inputScheda numInput" value="0">
 
-                            <th  class="tableIntestazione numColSmall intestazioneRosso" data-column="column8">  (+%) </th>
-                            <th  class="tableIntestazione colMedium intestazioneRosso" data-column="column10"> Imballo </th>
-                            <th  class="tableIntestazione colMedium intestazioneRosso" data-column="column10"> Trasporto </th>
-                            <th  class="tableIntestazione colMedium intestazioneRosso" data-column="column11"> Montaggio <br/> (+50%) </th>
+                    </td>
+                    <td class="nettoUsFornituraPosa no_cursor">
+                        <label class="printedCalc">&euro; 0</label>
+                        <input type="number"  step="0.01" class="inputScheda numInput" style="display:none" value="0">
+                    </td>
+                    <td class="posa no_cursor">
+                        <label class="unita">&euro;</label>
+                        <input type="number"  step="0.01" class="posa inputScheda numInput" value=0>
+                    </td>
+                    <td class="rincaroCliente no_cursor">
+                        <input type="number" class="inputScheda numInput" value=0>
+                        <label class="unita">%</label>
+                    </td>
+                    <td class="totale no_cursor">
+                        <label class="printedCalc">&euro; 0</label>
+                        <input type="number"  step="0.01" class="inputScheda numInput" style="display:none" value="0">
+                    </td>
+                </tr>
 
-                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column12"> Sconto </th>
-                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column13">ex.1</th>
-                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column14">ex.2</th>
-                            <th  class="tableIntestazione numColSmall intestazioneBlu" data-column="column15">Imballo</th>
-                            <th  class="tableIntestazione colMedium intestazioneBlu" data-column="column16">Trasporto</th>
-                            <th  class="tableIntestazione colMedium intestazioneBlu" data-column="column11"> Montaggio <br/> (+50%) </th>
+            </table>
+         </div>
 
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column6"> &euro; Listino<br/> (F+P)</th>
-                            <th  class="tableIntestazione numColSmall intestazioneOliva" data-column="column6"> &euro; Listino<br/> (F)</th>
-
-                            <th  class="tableIntestazione numColSmall" data-column="column17">Rincaro</th>
-                            <th  class="tableIntestazione numColMedium" data-column="column18">Totale <br/> cliente</th>
-                        </tr>
-                        <tr id="trForm">
-                            <th  class="tableForm" data-column="column1"><a id="hideForm" class="fa fa-angle-double-up"></a><button  id="registraProdotto" class="buttonPrezzario" type="button">Inserisci</button></th>
-                            <th  class="tableForm"  data-column="column2"><input id="nomeProdottoInput" type="text" name="nomeProdotto" placeholder="Inserire il nome del prodotto"></th>
-                            <th  class="tableForm numColMedium" data-column="column3"><input id="marchioInput" type="text" name="marchio" placeholder="Inserire il marchio"> </th>
-                            <th  class="tableForm numColMedium" data-column="column4"><input id="codiceInput" type="text" name="codice" placeholder="Inserire il codice"> </th>
-
-                            <th  class="tableForm colMedium" data-column="column5">
-
-                                <select id="fornitoreSelect" name="fornitore">
-                                    {% for fornitore in fornitori %}
-                                         <option>{{fornitore.gruppo_azienda}} - {{fornitore.nome}}</option>
-
-                                    {% endfor %}
-                                </select>
-
-                            </th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneOliva" data-column="column6"><input id="listinoInput" class="numberInput colorBlack" type="number" name="listino" placeholder="listino" value=0> &euro; </th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneOliva" data-column="column7"><input id="listinoNettoInput" class="numberInput colorBlack" type="number" name="listinoNetto" placeholder="listino netto" value=0> &euro; </th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneOliva" data-column="column8"><input id="scontoPercentualeInput" class="numberInput colorBlack" type="number" name="scontoPercentuale" placeholder="sconto " value=0> % </th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneOliva" data-column="column9"><input id="nettoUsInput" class="numberInput colorBlack" type="number" name="nettoUs" placeholder="netto US" value=0> &euro; </th>
-
-                            <th  class="tableForm colMedium colorWhite intestazioneRosso" data-column="column10"><input id="trasportoInput" class="numberInput colorBlack" type="number" name="trasporto" placeholder="trasporto" value=0> &euro; </th>
-                            <th  class="tableForm colMedium colorWhite intestazioneRosso" data-column="column11"><input id="montaggioInput" class="numberInput colorBlack" type="number" name="montaggio" placeholder="montaggio" value=0>&euro;</th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneBlu" data-column="column12"><input id="scontoInput"  class="numberInput colorBlack" type="number" name="sconto" placeholder="sconto" value=0>%</th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneBlu" data-column="column13"><input id="ex1Input"  class="numberInput colorBlack" type="number" name="ex1" placeholder="ex1" value=0></th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneBlu" data-column="column14"><input id="ex2Input"  class="numberInput colorBlack" type="number" name="ex2" placeholder="ex2" value=0></th>
-                            <th  class="tableForm numColSmall colorWhite intestazioneBlu" data-column="column15"><input id="imballoInput"  class="numberInput colorBlack" type="number" name="imballo" placeholder="imballo" value=0>%</th>
-                            <th  class="tableForm colMedium colorWhite intestazioneBlu" data-column="column16"><input id="trasportoExtraInput"  class="numberInput colorBlack" type="number" name="trasportoExtra" placeholder="trasporto extra" value=0>&euro;</th>
-
-                            <th  class="tableForm numColSmall colorWhite" data-column="column17"><input id="rincaroInput"  class="numberInput colorBlack" type="number" name="rincaro" placeholder="rincaro" value=0>%</th>
-                            <th  class="tableForm numColMedium" data-column="column18"></th>
-
-                        </tr>
-                    </thead>
-                    <tbody id="bodyPrezzario">
-                 <!--  <tr>
-                        <td colspan="2" data-column="column1">C'era una volta un re seduto su un sofa che disse al</td>
-                    </tr>-->
-
-
-                    </tbody>
-
-
-                </table>
-
+        <div id="tabellaContainerNewRow3">
+            <table class="tabella">
+                <tr class="sezioneTabella dimensionaTabella newRow">
+                    <th colspan="3">Azienda</th>
+                </tr>
+                <tr class="headerTabella dimensionaTabella newRow">
+                    <th> (+%) </th>
+                    <th> Trasporto </th>
+                    <th> Imballlo </th>
+                </tr>
+                <tr class="datiScheda dimensionaTabella">
+                    <td class="rincaroAzienda no_cursor">
+                        <input type="number" class="inputScheda numInput" value="0">
+                        <label class="simpleAfterInputLabel">%</label>
+                    </td>
+                    <td class="trasportoAzienda no_cursor">
+                        <input type="number" step="0.01" class="inputScheda numInput euro check" value="0">
+                        <input type="number" style="display:none" class="inputScheda numInput perc" value="0">
+                        <input type="radio" id="inputEuroPercTrasportoNewRow1"  name="euroPercTrasportoNewRow" class="radioUnit" value="euro" checked="checked">
+                        <label for="inputEuroPercTrasportoNewRow1"  class="radioLabel">&euro;</label>
+                        <input type="radio" id="inputEuroPercTrasportoNewRow2" name="euroPercTrasportoNewRow" class="radioUnit" value="perc">
+                        <label for="inputEuroPercTrasportoNewRow2" class="radioLabel">%</label>
+                    </td>
+                    <td class="imballoAzienda no_cursor">
+                        <input type="number" step="0.01" class="inputScheda numInput euro check" value="0">
+                        <input type="number" style="display:none"  class="inputScheda numInput perc" value="0">
+                        <input type="radio" id="inputEuroPercImballoNewRow1"  name="euroPercImballoNewRow" class="radioUnit" value="euro" checked="checked">
+                        <label for="inputEuroPercImballoNewRow1"  class="radioLabel">&euro;</label>
+                        <input type="radio" id="inputEuroPercImballoNewRow2" name="euroPercImballoNewRow" class="radioUnit" value="perc">
+                        <label for="inputEuroPercImballoNewRow2" class="radioLabel">%</label>
+                    </td>
+                </tr>
+            </table>
         </div>
 
     </div>
-   <script>
-            var rappresentanteDaRegistrare = false;
-            var oldNome="";
-
-            var socketHome = io.connect("{{sockUrl}}"+'/home');
 
 
-            socketHome.on('connect', function() {
 
-                socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-            });
+    <div id="page-wrapper">
 
-            var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
+        <header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+        <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+        <div id="schedaProdotti" class="scheda">
+
+            <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
+                <div id="openCloseFilterSearch"><a class="fa fa-angle-double-up"></a></div>
+                <div id="filtersContainer">
+                    <div class="containerTitle"><h2>Filtri di Ricerca</h2></div>
+                    <div id="filters">
+                        <div class="filterInputContainer tipologia">
+                            <input id="filtraTipologie" list="listaTipologia" autocomplete="off" class="filterInput" placeholder="Selezionare la tipologia...">
+
+                        </div>
+
+                        <div class="filterInputContainer prodotto">
+                            <input id="filtraProdotti" list="listaProdotti" autocomplete="off" class="filterInput" placeholder="Selezionare il prodotto...">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delModLists headerSection">
+                    <div class="containerTitle"><h2>Modifica/cancella</h2></div>
+                    <div class="filterInputContainer">
+                        <label for="modDelTipologia">Tipologia Prodotto</label><br/>
+                        <select id="modDelTipologia" class="delModList">
+                            {% for tipo in tipologia %}
+                            <option>{{tipo.nome}}</option>
+                            {% endfor %}
+                        </select>
+                        <a class="fa fa-edit editLista iconLista"></a>
+                        <a class="fa fa-trash delLista iconLista"></a>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="sezioneHeader">
+                <div id="headerTableContainer_1">
+                     <div id="divHeaderTabella1">
+                        <table class="tabella">
+                            <tr class="headerDelHeader dimensionaTabella">
+                               <th class="primaCol"></th>
+                                <th class="secondaCol" colspan="5" >Dati prodotto</th>
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                                <th class="secondaCol long_string"> Nome prodotto </th>
+                                <th class="normal_string"> Marchio </th>
+                                <th class="normal_string"> Modello </th>
+                                <th class="normal_string"> Codice  </th>
+                                <th class="normal_string"> Fornitore </th>
+                            </tr>
+                        </table>
+                     </div>
+                </div>
+
+                <div id="headerTableContainer_2">
+                     <div id="divHeaderTabella2">
+                        <table class="tabella">
+                            <tr class="headerDelHeader dimensionaTabella">
+                                <th colspan="7">Costi</a></th>
+
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th> &euro; listino (F+P) </th>
+                                <th> &euro; listino (P) </th>
+                                <th> &euro; US (P) <a class="fa fa-info-circle"></a></th>
+                                <th> &euro; US (F+P) </th>
+                                <th> Posa </th>
+                                <th> Rincaro </th>
+                                <th> Totale </th>
+
+                            </tr>
+                        </table>
+                     </div>
+                </div>
+            </div>
+
+            <div class="fc-view-container viewContainer">
+
+                <div id="tabellaContainer1">
+                    <table class="tabella">
+
+                       <!-- <tbody class="prv">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th class="primaCol"></th>
+                                <th class="secondaCol" colspan="5">Tipologia: sanitari</th>
+                            </tr>
+                            <tr class="datiScheda dimensionaTabella">
+                                <td class="primaCol">
+                                    <a class="fa fa-warning primaColIcon"></a>
+                                    <a class="fa fa-trash primaColIcon centralIcon"></a>
+                                </td>
+
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="nome prodotto..." >
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="marchio prodotto..." >
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="modello prodotto..." >
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input style="display:none" class="inputScheda" value="" placeholder="codice prodotto..." >
+                                </td>
+
+                                <td class="hiddenInput"><label class="cellaDato">Cambielli</label>
+                                    <select style="display:none" >
+                                        <option>Cambielli</option>
+                                        <option>Rossi & co.</option>
+                                    </select>
+                                    <a class="fa fa-info-circle"></a>
+                                </td>
+
+                            </tr>
+                        </tbody>-->
+
+                    </table>
+                </div>
 
 
-           //Script necessario per renderizzare corretamente il tag select di "settore"
-            $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+                <div id="tabellaContainer2">
+                    <table class="tabella">
 
-            /*Aggiungo funzionalità ai bottoni visualizza/nascondi form*/
-            $('#trForm').hide();
+                        <!--<tbody class="prv">
+                            <tr class="sezioneTabella dimensionaTabella">
+                                <th colspan="7"></th>
+                            </tr>
+                            <tr class="datiScheda dimensionaTabella">
 
-            $('#hideForm').click(function(){
-                $('#trForm').hide();
-                $(showForm).addClass('fa');
-                $(showForm).addClass('fa-plus');
-                $('#bodyPrezzario').css('height', '88%');
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">%</label>
+                                </td>
+                                <td class="hiddenInput"><label class="cellaDato"></label>
+                                    <input type="number" style="display:none" class="inputScheda numInput" > <label style="display:none" class="simpleAfterInputLabel">&euro;</label>
+                                </td>
+                            </tr>
 
-            });
-
-            $('#showForm').click(function(){
-                $('#trForm').show();
-                $(this).removeClass('fa');
-                $(this).removeClass('fa-plus');
-                $('#bodyPrezzario').css('height', '81%');
-
-            });
+                        </tbody>-->
+                    </table>
+                </div>
 
 
-            //funzione che inserisce nel #bodyPrezzario il sibolo "-" al posto di valori numerici nulli
-            function stampaValore(valore, colonna, unita,   classValues){
+            </div>
 
-                 var where="column"+colonna
+        </div>
 
-                 if( valore == 0 )
-                    return '<td  class="'+ classValues +'" data-column="'+where+'"> - </td>';
-                 else
-                    if( unita == "%" )
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ valore  + ' ' + unita + '</td>';
-                    else
-                     return '<td  class="'+ classValues +'" data-column="'+where+'">'+ unita + ' ' + valore  +'</td>';
+        <datalist id="listaTipologia">
+            {% for tipo in tipologia %}
+                <option>{{tipo.nome}}</option>
+            {% endfor %}
+        </datalist>
+
+         <datalist id="listaProdotti">
+         </datalist>
+
+    </div>
+
+    <script>
+
+        var socketHome = io.connect("{{sockUrl}}"+'/home');
+
+
+        socketHome.on('connect', function() {
+
+            socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+        });
+
+        var socketProdotto= io.connect("{{sockUrl}}"+'/prezzarioProdotti');
+
+
+
+        $('.iconLista').click(function(){
+
+            var $selectEl=$(this).parent().children('select');
+            var selectedVal=$(this).parent().children('select').val();
+            var lista=$(this).parent().children('select').attr('id');
+
+            if( $(this).hasClass('editLista') ){
+
+                swal.withFormAsync({
+                    title: 'Modifica valore "'+selectedVal+'"',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+                        { id: 'valore', name: 'valore', value: selectedVal},
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+                      $selectEl.children('option').each(function(){
+                        if($(this).val() == selectedVal ){
+                            $(this).val(context.swalForm['valore'] );
+                            $(this).text(context.swalForm['valore']);
+                        }
+                      });
+
+                      $('#listaTipologia').children('option').each(function(){
+                            if($(this).text() == selectedVal )
+                                $(this).val(context.swalForm['valore']);
+                                $(this).text('');
+                      });
+
+                      $('#tabellaContainer1 tbody.'+selectedVal).each(function(){
+                        $(this).children('tr.sezioneTabella').children('.secondaCol').text('Tipologia prodotto: '+context.swalForm['valore']);
+                      });
+
+                      $('tbody.'+selectedVal).each(function(){
+                        $(this).removeClass(selectedVal);
+                        $(this).addClass(context.swalForm['valore'])
+                      });
+
+
+
+
+                      socketProdotto.emit('modifica_tipologia_prodotto', {'oldNome': selectedVal, 'newNome': context.swalForm['valore']});
+                    }
+
+                });
+
+
+            }
+            else if( $(this).hasClass('delLista') ){
+                swal({
+                    title: 'Stai per eliminare "'+selectedVal+' e i relativi prodotti" ',
+                    text: 'vuoi continuare?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+
+                }, function(isConfirm){
+                    if( isConfirm ){
+
+                        $selectEl.children('option').each(function(){
+
+                            if($(this).val() == selectedVal )
+                                $(this).remove();
+                        });
+
+                        $('#listaTipologia').children('option').each(function(){
+                            if($(this).text() == selectedVal )
+                                $(this).remove();
+                        });
+
+                        $('tbody.'+selectedVal).each(function(){
+                            $(this).remove();
+                        });
+                        socketProdotto.emit('elimina_tipologia_prodotto', {'nome': selectedVal});
+
+                    }
+
+
+                });
+
+            }
+        });
+
+
+
+        var setFieldToComplete = function($riga, newVal){
+
+            if( $riga.hasClass('azienda') ){
+
+
+
+                $riga.children('.prezzoListinoFornitura').children('.unita').hide();
+                $riga.children('.prezzoListinoFornitura').children('.inputScheda').hide();
+                $riga.children('.prezzoListinoFornitura').children('.printedCalc').show();
+
+
+            }
+            else if( $riga.hasClass('fornitore') ){
+                $riga.children('.nettoUsFornitura').children('.unita').hide();
+                $riga.children('.nettoUsFornitura').children('.inputScheda').hide();
+                $riga.children('.nettoUsFornitura').children('.printedCalc').show();
+
+
+            }
+            else{
+
+                $riga.children('.prezzoListinoFornituraPosa').children('.inputScheda').val(0);
+                $riga.children('.prezzoListinoFornituraPosa').children('.printedCalc').html('&euro; 0');
+
+                $riga.children('.prezzoListinoFornitura').children('.inputScheda').val(0);
+                $riga.children('.prezzoListinoFornitura').children('.printedCalc').html('&euro; 0');
+
+                $riga.children('.prezzoListinoFornitura').children('.unita').show();
+                $riga.children('.prezzoListinoFornitura').children('.inputScheda').show();
+                $riga.children('.prezzoListinoFornitura').children('.printedCalc').hide();
+
+                $riga.children('.nettoUsFornitura').children('.inputScheda').val(0);
+                $riga.children('.nettoUsFornitura').children('.printedCalc').html('&euro; 0' );
+
+                $riga.children('.nettoUsFornitura').children('.unita').show();
+                $riga.children('.nettoUsFornitura').children('.inputScheda').show();
+                $riga.children('.nettoUsFornitura').children('.printedCalc').hide();
+
+                $riga.children('.nettoUsFornituraPosa').children('.inputScheda').val(0);
+                $riga.children('.nettoUsFornituraPosa').children('.printedCalc').html('&euro; 0' );
+
+
+                $riga.children('.rincaroCliente').children('.inputScheda').val(0);
+                $riga.children('.posa').children('.inputScheda').val(0);
+                $riga.parent().children('.headerTabella').children('.posaHeader').children('.posaPerc').val(50);
+                $riga.children('.totale').children('.printedCalc').html('&euro; 0' );
 
 
             }
 
-            //codice per riempire il #bodyPrezzario
-            {% for modello in modelli %}
-                if( "{{modello.tipologia}}" == $("#selectTipologia").val()) {
+        }
+/*
+        $('#delNewRow').unbind('click').click(function(){
 
-                    {% if modello.daVerificare %}
-                        var classiTr="rowBodyTab daVerificare" ;
-                    {% else %}
-                        var classiTr="rowBodyTab";
+            $('#headerNewRow').animate({'margin-top': '-=10%'});
 
-                    {% endif %}
+            if( $('#tabellaContainerNewRow2 .datiScheda').hasClass('azienda') ){
+               $('#tabellaContainerNewRow2 .datiScheda').removeClass('azienda')
 
-                    {% for fornitore in fornitori %}
-                        console.log('santi Numi');
-                       {% if fornitore.nome == modello.fornitore_sotto_gruppo and fornitore.gruppo_azienda == modello.fornitore_primo_gruppo %}
-                         console.log('how is possible');
 
-                         {% if modello.versoDiLettura %}
-                            console.log('in teoria entro qua {{fornitore.scontoStandard}}');
-                            var toAppend = stampaValore(  {{fornitore.scontoStandard}}, 11, "%","colMedium"  )+
-                                            stampaValore( {{fornitore.scontoExtra1}}, 12, "%","numColSmall"  )+
-                                            stampaValore( {{fornitore.scontoExtra2}}, 13, "%","numColSmall"  )+
-                                            stampaValore( {{fornitore.trasporto}}, 14, "&euro;","numColSmall"  )+
-                                            stampaValore( {{fornitore.imballo}}, 15, "&euro;","numColSmall"  );
-                         {% else %}
+               var altezzaHeaderNewRow = $('#tabellaContainerNewRow2 tbody').height()
+               var incremento = altezzaHeaderNewRow*6/100;
+               $('#tabellaContainerNewRow3').animate({'margin-top': '-='+incremento+'%'});
 
-                            var toAppend = stampaValore( 0, 11, "&euro;","colMedium"  )+
-                                            stampaValore( 0, 12, "%","numColSmall"  )+
-                                            stampaValore( 0, 13, "&euro;","numColSmall"  )+
-                                            stampaValore( 0, 14, "&euro;","numColSmall"  )+
-                                            stampaValore( 0, 15, "%","numColSmall"  );
+               divAziendaAssente=true;
+            }
+            else if( $('#tabellaContainerNewRow2 .datiScheda').hasClass('fornitore') ){
+               $('#tabellaContainerNewRow2 .datiScheda').removeClass('fornitore')
 
-                         {% endif %}
+            }
 
-                       {% endif %}
-                    {% endfor %}
+            $row = $('#tabellaContainerNewRow2 .datiScheda');
+            setFieldToComplete($row,0);
 
-                    $("#bodyPrezzario").append(
-                          '<tr class="'+ classiTr +'">'+
-                                '<td class="controlCol" data-column="column1">'+
 
-                                      '<div class="iconsDiv row">'+
-                                          '<div class="col-md-4 iconContainer firstIconContainer" >'+
-                                            '<a class="fa fa-trash iconsTab delProdotto"></a>'+
-                                          '</div>'+
-                                          '<div class="col-md-4 iconContainer">'+
-                                            '<a  class="fa fa-edit iconsTab modProdotto"></a>'+
-                                          '</div>'+
-                                          '<div class="col-md-4 iconContainer">'+
-                                            '<a  class="fa fa-warning iconsTab segnalaProdotto"></a>'+
-                                          '</div>'+
-                                      '</div>'+
+            $('#addRow').click(function(){
+                $(this).unbind('click');
+                $('#headerNewRow').animate({'margin-top': '+=10%'});
 
-                                '</td>'+
-                                '<td  class="nome_prodotto" data-column="column2">{{modello.prodotto}}</td>'+
-                                '<td  class="numColMedium" data-column="column3">{{modello.marchio}}</td>'+
-                                '<td  class="numColMedium" data-column="column4">{{modello.codice}}</td>'+
-                                '<td  class="colMedium" data-column="column5">{{modello.fornitore_primo_gruppo}} - {{modello.fornitore_sotto_gruppo}}</td>'+
-                                stampaValore( {{modello.prezzoListinoFornituraPosa}}, 6, "&euro;","numColSmall" )+
-                                stampaValore( {{modello.prezzoListinoFornitura}}, 7, "&euro;","numColSmall"  )+
-                                stampaValore( {{modello.rincaroAzienda}}, 8, "%","numColSmall"  )+
-                                stampaValore( {{modello.trasportoAzienda}}, 9, "&euro;","numColSmall"  )+
-                                stampaValore( {{modello.imballoAzienda}}, 10, "&euro;","colMedium"  )+
+            });
 
-                                toAppend+
+            $('#headerNewRow input').each(function(){
 
-                                stampaValore( {{modello.posa}}, 16, "&euro;","colMedium"  )+
-                                stampaValore( {{modello.nettoUsFornitura}}, 17, "%","numColSmall"  )+
-                                stampaValore( {{modello.nettoUsFornituraPosa}}, 18, "&euro;","colMedium"  )+
-                                stampaValore( {{modello.rincaroCliente}}, 19, "%","numColSmall"  )+
+                if( $('#setCapitolato').is(':checked') )
+                {
+                    $('#setCapitolato').trigger('click');
+                }
 
-                                '<td  class="numColMedium" data-column="column20">Totale cliente</td>'+
-                                '</td>'+
+                if($(this).attr('type') == 'number')
+                    $(this).val('0');
+                else
+                {
+                    $(this).val('');
 
-                          '</tr>'
+                }
+            });
+        });*/
 
-                    );
+        var calcolaCampiAutomatici = function($riga){
+
+            var listinoFornitura;
+            var listinoFornituraPosa;
+            var usFornitura;
+            var usFornituraPosa;
+            var posa;
+            var rincaro;
+            var posaPerc;
+            var totale;
+
+            var rincaroAzienda;
+            var trasportoAzienda;
+            var imballoAzienda;
+            var trasportoAziendaUnita;
+            var imballoAziendaUnita;
+
+            var scontoStd;
+            var scontoExtra1;
+            var scontoExtra2;
+            var trasportoFornitore;
+            var imballoFornitore;
+            var posaFornitore;
+            var trasportoFornitoreUnita;
+            var imballoFornitoreUnita;
+            var posaFornitoreUnita;
+
+
+            $riga.children('td').each(function(){
+
+                if( $(this).hasClass('prezzoListinoFornitura') ){
+                    listinoFornitura=parseFloat($(this).children('input').val());
+                }
+                else if( $(this).hasClass('nettoUsFornitura') ){
+                    usFornitura=parseFloat($(this).children('input').val());
+                }
+                else if( $(this).hasClass('posa') ){
+                    posa=parseFloat($(this).children('input.posa').val());
+
+                    if($riga.hasClass('newRow')){
+                        posaPerc=parseInt($riga.parent().children('.headerTabella').children('.posaHeader').children('input').val());
+                    }
+                    else
+                        posaPerc=parseInt($(this).children('span').children('input.posaPerc').val());
+                }
+                else if( $(this).hasClass('rincaroCliente') ){
+                    rincaro=parseInt($(this).children('input').val());
+                }
+
+
+            });
+
+
+            if( $riga.hasClass('azienda') ){
+
+
+                if($riga.hasClass('newRow')){
+
+                    rincaroAzienda=parseInt($('#tabellaContainerNewRow3 .rincaroAzienda').children('input.numInput').val());
+
+                    $('#tabellaContainerNewRow3 .trasportoAzienda').children('input.radioUnit:checked').each(function(){
+
+                        if( $(this).attr('id') == 'inputEuroPercTrasportoNewRow1' ){
+
+                            trasportoAzienda = parseFloat($(this).parent().children('input.euro').val());
+                            trasportoAziendaUnita='euro';
+                        }
+                        else{
+
+                            trasportoAzienda = parseInt($(this).parent().children('input.perc').val());
+                            trasportoAziendaUnita='perc';
+                        }
+
+                    });
+
+                    $('#tabellaContainerNewRow3 .imballoAzienda').children('input.radioUnit:checked').each(function(){
+
+
+                        if( $(this).attr('id') == 'inputEuroPercImballoNewRow1' ){
+                            imballoAzienda = parseFloat($(this).parent().children('input.euro').val());
+                            imballoAziendaUnita='euro';
+                        }
+                        else{
+                            imballoAzienda = parseInt($(this).parent().children('input.perc').val());
+                            imballoAziendaUnita='perc';
+
+                        }
+
+                    });
+
+                }
+                else{
+                    var $spanAzienda = $riga.children('td.nettoUsFornitura').children('span.aziendaDati');
+
+                    var listOfClasses=$spanAzienda.attr('class').split(' ');
+
+                    rincaroAzienda=parseFloat(listOfClasses[1]);
+                    trasportoAzienda=parseFloat(listOfClasses[2]);
+                    trasportoAziendaUnita=listOfClasses[3];
+                    imballoAzienda=parseFloat(listOfClasses[4]);
+                    imballoAziendaUnita=listOfClasses[5];
+
 
 
                 }
-            {% endfor %}
 
 
-      /*Codice per aggiungere il cancella e il modifica alle opzioni del select #selectTipologia */
+                posa= posa+((posa*posaPerc)/100);
+                rincaroAzienda=(usFornitura*rincaroAzienda)/100;
 
-          var firstTime = true;
+                if( trasportoAziendaUnita == 'perc' ){
+                    trasportoAzienda=(usFornitura*trasportoAzienda)/100;
 
+                }
 
-          $('#divTipologia').click(function(){
-
-               /* il dropdown della libreria bootstrap viene costruito una sola volta al click sul
-                   select predefinito. If 'firstTime' previene che vengano aggiunti continaumente
-                   le icone di controllo ad ogni click */
-               if($('#dropDownTipologia').children().length > 0) {
-                    if( firstTime )
-                    {
-                        firstTime = false;
-                        $('.select2-results').addClass('resizedResults');
-
-                        $('.select2-dropdown').addClass('dropDownEffettivo');
+                if( imballoAziendaUnita == 'perc' )
+                    imballoAzienda=(usFornitura*imballoAzienda)/100;
 
 
-                        $('.select2-dropdown').append(
-                            '<span class="delModResults"><ul class="controlSelectUl"></ul></span>'
-                        );
+                listinoFornitura=usFornitura+rincaroAzienda+trasportoAzienda+imballoAzienda;
+                listinoFornituraPosa=listinoFornitura+posa;
+                usFornituraPosa=usFornitura+posa;
 
-                        $('ul.select2-results__options').addClass('togliOverflowUlSelect');
+                rincaro = (rincaro*listinoFornituraPosa)/100;
+                totale=listinoFornituraPosa+rincaro;
 
-                        $('.select2-results li').each(function(){
+                posa=Math.round(posa*100)/100;
+                listinoFornitura=Math.round(listinoFornitura*100)/100;
+                listinoFornituraPosa=Math.round(listinoFornituraPosa*100)/100;
+                usFornituraPosa=Math.round(usFornituraPosa*100)/100;
+                totale=Math.round(totale*100)/100;
 
+                $riga.children('td').each(function(){
 
-                                $('.delModResults ul').append(
-
-                                    '<li val="'+$(this).text() +'" class="controlSelectLi"><a class="fa fa-trash delTipologia" ></a><a class="fa fa-edit leftIcon modTipologia" ></a></li>'
-                                );
-
-
-                        });
-
-
-                        $('.modTipologia').click(function() {
-
-                              var oldTipo=$(this).parent().attr('val');
-
-                              swal.withForm({
-                                title: 'Modifica nome settore',
-                                text: 'Inserire il nome modificato: ',
-                                showCancelButton: true,
-                                confirmButtonColor: '#DD6B55',
-                                confirmButtonText: 'Ok',
-                                cancelButtonText: 'annulla',
-                                closeOnConfirm: true,
-                                formFields: [
-
-                                  { id: 'newTipologia', placeholder: 'Inserire il nome della nuova tipologia', value: oldTipo }
+                    if( $(this).hasClass('prezzoListinoFornituraPosa') ){
+                        $(this).children('input').val(listinoFornituraPosa);
+                        $(this).children('.printedCalc').html('&euro; '+ listinoFornituraPosa)
+                    }
+                    else if( $(this).hasClass('prezzoListinoFornitura') ){
+                        $(this).children('input').val(listinoFornitura);
+                        $(this).children('.printedCalc').html('&euro; '+ listinoFornitura)
+                    }
+                    else if( $(this).hasClass('nettoUsFornituraPosa') ){
+                        $(this).children('input').val(usFornituraPosa);
+                        $(this).children('.printedCalc').html('&euro; '+ usFornituraPosa)
+                    }
+                    else if( $(this).hasClass('totale') ){
+                        $(this).children('input').val(totale);
+                        $(this).children('.printedCalc').html('&euro; '+ totale)
+                    }
 
 
-                                ]
-                              }, function (isConfirm) {
 
-                                      if (isConfirm) {
-                                            var form=this.swalForm
-                                            socketProdotto.emit("modifica_tipologia_prodotto",
-                                               { 'dip': '{{dipendente.username}}', 'tipologia': form['newTipologia'], 'oldTipologia': oldTipo });
+                });
 
-                                      }
+            }
+            else if( $riga.hasClass('fornitore') ){
 
-                              })
+                var fornitore;
 
-                        });
+                if($riga.hasClass('newRow')){
 
-                        $('.delTipologia').click(function() {
+                    fornitore = $('#tabellaContainerNewRow1 td.fornitore').children('select').val();
 
-                                 var tipologiaSelezionata = $(this).parent().attr('val')
+                }
+                else{
+                    var $spanFornitore = $riga.children('td.prezzoListinoFornitura').children('span.fornitore');
 
-                                  swal({
-                                    title: 'Eliminazione tipologia '+ tipologiaSelezionata,
-                                    text: 'sicuro di voler procedere?',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#DD6B55',
-                                    confirmButtonText: 'Ok',
-                                    cancelButtonText: 'annulla',
-                                    closeOnConfirm: true,
+                    $spanFornitore.removeClass('fornitore');
+                    fornitore =$spanFornitore.attr('class');
+                    $spanFornitore.removeClass(fornitore);
+                    $spanFornitore.addClass('fornitore');
+                    $spanFornitore.addClass(fornitore);
+                }
 
-                                  }, function (isConfirm) {
-
-                                          if (isConfirm) {
-
-                                               socketProdotto.emit("elimina_tipologia_prodotto", {'dip': '{{dipendente.username}}', 'tipologia': tipologiaSelezionata});
-
-                                          }
-
-                                  })
+                {% for fornitore in fornitori %}
+                    if( '{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}' == fornitore ||
+                         '{{fornitore.primo_gruppo}} -' == fornitore ||
+                          '- {{fornitore.sotto_gruppo}}' == fornitore){
 
 
-                            });
+                        scontoStd = parseInt('{{fornitore.scontoStandard}}');
+                        scontoExtra1 = parseInt('{{fornitore.scontoExtra1}}');
+                        scontoExtra2 = parseInt('{{fornitore.scontoExtra2}}');
+                        trasportoFornitore = parseFloat('{{fornitore.trasporto}}');
+                        imballoFornitore = parseFloat('{{fornitore.imballo}}');
+                        posaFornitore = parseFloat('{{fornitore.montaggio}}');
+                        trasportoFornitoreUnita = '{{fornitore.trasportoUnitaMisura}}';
+                        imballoFornitoreUnita = '{{fornitore.imballoUnitaMisura}}';
+                        posaFornitoreUnita = '{{fornitore.montaggioUnitaMisura}}';
+
+
+                    }
+
+                {% endfor %}
+
+
+                usFornitura = listinoFornitura - ( (listinoFornitura*scontoStd)/100 );
+
+                usFornitura = usFornitura - ( (usFornitura*scontoExtra1)/100 );
+
+                usFornitura = usFornitura - ( (usFornitura*scontoExtra2)/100 );
+
+                if( trasportoFornitoreUnita == '%' ){
+                    trasportoFornitore = (usFornitura*trasportoFornitore)/100;
+                }
+
+                if( imballoFornitoreUnita == '%' ){
+                    imballoFornitore = (usFornitura*imballoFornitore)/100;
+                }
+
+                if( posaFornitoreUnita == '%' ){
+                    posaFornitore = (usFornitura*posaFornitore)/100;
+
+                }
+
+                usFornitura += trasportoFornitore+imballoFornitore+posaFornitore;
+                posa= posa+((posa*posaPerc)/100);
+                listinoFornituraPosa=listinoFornitura+posa;
+                usFornituraPosa=usFornitura+posa;
+
+                rincaro = (rincaro*listinoFornituraPosa)/100;
+                totale=listinoFornituraPosa+rincaro;
+
+                usFornitura=Math.round(usFornitura*100)/100;
+                listinoFornituraPosa=Math.round(listinoFornituraPosa*100)/100;
+                usFornituraPosa=Math.round(usFornituraPosa*100)/100;
+                totale=Math.round(totale*100)/100;
+
+                $riga.children('td').each(function(){
+
+                    if( $(this).hasClass('prezzoListinoFornituraPosa') ){
+                        $(this).children('input').val(listinoFornituraPosa);
+                        $(this).children('.printedCalc').html('&euro; '+ listinoFornituraPosa)
+                    }
+                    else if( $(this).hasClass('nettoUsFornitura') ){
+                        $(this).children('input').val(usFornitura);
+                        $(this).children('.printedCalc').html('&euro; '+ usFornitura)
+                    }
+                    else if( $(this).hasClass('nettoUsFornituraPosa') ){
+                        $(this).children('input').val(usFornituraPosa);
+                        $(this).children('.printedCalc').html('&euro; '+ usFornituraPosa)
+                    }
+                    else if( $(this).hasClass('totale') ){
+                        $(this).children('input').val(totale);
+                        $(this).children('.printedCalc').html('&euro; '+ totale)
+                    }
+
+                });
+
+            }
+
+
+
+        }
+
+        $('#listinoFornituraInput').change(function(){
+            $riga = $(this).parent().parent();
+
+            if( $(this).val() > 0 ){
+
+                if( !$riga.hasClass('fornitore') ){
+                    $riga.addClass('fornitore');
+                    setFieldToComplete($riga, $(this).val());
+                }
+
+                calcolaCampiAutomatici($riga);
+            }
+            else if( $(this).val() == 0 ){
+
+                $('#tabellaContainerNewRow2 .inputScheda').val(0);
+                $('#tabellaContainerNewRow2 .printedCalc').html('&euro; 0');
+
+                $('#tabellaContainerNewRow3 .numInput').val(0);
+
+                $riga.removeClass('fornitore');
+                setFieldToComplete($riga, $(this).val());
+            }
+        });
+
+        $('#nettoUsFornituraInput').change(function(){
+            $riga = $(this).parent().parent();
+            var altezzaHeaderNewRow = $('#tabellaContainerNewRow2').height()
+            var incremento = altezzaHeaderNewRow;
+
+            if( $(this).val() > 0 ){
+                if( divAziendaAssente ){
+                    divAziendaAssente=false;
+
+                    $('#tabellaContainerNewRow3').animate({'top': ''+incremento+'px'}, 50);
+                }
+
+                if( !$riga.hasClass('azienda') ){
+                    $riga.addClass('azienda');
+                    setFieldToComplete($riga, $(this).val());
+                }
+
+                calcolaCampiAutomatici($riga);
+            }
+            else if( $(this).val() == 0 ){
+                divAziendaAssente=true;
+                $('#tabellaContainerNewRow3').animate({'top': '-'+incremento+'px'}, 50);
+                $('#tabellaContainerNewRow2 .inputScheda').val(0);
+                $('#tabellaContainerNewRow2 .printedCalc').html('&euro; 0');
+
+                $('#tabellaContainerNewRow3 .numInput').val(0);
+
+                $riga.removeClass('azienda');
+                //setFieldToComplete($riga, $(this).val());
+            }
+
+
+        });
+
+        $('#tabellaContainerNewRow2 .inputScheda').change(function(){
+            $riga = $(this).parent().parent();
+
+            if( $(this).attr('id') != 'nettoUsFornituraInput' ){
+                if( $(this).attr('id') != 'listinoFornituraInput' ){
+                    calcolaCampiAutomatici($riga);
+                }
+            }
+
+        });
+
+        $('#tabellaContainerNewRow2 .headerTabella').children('.posaHeader').children('input').change(function(){
+
+            $riga=$(this).parent().parent().parent().children('.datiScheda');
+
+            calcolaCampiAutomatici($riga);
+
+        });
+
+
+        $('input.radioUnit').change(function(){
+
+
+            var $radioContainer = $(this).parent();
+            var inputToShow =""
+
+
+
+            $radioContainer.children('input').each(function(){
+
+                if( $(this).hasClass('check') ){
+
+                    $(this).removeClass('check');
+                    $(this).css('display', 'none');
+                    $(this).val(0);
+
+                    if( $(this).hasClass('euro') ){
+
+                        inputToShow = 'perc';
+                    }
+                    else if( $(this).hasClass('perc') ){
+
+                        inputToShow = 'euro';
+                    }
+
+                }
+
+            });
+
+            $radioContainer.children('input.'+inputToShow).addClass('check');
+            $radioContainer.children('input.'+inputToShow).css('display', 'initial');
+
+            $riga=$('#tabellaContainerNewRow2 .datiScheda');
+            calcolaCampiAutomatici($riga);
+
+        });
+
+        $('#tabellaContainerNewRow3 input.numInput').change(function(){
+            $riga=$('#tabellaContainerNewRow2 .datiScheda');
+            calcolaCampiAutomatici($riga);
+
+        });
+
+        $('.fornitoreSelectNewRow').change(function(){
+
+            $riga=$('#tabellaContainerNewRow2 .datiScheda');
+            calcolaCampiAutomatici($riga);
+        });
+
+
+        $('#regNewRow').click(function(){
+
+            $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+            $tbodyNewRow3=$('#tabellaContainerNewRow3').children('table').children('tbody');
+
+            $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+            $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+            $datiScheda3=$tbodyNewRow3.children('.datiScheda');
+
+            var $tipologiaProdotto=$sezioneTabella1.children('th.primaCol').next('th').children('input');
+
+            var $nome_prodotto=$datiScheda1.children('td.nome_prodotto').children('input');
+            var $nome_modello=$datiScheda1.children('td.nome_modello').children('input');
+            var $marchio=$datiScheda1.children('td.marchio').children('input');
+            var $codice=$datiScheda1.children('td.codice').children('input');
+
+            var $fornitore=$datiScheda1.children('td.fornitore').children('select');
+
+            var $prezzoListinoFornituraPosa=$datiScheda2.children('td.prezzoListinoFornituraPosa').children('input');
+            var $prezzoListinoFornitura=$datiScheda2.children('td.prezzoListinoFornitura').children('input');
+            var $nettoUsFornituraPosa=$datiScheda2.children('td.nettoUsFornituraPosa').children('input');
+            var $nettoUsFornitura=$datiScheda2.children('td.nettoUsFornitura').children('input');
+            var $posa=$datiScheda2.children('td.posa').children('input');
+            var $rincaroCliente=$datiScheda2.children('td.rincaroCliente').children('input');
+            var $totale=$datiScheda2.children('td.totale').children('input');
+
+            var capitolato=$('#setCapitolato').is(':checked');
+
+            var $rincaroAzienda=$datiScheda3.children('td.rincaroAzienda').children('input');
+            var $trasportoAzienda=$datiScheda3.children('td.trasportoAzienda').children('input.numInput');
+            var $trasportoAziendaUnita=$datiScheda3.children('td.trasportoAzienda').children('input.radioUnit:checked');
+            var $imballoAzienda=$datiScheda3.children('td.imballoAzienda').children('input.numInput');
+            var $imballoAziendaUnita=$datiScheda3.children('td.imballoAzienda').children('input.radioUnit:checked');
+
+            if( $tipologiaProdotto.val() == "" ){
+                swal({
+                    title: 'Assegnare una tipologia al nuovo prodotto',
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $nome_prodotto.val() == "" ){
+                swal({
+                    title: "Il campo 'Nome prodotto' non può essere lasciato vuoto",
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $nome_modello.val() == "" ){
+                swal({
+                    title: "Il campo 'Modello' non può essere lasciato vuoto",
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    closeOnConfirm: true,
+
+                });
+
+                return;
+            }
+
+            if( $prezzoListinoFornitura.val() == "" ){
+                $prezzoListinoFornitura=0;
+            }
+            else{
+                $prezzoListinoFornitura=$prezzoListinoFornitura.val()
+            }
+
+            if( $prezzoListinoFornituraPosa.val() == "" ){
+                $prezzoListinoFornituraPosa=0;
+            }
+            else{
+                $prezzoListinoFornituraPosa=$prezzoListinoFornituraPosa.val();
+            }
+
+            if( $nettoUsFornituraPosa.val() == "" ){
+                $nettoUsFornituraPosa=0;
+            }
+            else{
+                $nettoUsFornituraPosa=$nettoUsFornituraPosa.val();
+            }
+
+            if( $nettoUsFornitura.val() == "" ){
+                $nettoUsFornitura=0;
+            }
+            else{
+                $nettoUsFornitura=$nettoUsFornitura.val();
+            }
+
+            if( $posa.val() == "" ){
+                $posa=0;
+            }
+            else{
+                $posa=$posa.val();
+            }
+
+            if( $rincaroCliente.val() == "" ){
+                $rincaroCliente=0;
+            }
+            else{
+                $rincaroCliente=$rincaroCliente.val();
+            }
+
+            var $posaPerc=parseInt($('#tabellaContainerNewRow2 .posaPerc').val());
+            var versoDiLettura = true;
+
+            if( $datiScheda2.hasClass('azienda') )
+                versoDiLettura = false;
+
+            socketProdotto.emit("registra_prodotto", {
+                'dip': '{{dipendente.username}}',
+                'nome': $nome_prodotto.val(),
+                'tipologia': $tipologiaProdotto.val(),
+                'modello': $nome_modello.val(),
+                'marchio': $marchio.val(),
+                'codice': $codice.val(),
+                'fornitore_primo_gruppo': $fornitore.val().split(' - ')[0],
+                'fornitore_sotto_gruppo':  $fornitore.val().split(' - ')[1],
+                'prezzoListinoFornitura': $prezzoListinoFornitura,
+                'nettoUsFornitura': $nettoUsFornitura,
+                'posa': $posa,
+                'posaPerc': $posaPerc,
+                'rincaroCliente': $rincaroCliente,
+                'versoDiLettura': versoDiLettura,
+                'capitolato': capitolato,
+                'rincaroAzienda': $rincaroAzienda.val(),
+                'trasportoAzienda': $trasportoAzienda.val(),
+                'imballoAzienda': $imballoAzienda.val(),
+                'trasportoAziendaUnita': $trasportoAziendaUnita.val(),
+                'imballoAziendaUnita': $imballoAziendaUnita.val()
+
+
+            });
+
+
+
+        });
+
+
+        var infoFornitoreClickAction = function($this, primo_gruppo, sotto_gruppo, inTable){
+
+            var bodyPopup;
+
+            {% for fornitore in fornitori %}
+
+                if( '{{fornitore.primo_gruppo}}' == primo_gruppo){
+
+                    if('{{fornitore.sotto_gruppo}}' == sotto_gruppo ){
+
+
+                         bodyPopup = '<ul class="datiFornitore"> \
+                                            <li> \
+                                                <label class="major">Sconto standard: {{fornitore.scontoStandard}} %;</label> \
+                                            </li> \
+                                            <li> \
+                                                <label class="major">Sconto extra 1: {{fornitore.scontoExtra1}} %;</label> \
+                                            </li> \
+                                            <li> \
+                                                <label class="major">Sconto extra 2: {{fornitore.scontoExtra2}} %;</label> \
+                                            </li>';
+
+                         if( '{{fornitore.trasportoUnitaMisura}}' == '%' ){
+                            bodyPopup+='<li> \
+                                            <label class="major">Trasporto: {{fornitore.trasporto}} %;</label> \
+                                        </li>';
+                         }
+                         else{
+                            bodyPopup+='<li> \
+                                            <label class="major">Trasporto: {{fornitore.trasporto}} &euro;</label> \
+                                        </li>';
+
+                         }
+
+                         if( '{{fornitore.imballoUnitaMisura}}' == '%' ){
+                            bodyPopup+='<li> \
+                                            <label class="major">Imballo: {{fornitore.imballo}} %;</label> \
+                                        </li>';
+                         }
+                         else{
+                            bodyPopup+='<li> \
+                                            <label class="major">Imballo: {{fornitore.imballo}} &euro;</label> \
+                                        </li>';
+
+                         }
+
+                         if( '{{fornitore.montaggioUnitaMisura}}' == '%' ){
+                            bodyPopup+='<li> \
+                                            <label class="major">Posa: {{fornitore.montaggio}} %;</label> \
+                                        </li>';
+                         }
+                         else{
+                            bodyPopup+='<li> \
+                                            <label class="major">Posa: {{fornitore.montaggio}} &euro;</label> \
+                                        </li>';
+
+                         }
 
 
                     }
                 }
 
+            {% endfor %}
+
+            var whereToAppend;
+
+            if(inTable)
+                whereToAppend = $('#page-wrapper');
+            else
+                whereToAppend = $('#headerNewRow');
+
+
+            var parametriPopup = {
+                'clicckedButton': $this,
+                'popupContainer': whereToAppend,
+                'popupBodyContent': bodyPopup,
+                'popupTitle': 'Fornitore:',
+                'popupFunction': function(){},
+                'inTable': inTable
+
+            };
+
+            usPopupProdotti(parametriPopup);
+        }
+
+        var clickInfoFornitore = function(clickToTrigger){
+
+            $('.infoFornitore').each(function(){
+                var inTable = true;
+
+                if( $(this).parent().parent().hasClass('newRow') )
+                    inTable=false
+
+                $(this).unbind('click').click(function(){
+
+                    var fornitore = $(this).parent().children('select').val();
+                    var primo_gruppo;
+                    var sotto_gruppo;
+
+
+                    var primo_gruppo= fornitore.split(' - ')[0];
+                    var sotto_gruppo= fornitore.split(' - ')[1];
+
+
+                    if( primo_gruppo == '-' )
+                        infoFornitoreClickAction($(this), "", sotto_gruppo, inTable);
+                    else if(sotto_gruppo == '-' )
+                        infoFornitoreClickAction($(this), primo_gruppo, "", inTable);
+                    else
+                        infoFornitoreClickAction($(this), primo_gruppo, sotto_gruppo, inTable);
+                });
+
+            });
+
+            if( clickToTrigger ){
+                $(this).trigger('click');
+            }
+
+        }
+
+        clickInfoFornitore(true);
+
+        var infoAziendaClickAction = function($this, rincaroAzienda, trasportoAzienda, trasportoAziendaUnita,
+                                                   imballoAzienda, imballoAziendaUnita, inTable){
+
+            var transToAppend;
+            var imbToAppend;
+
+            if( trasportoAziendaUnita == "euro" ){
+                transToAppend = '<input type="radio" class="datiAziendaRadio" id="datiAziendaTrasportoRadio1" name="datiAziendaTrasportoRadio" value="euro" checked="checked"> \
+                                                    <label for="datiAziendaRadio1"> &euro; </label> \
+                                                    <input type="radio" class="datiAziendaRadio" id="datiAziendaTrasportoRadio2" name="datiAziendaTrasportoRadio" value="%"> \
+                                                    <label for="datiAziendaRadio2"> % </label> '
+            }
+            else{
+                transToAppend = '<input type="radio" class="datiAziendaRadio" id="datiAziendaTrasportoRadio1" name="datiAziendaTrasportoRadio" value="euro"> \
+                                                    <label for="datiAziendaRadio1"> &euro; </label> \
+                                                    <input type="radio" class="datiAziendaRadio" id="datiAziendaTrasportoRadio2" name="datiAziendaTrasportoRadio" value="%" checked="checked"> \
+                                                    <label for="datiAziendaRadio2"> % </label> '
+            }
+
+            if( imballoAziendaUnita == "euro" ){
+                imbToAppend='<input type="radio" class="datiAziendaRadio" id="datiAziendaImballoRadio1" name="datiAziendaImballoRadio" value="euro" checked="checked"> \
+                                                    <label for="datiAziendaRadio1"> &euro; </label> \
+                                                    <input type="radio" class="datiAziendaRadio" id="datiAziendaImballoRadio2" name="datiAziendaImballoRadio" value="%"> \
+                                                    <label for="datiAziendaRadio2"> % </label> '
+            }
+            else{
+                imbToAppend='<input type="radio" class="datiAziendaRadio" id="datiAziendaImballoRadio1" name="datiAziendaImballoRadio" value="euro"> \
+                                                    <label for="datiAziendaRadio1"> &euro; </label> \
+                                                    <input type="radio" class="datiAziendaRadio" id="datiAziendaImballoRadio2" name="datiAziendaImballoRadio" value="%" checked="checked"> \
+                                                    <label for="datiAziendaRadio2"> % </label> '
+            }
+
+
+            var bodyPopup = '<ul class="datiAzienda"> \
+                                            <li> \
+                                                <label class="major">(+%): \
+                                                    <input type="number" step="0.01" class="datiAziendaInput rincaroAzienda" value="'+rincaroAzienda+'"> % \
+                                                </label> \
+                                            </li> \
+                                            <li> \
+                                                <label class="major">Trasporto: \
+                                                    <input type="number" step="0.01" class="datiAziendaInput trasportoAzienda" value="'+trasportoAzienda+'"> '+
+                                                    transToAppend+
+                                                '</label> \
+                                            </li> \
+                                            <li> \
+                                                <label class="major">Imballo: \
+                                                    <input type="number" step="0.01" class="datiAziendaInput imballoAzienda" value="'+imballoAzienda+'"> '+
+                                                    imbToAppend+
+                                                '</label> \
+                                            </li></ul>';
+
+
+            var popupFunction = function(){
+
+
+                $('.datiAziendaInput').change(function(){
+                    var $span=$this.parent().children('span');
+                    var spanClasses=$span.attr('class').split(' ');
+
+
+                    if( $(this).hasClass('rincaroAzienda') ){
+
+                        var trasportoAzienda=spanClasses[2];
+                        var trasportoAziendaUnita=spanClasses[3];
+                        var imballoAzienda=spanClasses[4];
+                        var imballoAziendaUnita=spanClasses[5];
+
+                        $span.removeClass($span.attr('class'));
+
+                        $span.attr('class', 'aziendaDati' + ' ' + $(this).val() + ' ' + trasportoAzienda + ' '+ trasportoAziendaUnita + ' ' + imballoAzienda +' '+imballoAziendaUnita);
 
 
 
-           });
+                    }
+                    else if( $(this).hasClass('trasportoAzienda') ){
+
+                        var rincaroAzienda=spanClasses[1];
+                        var trasportoAziendaUnita=spanClasses[3];
+                        var imballoAzienda=spanClasses[4];
+                        var imballoAziendaUnita=spanClasses[5];
+
+                        $span.removeClass($span.attr('class'));
+
+                        $span.attr('class', 'aziendaDati' + ' ' + rincaroAzienda + ' ' + $(this).val() + ' '+ trasportoAziendaUnita + ' ' + imballoAzienda +' '+imballoAziendaUnita);
 
 
-        socketProdotto.on('aggiornaPagina', function() {
-            location.reload();
+                    }
+                    else if( $(this).hasClass('imballoAzienda') ){
+
+                        var rincaroAzienda=spanClasses[1];
+                        var trasportoAzienda=spanClasses[2];
+                        var trasportoAziendaUnita=spanClasses[3];
+                        var imballoAziendaUnita=spanClasses[5];
+
+                        $span.removeClass($span.attr('class'));
+
+                        $span.attr('class', 'aziendaDati' + ' ' + rincaroAzienda + ' ' + trasportoAzienda + ' '+ trasportoAziendaUnita + ' ' + $(this).val() +' '+imballoAziendaUnita);
 
 
-        });
+                    }
+
+                    calcolaCampiAutomatici($span.parent().parent());
+
+                });
+
+                $('.datiAziendaRadio').change(function(){
+
+                    var $span=$this.parent().children('span');
+                    var spanClasses=$span.attr('class').split(' ');
 
 
-        //Seguono due metodi diversi per stampare l'alert "prodotto già inserito"
-        {% if rigaPresente %}
-              swal({
-                title: "{{tabellaRigaPresente}}" + ' inserito è già presente',
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                closeOnConfirm: true
+                    if( $(this).attr('id') == 'datiAziendaTrasportoRadio1' ){
+                        var rincaroAzienda=spanClasses[1];
+                        var trasportoAzienda=spanClasses[2];
 
-              });
+                        var imballoAzienda=spanClasses[4];
+                        var imballoAziendaUnita=spanClasses[5];
 
-        {% endif %}
+                        $span.removeClass($span.attr('class'));
 
-        socketProdotto.on('rigaPresente', function(message) {
-
-              console.log("allora");
-              swal({
-                title: message['who'] + ' inserito è già presente',
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                closeOnConfirm: true
-
-              });
+                        $span.attr('class', 'aziendaDati' + ' ' + rincaroAzienda + ' ' + trasportoAzienda + ' euro ' + imballoAzienda +' '+imballoAziendaUnita);
 
 
-        });
+                    }
+                    else if( $(this).attr('id') == 'datiAziendaTrasportoRadio2' ){
+                        var rincaroAzienda=spanClasses[1];
+                        var trasportoAzienda=spanClasses[2];
 
-        $('#selectTipologia').change( function() {
+                        var imballoAzienda=spanClasses[4];
+                        var imballoAziendaUnita=spanClasses[5];
 
-          socketProdotto.emit('cambia_tipologia_prezzario', {"dip": "{{dipendente.username}}", "tipologia": $(this).val() })
+                        $span.removeClass($span.attr('class'));
 
-        });
-
-
-        $('#addTipologiaProdotto').click(function(){
-
-               swal.withForm({
-                title: 'Aggiungi una nuova tipologia di prodotto',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
-                formFields: [
-
-                  { id: 'newTipologia', placeholder: 'Inserire il nome della nuova tipologia' }
+                        $span.attr('class', 'aziendaDati' + ' ' + rincaroAzienda + ' ' + trasportoAzienda + ' perc ' + imballoAzienda +' '+imballoAziendaUnita);
 
 
-                ]
-              }, function (isConfirm) {
+                    }
+                    else if( $(this).attr('id') == 'datiAziendaImballoRadio1' ){
+                        var rincaroAzienda=spanClasses[1];
+                        var trasportoAzienda=spanClasses[2];
+                        var trasportoAziendaUnita=spanClasses[3];
+                        var imballoAzienda=spanClasses[4];
 
-                      if (isConfirm) {
-                            var form=this.swalForm;
-                            socketProdotto.emit("registra_tipologiaProdotto",
-                               { 'dip': '{{dipendente.username}}', 'nomeTipo': form['newTipologia'] });
+                        $span.removeClass($span.attr('class'));
 
-
-                      }
-
-              })
-        });
+                        $span.attr('class', 'aziendaDati' + ' ' + rincaroAzienda + ' ' + trasportoAzienda + ' '+ trasportoAziendaUnita + ' ' + imballoAzienda +' euro');
 
 
-        //variabili globale per il meccanismo di modifica dei prodotti
-        var modificaAttiva=false;
-        var oldProdotto ="";
+                    }
+                    else if( $(this).attr('id') == 'datiAziendaImballoRadio2' ){
+                        var rincaroAzienda=spanClasses[1];
+                        var trasportoAzienda=spanClasses[2];
+                        var trasportoAziendaUnita=spanClasses[3];
+                        var imballoAzienda=spanClasses[4];
+
+                        $span.removeClass($span.attr('class'));
 
 
-        /*funzione lanciata all'evento click del pulsante "inserisci fornitore"*/
+                        $span.attr('class', 'aziendaDati' + ' ' + rincaroAzienda + ' ' + trasportoAzienda + ' '+ trasportoAziendaUnita + ' ' + imballoAzienda +' perc');
 
-       $('#registraProdotto').click( function() {
+                    }
 
-
-            if(modificaAttiva)
-            {
-                titleTxt="Si sta per modificare una voce prodotto già presente";
-            }else
-                titleTxt='Si sta per aggiungere un nuovo prodotto';
-
-          swal({
-            title: titleTxt,
-            text: 'Sicuro di voler continuare?',
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: 'Ok',
-            cancelButtonText: 'annulla',
-            closeOnConfirm: true
-
-          }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                        var inputOfProdotti =  [];
-                        var selectOfProdotti = [];
+                    calcolaCampiAutomatici($span.parent().parent());
+                });
 
 
+            }
 
-                        $("#trForm input").each(function(index){
-                            inputOfProdotti.push($(this).val());
+            var parametriPopup = {
+                'clicckedButton': $this,
+                'popupContainer': $('#page-wrapper'),
+                'popupBodyContent': bodyPopup,
+                'popupTitle': 'Azienda:',
+                'popupFunction': popupFunction,
+                'inTable': true
+            };
 
-                        });
+            usPopupProdotti(parametriPopup);
+        }
 
-                        $("#trForm select").each(function(index){
+        var clickInfoAzienda = function(clickToTrigger){
 
-                            selectOfProdotti=$(this).val().split('-');
+            $('.infoAzienda').each(function(){
 
-                            /*tolgo degli spazi extra*/
+                if( $(this).parent().parent().hasClass('azienda') ){
 
-                            selectOfProdotti[0]=selectOfProdotti[0].substring(0, selectOfProdotti[0].length-1 );
-                            selectOfProdotti[1]=selectOfProdotti[1].substring(1, selectOfProdotti[1].length );
+                    $(this).unbind('click').click(function(){
 
-                        });
+                        var $spanAzienda=$(this).parent().children('span.aziendaDati');
+
+                        var spanClasses=$spanAzienda.attr('class').split(' ');
+
+                        var rincaroAzienda=spanClasses[1];
+                        var trasportoAzienda=spanClasses[2];
+                        var trasportoAziendaUnita=spanClasses[3];
+                        var imballoAzienda=spanClasses[4];
+                        var imballoAziendaUnita=spanClasses[5];
+
+                        infoAziendaClickAction($(this), rincaroAzienda, trasportoAzienda,
+                                                       trasportoAziendaUnita, imballoAzienda, imballoAziendaUnita);
+
+                    });
+                }
+
+            });
+
+            if( clickToTrigger ){
+                $(this).trigger('click');
+            }
+
+        }
+
+        var counter_riga=0;
+
+        var aggiungiRiga= function(daVerificare){
+
+            /* costruisce nel documento la nuova riga registrata nel db */
+
+            var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+            var $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+            var $tbodyNewRow3=$('#tabellaContainerNewRow3').children('table').children('tbody');
+
+            var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+
+            var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+            var $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+            var $datiScheda3=$tbodyNewRow3.children('.datiScheda');
+
+            var $tipologiaProdotto=$sezioneTabella1.children('th.primaCol').next('th').children('input');
+
+            var $nome_prodotto=$datiScheda1.children('td.nome_prodotto').children('input');
+            var $nome_modello=$datiScheda1.children('td.nome_modello').children('input');
+            var $marchio=$datiScheda1.children('td.marchio').children('input');
+            var $codice=$datiScheda1.children('td.codice').children('input');
+
+            var $fornitore=$datiScheda1.children('td.fornitore').children('select');
+
+            var $prezzoListinoFornituraPosa=$datiScheda2.children('td.prezzoListinoFornituraPosa').children('input');
+            var $prezzoListinoFornitura=$datiScheda2.children('td.prezzoListinoFornitura').children('input');
+            var $nettoUsFornituraPosa=$datiScheda2.children('td.nettoUsFornituraPosa').children('input');
+            var $nettoUsFornitura=$datiScheda2.children('td.nettoUsFornitura').children('input');
+            var $posa=$datiScheda2.children('td.posa').children('input');
+            var posaPerc=parseInt($('#tabellaContainerNewRow2 .posaPerc').val())
+            var $rincaroCliente=$datiScheda2.children('td.rincaroCliente').children('input');
+            var $totale=$datiScheda2.children('td.totale').children('input');
+
+            var capitolato=$('#setCapitolato').is(':checked');
+
+            var $rincaroAzienda=$datiScheda3.children('td.rincaroAzienda').children('input');
+            var $trasportoAzienda=$datiScheda3.children('td.trasportoAzienda').children('input.numInput');
+            var $imballoAzienda=$datiScheda3.children('td.imballoAzienda').children('input.numInput');
+
+            var $trasportoAziendaUnita;
+            var $imballoAziendaUnita;
+
+            if( $datiScheda3.children('td.trasportoAzienda').children('input.radioUnit:checked').attr('id') == 'inputEuroPercTrasportoNewRow1' ){
+                $trasportoAziendaUnita='euro';
+            }
+            else{
+                $trasportoAziendaUnita='perc';
+            }
+
+            if( $datiScheda3.children('td.imballoAzienda').children('input.radioUnit:checked').attr('id') == 'inputEuroPercImballoNewRow1' ){
+                $imballoAziendaUnita='euro';
+            }
+            else{
+                $imballoAziendaUnita='perc';
+            }
 
 
-                         //se non è stato impostato il nome o tipo del prodotto non fare nulla
-                        if( inputOfProdotti[0] == "" )
-                            return;
 
-                        if(!modificaAttiva){
+            var $table1=$('#tabellaContainer1').children('table');
+            var $table2=$('#tabellaContainer2').children('table');
 
 
+            var tipoEsistente=false;
 
-                            socketProdotto.emit("registra_prodotto", { "dip": "{{dipendente.username}}", "tipologia":  $('#selectTipologia').val(),
-                                                                           "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
-                                                                           "codice" : inputOfProdotti[2],
-                                                                            "fornitore_primo_gruppo": selectOfProdotti[0], "fornitore_sotto_gruppo": selectOfProdotti[1],
-                                                                            "prezzoListino": inputOfProdotti[3], "prezzoNettoListino": inputOfProdotti[4],
-                                                                             "rincaroListino" : inputOfProdotti[5],
-                                                                             "nettoUs": inputOfProdotti[6], "rincaroTrasporto": inputOfProdotti[7],
-                                                                              "rincaroMontaggio": inputOfProdotti[8], "scontoUs": inputOfProdotti[9],
-                                                                              "scontoEx1": inputOfProdotti[10],
-                                                                              "scontoEx2": inputOfProdotti[11], "scontoImballo": inputOfProdotti[12], "rincaroTrasporto2": inputOfProdotti[13],
-                                                                              "rincaroCliente": inputOfProdotti[14] });
+            $table1.children('tbody').each(function(){
+                if( $(this).attr('class') == $tipologiaProdotto.val() ){
+                    tipoEsistente = true;
+                }
+            });
 
+            if( !tipoEsistente ){
+                $table1.append(
+                    '<tbody class="'+$tipologiaProdotto.val()+'"> \
+                        <tr class="sezioneTabella dimensionaTabella""> \
+                            <th class="primaCol"></th> \
+                            <th class="secondaCol" colspan="5">Tipologia prodotto: '+$tipologiaProdotto.val()+'</th> \
+                        </tr> \
+                    <tbody>'
+                );
+
+                $table2.append(
+                    '<tbody class="'+$tipologiaProdotto.val()+'">  \
+                        <tr class="sezioneTabella dimensionaTabella"> \
+                            <th colspan="7"></th> \
+                        </tr> \
+                    </tbody>'
+                );
+
+                var tipologiaPresente=false;
+
+                $('#listaTipologia').children('option').each(function(){
+                    if( $(this).text() == $tipologiaProdotto.val() )
+                        tipologiaPresente = true;
+                });
+
+                if( !tipologiaPresente ){
+                    $('#listaTipologia').append('<option>'+ $tipologiaProdotto.val() +'</option>');
+                    $('#modDelTipologia').append('<option>'+ $tipologiaProdotto.val() +'</option>')
+
+                }
+
+            }
+
+            prodottiInListaProdotti($nome_prodotto.val());
+
+            var $tbodyToExpand1=null;
+            var $tbodyToExpand2=null;
+
+            $table1.children('tbody').each(function(){
+                if( $(this).attr('class') == $tipologiaProdotto.val() ){
+                    $tbodyToExpand1=$(this);
+                }
+            });
+
+            $table2.children('tbody').each(function(){
+                if( $(this).attr('class') == $tipologiaProdotto.val() ){
+                    $tbodyToExpand2=$(this);
+                }
+            });
+
+            var selectToAdd= '<select class="fornitore shortSelect">';
+
+            {% for fornitore in fornitori %}
+
+                if('{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}' == $fornitore.val())
+                    selectToAdd+='<option selected value="{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}">{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}</option>';
+                else
+                    selectToAdd+='<option value="{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}">{{fornitore.primo_gruppo}} - {{fornitore.sotto_gruppo}}</option>';
+
+            {% endfor %}
+            selectToAdd+='</select>';
+
+
+            var datiSchedaNewRow1=$(
+                '<tr class="datiScheda dimensionaTabella"> \
+                    <td class="nome_prodotto" style="display:none"><label>'+$nome_prodotto.val()+'</label></td> \
+                    <td class="nome_modello" style="display:none"><label>'+$nome_modello.val()+'</label></td> \
+                    <td class="tipologia" style="display:none"><label>'+$tipologiaProdotto.val()+'</label></td> \
+                    <td class="marchio" style="display:none"><label>'+$marchio.val()+'</label></td> \
+                    <td class="primaCol"> \
+                        <div> \
+                            <a class="segnalaProdotto fa fa-warning primaColIcon"></a> \
+                            <a class="delProdotto fa fa-trash primaColIcon centralIcon"></a> \
+                        </div> \
+                        <div> \
+                            <input class="check_cap" type="radio" name="capitolato_'+$tipologiaProdotto.val()+'" id="capitolato_check_'+ counter_riga +'"> \
+                            <label class="check_cap" for="capitolato_check_'+ counter_riga +'">capitolato</label> \
+                        </div> \
+                    </td> \
+                    <td class="nome hiddenInput long_string"><label class="cellaDato">'+$nome_prodotto.val()+'</label> \
+                        <input style="display:none" class="nome_prodotto inputScheda" value="'+$nome_prodotto.val()+'" placeholder="nome prodotto..." > \
+                    </td> \
+                    <td class="marchio hiddenInput normal_string"><label class="cellaDato">'+$marchio.val()+'</label> \
+                        <input style="display:none" class="marchio inputScheda" value="'+$marchio.val()+'" placeholder="marchio prodotto..." > \
+                    </td> \
+                    <td class="modello hiddenInput normal_string"><label class="cellaDato">'+$nome_modello.val()+'</label> \
+                        <input style="display:none" class="nome_modello inputScheda" value="'+$nome_modello.val()+'" placeholder="modello prodotto..." > \
+                    </td> \
+                    <td class="codice hiddenInput normal_string"><label class="cellaDato">'+$codice.val()+'</label> \
+                        <input style="display:none" class="codice inputScheda" value="'+$codice.val()+'" placeholder="codice prodotto..." > \
+                    </td> \
+                    <td class="fornitore no_cursor normal_string">'+
+                        selectToAdd +
+                    '</td> \
+                </tr>'
+
+            ).appendTo($tbodyToExpand1);
+
+            if( daVerificare ){
+                datiSchedaNewRow1.addClass('daVerificare');
+            }
+
+
+            var datiSchedaNewRow2=$('<tr class="datiScheda dimensionaTabella"> \
+                    <td class="nome_prodotto" style="display:none"><label>'+$nome_prodotto.val()+'</label></td> \
+                    <td class="nome_modello" style="display:none"><label>'+$nome_modello.val()+'</label></td> \
+                    <td class="tipologia" style="display:none"><label>'+$tipologiaProdotto.val()+'</label></td> \
+                    <td class="marchio" style="display:none"><label>'+$marchio.val()+'</label></td> \
+                    <td class="prezzoListinoFornituraPosa no_cursor"> \
+                        <label  class="printedCalc">&euro; '+$prezzoListinoFornituraPosa.val()+'</label> \
+                        <label style="display:none" class="unita">€</label> \
+                        <input type="number" step="0.01" style="display:none" value="'+$prezzoListinoFornituraPosa.val()+'" class="prezzoListinoFornituraPosa inputScheda numInput" >\
+                    </td> \
+                    <td class="prezzoListinoFornitura hiddenInput"> \
+                        <label  class="printedCalc">&euro; '+$prezzoListinoFornitura.val()+'</label> \
+                        <label style="display:none" class="unita">€</label> \
+                        <input type="number" step="0.01" style="display:none" value="'+$prezzoListinoFornitura.val()+'" class="prezzoListinoFornitura inputScheda numInput" > \
+                    </td> \
+                    <td class="nettoUsFornitura hiddenInput"> \
+                        <label  class="printedCalc">&euro; '+$nettoUsFornitura.val()+'</label> \
+                        <label style="display:none" class="unita">€</label> \
+                        <input type="number" step="0.01" style="display:none" value="'+$nettoUsFornitura.val()+'" class="nettoUsFornitura inputScheda numInput" > \
+                    </td> \
+                    <td class="nettoUsFornituraPosa no_cursor"> \
+                        <label  class="printedCalc">&euro; '+$nettoUsFornituraPosa.val()+'</label> \
+                        <label style="display:none" class="unita">€</label> \
+                        <input type="number" step="0.01" style="display:none" value="'+$nettoUsFornituraPosa.val()+'" class="nettoUsFornituraPosa inputScheda numInput" > \
+                    </td> \
+                    <td class="posa hiddenInput"> \
+                        <label  class="printedCalc">&euro; '+$posa.val()+'   +'+posaPerc+'%</label> \
+                        <label style="display:none" class="unita">€</label> \
+                        <input type="number" step="0.01" style="display:none" value="'+$posa.val()+'" class="posa inputScheda numInput" > \
+                        <span class="rincaroPercentuale"> \
+                            <label style="display:none" class="unita">+</label> \
+                            <input type="number" style="display:none" value="'+posaPerc+'" class="posaPerc inputScheda numInput" > \
+                            <label style="display:none" class="unita">%</label> \
+                        </span> \
+                    </td> \
+                    <td class="rincaroCliente hiddenInput"> \
+                        <label  class="printedCalc">'+$rincaroCliente.val()+'%</label> \
+                        <input type="number" style="display:none" value="'+$rincaroCliente.val()+'" class="rincaroCliente inputScheda numInput" >\
+                        <label style="display:none" class="unita">%</label> \
+                    </td> \
+                    <td class="totale no_cursor"> \
+                        <label  class="printedCalc">&euro; '+$totale.val()+'</label> \
+                        <label style="display:none" class="unita">€</label> \
+                        <input type="number" step="0.01" style="display:none" value="'+$totale.val()+'" class="totale inputScheda numInput" > \
+                    </td> \
+                </tr>'
+
+            ).appendTo($tbodyToExpand2);
+
+            if( capitolato ){
+
+                $("#capitolato_check_"+ counter_riga).trigger('click');
+            }
+
+
+            if( $datiScheda2.hasClass('azienda') ){
+                datiSchedaNewRow2.children('td.nettoUsFornitura').append('<a class="fa fa-info-circle infoAzienda"></a>')
+                datiSchedaNewRow2.addClass('azienda');
+                datiSchedaNewRow2.children('.prezzoListinoFornitura').removeClass('hiddenInput');
+                datiSchedaNewRow2.children('.prezzoListinoFornitura').addClass('no_cursor');
+                datiSchedaNewRow2.children('.nettoUsFornitura').append(
+                        '<span style="display:none" class="aziendaDati '+ $rincaroAzienda.val() + ' ' + $trasportoAzienda.val() + ' ' +
+                        $trasportoAziendaUnita + ' ' + $imballoAzienda.val() + ' ' + $imballoAziendaUnita +'" ></span>'
+
+                );
+            }else{
+                datiSchedaNewRow1.children('td.fornitore').append('<a class="fa fa-info-circle infoFornitore"></a>')
+                datiSchedaNewRow2.addClass('fornitore');
+                datiSchedaNewRow2.children('.nettoUsFornitura').removeClass('hiddenInput');
+                datiSchedaNewRow2.children('.nettoUsFornitura').addClass('no_cursor');
+                datiSchedaNewRow2.children('.prezzoListinoFornitura').append(
+                        '<span style="display:none" class="fornitore '+
+                        datiSchedaNewRow1.children('td.fornitore').children('select').val() +'" ></span>'
+
+                );
+            }
+
+            clickInfoFornitore(true);
+            clickInfoAzienda(true);
+
+            //ripulisco i vari campi del aggiungi riga
+            var firstRadio=true;
+            /*$('#headerNewRow input').each(function(){
+                if( $(this).attr('type') == 'number' )
+                    $(this).val('0');
+                else
+                    $(this).val('');
+            });*/
+
+
+            $('td.hiddenInput').click( function(){
+                hiddenInputAction($(this));
+
+            });
+
+            $('.primaCol').unbind('click');
+
+            socketProdotto.on('confermaModificaProdotto', function(msg){
+
+
+                $('.inModifica').each(function(){
+
+
+
+                    $(this).children('label.cellaDato').text(msg['value']);
+
+
+
+
+                    $(this).children('label').show();
+                    $(this).children('input').hide();
+                    $(this).children('select').hide();
+                    $(this).children('.radioLabel').hide();
+                    $(this).children('.checked').show();
+                    $(this).children('.simpleAfterInputLabel').hide();
+                    $(this).removeClass('inModifica');
+                });
+
+
+                var modificaOldValueFunct = function($this){
+                    $this.children('td.nome_prodotto').each(function(){
+                        if($(this).children('label').text() == msg['prodotto']){
+
+                            if( $(this).next().children('label').text() ==  msg['modello'] ){
+
+                                if( $(this).next().next().children('label').text() ==  msg['tipologia'] ){
+
+                                        if(msg['toEdit'] == 'nome_prodotto' ){
+                                            $(this).children('label').text( msg['value'] )
+
+                                        }
+                                        else if( msg['toEdit'] == 'nome_modello' )
+                                            $(this).next().children('label').text(msg['value'] )
+                                        else if( msg['toEdit'] == 'tipologia' )
+                                            $(this).next().next().children('label').text(msg['value'] )
+                                        else if( msg['toEdit'] == 'marchio' )
+                                            $(this).next().next().next().children('label').text(msg['value'] )
+
+                                }
+                            }
+                        }
+
+                    });
+
+                }
+
+
+                $('#tabellaContainer1 tr').each(function(){
+
+                    modificaOldValueFunct($(this));
+
+
+                });
+
+                /*$('#tabellaContainer2 tr').each(function(){
+
+                     modificaOldValueFunct($(this));
+
+                });*/
+
+                equalizzaAltezzaRighe();
+
+
+            });
+
+            var changeValueProdotto = function($this){
+
+                var modello = "";
+                var prodotto = "";
+                var marchio = "";
+                var tipologia = "";
+
+                var $row;
+                var $container;
+
+                if( $this.hasClass('posaPerc') ){
+
+                    $row=$this.parent().parent().parent();
+                    $container=$this.parent().parent();
+                }
+                else{
+
+                    $row=$this.parent().parent();
+                    $container=$this.parent();
+
+                }
+
+
+                var $tableContainer=$row.parent().parent().parent();
+
+
+
+                if( $container.hasClass('posa') ){
+                     $container.children('label.printedCalc').html('&euro; '+
+                            $container.children('input.posa').val() + '   +'+ $container.children('span').children('input.posaPerc').val()+'%' )
+                }
+                else if( $container.hasClass('rincaroCliente') ){
+                    $container.children('label.printedCalc').html($this.val()+'%')
+                }
+                else if( $container.hasClass('fornitore') ){
+                    $container.children('label.cellaDato').html($this.val())
+                }
+                else{
+                    $container.children('label.printedCalc').html('&euro; '+$this.val())
+                }
+
+                var attributoToEdit=$this.attr('class').split(' ')[0];
+                var valore=$this.val();
+
+
+
+                if( attributoToEdit != 'nome_modello' &&
+                     attributoToEdit != 'nome_prodotto' &&
+                       attributoToEdit != 'tipologia' &&
+                        attributoToEdit != 'marchio' ){
+
+
+                    if( $row.hasClass('azienda') ){
+
+
+                        var usListino = parseFloat($row.children('td.nettoUsFornitura').children('input').val());
+
+                        if( usListino > 0 )
+                        {
+                            calcolaCampiAutomatici($row);
 
                         }
-                        else{
-                             socketProdotto.emit("modifica_prodotto", { "dip": "{{dipendente.username}}", "oldNome": oldNome,
-                                                                           "tipologia":  $('#selectTipologia').val(),
-                                                                           "nome": inputOfProdotti[0], "marchio": inputOfProdotti[1],
-                                                                           "codice" : inputOfProdotti[2],
-                                                                            "fornitore_primo_gruppo": selectOfProdotti[0], "fornitore_sotto_gruppo": selectOfProdotti[1],
-                                                                            "prezzoListino": inputOfProdotti[3], "prezzoNettoListino": inputOfProdotti[4],
-                                                                             "rincaroListino" : inputOfProdotti[5],
-                                                                             "nettoUs": inputOfProdotti[6], "rincaroTrasporto": inputOfProdotti[7],
-                                                                              "rincaroMontaggio": inputOfProdotti[8], "scontoUs": inputOfProdotti[9],
-                                                                              "scontoEx1": inputOfProdotti[10],
-                                                                              "scontoEx2": inputOfProdotti[11], "scontoImballo": inputOfProdotti[12], "rincaroTrasporto2": inputOfProdotti[13],
-                                                                              "rincaroCliente": inputOfProdotti[14] });
-
+                        else if( usListino == 0 )
+                        {
+                            $row.removeClass('azienda');
 
                         }
 
-                  }
+                    }else if ( $row.hasClass('fornitore') ){
+
+                        var listinoFornitura = parseFloat($row.children('td.prezzoListinoFornitura').children('input').val());
+
+                        if( listinoFornitura > 0 )
+                        {
+
+                            calcolaCampiAutomatici($row);
+
+                        }
+                        else if( listinoFornitura == 0 )
+                        {
+                            $row.removeClass('fornitore');
+                        }
+
+                    }
+
+                }
+
+                var $setTdObj=$row.children('td');
+
+
+                $setTdObj.each(function(){
+                    if( $(this).hasClass('nome_modello') )
+                    {
+                        modello=$(this).children('label').text();
+                    }
+                    else if($(this).hasClass('nome_prodotto')){
+                        prodotto=$(this).children('label').text();
+                    }
+                    else if($(this).hasClass('tipologia')){
+                        tipologia=$(this).children('label').text();
+                    }
+                    else if($(this).hasClass('marchio')){
+                        marchio=$(this).children('label').text();
+                    }
+
+
+                });
+
+                if(attributoToEdit == 'fornitore'){
+                    $('#tabellaContainer2 .datiScheda').each(function(){
+
+                        var prodotto_riga = $(this).children('td.nome_prodotto').children('label').text();
+                        var modello_riga = $(this).children('td.nome_modello').children('label').text();
+                        var tipologia_riga = $(this).children('td.tipologia').children('label').text();
+                        var marchio_riga = $(this).children('td.marchio').children('label').text();
+
+
+                        if( modello == modello_riga && prodotto == prodotto_riga ){
+                            if( tipologia == tipologia_riga && marchio == marchio_riga ){
+                                var $spanFornitore=$(this).children('td.prezzoListinoFornitura').children('span.fornitore');
+
+                                $spanFornitore.removeClass($spanFornitore.attr('class'));
+                                $spanFornitore.attr('class', 'fornitore '+ valore );
+
+                                calcolaCampiAutomatici($(this));
+                            }
+
+                        }
+                    });
+                }
+
+                if( $tableContainer.attr('id') == 'tabellaContainer1' ){
+
+                    socketProdotto.emit('modifica_prodotto_dati', {
+                        'dip': '{{dipendente.username}}',
+                        'prodotto': prodotto,
+                        'modello': modello,
+                        'tipologia': tipologia,
+                        'marchio': marchio,
+                        'toEdit': attributoToEdit,
+                        'value': valore
+                    });
+
+                }
+                else if( $tableContainer.attr('id') == 'tabellaContainer2' ){
+
+
+                    var listinoProdotto = $row.children('td.prezzoListinoFornitura').children('input').val();
+                    var usProdotto = $row.children('td.nettoUsFornitura').children('input').val();
+                    var posa = $row.children('td.posa').children('input.posa').val();
+                    var posaPerc = $row.children('td.posa').children('span.rincaroPercentuale').children('input.posaPerc').val();
+                    var rincaroCliente = $row.children('td.rincaroCliente').children('input').val();
+                    var rincaroAzienda = 0;
+                    var trasportoAzienda = 0;
+                    var trasportoAziendaUnita = 'euro';
+                    var imballoAzienda = 0;
+                    var imballoAziendaUnita = 'euro';
+
+                    if( $row.hasClass('azienda') ){
+
+                        var spanAzienda = $row.children('td.nettoUsFornitura').children('span').attr('class').split(' ');
+                        rincaroAzienda = spanAzienda[1];
+                        trasportoAzienda = spanAzienda[2];
+                        trasportoAziendaUnita = spanAzienda[3];
+                        imballoAzienda = spanAzienda[4];
+                        imballoAziendaUnita = spanAzienda[5];
+
+                    }
+
+
+                    socketProdotto.emit('modifica_prodotto_calcoli', {
+                        'dip': '{{dipendente.username}}',
+                        'prodotto': prodotto,
+                        'modello': modello,
+                        'tipologia': tipologia,
+                        'marchio': marchio,
+                        'listinoProdotto': listinoProdotto,
+                        'usProdotto': usProdotto,
+                        'posa': posa,
+                        'posaPerc': posaPerc,
+                        'rincaroCliente': rincaroCliente,
+                        'rincaroAzienda': rincaroAzienda,
+                        'trasportoAzienda': trasportoAzienda,
+                        'trasportoAziendaUnita': trasportoAziendaUnita,
+                        'imballoAzienda': imballoAzienda,
+                        'imballoAziendaUnita': imballoAziendaUnita
 
 
 
-          })
-       });
+                    });
 
 
-       $('.delProdotto').click(function(){
 
-            var tipoProdotto = $('#selectTipologia').val();
-            var prodotto = $(this).closest('.rowBodyTab').children('.nome_prodotto').text();
+                }
+
+
+            }
+
+
+            $('#tabellaContainer1 input').unbind('change').change(function(){
+                changeValueProdotto($(this));
+            });
+
+            $('#tabellaContainer1 select').unbind('change').change(function(){
+                changeValueProdotto($(this));
+
+            });
+
+            $('#tabellaContainer2 input').unbind('change').change(function(){
+                changeValueProdotto($(this));
+            });
+
+            $("input.check_cap").change(function(){
+
+                var $row=$(this).parent().parent().parent();
+
+                var nome_prodotto = $row.children('td.nome_prodotto').children('label').text();
+                var modello = $row.children('td.nome_modello').children('label').text();
+                var tipologia = $row.children('td.tipologia').children('label').text();
+                var marchio = $row.children('td.marchio').children('input').val();
+
+                socketProdotto.emit('modifica_capitolato', {
+                    'nome_prodotto': nome_prodotto,
+                    'modello': modello,
+                    'tipologia': tipologia,
+                    'marchio': marchio
+                });
+
+            });
+
+            $('.delProdotto').unbind('click').click(function(){
+
+                var $thisRow=$(this).parent().parent().parent();
+                var prodotto=$thisRow.children('td.nome_prodotto').children('label').text();
+                var modello=$thisRow.children('td.nome_modello').children('label').text();
+                var tipologia=$thisRow.children('td.tipologia').children('label').text();
+                var marchio;
+
+                $thisRow.children('td.marchio').each(function(){
+                    if(!$(this).hasClass('hiddenInput')){
+                        marchio=$(this).children('label').text();
+                    }
+                });
+
+                socketProdotto.emit('elimina_prodotto', {
+                    'prodotto': prodotto,
+                    'modello': modello,
+                    'tipologia': tipologia,
+                    'marchio': marchio
+                });
+
+
+                $thisRow.remove();
+
+                var removeRow=function($this){
+                    if( $this.children('td.nome_prodotto').children('label').text() == prodotto ){
+                        if( $this.children('td.nome_modello').children('label').text() == modello ){
+                            if( $this.children('td.tipologia').children('label').text() == tipologia ){
+                                if( $this.children('td.marchio').children('label').text() == marchio ){
+                                    $this.remove();
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+
+                $('#tabellaContainer2 tr').each(function(){
+                   removeRow($(this));
+                });
+
+
+                /*se una sezione rimane senza fornitori elimino il settoreMerceologico */
+                var eliminaSettore= function($this){
+                   var counter = 0;
+
+                   $this.children('tr').each(function(){
+                        counter++;
+
+                   });
+
+
+                   if( counter == 1 ){
+
+                    $this.remove();
+                   }
+
+                }
+
+                $('#tabellaContainer1 tbody').each(function(){
+                   eliminaSettore($(this));
+                });
+
+
+                $('#tabellaContainer2 tbody').each(function(){
+                   eliminaSettore($(this));
+                });
+
+
+
+            });
+
+            $('.segnalaProdotto').unbind('click').click(function(){
+                var $thisRow=$(this).parent().parent().parent();
+                var prodotto=$thisRow.children('td.nome_prodotto').children('label').text();
+                var modello=$thisRow.children('td.nome_modello').children('label').text();
+                var tipologia=$thisRow.children('td.tipologia').children('label').text();
+                var marchio=$thisRow.children('td.marchio').children('input').val();
+
+                var valore=false;
+
+
+                if( $thisRow.hasClass('daVerificare') ){
+                    $thisRow.removeClass('daVerificare');
+                     $thisRow.css('background', 'white');
+                }
+                else{
+                    $thisRow.addClass('daVerificare');
+                    $thisRow.css('background', 'yellow');
+                    valore=true;
+                }
+
+                socketProdotto.emit('settaProdottoDaVerificare', {
+                    'prodotto': prodotto,
+                    'modello': modello,
+                    'tipologia': tipologia,
+                    'marchio': marchio,
+                    'valore': valore
+                });
+            });
+
+
+            equalizzaAltezzaRighe();
+
+            $('input').unbind('mouseover').mouseover(function(){
+                $(this).focus();
+            });
+
+            counter_riga++;
+
+        } /*********************** FINE AGGIUNGI RIGA ******************************/
+
+
+        socketProdotto.on('confermaRegistrazioneProdotto', function(){
+
             swal({
-                title: 'Eliminazione prodotto '+ prodotto,
-                text: 'sicuro di voler procedere?',
-                showCancelButton: true,
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Ok',
-                cancelButtonText: 'annulla',
-                closeOnConfirm: true,
+                    title: "Prodotto registrato correttamente",
+                    showCancelButton: false,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
 
-            }, function (isConfirm) {
-
-                  if (isConfirm) {
-
-                         socketProdotto.emit('elimina_prodotto', {'dip': '{{dipendente.username}}', 'prodotto': prodotto,
-                                                   'tipologia': tipoProdotto });
-
-                  }
-
-            })
-
-       });
-
-       $('.modProdotto').click(function(){
-
-           //se qualche altro prodotto e' gia' stato selezionato per la modifica deselezionalo
-           if( modificaAttiva ){
-                $('.inModifica').removeClass('inModifica');
-
-
-           }
-            else {
-
-                modificaAttiva=true;
-                $('#trForm').show();
-                $('#showForm').removeClass('fa');
-                $('#showForm').removeClass('fa-plus');
-                /*$('#bodyPrezzario').css('height', '81%');*/
-           }
-
-
-           $(this).closest('tr').addClass("inModifica");
-
-           var datiProdotto=[];
-
-           $(".inModifica td").each(function(index){
-
-               if( $(this).text() == " - " )
-                datiProdotto.push(0);
-               else
-                datiProdotto.push($(this).text());
-
-           });
-
-            console.log(datiProdotto);
-
-            oldNome = datiProdotto[1];
-
-
-            $("#nomeProdottoInput").val( datiProdotto[1]);
-            $("#marchioInput").val(datiProdotto[2]);
-            $("#codiceInput").val(datiProdotto[3]);
-            $("#fornitoreSelect").val(datiProdotto[4]);
-            $("#listinoInput").val(datiProdotto[5]);
-            $("#listinoNettoInput").val(datiProdotto[6]);
-            $("#scontoPercentualeInput").val(datiProdotto[7]);
-            $("#nettoUsInput").val(datiProdotto[8]);
-            $("#trasportoInput").val(datiProdotto[9]);
-            $("#montaggioInput").val(datiProdotto[10]);
-            $("#scontoInput").val(datiProdotto[11]);
-            $("#ex1Input").val(datiProdotto[12]);
-            $("#ex2Input").val(datiProdotto[13]);
-            $("#imballoInput").val(datiProdotto[14]);
-            $("#trasportoExtraInput").val(datiProdotto[15]);
-            $("#rincaroInput").val(datiProdotto[16]);
+            });
 
 
 
+            aggiungiRiga(false);
 
-            $(this).closest('tr').removeClass("inModifica");
-
-       });
-
-
-       $('.segnalaProdotto').click(function(){
-
-            var tipo = $('#selectTipologia').val();
-            var prodotto = $(this).closest('.rowBodyTab').children('.nome_prodotto').text();
-
-
-            if(!$(this).closest('tr').hasClass('daVerificare') ){
-
-
-                socketProdotto.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
-                                                           'prodotto': prodotto, 'valore': true});
-            }
-            else {
-                socketProdotto.emit('settaProdottoDaVerificare', {'dip': '{{dipendente.username}}', 'tipo': tipo,
-                                                       'prodotto': prodotto, 'valore': false});
-
+            if( $('#setCapitolato').is(':checked') )
+            {
+                $('#setCapitolato').trigger('click');
             }
 
-       });
+
+            $('#tabellaContainerNewRow1 input').val('');
+            $('#tabellaContainerNewRow2 .datiScheda').removeClass('azienda');
+            $('#tabellaContainerNewRow2 .datiScheda').removeClass('fornitore');
+            setFieldToComplete($('#tabellaContainerNewRow2 .datiScheda'), 0);
+
+            $('#tabellaContainerNewRow3 input').val(0);
+
+            var altezzaHeaderNewRow = $('#tabellaContainerNewRow2 tbody').height()
+            var incremento = altezzaHeaderNewRow*6/100;
+            $('#tabellaContainerNewRow3').animate({'top': '-'+incremento+'px'});
+            divAziendaAssente=true;
+
+        });
+
+        $(function(){
+
+            /* Aggiungo alla tabella le righe registrate nel db */
+
+            {% for prodotto in prodotti %}
+
+
+                var $tbodyNewRow1=$('#tabellaContainerNewRow1').children('table').children('tbody');
+                var $tbodyNewRow2=$('#tabellaContainerNewRow2').children('table').children('tbody');
+                var $tbodyNewRow3=$('#tabellaContainerNewRow3').children('table').children('tbody');
+
+                var $sezioneTabella1=$tbodyNewRow1.children('.sezioneTabella');
+
+                var $datiScheda1=$tbodyNewRow1.children('.datiScheda');
+                var $datiScheda2=$tbodyNewRow2.children('.datiScheda');
+                var $datiScheda3=$tbodyNewRow3.children('.datiScheda');
+
+
+                $sezioneTabella1.children('th.primaCol').next('th').children('input').val('{{prodotto.tipologia}}');
+
+                $datiScheda1.children('td.nome_prodotto').children('input').val('{{prodotto.prodotto}}');
+                $datiScheda1.children('td.nome_modello').children('input').val('{{prodotto.nome}}');
+                $datiScheda1.children('td.marchio').children('input').val('{{prodotto.marchio}}');
+                $datiScheda1.children('td.codice').children('input').val('{{prodotto.codice}}');
+
+                $datiScheda1.children('td.fornitore').children('select').children('option[value="{{prodotto.fornitore_primo_gruppo}} - {{prodotto.fornitore_sotto_gruppo}}"]').attr('selected', 'selected');
+
+                $('#tabellaContainerNewRow2 .posaPerc').val('{{prodotto.posaPerc}}')
+                $datiScheda2.children('td.posa').children('input').val('{{prodotto.posa}}');
+                $datiScheda2.children('td.rincaroCliente').children('input').val('{{prodotto.rincaroCliente}}');
+
+                $datiScheda3.children('td.rincaroAzienda').children('input').val('{{prodotto.rincaroAzienda}}');
+
+                var capitolatoSet=false;
+                {% for capitolato in capitolati %}
+                    {% if capitolato.nome == prodotto.prodotto %}
+                        {% if capitolato.modello == prodotto.nome %}
+                            {% if capitolato.marchio == prodotto.marchio %}
+                                {% if capitolato.tipologia == prodotto.tipologia %}
+                                    $('#setCapitolato').trigger('click');
+                                    capitolatoSet=true;
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+                {% endfor %}
+
+                if( '{{prodotto.trasportoAziendaUnitaMisura}}' == 'euro' )
+                    $('#inputEuroPercTrasportoNewRow1').trigger('click');
+                else
+                    $('#inputEuroPercTrasportoNewRow2').trigger('click');
+
+
+                $datiScheda3.children('td.trasportoAzienda').children('input.numInput').val('{{prodotto.trasportoAzienda}}');
+
+                if( '{{prodotto.imballoAziendaUnitaMisura}}' == 'euro' )
+                    $('#inputEuroPercImballoNewRow1').trigger('click');
+                else
+                    $('#inputEuroPercImballoNewRow2').trigger('click');
+
+                $datiScheda3.children('td.imballoAzienda').children('input.numInput').val('{{prodotto.imballoAzienda}}');
+
+
+
+                if( '{{prodotto.versoDiLettura}}' == 'True' ){
+                    $datiScheda2.addClass('fornitore');
+                    $datiScheda2.children('td.prezzoListinoFornitura').children('input').val('{{prodotto.prezzoListinoFornitura}}');
+
+                }
+                else{
+                    $datiScheda2.addClass('azienda');
+                    $datiScheda2.children('td.nettoUsFornitura').children('input').val('{{prodotto.nettoUsFornitura}}');
+                }
+
+                calcolaCampiAutomatici($datiScheda2);
+
+                {% if prodotto.daVerificare %}
+                    aggiungiRiga(true);
+                {% else %}
+                    aggiungiRiga(false);
+                {% endif %}
+
+                if( capitolatoSet )
+                    $('#setCapitolato').trigger('click');
+
+
+
+                if( '{{prodotto.daVerificare}}' == 'True' ){
+                    $table1= $('#tabellaContainer1').children('table');
+                    $table2= $('#tabellaContainer2').children('table');
+
+                    $table1.children('tbody').each(function(){
+                        $(this).children('tr').each(function(){
+                            if( $(this).children('td.nome_prodotto').children('label').text() == '{{prodotto.prodotto}}' )
+                            {
+                                if( $(this).children('td.nome_modello').children('label').text() == '{{prodotto.nome}}' )
+                                {
+                                    if( $(this).children('td.tipologia').children('label').text() == '{{prodotto.tipologia}}' )
+                                    {
+                                        if( $(this).children('td.marchio').children('label').text() == '{{prodotto.marchio}}' )
+                                        {
+
+                                            $(this).children('td.prima_col').children('a.segnalaProdotto').addClass('daVerificare')
+
+                                            $(this).css('background-color', 'yellow');
+
+
+                                        }
+
+                                    }
+
+
+                                }
+
+                            }
+                        });
+                    });
+                }
+
+                if( '{{prodotto.versoDiLettura}}' == 'True' )
+                    $datiScheda2.removeClass('fornitore');
+                else
+                    $datiScheda2.removeClass('azienda');
+
+                $('#inputEuroPercTrasportoNewRow1').trigger('click');
+                $('#inputEuroPercImballoNewRow1').trigger('click');
+                $('#tabellaContainerNewRow3 input.numInput').val(0);
+                setFieldToComplete($datiScheda2, 0);
+
+                $('#tabellaContainerNewRow1 input').val('');
+
+
+            {% endfor %}
+
+        });
+
+        /*var equalizzaAltezzaHeaderTabella = function(){
+
+            var tallerRow=0;
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainer1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainer2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            tallerRow = 0;
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                if($(this).height() > tallerRow){
+                    tallerRow = $(this).height();
+                }
+            });
+
+            $('#tabellaContainerNewRow1 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+
+            });
+
+            $('#tabellaContainerNewRow2 .headerTabella').each(function(){
+                $(this).height(tallerRow);
+            });
+
+            equalizzaAltezzaRighe();
+
+        }*/
+
+        //window.addEventListener('resize', equalizzaAltezzaHeaderTabella);
+
+      //  equalizzaAltezzaHeaderTabella();
+
+        var filtraTbody = function($tabella, classe){
+
+            if( classe != '' ){
+                $tabella.children('table').children('tbody').each(function(){
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+
+                        if( !tbodyClass.startsWith(classe) ){
+                            $(this).hide();
+                        }
+                        else if( tbodyClass.startsWith(classe) ){
+                            $(this).show();
+                        }
+
+                    }
+                });
+            }
+            else{
+                $tabella.children('table').children('tbody').each(function(){
+                    $(this).show();
+                });
+
+            }
+        }
+
+        var filtraRighe = function($tabella, nome_prodotto){
+
+            if( nome_prodotto != '' ){
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    var tbodyClass = $(this).attr('class');
+
+                    if( tbodyClass !== undefined ){
+                        var hideTbody = false;
+                        var countRow = 0;
+                        var countHiddenRow = 0;
+
+
+                        $(this).children('tr.datiScheda').each( function(){
+                            var trProdotto = $(this).children('td.nome_prodotto').children('label').text();
+
+                            countRow++;
+
+                            if( trProdotto.startsWith(nome_prodotto) ){
+                                $(this).show();
+                            }
+                            else{
+                                countHiddenRow++;
+                                $(this).hide();
+                            }
+
+                        });
+
+                        if( countRow == countHiddenRow ){
+                            $(this).hide();
+
+                        }
+                    }
+                });
+
+            }
+            else{
+
+                $tabella.children('table').children('tbody').each(function(){
+
+                    $(this).show();
+
+                    $(this).children('tr.datiScheda').each( function(){
+                        $(this).show();
+                    });
+
+
+                });
+
+
+            }
+
+        }
+
+
+
+        $('#filtraTipologie').change(function(){
+
+            filtraTbody( $('#tabellaContainer1'), $(this).val());
+            filtraTbody( $('#tabellaContainer2'), $(this).val());
+        });
+
+        $('#filtraTipologie').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
+
+        $('#filtraProdotti').change(function(){
+
+            filtraRighe( $('#tabellaContainer1'), $(this).val());
+            filtraRighe( $('#tabellaContainer2'), $(this).val());
+        });
+
+        $('#filtraProdotti').keydown(function(){
+
+
+            $(this).trigger('change');
+
+        });
 
     </script>
-
-
 
 {% endblock %}

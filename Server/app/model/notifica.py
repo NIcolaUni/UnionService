@@ -1,5 +1,6 @@
 from .db.notificaDBmodel import NotificaDBmodel
 from sqlalchemy import  func, desc
+from operator import  attrgetter
 
 
 class Notifica(NotificaDBmodel):
@@ -31,14 +32,20 @@ class Notifica(NotificaDBmodel):
 
         notifiche = NotificaDBmodel.query.filter_by(destinatario=destinatario).order_by(desc(NotificaDBmodel.numero)).first()
 
+        numToRet = 0;
+
         if notifiche is None:
             daNotificare = Notifica(destinatario=destinatario, titolo=titolo, contenuto=contenuto, tipologia=tipologia,
                                     numero=1, richiedente_ferie=richiedente_ferie, start_date=start_date)
+            numToRet = 1;
         else:
             daNotificare = Notifica(destinatario=destinatario, titolo=titolo, contenuto=contenuto, tipologia=tipologia,
                                     numero=notifiche.numero+1, richiedente_ferie=richiedente_ferie, start_date=start_date)
 
+            numToRet=notifiche.numero+1
+
         NotificaDBmodel.addRow(daNotificare)
+        return  numToRet
 
     def eliminaNotifica(destinatario, numero):
         toDel=NotificaDBmodel.query.filter_by(destinatario=destinatario, numero=numero).first()
@@ -48,6 +55,14 @@ class Notifica(NotificaDBmodel):
 
         toDel = NotificaDBmodel.query.filter_by(richiedente_ferie=richiedente_ferie, start_date=start_date).all()
         NotificaDBmodel.delRow(toDel)
+
+    def getNotificheOrdinate(destinatario):
+        allNOtifiche = NotificaDBmodel.query.filter_by(destinatario=destinatario).all()
+
+        return sorted( allNOtifiche,  key=attrgetter('numero'), reverse=True )
+
+
+
 
 
 

@@ -35,15 +35,15 @@
     $('#newPreventivoFiniture').click(function(){
 
         swal.withFormAsync({
-            title: 'Creare una nuova commessa o selezionare una già esistente:',
+            title: 'Selezionare una commessa:',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Ok',
             cancelButtonText: 'annulla',
-            closeOnConfirm: false,
+            closeOnConfirm: true,
             formFields: [
 
-                { id: 'intervento', label: 'Tipologia', name: 'commessa',  placeholder: 'intervento commessa' },
+
                 { id: 'select', type: 'select',
                     options: [
                     {% for prev in preventiviEdili_distinti %}
@@ -57,49 +57,12 @@
         }).then(function (context) {
             if(context._isConfirm){
 
-                    if(context.swalForm['commessa'] == '' ){
                         socketFiniture.emit('registra_nuovo_preventivo_vecchia_commessa',
                                     { 'dip': '{{dipendente.username}}',
                                       'numero_preventivo': context.swalForm['select'].split('-')[1]
                                     }
                           );
-                    }
-                    else{
-                        var intervento = context.swalForm['commessa'];
-                        swal.withFormAsync({
-                            title: 'Inserire luogo intervento:',
-                            showCancelButton: true,
-                            confirmButtonColor: '#DD6B55',
-                            confirmButtonText: 'Ok',
-                            cancelButtonText: 'annulla',
-                            closeOnConfirm: true,
-                            formFields: [
 
-                                { id: 'indirizzo', label: 'Indirizzo:', name: 'indirizzo',  placeholder: 'indirizzo commessa' },
-                                { id: 'comune', label: 'Comune:', name: 'comune',  placeholder: 'comune commessa' },
-
-
-                            ]
-                        }).then(function (context) {
-                            if(context._isConfirm){
-                                socketFiniture.emit('registra_nuovo_preventivo_nuova_commessa',
-                                    { 'dip': '{{dipendente.username}}',
-                                      'nome_cliente' : '{{cliente.nome}}',
-                                      'cognome_cliente' : '{{cliente.cognome}}',
-                                      'indirizzo_cliente' : '{{cliente.indirizzo}}',
-                                      'intervento': intervento,
-                                      'indirizzo': context.swalForm['indirizzo'],
-                                      'comune': context.swalForm['comune'],
-
-                                    }
-                                );
-
-                            }
-
-                        });
-
-
-                    }
 
             }
         });

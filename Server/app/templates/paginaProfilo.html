@@ -224,8 +224,8 @@
                                      <div class="col-md-6">
                                          <span class="dato"><h3>Codice fiscale:<a class="fa fa-edit editProfilo cf"></a></h3><span id="cf">{{dipendente.cf}}</span></span><br/>
                                          <span class="dato"><h3>Data di nascita:<a class="fa fa-edit editProfilo nascita"></a></h3><span id="nascita">{{dipendente.dataNascita}}</span></span><br/>
-                                         <span class="dato"><h3>Indirizzo residenza:<a class="fa fa-edit editProfilo residenza"></a></h3><span id="residenza">{{dipendente.residenza}}</span></span><br/>
-                                         <span class="dato"><h3>Indirizzo domicilio:<a class="fa fa-edit editProfilo domicilio"></a></h3><span id="domicilio">{{dipendente.domicilio}}</span></span><br/>
+                                         <span class="dato"><h3>Indirizzo residenza:<a class="fa fa-edit editProfilo residenza"></a></h3><span id="residenza">{{dipendente.residenzaVia}} n.{{dipendente.residenzaNum}}, {{dipendente.residenzaCitta}}, {{dipendente.residenzaRegione}}</span></span><br/>
+                                         <span class="dato"><h3>Indirizzo domicilio:<a class="fa fa-edit editProfilo domicilio"></a></h3><span id="domicilio">{{dipendente.domicilioVia}} n.{{dipendente.domicilioNum}}, {{dipendente.domicilioCitta}}, {{dipendente.domicilioRegione}}</span></span><br/>
                                          <span class="dato"><h3>Telefono:<a class="fa fa-edit editProfilo telefono"></a></h3><span id="telefono">{{dipendente.telefono}}</span></span><br/>
                                      </div>
                                      <div class="col-md-6">
@@ -582,7 +582,7 @@
                questo risponderà al client con un segnale "aggiornaPagina". Le due variabili che seguono vengono usate
                per aggiornare i campi specifici e non l'intera pagina */
 
-            var nomeObjToChange = ".";
+            var nomeObjToChange = "#";
             var newValObjToChange ="";
 
 
@@ -708,23 +708,32 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.residenza}}' },
+                                { id: 'via', label: 'VIA', name: 'testo', type: 'text', value: '{{dipendente.residenzaVia}}' },
+                                { id: 'num', label: 'NUMERO', name: 'testo', type: 'number', value: '{{dipendente.residenzaNum}}' },
+                                { id: 'citta', label: 'CITTÀ', name: 'testo', type: 'text', value: '{{dipendente.residenzaCitta}}' },
+                                { id: 'regione', label: 'REGIONE', name: 'testo', type: 'text', value: '{{dipendente.residenzaRegione}}' },
 
 
                             ]
                         }).then(function (context) {
                             if(context._isConfirm){
                                  campo="residenza";
-                                 valore=context.swalForm['testo'];
+                                 via=context.swalForm['via'];
+                                 num=context.swalForm['num'];
+                                 citta=context.swalForm['citta'];
+                                 regione=context.swalForm['regione'];
 
-                                 socketProfilo.emit('modifica_profilo', {
+                                 socketProfilo.emit('modifica_indirizzo_profilo', {
                                     'dip' : '{{dipendente.username}}',
                                     'campo': campo,
-                                    'valore': valore
+                                    'via': via,
+                                    'num': num,
+                                    'citta': citta,
+                                    'regione': regione
                                  });
 
                                  nomeObjToChange+=campo;
-                                 newValObjToChange=valore;
+                                 newValObjToChange=via+' num.'+num+', '+citta+', '+regione;;
 
                             }
 
@@ -743,23 +752,32 @@
                             closeOnConfirm: true,
                             formFields: [
 
-                                { id: 'testo', label: label, name: 'testo', type: 'text', value: '{{dipendente.domicilio}}' },
+                                { id: 'via', label: 'VIA', name: 'testo', type: 'text', value: '{{dipendente.domicilioVia}}' },
+                                { id: 'num', label: 'NUMERO', name: 'testo', type: 'number', value: '{{dipendente.domicilioNum}}' },
+                                { id: 'citta', label: 'CITTÀ', name: 'testo', type: 'text', value: '{{dipendente.domicilioCitta}}' },
+                                { id: 'regione', label: 'REGIONE', name: 'testo', type: 'text', value: '{{dipendente.domicilioRegione}}' },
 
 
                             ]
                         }).then(function (context) {
                             if(context._isConfirm){
                                  campo="domicilio";
-                                 valore=context.swalForm['testo'];
+                                 via=context.swalForm['via'];
+                                 num=context.swalForm['num'];
+                                 citta=context.swalForm['citta'];
+                                 regione=context.swalForm['regione'];
 
-                                 socketProfilo.emit('modifica_profilo', {
+                                 socketProfilo.emit('modifica_indirizzo_profilo', {
                                     'dip' : '{{dipendente.username}}',
                                     'campo': campo,
-                                    'valore': valore
+                                    'via': via,
+                                    'num': num,
+                                    'citta': citta,
+                                    'regione': regione
                                  });
 
                                  nomeObjToChange+=campo;
-                                 newValObjToChange=valore;
+                                 newValObjToChange=via+' num.'+num+', '+citta+', '+regione;
 
                             }
 
@@ -961,7 +979,6 @@
                     modificaFerieAttiva=false;
                 }
                 else{
-
                     $(nomeObjToChange).text(newValObjToChange);
                     nomeObjToChange='#';
                     newValObjToChange='';

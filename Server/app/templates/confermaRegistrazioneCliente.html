@@ -1,19 +1,20 @@
-    <script>
+{% extends "paginaBase_noChat.html" %}
 
-        swal({
-          title: "",
-          text: "Registrazione cliente avvenuta con successo",
-          type: 'info',
-          confirmButtonText: "ok",
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
+{% block content %}
 
-        }, function(isConfirm) {
+    <script  type="text/javascript" charset="utf-8">
 
-             window.location = "{{url_for('homepage')}}";
-        });
 
+            swal({
+              title: "",
+              text: "Registrazione cliente avvenuta con successo",
+              type: 'info',
+              confirmButtonText: "ok",
+            }).then((result) => {
+                window.location = "{{url_for('homepage')}}";
+            });
 
 
     </script>
+
+{% endblock %}

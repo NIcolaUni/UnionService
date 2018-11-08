@@ -202,7 +202,8 @@
 
         var counter=0;
 
-        {% for elemento in prezzarioEdile %}
+        {% for elemento in lavorazioni %}
+
           if( "{{elemento.settore}}" == $('#selectSettore').val() ){
             $('#listaElementFattura').append(
 
@@ -231,6 +232,14 @@
             if( unita == "cad" ){
 
                 return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
+            }
+            if( unita == "a_corpo" ){
+
+                return  '<td class="tdPreventivo numColSmall aCorpoTd basePrezzo-'+prezzoBase+' inputPrev"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
@@ -296,11 +305,14 @@
                 var total = 0;
                 var quantita =0;
 
-
+              //  alert('.'+settore+'_trSottolavorazione-'+numOfEl)
                 $('.'+settore+'_trSottolavorazione-'+numOfEl).each(function(){
+                 //   alert('eppur entro')
                     total+=parseFloat($(this).children('.totalSottolavorazione').text().split(' ')[1]);
                     quantita+=parseFloat($(this).children('.totDimensioni').text());
                 });
+
+              //  alert( total )
 
                 $('.trFoot'+numOfEl).children('.footTot').html("&euro; "+ Math.round(total*100)/100 );
                 $('.trFoot'+numOfEl).children('.quantita').html(Math.round(quantita*100)/100);
@@ -324,12 +336,15 @@
                     var totalePrezzo=prezzoBase;
                     var quantita=1;
 
+
                     $(this).children('td.inputField').each(function(){
                        quantita=quantita*parseFloat($(this).children('input').val());
 
                     });
 
+                   // alert( 'mmm '+ totalePrezzo + ' ' + quantita )
                     totalePrezzo=parseFloat(totalePrezzo)*quantita;
+
 
                     $(this).children('td.totDimensioni').text( Math.round(quantita*100)/100 );
                     $(this).children('td.totalSottolavorazione').html( "&euro; " + Math.round(totalePrezzo*100)/100 );
@@ -450,7 +465,7 @@
                 });
 
                 var unitaMisura = $('.trFoot'+counter).attr('class').split(' ')[2].split('-')[1];
-
+                unitaMisura = unitaMisura.split('_')[0]+' '+unitaMisura.split('_')[1];
 
                 socketPreventivo.emit("modifica_ordine_lavorazione",
                                 {
@@ -479,8 +494,8 @@
                  if( $this.hasClass('aggiunto') ){
                     console.log( "Devo prendere: " + $this.attr('class').split(" ")[1] + " riga num: " + $this.attr('class').split(" ")[3].split("-")[1] );
                  }else{
-                     {% for prezzario in prezzarioEdile %}
-                        if( "{{prezzario.tipologia_lavorazione}}" ==  $this.text() ){
+                     {% for lavorazione in lavorazioni %}
+                        if( "{{lavorazione.tipologia_lavorazione}}" ==  $this.text() ){
 
                             //Segno nel bottono cliccato che e' una lavorazione aggiunto
                             $this.addClass("aggiunto");
@@ -488,7 +503,7 @@
 
 
                             /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineLavorazioni al bottone*/
-                            $("#memoriaLavorazioniAggiunte-{{prezzario.settore}}").append(
+                            $("#memoriaLavorazioniAggiunte-{{lavorazione.settore}}").append(
                                 '<div class="'+$this.attr('id')+'">'+
                                     '<span class="classeToAdd">aggiunto-'+ordineLavorazioni+'</span>'+
                                 '</div>'
@@ -496,34 +511,44 @@
                             );
 
 
-                            var sezioneSettore =  $('#bodyPreventivo').children('.{{prezzario.settore}}');
+                            var sezioneSettore =  $('#bodyPreventivo').children('.{{lavorazione.settore}}');
+
+                            var costoLavorazione = parseFloat('{{lavorazione.prezzoMax}}');
+                            var ricaricoAzienda = parseInt('{{prezzarioEdile.ricaricoAzienda}}');
+                            var costoLavorazione = costoLavorazione+(costoLavorazione*ricaricoAzienda/100);
+
+
+                            var unitaMisura = '{{lavorazione.unitaMisura}}';
+
+                            if( unitaMisura == 'a corpo' )
+                                unitaMisura = 'a_corpo';
 
                             //Preparo la riga della lavorazione
-                            var rowsToAdd='<tr id="{{prezzario.settore}}_trBody-'+ordineLavorazioni+'" class="trBody {{prezzario.settore}}_lastAdded">'+
+                            var rowsToAdd='<tr id="{{lavorazione.settore}}_trBody-'+ordineLavorazioni+'" class="trBody {{lavorazione.settore}}_lastAdded">'+
                                             '<td class="firstCol'+ordineLavorazioni+' firstCol"></td>'+
-                                            '<td class="tdPreventivo tdLavorazione"><textarea>{{prezzario.tipologia_lavorazione}}</textarea></td>'+
+                                            '<td class="tdPreventivo tdLavorazione"><textarea>{{lavorazione.tipologia_lavorazione}}</textarea></td>'+
                                             '<td class="tdPreventivo numColSmall"></td>'+
                                             '<td class="tdPreventivo numColSmall"></td>'+
                                             '<td class="tdPreventivo numColSmall"></td>'+
                                             '<td class="tdPreventivo numColSmall"></td>'+
                                             '<td class="tdPreventivo numColSmall"></td>'+
                                             '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo prezzoBase colSmall">&euro; {{prezzario.prezzoMax}}</td>'+
+                                            '<td class="tdPreventivo prezzoBase colSmall">&euro; '+costoLavorazione+'</td>'+
                                             '<td></td>'+
                                         '</tr>'+
-                                        '<tr class="{{prezzario.settore}}_trSottolavorazione-'+ordineLavorazioni+' sottolavNum-0">'+
+                                        '<tr class="{{lavorazione.settore}}_trSottolavorazione-'+ordineLavorazioni+' sottolavNum-0">'+
                                                 '<td colspan="2"><a class="delSottolavorazione fa fa-trash"></a></td>'+
-                                                righeDimensioniSottolavorazione( '{{prezzario.unitaMisura}}',
-                                                                                  '{{prezzario.prezzoMax}}',
+                                                righeDimensioniSottolavorazione( unitaMisura,
+                                                                                  costoLavorazione,
                                                                                    ordineLavorazioni)+
-                                                '<td class="tdPreventivo numColSmall">{{prezzario.unitaMisura}}</td>'+
+                                                '<td class="tdPreventivo numColSmall">{{lavorazione.unitaMisura}}</td>'+
                                                 '<td class="tdPreventivo colSmall"></td>'+
                                                 '<td class="totalSottolavorazione"></td>'+
                                         '</tr>'+
-                                        '<tr class="trFoot {{prezzario.settore}}_trFoot unitaMisura-{{prezzario.unitaMisura}} trFoot'+parseInt(ordineLavorazioni)+'">'+
+                                        '<tr class="trFoot {{lavorazione.settore}}_trFoot unitaMisura-'+ unitaMisura +' trFoot'+parseInt(ordineLavorazioni)+'">'+
                                                 '<td colspan="6"></td>'+
                                                 '<td class="quantita colSmall"></td>'+
-                                                '<td>{{prezzario.unitaMisura}}</td>'+
+                                                '<td>{{lavorazione.unitaMisura}}</td>'+
                                                 '<td colSmall"></td>'+
                                                 '<td class="footTot"></td>'+
                                          '</tr>';
@@ -536,11 +561,11 @@
 
                                 $('#bodyPreventivo').append(
 
-                                    '<tr class="trHead {{prezzario.settore}}">'+
-                                        '<td  colspan="9"  class="titleSettoreTd">{{prezzario.settore}}</td>'+
+                                    '<tr class="trHead {{lavorazione.settore}}">'+
+                                        '<td  colspan="9"  class="titleSettoreTd">{{lavorazione.settore}}</td>'+
                                         '<td class="titleSettoreTd totaleSettore"></td>'+
                                     '</tr>'+
-                                    '<tr class="trHead {{prezzario.settore}}_head">'+
+                                    '<tr class="trHead {{lavorazione.settore}}_head">'+
                                         '<th class="thPreventivo"></th>'+
                                         '<th class="thPreventivo"></th>'+
                                         '<th class="thPreventivo numColSmall">N</th>'+
@@ -559,27 +584,25 @@
                             }
                             else{
 
-                               // var countLav = countLavorazioniSettore("{{prezzario.settore}}");
-                              //  $(".{{prezzario.settore}}").removeClass('counterLavorazioni-'+ parseInt(countLav));
-                               // $(".{{prezzario.settore}}").addClass('counterLavorazioni-'+ parseInt(countLav+1));
 
+                                $(".{{lavorazione.settore}}_lastAdded").removeClass("{{lavorazione.settore}}_lastAdded");
 
-                                $(".{{prezzario.settore}}_lastAdded").removeClass("{{prezzario.settore}}_lastAdded");
-
-                                $('.{{prezzario.settore}}_trFoot').last().after( rowsToAdd );
+                                $('.{{lavorazione.settore}}_trFoot').last().after( rowsToAdd );
                             }
 
 
 
-                            calcolaTotaleRigaSottolavorazione('{{prezzario.settore}}_trSottolavorazione-'+ordineLavorazioni, 'sottolavNum-0', parseFloat('{{prezzario.prezzoMax}}') );
+                            calcolaTotaleRigaSottolavorazione('{{lavorazione.settore}}_trSottolavorazione-'+ordineLavorazioni, 'sottolavNum-0', costoLavorazione );
 
                             /*Ogni volta che un inputField viene modificato: ricalcola il totale della riga e aggiorna il db */
                             $('.inputPrev-'+ordineLavorazioni).on('input', function(){
                                      var classesOfRow = $(this).parent().parent().attr('class').split(' ');
-                                     calcolaTotaleRigaSottolavorazione( classesOfRow[0], 'sottolavNum-0', parseFloat('{{prezzario.prezzoMax}}') );
+                                     calcolaTotaleRigaSottolavorazione( classesOfRow[0], 'sottolavNum-0', costoLavorazione );
 
                                      ordine = classesOfRow[0].split('-')[1];
                                      var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[2].split('-')[1];
+                                     unitaMisura = unitaMisura.split('_')[0]+' '+unitaMisura.split('_')[1];
+
                                      numero =parseFloat($(this).val());
                                      variabile =$(this).attr('class').split(' ')[2];
 
@@ -603,11 +626,11 @@
                                                     {
                                                         "numero_preventivo" : "{{preventivo.numero_preventivo}}",
                                                         "data" : "{{preventivo.data}}",
-                                                        "settore" : "{{prezzario.settore}}",
-                                                        "lavorazione" : "{{prezzario.tipologia_lavorazione}}",
-                                                        "unitaMisura" : "{{prezzario.unitaMisura}}",
+                                                        "settore" : "{{lavorazione.settore}}",
+                                                        "lavorazione" : "{{lavorazione.tipologia_lavorazione}}",
+                                                        "unitaMisura" : "{{lavorazione.unitaMisura}}",
                                                         "ordine": ordineLavorazioni,
-                                                        "prezzoUnitario" : "{{prezzario.prezzoMax}}"
+                                                        "prezzoUnitario" : costoLavorazione
 
                                                     }
 
@@ -635,7 +658,7 @@
                                         var lastEl = $('#'+idElementToDel).hasClass(settore+'_lastAdded'); //variabile booleana
 
                                          //decremento il contatore delle lavorazioni del relativo settore
-                                         var countLav = countLavorazioniSettore("{{prezzario.settore}}");
+                                         var countLav = countLavorazioniSettore("{{lavorazione.settore}}");
                                          //$("."+settore).removeClass('counterLavorazioni-'+ parseInt(countLav));
                                         // $("."+settore).addClass('counterLavorazioni-'+ parseInt(countLav-1));
 
@@ -674,7 +697,7 @@
 
                                         // se non ci sono piu' lavorazioni per il relativo settore
                                         // elimina l'intestazione
-                                        countLav = countLavorazioniSettore("{{prezzario.settore}}");
+                                        countLav = countLavorazioniSettore("{{lavorazione.settore}}");
 
                                         if( countLav == 0 ){
 
@@ -695,6 +718,7 @@
                                         var numElement = $(this).attr('class').split(' ')[4].split('-')[1];
 
                                         var unitaMisura = $('.trFoot'+numElement).attr('class').split(' ')[2].split('-')[1];
+
 
                                         var prezzoUnitarioWithEuro = $('#'+settore+'_trBody-'+numElement).children('.prezzoBase').text();
                                         var prezzoUnitario = prezzoUnitarioWithEuro.split(' ')[1];
@@ -791,6 +815,7 @@
                                                     $(this).removeClass();
                                                     $(this).addClass(sottolavorazioniCommonClass);
                                                     $(this).addClass('sottolavNum-'+aux);
+                                                    unitaMisura = unitaMisura.split('_')[0]+ ' ' + unitaMisura.split('_')[1];
 
                                                     socketPreventivo.emit("modifica_ordine_sottolavorazione",
                                                         {
@@ -848,7 +873,7 @@
             $('#listaElementFattura').html("");
             var counter=0;
 
-            {% for elemento in prezzarioEdile %}
+            {% for elemento in lavorazioni %}
 
                 if( "{{elemento.settore}}" == $('#selectSettore').val() ){
 
@@ -892,10 +917,19 @@
                     var classeElemento = classes[0];
                     var ordineSottolav = classes[1];
                     var prezzoBase = 0;
+                    var tmpCount =0;
 
                     $(this).children('td.inputField').first().each(function(){
                         prezzoBase=parseFloat($(this).attr('class').split(' ')[3].split('-')[1]);
+                        tmpCount++;
                     });
+
+                    if( tmpCount == 0 )
+                        $(this).children('td.aCorpoTd').first().each(function(){
+                            prezzoBase=parseFloat($(this).attr('class').split(' ')[3].split('-')[1]);
+
+                        });
+
 
                     calcolaTotaleRigaSottolavorazione(classeElemento, ordineSottolav, prezzoBase);
                 });
@@ -937,7 +971,7 @@
                         var stopFor = false;
 
 
-                        {% for lavSelect in prezzarioEdile %}
+                        {% for lavSelect in lavorazioni %}
 
                             {% if lavSelect.tipologia_lavorazione != lavorazione[0].tipologia_lavorazione and lavSelect.settore == settore %}
                                 if( !stopFor ){
@@ -981,10 +1015,14 @@
 
 
                         {% for sottolavorazione in lavorazione[3] %}
+                            var unitaMisura = '{{lavorazione[0].unitaMisura}}';
+                            if( unitaMisura == 'a corpo' )
+                                unitaMisura = 'a_corpo';
+
 
                             rowsToAdd+='<tr class="{{settore}}_trSottolavorazione-{{lavorazione[0].ordine}} sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}">'+
                                             '<td colspan="2"><a class="delSottolavorazione fa fa-trash"></a></td>'+
-                                            righeDimensioniSottolavorazione( '{{lavorazione[0].unitaMisura}}',
+                                            righeDimensioniSottolavorazione( unitaMisura,
                                                                              '{{lavorazione[0].prezzoUnitario}}',
                                                                               '{{lavorazione[0].ordine}}')+
                                             '<td class="tdPreventivo numColSmall">{{lavorazione[0].unitaMisura}}</td>'+
@@ -995,8 +1033,13 @@
 
                         {% endfor %}
 
+                        var unitaMisura = '{{lavorazione[0].unitaMisura}}';
+
+                        if( unitaMisura == 'a corpo')
+                            unitaMisura ='a_corpo';
+
                         /*aggiungo il footer */
-                        rowsToAdd += '<tr class="trFoot {{settore}}_trFoot unitaMisura-{{lavorazione[0].unitaMisura}} trFoot{{lavorazione[0].ordine}}">'+
+                        rowsToAdd += '<tr class="trFoot {{settore}}_trFoot unitaMisura-'+unitaMisura+' trFoot{{lavorazione[0].ordine}}">'+
                                         '<td colspan="6"></td>'+
                                         '<td class="quantita colSmall"></td>'+
                                         '<td>{{lavorazione[0].unitaMisura}}</td>'+
@@ -1040,6 +1083,7 @@
 
                          ordine = classesOfRow[0].split('-')[1];
                          var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[2].split('-')[1];
+                         unitaMisura = unitaMisura.split('_')[0] + ' ' +unitaMisura.split('_')[1];
                          numero =parseFloat($(this).val());
                          variabile =$(this).attr('class').split(' ')[2];
 
@@ -1167,6 +1211,7 @@
                             $(this).removeClass();
                             $(this).addClass(sottolavorazioniCommonClass);
                             $(this).addClass('sottolavNum-'+aux);
+                            unitaMisura = unitaMisura.split('_')[0] + ' ' +unitaMisura.split('_')[1];
 
                             socketPreventivo.emit("modifica_ordine_sottolavorazione",
                                 {
@@ -1202,6 +1247,7 @@
 
                         var unitaMisura = $('.trFoot'+numElement).attr('class').split(' ')[2].split('-')[1];
 
+
                         var prezzoUnitarioWithEuro = $('#'+settore+'_trBody-'+numElement).children('.prezzoBase').text();
                         var prezzoUnitario = prezzoUnitarioWithEuro.split(' ')[1];
 
@@ -1218,6 +1264,7 @@
                             '</tr>'
 
                         );
+
 
                         calcolaTotaleParziale(settore, numElement);
 
@@ -1244,7 +1291,7 @@
 
 
                             var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[3].split('-')[1];
-
+                            unitaMisura = unitaMisura.split('_')[0] + ' ' +unitaMisura.split('_')[1];
 
                             numero =parseFloat($(this).val());
                             variabile =$(this).attr('class').split(' ')[2];
@@ -1299,6 +1346,7 @@
                                     $(this).removeClass();
                                     $(this).addClass(sottolavorazioniCommonClass);
                                     $(this).addClass('sottolavNum-'+aux);
+                                    unitaMisura = unitaMisura.split('_')[0] +' ' + unitaMisura.split('_')[1];
 
                                     socketPreventivo.emit("modifica_ordine_sottolavorazione",
                                         {

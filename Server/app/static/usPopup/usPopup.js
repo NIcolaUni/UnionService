@@ -107,9 +107,8 @@
     var funzionePostPopup=parametriPopup['popupFunction'];
     var content_popup_classes=parametriPopup['content_popup_classes'];
     var body_popup_classes = parametriPopup['body_popup_classes'];
-    var funzioneRemove= parametriPopup['funzione_remove']
-    var fornitoreInTable = parametriPopup['fornitoreInTable'];
-    var aziendaInTable = parametriPopup['aziendaInTable'];
+
+    var inTable = parametriPopup['inTable'];
 
 
     if( content_popup_classes === undefined ){
@@ -146,41 +145,36 @@
                           '<div class="body-popup '+body_popup_classes+'">'+
                           bodyPopup+'</div></div></div>').appendTo('#'+docWrapper.attr('id'));
 
-            var offset = $(this).offset();
-            var top = offset.top + $(this).outerHeight() + 15;
+            $('.popup-overlay.mini').css('width', '13%');
 
-            var left = offset.left-($(this).outerWidth()/2);
+            if( inTable ){
+                popup.children('.popup-content').addClass('topSideProdotti');
+                var offset = $clicckedBtn.offset();
+                var left = offset.left-20;
 
-            if( aziendaInTable ){
-                popup.children('.popup-content').addClass('topSide_azienda');
+
+                var top = ($clicckedBtn.offset().top- docWrapper.offset().top)- popup.innerHeight()//+20//-( popup.height()*10/100);
+
                 popup.css({
-                          'left': offset.left+$(this).outerWidth()-126,
-                          'top': offset.top -($(this).outerHeight()/2+7)
+                  'left': left,
+                  'top':  top
                 });
-            }
-            else if( fornitoreInTable ){
-                popup.children('.popup-content').addClass('topSide');
-                popup.css({
-                          'left': offset.left+$(this).outerWidth()-126,
-                          'top': offset.top -($(this).outerHeight()/2+77)
-                });
-            }
-            else if(left < -3){
-              popup.children('.popup-content').addClass('rightSide');
-              popup.css({
-                          'left': offset.left+$(this).outerWidth(),
-                          'top': offset.top -($(this).outerHeight()/2)
-              });
+
+
             }
             else{
-              popup.children('.popup-content').addClass('bottomSide');
-              popup.css({
-                          'left': offset.left-($(this).outerWidth()/2)-100,
-                          'top': offset.top -$(this).outerHeight()*2+10+70
-              });
+                popup.children('.popup-content').addClass('bottomSideProdotti');
+                var offset = $clicckedBtn.offset();
+                var left = offset.left-docWrapper.offset().left-$clicckedBtn.width();
+                var top= $clicckedBtn.offset().top+2*$clicckedBtn.innerHeight();
+
+                popup.css({
+                  'left': left,
+                  'top':  top
+                });
+
             }
 
-            $('.popup-overlay.mini').css('width', '13%');
 
             funzionePostPopup($(this));
 

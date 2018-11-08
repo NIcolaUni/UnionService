@@ -19,6 +19,14 @@
            $this.parent().parent().parent().remove();
 
            socketImpegni.emit('eliminaImpegno', {'dipendente': '{{dipendente.username}}', 'numero': numero_impegno});
+
+           var dirigente = $this.parent().parent().children('.pull-center').children('.labelImpegno').children('.dirImpegni').text().split(':')[0];
+           var impegno = $this.parent().parent().children('.pull-center').children('.labelImpegno').children('.msgImpegno').text();
+
+           if( $this.hasClass('imposto') ){
+                socketImpegni.emit('notifica_del_nota_imposta', {'dip': '{{dipendente.username}}', 'dir': dirigente, 'impegno': impegno});
+
+           }
     }
 
 
@@ -174,7 +182,11 @@
                                         <div class="media-body">
 
                                             <div class="pull-right">
-                                               <a onclick="eliminaImpegno($(this));" class="delImpegno"  href="" > × </a>
+                                                {% if impegno.dirigente == None %}
+                                                    <a onclick="eliminaImpegno($(this));" class="delImpegno"  href="" > × </a>
+                                                {% else %}
+                                                    <a onclick="eliminaImpegno($(this));" class="delImpegno imposto"  href="" > × </a>
+                                                {% endif %}
                                             </div>
                                             <div class="pull-center">
 
@@ -1047,7 +1059,7 @@
                 '<div class="rigaImpegni '+msg['numero']+'"> \
                     <div class="media-body"> \
                         <div class="pull-right"> \
-                            <a onclick="eliminaImpegno($(this));" class="delImpegno"  href="" > × </a> \
+                            <a onclick="eliminaImpegno($(this));" class="delImpegno imposto"  href="" > × </a> \
                         </div> \
                         <div class="pull-center"> \
                             <label class="labelImpegno"> \
@@ -1085,6 +1097,7 @@
                 socketImpegni.emit('registraImpegno', {'testo': newImpegno, 'dip': selectImpegno, 'dir': '{{dipendente.username}}'});
 
 
+            $('#textImpegno').val('');
 
 
         });
@@ -1116,6 +1129,8 @@
             if( newImpegno == "" )
 
             socketImpegni.emit('registraImpegno', {'testo': newImpegno, 'dip': '{{dipendente.username}}', 'dir': "" });
+
+            $('#textImpegno').val('');
 
         });
 

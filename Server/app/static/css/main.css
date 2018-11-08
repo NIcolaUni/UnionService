@@ -578,6 +578,10 @@ div#menu-3 {
     overflow-x: scroll;
 }
 
+.media_notifica{
+    overflow-x: hidden;
+}
+
 #notaVersoDipendente{
     resize: none;
     border: 1px solid;
@@ -626,6 +630,13 @@ div#menu-3 {
     line-height: normal;
     padding: 0;
 
+}
+
+label.testo_nota {
+    width: 100%;
+    display: inline-block;
+    word-break: break-word;
+    white-space: initial;
 }
 
 .lv-item{

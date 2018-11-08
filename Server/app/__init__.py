@@ -34,7 +34,7 @@ server.logger.setLevel(gunicorn_logger.level)
 accoglienzaForm = None
 accoglienzaOk = False
 formCercaCliente =None
-appUrl="http://192.168.1.131:80"
+appUrl="http://debtux:80"
 
 clienteSelezionato=None
 preventivoEdileSelezionato=None
