@@ -448,6 +448,14 @@ def homepage():
 
     return render_template('homepage.html', impegni=impegni, dipendente=dip, colleghi=colleghi, agenda=agenda, calendario=calendario, sockUrl=app.appUrl)
 
+@server.route('/chat')
+@login_required
+def chat():
+
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+    colleghi = Dipendente.query.all()
+
+    return render_template('chat.html', colleghi=colleghi, dipendente=dip, sockUrl=app.appUrl)
 
 
 @server.route('/sidebarLeft')
@@ -1630,11 +1638,26 @@ def handle_storico_messaggi(message):
 
     emit("stampaStorico", {'htmlChat': htmlChat}, namespace='/chat', room=mittente.session_id)
 
+@socketio.on('cerca_colleghi_msg_non_letti', namespace="/chat")
+def handle_cerca_colleghi_msg_non_letti(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    colleghi = Messaggio.returnColleghiMessaggiNonLetti(destinatario=dip.username)
+
+    for collega in colleghi:
+        emit('blinka_collega', {'collega': collega}, namespace='/chat', room=dip.session_id)
+
+
+@socketio.on('messaggio_letto', namespace="/chat")
+def handle_messaggio_letto(message):
+    Messaggio.messaggioLetto(mittente=message['mittente'], destinatario=message['destinatario'])
+
 @socketio.on('cambia_livello_difficolta', namespace="/cliente")
 def handle_cambia_livello_difficolta(message):
 
     ClienteAccolto.modificaDifficolta(nome=message['nome'], cognome=message['cognome'],
                                       indirizzo=message['indirizzo'], valore=message['valore'])
+
 
 @socketio.on_error('/cliente')
 def error_handler(e):

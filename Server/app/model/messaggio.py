@@ -5,12 +5,13 @@ import datetime, app
 
 class Messaggio(MessaggioDBmodel):
 
-    def __init__(self, mittente, destinatario, testo, data, ora):
+    def __init__(self, mittente, destinatario, testo, data, ora, letto=False):
         self.mittente=mittente
         self.destinatario=destinatario
         self.testo=testo
         self.data=data
         self.ora=ora
+        self.letto=letto
 
 
     def registraMessaggio( mittente, destinatario, testo ):
@@ -72,4 +73,24 @@ class Messaggio(MessaggioDBmodel):
                                   '<span class="timestamp">{} - {}</span>'.format(data, ora) + \
                                   '</div><div class="bubble-arrow"></div></div>'
 
+
+
         return storicoMsgHtml
+
+    def messaggioLetto(mittente, destinatario ):
+        MessaggioDBmodel.query.filter_by(mittente=mittente, destinatario=destinatario, letto=False).update( {'letto':True} )
+
+        MessaggioDBmodel.commit()
+
+    def returnColleghiMessaggiNonLetti(destinatario):
+
+        messaggi = Messaggio.query.filter_by(destinatario=destinatario, letto=False).all()
+
+        # cerco i messaggi non letti e setto i colleghi che devono "blinkare"
+        colleghiToBlink = [];
+
+        for msg in messaggi:
+            if not msg.letto:
+                colleghiToBlink.append(msg.mittente)
+
+        return  colleghiToBlink

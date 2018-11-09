@@ -15,4 +15,5 @@ class MessaggioDBmodel(DbUSinterface, DbUSinterface.db.Model):
     testo = Column(String(1000), nullable=False)
     data = Column(Date())
     ora = Column(Time)
+    letto = Column(Boolean)
 

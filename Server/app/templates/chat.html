@@ -1,0 +1,89 @@
+
+<div class="chat-div row">
+    <label id="chat-title">Chat</label>
+    <div id="openCloseChat" class="col-md-3"><a class="close-chat fa fa-arrow-left"></a></div>
+    <div class="listColleghi col-md-9">
+        <ul id="ulListColleghi">
+            {% for collega in colleghi %}
+            <li class="collega"><label class="{{collega.username}}"><span class="chatImgProfile"><img src="{{url_for('static', filename='immaginiProfilo/'+collega.immagine_profilo ) }}"></span><span class="chatNameProfile">{{collega.nome}} {{collega.cognome}}</span></label></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    var socketChat = io.connect("{{sockUrl}}"+'/chat');
+</script>
+<script src="{{url_for('static', filename='chat/js/chat.js') }}"></script>
+
+<script>
+
+
+    $('li.collega label').click(function(){
+
+        apriChatBox($(this), '{{dipendente.username}}');
+
+        if( $(this).hasClass('blink') ){
+
+            socketChat.emit('messaggio_letto', {
+                'mittente' : $(this).attr('class').split(' ')[0],
+                'destinatario' : '{{dipendente.username}}'
+            });
+        }
+
+    });
+
+    socketChat.on('impostaTimestamp', function(msg){
+
+        $('.timestampToSet').text( msg['data'] +' - '+msg['ora'])
+        $('.timestampToSet').removeClass('timestampToSet');
+
+    });
+
+    socketChat.on('nuovoMessaggio', function(msg){
+
+
+        //Se e' aperta la cha-box e il mittente corrisponde
+        if( $('#chat-box').hasClass(msg['mittente']) ){
+
+            inserisciBallonNuovoMessaggio( msg['mittente'], msg['htmlMsg'], '{{dipendente.username}}' );
+
+        }
+        else
+        {
+            attivaBlinkMessaggioNonLetto(msg['mittente']);
+
+        }
+
+
+    });
+
+    socketChat.on('stampaStorico', function(msg){
+
+        bloccaBlink(msg['mittente'], '{{dipendente.username}}');
+
+        $('.speech-wrapper').html(msg['htmlChat']);
+
+        var countBubble = 1;
+
+        $('.bubble').each(function(){
+            countBubble = countBubble+1;
+        });
+
+        var countBubble = countBubble;
+
+
+        $('.speech-wrapper').animate({scrollTop: $('.speech-wrapper').height()*countBubble}, 0);
+
+    });
+
+    socketChat.emit('cerca_colleghi_msg_non_letti', {
+        'dip': '{{dipendente.username}}'
+    });
+
+    socketChat.on('blinka_collega', function(msg){
+
+        attivaBlinkMessaggioNonLetto(msg['collega']);
+    });
+
+</script>

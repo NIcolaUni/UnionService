@@ -4268,3 +4268,12 @@ button.elementPreventivo {
     color: black;
     width: 3%;
   }
+
+  .changeLivelloCliente {
+    display: inline-block;
+  }
+
+  .changeLev {
+    height: 15px;
+    cursor: pointer;
+  }
