@@ -338,9 +338,25 @@
                     socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
                 });
 
-				$('.inputLivelloCliente').change(function(){
-					modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', $(this).val());
-    			});
+				$('.changeLev.levelUp').click(function(){
+
+					var livelloCliente = parseInt($('label.difficoltaLabel').text());
+
+					if( livelloCliente+1 < 4 ){
+						$('label.difficoltaLabel').text(livelloCliente+1);
+						modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', livelloCliente+1);
+					}
+				});
+
+				$('.changeLev.levelDown').click(function(){
+
+					var livelloCliente = parseInt($('label.difficoltaLabel').text());
+
+					if( livelloCliente-1 > 0 ){
+						$('label.difficoltaLabel').text(livelloCliente-1);
+						modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', livelloCliente-1);
+					}
+				});
 
 				socketPreventivoEdile.on('aggiornaAnteprimaPreventivoEdile', function(){
     				$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
@@ -695,7 +711,7 @@
 					if( difficoltaNascosta ){
 						$('.difficoltaTitle').show();
 						$('.difficoltaLabel').show();
-						$('.changeLivelloCliente').show();
+						$('.changeLivelloCliente').css('display', 'inline-block');
 						difficoltaNascosta=false;
 					}
 					else{

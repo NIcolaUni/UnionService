@@ -171,11 +171,11 @@ tr.trFoot {
 
 
 #memoriaLavorazioniAggiunte{
-    visibility: hidden;
+    display: none;
 }
 
 #memoriaProdottiAggiunti{
-    visibility: hidden;
+    display: none;
 }
 
 textarea {

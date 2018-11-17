@@ -15,9 +15,7 @@
                         <span>Tipologie prodotto</span></br>
                         <div>
                             <select id="selectTipologia" class="js-select2" name="service">
-                                {% for tipologia in tipologie %}
-                                    <option>{{tipologia.nome}}</option>
-                                {% endfor %}
+
                             </select>
                             <div class="dropDownSelect2"></div>
                         </div>
@@ -103,129 +101,7 @@
 </div>
 
 <script>
-
-    var cbxStatus=true;
-    $('#cbx').change(function(){
-        if(cbxStatus == true ){
-
-            $('.titleTipologiaTd').attr('colspan', 9 );
-            $('.thAdded').show();
-            $('.tdAdded').show();
-            cbxStatus=false;
-        }
-        else{
-
-            $('.titleTipologiaTd').attr('colspan', 7 );
-            $('.thAdded').hide();
-            $('.tdAdded').hide();
-            cbxStatus=true;
-
-        }
-    });
-
-    function popolaSelectFields(){
-
-        var marchiGiaPresenti = [];
-
-        {% for modello in modelliProdotto %}
-            var marchioPresente = false;
-            if( "{{modello.tipologia}}" == $('#selectTipologia').val() ){
-
-                /*evito i duplicati */
-                for( i = 0; i < marchiGiaPresenti.length; i++){
-                    if( marchiGiaPresenti[i] ==  '{{modello.marchio}}' )
-                        marchioPresente = true;
-
-                }
-
-                if( ! marchioPresente ){
-                    $('#selectMarchio').append('<option>{{modello.marchio}}</option>');
-                    marchiGiaPresenti.push('{{modello.marchio}}');
-                }
-
-            }
-
-        {% endfor %}
-
-        var modelliGiaPresenti = [];
-
-        {% for modello in modelliProdotto %}
-            var modelloPresente = false;
-            if( "{{modello.tipologia}}" == $('#selectTipologia').val() && "{{modello.marchio}}" == $('#selectMarchio').val() ){
-
-                /* evito i duplicati */
-                for( i =0; i < modelloPresente.length; i++){
-                    modelloPresente = true;
-                }
-
-                if( ! modelloPresente){
-                    $('#selectModello').append('<option>{{modello.nome}}</option>');
-                    modelliGiaPresenti.push('{{modello.nome}}');
-                }
-            }
-        {% endfor %}
-
-        var counter=0;
-
-        {% for modello in modelliProdotto %}
-
-            if( "{{modello.tipologia}}" == $('#selectTipologia').val() &&
-                    "{{modello.marchio}}" == $('#selectMarchio').val() &&
-                        "{{modello.nome}}" == $('#selectModello').val() ){
-
-                $('#listaElementPreventivo').append(
-
-                     '<li><button id="button_{{modello.marchio}}_{{modello.nome}}-'+ counter +'" onclick="aggiungiRiga($(this))" class="elementPreventivo {{modello.tipologia}}"><label for="button'+ counter +'">{{modello.prodotto}}</label></button></li>'
-                );
-                counter+=1;
-            }
-
-        {% endfor %}
-    }
-
-    popolaSelectFields();
-
-    $('#selectTipologia').change(function(){
-        $('#selectMarchio').html('');
-        $('#selectModello').html('');
-        $('#listaElementPreventivo').html('');
-        popolaSelectFields();
-        reimpostaClassiBottoniProdotti();
-    });
-
-    $('#selectMarchio').change(function(){
-        $('#selectModello').html('');
-        $('#listaElementPreventivo').html('');
-        var modelliGiaPresenti = [];
-
-        {% for modello in modelliProdotto %}
-            var modelloPresente = false;
-            if( "{{modello.tipologia}}" == $('#selectTipologia').val() && "{{modello.marchio}}" == $('#selectMarchio').val() ){
-
-                /* evito i duplicati */
-                for( i =0; i < modelloPresente.length; i++){
-                    modelloPresente = true;
-                }
-
-                if( ! modelloPresente){
-                    $('#selectModello').append('<option>{{modello.nome}}</option>');
-                    modelliGiaPresenti.push('{{modello.nome}}');
-                }
-            }
-        {% endfor %}
-
-        reimpostaClassiBottoniProdotti();
-    });
-
-    $('#selectModello').change(function(){
-        $('#listaElementPreventivo').html('');
-
-        reimpostaClassiBottoniProdotti();
-    });
-
-
     var socketHome = io.connect("{{sockUrl}}"+'/home');
-
 
     socketHome.on('connect', function() {
 
@@ -235,719 +111,78 @@
 
     var socketFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 
-    $('#note').on('input', function(){
-            socketFiniture.emit('inserisci_note', {   'numero_preventivo': '{{preventivo.numero_preventivo}}',
-                                                        'data': '{{preventivo.data}}',
-                                                        'nota': $(this).val() });
-    });
 
-    socketFiniture.on( 'procediADownload', function(){
-        window.open('{{url_for("downloadPreventivoFiniture")}}', '_blank');
-    });
+    /****** Popolo la lista dei prodotti dati dai select **************************/
 
-    $('#printButton').click(function(){
 
-        swal.withFormAsync({
-        title: 'Scelte pre-stampa:',
-        showCancelButton: true,
-        confirmButtonColor: '#DD6B55',
-        confirmButtonText: 'Ok',
-        cancelButtonText: 'annulla',
-        closeOnConfirm: false,
-        formFields: [
+    var listProdottiPerTipologia = [];
+    var listMarchi =[];
+    var listModelli =  [];
 
-            { id: 'iva', label: 'Iva (%)', name: 'iva', type: 'number', placeholder: 'intervento commessa', value: '0' },
-            { id: 'scontoTipo',
-                type: 'select-hidden',
-                options: [
-                  {value: '1', text: 'non applicare sconto'},
-                  {value: '2', text: 'applica sconto netto'},
-                  {value: '3', text: 'applica sconto percentuale'},
-                  {value: '4', text: 'forza totale'},
-                ]},
-            { id: 'sumisura', label: 'Preventivo su misura', name: 'sumisura', value: 'sumisura', type: 'checkbox' },
-            { id: 'chiudi', label: 'Chiudi preventivo', name: 'chiudi', value: 'chiudi', type: 'checkbox' },
+    {% for tipologia in tipologie %}
 
-        ]
-        }).then(function (context) {
-            if(context._isConfirm){
+        //suddivido i prodotti per tipologia
 
-                var sceltaSconto=parseInt(context.swalForm['scontoTipo']);
-                var chiudiPrev=false;
-                var sumisura=false;
-                var iva=parseInt(context.swalForm['iva']);
+        var listProdotti = [];
 
-                console.log( 'sto stampando: ' + iva );
-                if( context.swalForm['scontoTipo'] == 'chiudi' )
-                    chiudiPrev=true;
+        {% for modelloProdotto in modelliProdotto %}
+            {% if modelloProdotto.tipologia == tipologia.nome %}
 
-                if( context.swalForm['sumisura'] == 'sumisura' )
-                    sumisura=true;
-
-                if( sceltaSconto == 1 ){
-                    socketFiniture.emit('stampa_preventivo', {
-                                                    'dip': '{{dipendente.username}}',
-                                                    'numero_preventivo': '{{preventivo.numero_preventivo}}',
-                                                    'data': '{{preventivo.data}}',
-                                                    'iva': iva,
-                                                    'tipoSconto': sceltaSconto,
-                                                    'sconto': 0,
-                                                    'chiudiPreventivo': chiudiPrev,
-                                                    'sumisura': sumisura });
-                    sweetAlert.close();
-                }
-                else{
-                    var toPrint="";
-
-                    if( sceltaSconto == 2 ){
-                        toPrint ="Inserire sconto netto da applicare:";
-                    }
-                    else if( sceltaSconto == 3 ){
-                        toPrint ="Inserire sconto percentuale da applicare:";
-                    }
-                    else if( sceltaSconto == 4 ){
-                        toPrint = "Forza totale:";
-                    }
-
-
-
-                    swal.withFormAsync({
-                        title: toPrint,
-                        showCancelButton: true,
-                        confirmButtonColor: '#DD6B55',
-                        confirmButtonText: 'Ok',
-                        cancelButtonText: 'annulla',
-                        closeOnConfirm: true,
-                        formFields: [
-
-                            { id: 'sconto', label: 'Sconto: ', name: 'sconto', type: 'number', placeholder: 'sconto', value: '0' },
-
-
-                        ]
-                    }).then(function (context) {
-                        if(context._isConfirm){
-                             socketFiniture.emit('stampa_preventivo', {
-                                                    'dip': '{{dipendente.username}}',
-                                                    'numero_preventivo': '{{preventivo.numero_preventivo}}',
-                                                    'data': '{{preventivo.data}}',
-                                                    'iva': iva,
-                                                    'tipoSconto': sceltaSconto,
-                                                    'sconto': parseFloat(context.swalForm['sconto']),
-                                                    'chiudiPreventivo': chiudiPrev,
-                                                    'sumisura': sumisura });
-
-                        }
-
-                    });
-
-                }
-
-
-
-            }
-
-        });
-
-
-
-    });
-
-    function rienumeraMemoriaLavorazioni(){
-
-        var counter = 1;
-        $('#memoriaProdottiAggiunti').children('.tipologiaMemorizzata').each(function(){
-            $(this).children('div').each(function(){
-                $(this).text('aggiunto-'+counter);
-                counter+=1;
-            });
-
-        });
-    }
-
-
-    function rienumeraPagina(){
-
-        var counter = 1;
-        var oldNum="";
-
-        //rinomino tutti gli id degli elementi per non rischiare di
-        //averne due uguali nella renumerazione.
-        $('.trBody').each(function(){
-            var idThisFirstPart = $(this).attr('id').split('-')[0];
-            var tipologia=idThisFirstPart.split('_')[0];
-
-
-
-            oldNum = $(this).attr('id').split('-')[1]
-
-            $(this).attr('id', idThisFirstPart+'-old'+oldNum);
-
-            $(this).children('.firstCol'+oldNum).addClass('firstCol-old'+oldNum);
-            $(this).children('.firstCol'+oldNum).removeClass('firstCol'+oldNum);
-
-            /*modifico i pulsanti "aggiungi elemento" degli elementi presenti*/
-            $('.aggiunto-'+oldNum).addClass('aggiunto-old'+oldNum);
-            $('.aggiunto-'+oldNum).removeClass('aggiunto-'+oldNum);
-        });
-
-
-        $('.trBody').each(function(){
-            var idThisFirstPart = $(this).attr('id').split('-')[0];
-            var settore=idThisFirstPart.split('_')[0];
-            oldNum =  $(this).attr('id').split('-old')[1];
-
-            $('.aggiunto-old'+oldNum).addClass('aggiunto-'+counter);
-            $('.aggiunto-old'+oldNum).removeClass('aggiunto-old'+oldNum);
-
-            $(this).attr('id', idThisFirstPart+'-'+counter);
-
-            $(this).children('.firstCol-old'+oldNum).addClass('firstCol'+counter);
-            $(this).children('.firstCol-old'+oldNum).removeClass('firstCol-old'+oldNum);
-
-            $(this).children('.firstCol'+counter).children('label').text(counter);
-
-
-
-            socketFiniture.emit("modifica_ordine_prodotto",
-                            {
-                                "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                "data" : "{{preventivo.data}}",
-                                "ordineVecchio": -oldNum,
-                                "ordineNuovo" : counter
-
-                            }
-                  );
-            counter+=1;
-        });
-
-        rienumeraMemoriaLavorazioni();
-
-    }
-
-    function settaLastElement(tipologia){
-
-            $('tr[id^='+tipologia+'_trBody]').last().addClass(tipologia+'_lastAdded');
-    }
-
-    function countProdottiPerTipologia(tipologia){
-            var counter=0;
-            $('tr[id^='+tipologia+'_trBody]').each(function(){
-                counter++;
-            });
-
-            return counter;
-    }
-
-    function calcolaTotalePreventivo(){
-
-        var totale =0;
-        $('.tdDiffCapitolato').each(function(){
-            var costo = $(this).html();
-
-            if( costo == "-" ){
-
-                costo = 0;
-            }
-            else {
-                costo = parseFloat(costo.split(' ')[1]);
-            }
-
-            totale += costo;
-        });
-
-        $('#divTotale').html("<span> <u>Totale: </u> &euro; "+ Math.round(totale*100)/100 +"</span>");
-    }
-
-
-    /* variabile globale usata per tener conto del numero dell'ultima lavorazione aggiunta */
-    var ordineProdotti = 1;
-
-    function aggiungiRiga($this){
-       // alert('chiamato')
-        if( $this.hasClass('aggiunto') ){
-            console.log( "Il prodotto e' stato aggiunto" );
-        }else{
-
-            {% for modello in modelliProdotto %}
-
-                /* seleziono il prodotto richiesto */
-                if( "{{modello.prodotto}}" ==  $this.text() &&
-                        "{{modello.tipologia}}" == $('#selectTipologia').val() &&
-                            "{{modello.marchio}}" == $('#selectMarchio').val() &&
-                                "{{modello.nome}}" == $('#selectModello').val()){
-
-
-                    /* seleziono il relativo capitolato del prodotto richiesto */
-                    {% for prodotto in prezzarioProdotti %}
-                        {% if modello.prodotto == prodotto.nome and modello.tipologia == prodotto.tipologia %}
-
-                            {% for capitolato in modelliProdotto %}
-
-                                {% if capitolato.nome == prodotto.capitolato_modello and
-                                        capitolato.marchio == prodotto.capitolato_marchio and
-                                            capitolato.tipologia == prodotto.tipologia and
-                                                capitolato.prodotto == prodotto.nome %}
-
-
-                                    //Segno nel bottono cliccato che e' una lavorazione aggiunto
-                                    $this.addClass("aggiunto");
-                                    $this.addClass("aggiunto-"+ordineProdotti);
-
-                                    /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineProdotti al bottone*/
-                                    $("#memoriaProdottiAggiunti-{{prodotto.tipologia}}").append(
-                                        '<div class="'+$this.attr('id')+'">'+
-                                            '<span class="classeToAdd">aggiunto-'+ordineProdotti+'</span>'+
-                                        '</div>'
-
-                                    );
-
-
-                                    var tipologiaProdotto =  $('#bodyPreventivo').children('.{{prodotto.tipologia}}');
-
-                                    var diffCapitolato = Math.abs( parseFloat('{{capitolato.prezzoListinoFornituraPosa}}') - parseFloat('{{modello.prezzoListinoFornituraPosa}}') )
-                                    var diffCapitolatoNum = diffCapitolato
-
-                                    if( diffCapitolato == 0 ){
-                                        diffCapitolato = '-';
-                                    }
-                                    else
-                                        diffCapitolato = '&euro; '+diffCapitolato;
-
-                                    //Preparo la riga del prodotto
-                                    var rowsToAdd='<tr id="{{modello.tipologia}}_trBody-'+ordineProdotti+'" class="trBody {{modello.tipologia}}_lastAdded">'+
-                                                    '<td class="firstCol'+ordineProdotti+' firstCol"></td>'+
-                                                    '<td class="tdPreventivo tdProdotto"><textarea>{{modello.prodotto}}</textarea></td>'+
-                                                    '<td class="tdPreventivo tdModello">{{modello.nome}}</td>'+
-                                                    '<td class="tdPreventivo tdCodice">{{modello.codice}}</td>'+
-                                                    '<td class="tdPreventivo numColSmall tdQuantita"><input class="numInput numero" type="number" name="numero" placeholder="quantità" step="0.01" value="1.0"></td>'+
-                                                    '<td class="tdPreventivo numColSmall"><input name="unitaMisura" placeholder="unita misura" value="cad"></td>'+
-                                                    '<td class="tdPreventivo numColSmall tdDiffCapitolato">'+diffCapitolato+'</td>'+
-                                                    '<td class="tdPreventivo tdAdded">&euro; {{modello.prezzoListinoFornituraPosa}}</td>'+
-                                                    '<td class="tdPreventivo tdAdded">&euro; {{modello.nettoUsFornituraPosa}}</td>'+
-                                                '</tr>';
-
-                                    //se non e' gia' stata aggiunta una sezione lo faccio e subito sotto metto il prodotto
-                                    if( !tipologiaProdotto.length ){
-
-                                        $('#bodyPreventivo').append(
-
-                                            '<tr class="trHead {{modello.tipologia}}">'+
-                                                '<td  colspan="7"  class="titleTipologiaTd">{{modello.tipologia}}</td>'+
-                                            '</tr>'+
-                                            '<tr class="trHead {{modello.tipologia}}_head intestazione_head">'+
-                                                '<th class="thPreventivo"></th>'+
-                                                '<th class="thPreventivo">Nome prodotto</th>'+
-                                                '<th class="thPreventivo">Modello</th>'+
-                                                '<th class="thPreventivo">Codice</th>'+
-                                                '<th class="thPreventivo numColSmall">Quantità</th>'+
-                                                '<th class="thPreventivo numColSmall">Unità <br/> misura</th>'+
-                                                '<th class="thPreventivo">diff. CAPITOLATO</th>'+
-                                                '<th class="thPreventivo thAdded">Prezzo Listino</th>'+
-                                                '<th class="thPreventivo thAdded">Prezzo US</th>'+
-                                            '</tr>'+
-                                            rowsToAdd
-
-                                        );
-                                        $('.thAdded').hide();
-                                        $('.tdAdded').hide();
-                                    }
-                                    else{
-
-                                        var ultimoProdottoInserito=$(".{{modello.tipologia}}_lastAdded");
-
-                                        ultimoProdottoInserito.removeClass("{{modello.tipologia}}_lastAdded");
-
-                                        ultimoProdottoInserito.after( rowsToAdd );
-                                        $('.tdAdded').hide();
-                                    }
-
-                                    $('tr.trBody').draggable({ helper: "clone"});
-
-
-                                    /*registro la riga nel database*/
-                                    socketFiniture.emit("add_nuovo_prodotto",
-                                        {
-                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                            "data" : "{{preventivo.data}}",
-                                            "ordine": ordineProdotti,
-                                            "tipologia" : "{{modello.tipologia}}",
-                                            "prodotto" : "{{modello.prodotto}}",
-                                            "modello" : "{{modello.nome}}",
-                                            "marchio": "{{modello.marchio}}",
-                                            "codice" : "{{modello.codice}}",
-                                            "quantita": 1,
-                                            "unitaMisura": 'cad',
-                                            "diffCapitolato": diffCapitolatoNum
-
-                                        }
-
-                                    );
-
-                                    /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
-                                    rienumeraPagina();
-
-
-                                    //Aggiungo funzionalita' ai "bottoni" nelle righe del preventivo e i bottoni stessi...
-                                    $('.trBody').each(function(){
-
-                                      var numEl = $(this).attr('id').split('-')[1];
-
-                                      var diffCap = $(this).children('td.tdDiffCapitolato').html();
-
-                                      if( diffCap != '-' )
-                                        diffCap=parseFloat(diffCap.split(' ')[1]);
-
-                                      $(this).children('td.tdQuantita').children('input').change(function(){
-
-                                            var numValue = parseFloat($(this).val());
-                                            var newCap = 0;
-
-                                            if( diffCap != '-' )
-                                            {
-                                                newCap = Math.round(diffCap*numValue*100)/100;
-
-                                                if( newCap == 0 )
-                                                    $(this).parent().parent().children('td.tdDiffCapitolato').html('-');
-                                                else
-                                                    $(this).parent().parent().children('td.tdDiffCapitolato').html('&euro; '+newCap);
-
-                                            }
-
-                                            calcolaTotalePreventivo();
-
-                                            socketFiniture.emit("modifica_prodotto",
-                                                            {
-                                                                "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                                                "data" : "{{preventivo.data}}",
-                                                                "ordine": numEl,
-                                                                "quantita": numValue,
-                                                                "diffCapitolato": newCap
-
-                                                            }
-                                            );
-
-                                      });
-
-                                      //aggiungo il bottoni di cancellazioni e il numero elemento
-                                      $(this).children('td.firstCol').html( '<label>'+ numEl + '</label><br/><a class="delElement fa fa-trash"></a>' );
-
-
-                                      //aggiungo la funzione 'cancellaLavorazione' al relativo bottone
-                                      $(this).children('td.firstCol').children('a.delElement').click(function(){
-                                            var idElementToDel=$(this).parent().parent().attr('id');
-                                            var numEl = idElementToDel.split('-')[1];
-                                            var tipologia =idElementToDel.split('_')[0];
-                                            var lastEl = $('#'+idElementToDel).hasClass(tipologia+'_lastAdded'); //variabile booleana
-
-
-                                            $('#'+idElementToDel).remove();
-
-                                            $('#memoriaProdottiAggiunti-'+tipologia).children('div').each(function(){
-                                                if( $(this).text() == 'aggiunto-'+numEl )
-                                                    $(this).remove();
-                                            });
-
-                                            $('.aggiunto-'+numEl).removeClass('aggiunto');
-                                            $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
-
-                                            socketFiniture.emit("elimina_prodotto",
-                                                            {
-                                                                "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                                                "data" : "{{preventivo.data}}",
-                                                                "ordine": numEl,
-
-                                                            }
-
-                                            );
-
-                                            rienumeraPagina();
-
-                                            if( lastEl ){
-                                                settaLastElement(tipologia);
-                                            }
-
-                                            // se non ci sono piu' prodotti per la relativo tipologia
-                                            // elimina l'intestazione
-                                            countProd = countProdottiPerTipologia(tipologia);
-
-                                            if( countProd == 0 ){
-
-                                                $('.'+tipologia).each(function(){
-                                                    if($(this).hasClass('trHead'))
-                                                        $(this).remove();
-                                                });
-
-                                                $('.'+tipologia+'_head').remove();
-
-                                            }
-                                      });
-
-                                    });
-
-                                    calcolaTotalePreventivo();
-                                    ordineProdotti++;
-
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                }
-            {% endfor %}
-
-        }
-    }
-
-
-    function reimpostaClassiBottoniProdotti(){
-
-        $('#listaElementPreventivo').html("");
-        var counter=0;
-
-
-        {% for modello in modelliProdotto %}
-
-            if( "{{modello.tipologia}}" == $('#selectTipologia').val() &&
-                    "{{modello.marchio}}" == $('#selectMarchio').val() &&
-                        "{{modello.nome}}" == $('#selectModello').val() ){
-
-                $('#listaElementPreventivo').append(
-
-                     '<li><button id="button_{{modello.marchio}}_{{modello.nome}}-'+ counter +'" onclick="aggiungiRiga($(this))" class="elementPreventivo {{modello.tipologia}}"><label for="button'+ counter +'">{{modello.prodotto}}</label></button></li>'
-                );
-
-
-                /*Riaggiungo le classi dinamiche che il change() toglierebbe*/
-                $('#memoriaProdottiAggiunti-{{modello.tipologia}}').children('div').each(function(){
-                    if($(this).hasClass('button_{{modello.marchio}}_{{modello.nome}}-'+counter)){
-
-                        classesToAdd="aggiunto "+ $(this).text();
-
-                        $('#button_{{modello.marchio}}_{{modello.nome}}-'+counter).addClass(classesToAdd);
-                    }
-
-                });
-
-                counter+=1;
-            }
-
-        {% endfor %}
-
-
-    }
-
-    function trovaOrdineBottone(tipologia, marchio, modello, prodotto){
-        var counter = 0;
-
-        {% for modello in modelliProdotto %}
-
-            if( tipologia == '{{modello.tipologia}}'  &&
-                    marchio == '{{modello.marchio}}' &&
-                        modello == '{{modello.nome}}'){
-
-                if( prodotto == '{{modello.prodotto}}' )
-                    return counter;
-                else
-                    counter++;
-
-            }
-
-        {% endfor %}
-
-        return -1;
-    }
-
-    function costruisciPreventivo(){
-
-        ordineProdotti = 1;
-
-        /* la lista in prodotti in prodottiPreventivo e' gia' ordinata in base all'atributo ordine */
-        {% for tipologia in prodottiPreventivo[0] %}
-
-            var rowsToAdd=""
-
-            {% for prodotto in prodottiPreventivo[1] %}
-
-                {% if prodotto.tipologia == tipologia %}
-
-                    {% for modello in modelliProdotto %}
-
-                        {% if modello.tipologia == tipologia and
-                            modello.prodotto == prodotto.nome_prodotto and
-                                modello.nome == prodotto.modello and
-                                    modello.marchio == prodotto.marchio %}
-
-
-                            rowsToAdd+='<tr id="{{tipologia}}_trBody-{{prodotto.ordine}}" class="trBody">'+
-                                        '<td class="firstCol{{prodotto.ordine}} firstCol"></td>'+
-                                        '<td class="tdPreventivo tdProdotto"><textarea>{{prodotto.nome_prodotto}}</textarea></td>'+
-                                        '<td class="tdPreventivo tdModello">{{prodotto.modello}}</td>'+
-                                        '<td class="tdPreventivo tdCodice">{{prodotto.codice}}</td>'+
-                                        '<td class="tdPreventivo numColSmall tdQuantita"><input class="numInput numero" type="number" name="numero" placeholder="quantità" value="{{prodotto.quantita}}" step="0.01" value="1.0"></td>'+
-                                        '<td class="tdPreventivo numColSmall"><input name="unitaMisura" placeholder="unita misura" value="{{prodotto.unitaMisura}}"></td>'+
-                                        '<td class="tdPreventivo numColSmall tdDiffCapitolato">&euro; {{prodotto.diffCapitolato}}</td>'+
-                                        '<td class="tdPreventivo tdAdded">&euro; {{modello.prezzoListinoFornituraPosa}}</td>'+
-                                        '<td class="tdPreventivo tdAdded">&euro; {{modello.nettoUsFornituraPosa}}</td>'+
-                                    '</tr>';
-
-                            /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineProdotti al bottone*/
-                            $("#memoriaProdottiAggiunti-{{prodotto.tipologia}}").append(
-                                '<div class="button_{{prodotto.marchio}}_{{prodotto.modello}}-'+trovaOrdineBottone('{{prodotto.tipologia}}', '{{prodotto.marchio}}', '{{prodotto.modello}}', '{{prodotto.nome_prodotto}}')+'">'+
-                                    'aggiunto-{{prodotto.ordine}}'+
-                                '</div>'
-
-                            );
-
-                            ordineProdotti++;
-                        {% endif %}
-
-                    {% endfor %}
-
-
-                {% endif %}
+                var listProdotti.push(['{{modelloProdotto.marchio}}', '{{modelloProdotto.nome}}',
+                                        '{{modelloProdotto.prodotto}}']);
 
             {% endfor %}
-
-            $('#bodyPreventivo').append(
-
-                '<tr class="trHead {{tipologia}}">'+
-                    '<td  colspan="7"  class="titleTipologiaTd">{{tipologia}}</td>'+
-                '</tr>'+
-                '<tr class="trHead {{tipologia}}_head intestazione_head">'+
-                    '<th class="thPreventivo"></th>'+
-                    '<th class="thPreventivo">Nome prodotto</th>'+
-                    '<th class="thPreventivo">Modello</th>'+
-                    '<th class="thPreventivo">Codice</th>'+
-                    '<th class="thPreventivo numColSmall">Quantità</th>'+
-                    '<th class="thPreventivo numColSmall">Unità <br/> misura</th>'+
-                    '<th class="thPreventivo">diff. CAPITOLATO</th>'+
-                    '<th class="thPreventivo thAdded">Prezzo Listino</th>'+
-                    '<th class="thPreventivo thAdded">Prezzo US</th>'+
-                '</tr>'+
-                rowsToAdd
-
-            );
-
-            settaLastElement('{{tipologia}}');
-
         {% endfor %}
 
-        $('.thAdded').hide();
-        $('.tdAdded').hide();
+        listProdottiPerTipologia.push(['{{tipologia.nome}}', listProdotti ]);
 
-
-        //Aggiungo funzionalita' ai "bottoni" nelle righe del preventivo e i bottoni stessi...
-        $('.trBody').each(function(){
-
-          var numEl = $(this).attr('id').split('-')[1];
-
-          var diffCap = $(this).children('td.tdDiffCapitolato').html();
-
-          if( diffCap != '-' )
-            diffCap=parseFloat(diffCap.split(' ')[1]);
-
-          $(this).children('td.tdQuantita').children('input').change(function(){
-
-                var numValue = parseFloat($(this).val());
-                var newCap = 0;
-
-                if( diffCap != '-' )
-                {
-                    newCap = Math.round(diffCap*numValue*100)/100;
-
-                    if( newCap == 0 )
-                        $(this).parent().parent().children('td.tdDiffCapitolato').html('-');
-                    else
-                        $(this).parent().parent().children('td.tdDiffCapitolato').html('&euro; '+newCap);
-
-                }
-
-                calcolaTotalePreventivo();
-
-                socketFiniture.emit("modifica_prodotto",
-                                {
-                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                    "data" : "{{preventivo.data}}",
-                                    "ordine": numEl,
-                                    "quantita": numValue,
-                                    "diffCapitolato": newCap
-
-                                }
-                );
-
-          });
-
-          //aggiungo il bottoni di cancellazioni e il numero elemento
-          $(this).children('td.firstCol').html( '<label>'+ numEl + '</label><br/><a class="delElement fa fa-trash"></a>' );
-
-
-          //aggiungo la funzione 'cancellaLavorazione' al relativo bottone
-          $(this).children('td.firstCol').children('a.delElement').click(function(){
-                var idElementToDel=$(this).parent().parent().attr('id');
-                var numEl = idElementToDel.split('-')[1];
-                var tipologia =idElementToDel.split('_')[0];
-                var lastEl = $('#'+idElementToDel).hasClass(tipologia+'_lastAdded'); //variabile booleana
-
-
-                $('#'+idElementToDel).remove();
-
-                $('#memoriaProdottiAggiunti-'+tipologia).children('div').each(function(){
-                    if( $(this).text() == 'aggiunto-'+numEl )
-                        $(this).remove();
-                });
-
-                $('.aggiunto-'+numEl).removeClass('aggiunto');
-                $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
-
-                socketFiniture.emit("elimina_prodotto",
-                                {
-                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                    "data" : "{{preventivo.data}}",
-                                    "ordine": numEl,
-
-                                }
-
-                );
-
-                rienumeraPagina();
-
-                if( lastEl ){
-                    settaLastElement(tipologia);
-                }
-
-                // se non ci sono piu' prodotti per la relativo tipologia
-                // elimina l'intestazione
-                countProd = countProdottiPerTipologia(tipologia);
-
-                if( countProd == 0 ){
-
-                    $('.'+tipologia).each(function(){
-                        if($(this).hasClass('trHead'))
-                            $(this).remove();
-                    });
-
-                    $('.'+tipologia+'_head').remove();
-
-                }
-          });
-
-        });
-
-        reimpostaClassiBottoniProdotti();
-        calcolaTotalePreventivo();
-
-    }
-
-    /*valuto se sta venendo aperto un nuovo preventivo o uno gia' fatto*/
-    var countNumPreventivo = 0;
-    {% for tipologia in prodottiPreventivo[0] %}
-        countNumPreventivo++;
     {% endfor %}
 
-    if( countNumPreventivo > 0 ){
 
-        costruisciPreventivo();
+    {% for modelloProdotto in modelliProdotto %}
+        // costruisco le liste dei distinti modelli e marchi esistenti
 
-    }
+        var modelloToIns = true;
+        var marchioToIns = true;
+
+        listModelli.forEach(function(modello){
+
+            if( modello == '{{modelloProdotto.nome}}' ){
+
+                modelloToIns = false;
+
+            }
+        });
+
+
+        listMarchi.forEach(function(marchio){
+
+            if( marchio == '{{modelloProdotto.marchio}}' ){
+
+                marchioToIns = false;
+
+            }
+        });
+
+        if( marchioToIns ){
+
+            listMarchi.push('{{modelloProdotto.marchio}}');
+        }
+
+        if( modelloToIns ){
+
+            listModello.push('{{modelloProdotto.nome}}');
+        }
+
+    {% endfor %}
+
+
+    aggiungiProdottiToSelectElement(listaProdottiPerTipologia, listMarchi, listModello);
+
+
+
+    /******************************************************************************/
+
 
 </script>
 

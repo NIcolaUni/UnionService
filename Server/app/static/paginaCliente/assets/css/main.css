@@ -4264,16 +4264,19 @@ button.elementPreventivo {
     margin-left: 5%;
   }
 
-  .inputLivelloCliente {
-    color: black;
-    width: 3%;
-  }
-
   .changeLivelloCliente {
     display: inline-block;
+    position: absolute;
+    top: 0;
+    margin-left: 1%;
   }
 
   .changeLev {
     height: 15px;
     cursor: pointer;
+  }
+
+  label.difficoltaLabel {
+    display: inline;
+    font-size: 25px;
   }

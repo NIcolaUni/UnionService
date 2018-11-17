@@ -136,7 +136,8 @@ def paginaProfilo():
 @server.route('/newPreventivoEdile')
 @login_required
 def newPreventivoEdile():
-    settori = SettoreLavorazione.query.all()
+
+    settori = SettoreLavorazione.query.order_by( SettoreLavorazione.nome )
     prezzarioEdile = PrezzarioEdile.query.first()
     lavorazioni = PrezzarioEdile.returnLavorazioni()
     preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
@@ -152,7 +153,7 @@ def newPreventivoEdile():
 @login_required
 def apriPreventivoEdile():
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
-    settori = SettoreLavorazione.query.all()
+    settori = SettoreLavorazione.query.order_by( SettoreLavorazione.nome )
     prezzarioEdile = PrezzarioEdile.query.first()
     lavorazioni = PrezzarioEdile.returnLavorazioni()
     preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], data=app.preventivoEdileSelezionato[1]).first()
@@ -1431,19 +1432,21 @@ def handle_modifica_ordine_sottolavorazione(message):
 @socketio.on('modifica_sottolavorazione', namespace='/preventivoEdile')
 def handle_modifica_sottolavorazione(message):
 
-    app.server.logger.info("\n\nEntrato in mod_sottolav: messaggio: {}\n\n".format(message))
+    #app.server.logger.info("\n\nEntrato in mod_sottolav: messaggio: {}\n\n".format(message))
 
-    message = json.loads(message)
+    app.server.logger.info('mmm non capisco {}'.format(message['data']))
 
-    numero_preventivo = message.pop("numero_preventivo")
-    data = message.pop("data")
-    ordine = message.pop("ordine")
-    ordine_sottolavorazione = message.pop("ordine_sottolavorazione")
-    unitaMisura = message.pop("unitaMisura")
+    numero_preventivo = message["numero_preventivo"]
+    data = message["data"]
+    ordine = message["ordine"]
+    ordine_sottolavorazione = message["ordine_sottolavorazione"]
+    unitaMisura = message["unitaMisura"]
+
+    toChange = { message['fieldToChange'] : message['newValue']}
 
     PreventivoEdile.modificaSottolavorazione(numero_preventivo=numero_preventivo, data=data,
                                                  ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione,
-                                                 modifica=message, unitaMisura=unitaMisura)
+                                                 modifica=toChange, unitaMisura=unitaMisura)
 
 
 @socketio.on('stampa_preventivo', namespace='/preventivoEdile')

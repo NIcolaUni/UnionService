@@ -25,3 +25,20 @@ var modificaLivelloCliente = function( nome, cognome, indirizzo, valore){
             })
         }
 }
+
+/******************************************************************************/
+
+$(function(){
+
+
+          var offsetLabelDifficolta = $('div.inner').offset();
+          var titleClientHeight = $('#nomeCliente').height();
+          var difficoltaLabelHeight = $('label.difficoltaLabel').height();
+        //  alert(offsetLabelDifficolta.top)
+          $('.changeLivelloCliente').css('top', offsetLabelDifficolta.top+titleClientHeight-(difficoltaLabelHeight/8));
+
+
+});
+
+
+/***********************************************************************************/

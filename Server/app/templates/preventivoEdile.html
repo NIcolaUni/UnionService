@@ -11,9 +11,7 @@
                     <span>Settore di Lavorazione</span></br>
                     <div>
                         <select id="selectSettore" class="js-select2" name="service">
-                            {% for settore in settori %}
-                                <option>{{settore.nome}}</option>
-                            {% endfor %}
+
                         </select>
                         <div class="dropDownSelect2"></div>
                     </div>
@@ -21,18 +19,16 @@
                        del "dropDownSelect2"; per far cio' creo un div perennemente invisibile
                         in cui memorizzo di dati che voglio -->
                     <div id="memoriaLavorazioniAggiunte">
-                        {% for settore in settori %}
                           <!--
                                 Esempio struttura di #memoriaLavorazioniAggiunte
+                                <div id="memoriaLavorazioniAggiunte-1" class="settoreMemorizzato">
+                                    <div class="<id-del-bottone>">
+                                       <span class="classeToAdd">aggiunto-'+count+'</span>
+                                    </div>
+                                </div>
 
-                                '<div class="<id-del-bottone>">'+
-                                    '<span class="classeToAdd">aggiunto-'+count+'</span>'+
-                                '</div>'
                              -->
-                            <div id="memoriaLavorazioniAggiunte-{{settore.nome}}" class="settoreMemorizzato">
 
-                            </div>
-                        {% endfor %}
                     </div>
                 </div>
                 <div  id="divElementFattura" class="features col-md-8">
@@ -75,885 +71,76 @@
 <script>
         var socketHome = io.connect("{{sockUrl}}"+'/home');
 
-
         socketHome.on('connect', function() {
 
             socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
         });
 
-
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
 
-        $('#note').on('input', function(){
-            socketPreventivo.emit('inserisci_note', {   'numero_preventivo': '{{preventivo.numero_preventivo}}',
-                                                        'data': '{{preventivo.data}}',
-                                                        'nota': $(this).val() });
-        });
 
-        socketPreventivo.on( 'procediADownload', function(){
-            window.open('{{url_for("downloadPreventivoEdile")}}', '_blank');
-        });
+        /**** popolo la lista delle lavorazioni per settore ******/
 
-        $('#printButton').click(function(){
+        var listaLavorazioni=[];
+        var indexSettore =0;
 
-            swal.withFormAsync({
-            title: 'Scelte pre-stampa:',
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: 'Ok',
-            cancelButtonText: 'annulla',
-            closeOnConfirm: false,
-            formFields: [
+        {% for settore in settori %}
 
-                { id: 'iva', label: 'Iva (%)', name: 'iva', type: 'number', placeholder: 'intervento commessa', value: '0' },
-                { id: 'scontoTipo',
-                    type: 'select-hidden',
-                    options: [
-                      {value: '1', text: 'non applicare sconto'},
-                      {value: '2', text: 'applica sconto netto'},
-                      {value: '3', text: 'applica sconto percentuale'},
-                      {value: '4', text: 'forza totale'},
-                    ]},
-                { id: 'sumisura', label: 'Preventivo su misura', name: 'sumisura', value: 'sumisura', type: 'checkbox' },
-                { id: 'chiudi', label: 'Chiudi preventivo', name: 'chiudi', value: 'chiudi', type: 'checkbox' },
+            var listaLavorazioniPerSettore=[];
 
-            ]
-            }).then(function (context) {
-                if(context._isConfirm){
+            {% for lavorazione in lavorazioni %}
 
-                    var sceltaSconto=parseInt(context.swalForm['scontoTipo']);
-                    var chiudiPrev=false;
-                    var sumisura=false;
-                    var iva=parseInt(context.swalForm['iva']);
-                    if( context.swalForm['scontoTipo'] == 'chiudi' )
-                        chiudiPrev=true;
+                {% if lavorazione.settore == settore.nome %}
 
-                    if( context.swalForm['sumisura'] == 'sumisura' )
-                        sumisura=true;
+                    listaLavorazioniPerSettore.push("{{lavorazione.tipologia_lavorazione}}")
+                {% endif %}
+            {% endfor %}
 
-                    if( sceltaSconto == 1 ){
-                        socketPreventivo.emit('stampa_preventivo', {
-                                                        'dip': '{{dipendente.username}}',
-                                                        'numero_preventivo': '{{preventivo.numero_preventivo}}',
-                                                        'data': '{{preventivo.data}}',
-                                                        'iva': iva,
-                                                        'tipoSconto': sceltaSconto,
-                                                        'sconto': 0,
-                                                        'chiudiPreventivo': chiudiPrev,
-                                                        'sumisura': sumisura });
-                        sweetAlert.close();
-                    }
-                    else{
-                        var toPrint="";
+            if( listaLavorazioniPerSettore.length > 0 )
+                listaLavorazioni.push(['{{settore.nome}}', listaLavorazioniPerSettore]);
 
-                        if( sceltaSconto == 2 ){
-                            toPrint ="Inserire sconto netto da applicare:";
-                        }
-                        else if( sceltaSconto == 3 ){
-                            toPrint ="Inserire sconto percentuale da applicare:";
-                        }
-                        else if( sceltaSconto == 4 ){
-                            toPrint = "Forza totale:";
-                        }
-
-
-
-                        swal.withFormAsync({
-                            title: toPrint,
-                            showCancelButton: true,
-                            confirmButtonColor: '#DD6B55',
-                            confirmButtonText: 'Ok',
-                            cancelButtonText: 'annulla',
-                            closeOnConfirm: true,
-                            formFields: [
-
-                                { id: 'sconto', label: 'Sconto: ', name: 'sconto', type: 'number', placeholder: 'sconto', value: '0' },
-
-
-                            ]
-                        }).then(function (context) {
-                            if(context._isConfirm){
-                                 socketPreventivo.emit('stampa_preventivo', {
-                                                        'dip': '{{dipendente.username}}',
-                                                        'numero_preventivo': '{{preventivo.numero_preventivo}}',
-                                                        'data': '{{preventivo.data}}',
-                                                        'iva': iva,
-                                                        'tipoSconto': sceltaSconto,
-                                                        'sconto': parseFloat(context.swalForm['sconto']),
-                                                        'chiudiPreventivo': chiudiPrev,
-                                                        'sumisura': sumisura });
-
-                            }
-
-                        });
-
-                    }
-
-
-
-                }
-
-            });
-
-
-
-        });
-
-
-        var counter=0;
-
-        {% for elemento in lavorazioni %}
-
-          if( "{{elemento.settore}}" == $('#selectSettore').val() ){
-            $('#listaElementFattura').append(
-
-                 '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura {{elemento.settore}}"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
-            );
-            counter+=1;
-          }
         {% endfor %}
 
-        function settaLastElement(settore){
 
-            $('tr[id^='+settore+'_trBody]').last().addClass(settore+'_lastAdded');
-        }
+        aggiungiSettoriELavorazioni(listaLavorazioni)
 
-        function countLavorazioniSettore(settore){
-            var counter=0;
-            $('tr[id^='+settore+'_trBody]').each(function(){
-                counter++;
-            });
+        /********************************************************/
 
-            return counter;
-        }
+        $('button.elementFattura').click(function(){
 
-        function righeDimensioniSottolavorazione(unita, prezzoBase, numElement){
+            /* i replace all'interno del codice servono perchè gli apostrofi
+                dei nomi recuperati dal database vengono ritornati con il
+                loro codice e non con il simbolo che li rappresenta */
 
-            if( unita == "cad" ){
+            var settore = $('#selectSettore option:selected').text();
+            var tipologia = $(this).text();
 
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
-            }
-            if( unita == "a_corpo" ){
+            {% for lavorazione in lavorazioni %}
 
-                return  '<td class="tdPreventivo numColSmall aCorpoTd basePrezzo-'+prezzoBase+' inputPrev"></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
-            }
-            else if ( unita == "ml" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
-            }
-            else if ( unita == "mq" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
-                        '<td class="tdPreventivo numColSmall"></td>'+
-                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
-            }
-            else if( unita == "mc" ){
-                return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
-                        '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input class="numInput inputPrev-'+numElement+' profondita" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
-                        '<td class="tdPreventivo totDimensioni colSmall"></td>'
+                var settoreToCompare = '{{lavorazione.settore}}'.replace(/&#39;/g, "'");
 
-            }
-        }
+                if( settoreToCompare == settore )
+                {
+                    var lavorazioneToCompare = '{{lavorazione.tipologia_lavorazione}}'.replace(/&#39;/g, "'");
+
+                    if( lavorazioneToCompare == tipologia){
 
 
-        function calcolaTotalePreventivo(){
-            var totale = 0;
-
-            $('.trBody').each(function(){
-                    var numEl = $(this).attr('id').split('-')[1];
-                    totale+=parseFloat($('.trFoot'+numEl).children('.footTot').text().split(' ')[1]);
-
-            });
-
-            $('#divTotale').html('<span><u>Totale:</u> &euro; ' + Math.round(totale*100)/100 + '</span>' );
-        }
-
-        function calcolaTotaleParzialeSettore( settore ){
-            totale = 0;
-
-            $("."+settore+"_trFoot").each(function(){
-                totale += parseFloat($(this).children('.footTot').text().split(' ')[1]);
-
-            });
-
-            $('.'+settore).each(function(){
-                if( $(this).hasClass('trHead') ){
-
-                    $(this).children('.totaleSettore').html(
-                    '&euro; '+totale
-                    );
-                }
-            });
-        }
-
-        function calcolaTotaleParziale(settore, numOfEl){
-
-                var total = 0;
-                var quantita =0;
-
-              //  alert('.'+settore+'_trSottolavorazione-'+numOfEl)
-                $('.'+settore+'_trSottolavorazione-'+numOfEl).each(function(){
-                 //   alert('eppur entro')
-                    total+=parseFloat($(this).children('.totalSottolavorazione').text().split(' ')[1]);
-                    quantita+=parseFloat($(this).children('.totDimensioni').text());
-                });
-
-              //  alert( total )
-
-                $('.trFoot'+numOfEl).children('.footTot').html("&euro; "+ Math.round(total*100)/100 );
-                $('.trFoot'+numOfEl).children('.quantita').html(Math.round(quantita*100)/100);
-
-                calcolaTotaleParzialeSettore( settore );
-                calcolaTotalePreventivo();
-        }
-
-
-        function calcolaTotaleRigaSottolavorazione(classeElemento, ordineSottolav, prezzoBase){
-            /*
-                Il paramentro "classeElemento" ha la forma: "<settore>_trSottolavorazione-<ordineLavorazione>"
-                Il parametro "ordineSottolav" ha la forma: "sottolavNum-<ordineSottolavorazione>"
-
-            */
-
-
-            $('.'+classeElemento).each(function(){
-
-                if($(this).hasClass(ordineSottolav)){
-                    var totalePrezzo=prezzoBase;
-                    var quantita=1;
-
-
-                    $(this).children('td.inputField').each(function(){
-                       quantita=quantita*parseFloat($(this).children('input').val());
-
-                    });
-
-                   // alert( 'mmm '+ totalePrezzo + ' ' + quantita )
-                    totalePrezzo=parseFloat(totalePrezzo)*quantita;
-
-
-                    $(this).children('td.totDimensioni').text( Math.round(quantita*100)/100 );
-                    $(this).children('td.totalSottolavorazione').html( "&euro; " + Math.round(totalePrezzo*100)/100 );
-                }
-            });
-
-            calcolaTotaleParziale(classeElemento.split('_')[0], classeElemento.split('-')[1]);
-        }
-
-        function rienumeraMemoriaLavorazioni(){
-
-            var counter = 1;
-            $('#memoriaLavorazioniAggiunte').children('.settoreMemorizzato').each(function(){
-                $(this).children('div').each(function(){
-                    $(this).text('aggiunto-'+counter);
-                    counter+=1;
-                });
-
-            });
-        }
-
-        function rienumeraPagina(){
-            var counter = 1;
-            var oldNum="";
-
-
-            //rinomino tutti gli id degli elementi per non rischiare di
-            //averne due uguali nella renumerazione.
-            $('.trBody').each(function(){
-                var idThisFirstPart = $(this).attr('id').split('-')[0];
-                var settore=idThisFirstPart.split('_')[0];
-
-
-
-                oldNum = $(this).attr('id').split('-')[1]
-
-                $(this).attr('id', idThisFirstPart+'-old'+oldNum);
-
-
-                $('.'+settore+'_trSottolavorazione-'+oldNum).addClass(settore+'_trSottolavorazione-old'+oldNum);
-                $('.'+settore+'_trSottolavorazione-'+oldNum).removeClass(settore+'_trSottolavorazione-'+oldNum);
-
-                $(this).next('.trFoot'+oldNum).addClass('trFoot-old'+oldNum);
-                $(this).next('.trFoot'+oldNum).removeClass('trFoot'+oldNum);
-
-                /* nel caso vi siano righe aggiunte il next non recupera il "trFoor" specifico;
-                  con questo comando si previene questa eventualita' */
-                $("."+settore+"_trFoot").each(function(){
-                    if($(this).hasClass('trFoot'+oldNum)){
-                        $(this).addClass('trFoot-old'+oldNum);
-                        $(this).removeClass('trFoot'+oldNum);
-
+                        aggiungiRiga( $(this), "{{preventivo.numero_preventivo}}", "{{preventivo.data}}",
+                                settoreToCompare, lavorazioneToCompare,
+                                parseFloat('{{lavorazione.prezzoMax}}'), parseInt('{{prezzarioEdile.ricaricoAzienda}}'),
+                                '{{lavorazione.unitaMisura}}' );
                     }
-                });
-
-                $(this).children('.firstCol'+oldNum).addClass('firstCol-old'+oldNum);
-                $(this).children('.firstCol'+oldNum).removeClass('firstCol'+oldNum);
-                $(this).children('.firstCol-old'+oldNum).children('.add-'+oldNum).addClass('add-old'+oldNum);
-                $(this).children('.firstCol-old'+oldNum).children('.add-'+oldNum).removeClass('add-'+oldNum);
-
-                /*modifico i pulsanti "aggiungi elemento" degli elementi presenti*/
-                $('.aggiunto-'+oldNum).addClass('aggiunto-old'+oldNum);
-                $('.aggiunto-'+oldNum).removeClass('aggiunto-'+oldNum);
-            });
-
-
-            $('.trBody').each(function(){
-                var idThisFirstPart = $(this).attr('id').split('-')[0];
-                var settore=idThisFirstPart.split('_')[0];
-                oldNum =  $(this).attr('id').split('-old')[1];
-
-                $('.aggiunto-old'+oldNum).addClass('aggiunto-'+counter);
-                $('.aggiunto-old'+oldNum).removeClass('aggiunto-old'+oldNum);
-
-                $(this).attr('id', idThisFirstPart+'-'+counter);
-
-                $(this).children('.firstCol-old'+oldNum).addClass('firstCol'+counter);
-                $(this).children('.firstCol-old'+oldNum).removeClass('firstCol-old'+oldNum);
-
-                $(this).children('.firstCol'+counter).children('label').text(counter);
-                $(this).children('.firstCol'+counter).children('.add-old'+oldNum).addClass('add-'+counter);
-                $(this).children('.firstCol'+counter).children('.add-old'+oldNum).removeClass('add-old'+oldNum);
-
-
-                $oldSottolavorazioneRows=$('.'+settore+'_trSottolavorazione-old'+oldNum);
-
-                $oldSottolavorazioneRows.children('.inputField').children('.numInput').each(function(){
-                    $(this).removeClass('inputPrev-'+oldNum);
-                    // questa operazione e' per mantenere l'ordine delle classi originario, importante per
-                    // recuperare correttamente tutte le informazioni indispensabili.
-                    var typeOfDim=$(this).attr('class').split(' ')[1];
-                    $(this).removeClass(typeOfDim);
-
-                    $(this).addClass('inputPrev-'+counter);
-                    $(this).addClass(typeOfDim);
-                });
-
-
-                $oldSottolavorazioneRows.each(function(){
-                    $(this).removeClass(settore+'_trSottolavorazione-old'+oldNum);
-                    var oldSottolavorazioneRowClasses=$(this).attr('class');
-                    $(this).removeClass(oldSottolavorazioneRowClasses);
-                    $(this).addClass(settore+'_trSottolavorazione-'+counter);
-                    $(this).addClass(oldSottolavorazioneRowClasses);
-                });
-
-                $(this).next('.trFoot-old'+oldNum).addClass('trFoot'+counter);
-                $(this).next('.trFoot-old'+oldNum).removeClass('trFoot-old'+oldNum);
-
-                /* nel caso vi siano righe aggiunte il next non recupera il "trFoot" specifico;
-                  con questo comando si previene questa eventualita' */
-                $("."+settore+"_trFoot").each(function(){
-                    if($(this).hasClass('trFoot-old'+oldNum)){
-                        $(this).addClass('trFoot'+counter);
-                        $(this).removeClass('trFoot-old'+oldNum);
-
-                    }
-                });
-
-                var unitaMisura = $('.trFoot'+counter).attr('class').split(' ')[2].split('-')[1];
-                unitaMisura = unitaMisura.split('_')[0]+' '+unitaMisura.split('_')[1];
-
-                socketPreventivo.emit("modifica_ordine_lavorazione",
-                                {
-                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                    "data" : "{{preventivo.data}}",
-                                    "unitaMisura" : unitaMisura,
-                                    "ordineVecchio": oldNum,
-                                    "ordineNuovo" : counter
-
-                                }
-                      );
-                counter+=1;
-            });
-
-
-
-            rienumeraMemoriaLavorazioni();
-
-        } //FINE RIENUMERA PAGINA
-
-
-        /* variabile globale usata per tener conto del numero dell'ultima lavorazione aggiunta */
-        var ordineLavorazioni = 1;
-
-        function aggiungiRiga($this){
-                 if( $this.hasClass('aggiunto') ){
-                    console.log( "Devo prendere: " + $this.attr('class').split(" ")[1] + " riga num: " + $this.attr('class').split(" ")[3].split("-")[1] );
-                 }else{
-                     {% for lavorazione in lavorazioni %}
-                        if( "{{lavorazione.tipologia_lavorazione}}" ==  $this.text() ){
-
-                            //Segno nel bottono cliccato che e' una lavorazione aggiunto
-                            $this.addClass("aggiunto");
-                            $this.addClass("aggiunto-"+ordineLavorazioni);
-
-
-                            /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineLavorazioni al bottone*/
-                            $("#memoriaLavorazioniAggiunte-{{lavorazione.settore}}").append(
-                                '<div class="'+$this.attr('id')+'">'+
-                                    '<span class="classeToAdd">aggiunto-'+ordineLavorazioni+'</span>'+
-                                '</div>'
-
-                            );
-
-
-                            var sezioneSettore =  $('#bodyPreventivo').children('.{{lavorazione.settore}}');
-
-                            var costoLavorazione = parseFloat('{{lavorazione.prezzoMax}}');
-                            var ricaricoAzienda = parseInt('{{prezzarioEdile.ricaricoAzienda}}');
-                            var costoLavorazione = costoLavorazione+(costoLavorazione*ricaricoAzienda/100);
-
-
-                            var unitaMisura = '{{lavorazione.unitaMisura}}';
-
-                            if( unitaMisura == 'a corpo' )
-                                unitaMisura = 'a_corpo';
-
-                            //Preparo la riga della lavorazione
-                            var rowsToAdd='<tr id="{{lavorazione.settore}}_trBody-'+ordineLavorazioni+'" class="trBody {{lavorazione.settore}}_lastAdded">'+
-                                            '<td class="firstCol'+ordineLavorazioni+' firstCol"></td>'+
-                                            '<td class="tdPreventivo tdLavorazione"><textarea>{{lavorazione.tipologia_lavorazione}}</textarea></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo numColSmall"></td>'+
-                                            '<td class="tdPreventivo prezzoBase colSmall">&euro; '+costoLavorazione+'</td>'+
-                                            '<td></td>'+
-                                        '</tr>'+
-                                        '<tr class="{{lavorazione.settore}}_trSottolavorazione-'+ordineLavorazioni+' sottolavNum-0">'+
-                                                '<td colspan="2"><a class="delSottolavorazione fa fa-trash"></a></td>'+
-                                                righeDimensioniSottolavorazione( unitaMisura,
-                                                                                  costoLavorazione,
-                                                                                   ordineLavorazioni)+
-                                                '<td class="tdPreventivo numColSmall">{{lavorazione.unitaMisura}}</td>'+
-                                                '<td class="tdPreventivo colSmall"></td>'+
-                                                '<td class="totalSottolavorazione"></td>'+
-                                        '</tr>'+
-                                        '<tr class="trFoot {{lavorazione.settore}}_trFoot unitaMisura-'+ unitaMisura +' trFoot'+parseInt(ordineLavorazioni)+'">'+
-                                                '<td colspan="6"></td>'+
-                                                '<td class="quantita colSmall"></td>'+
-                                                '<td>{{lavorazione.unitaMisura}}</td>'+
-                                                '<td colSmall"></td>'+
-                                                '<td class="footTot"></td>'+
-                                         '</tr>';
-
-
-
-                            //se non e' gia' stata aggiunta una sezione lo faccio e subito sotto metto la lavorazione
-                            // e il relativo footer
-                            if( !sezioneSettore.length ){
-
-                                $('#bodyPreventivo').append(
-
-                                    '<tr class="trHead {{lavorazione.settore}}">'+
-                                        '<td  colspan="9"  class="titleSettoreTd">{{lavorazione.settore}}</td>'+
-                                        '<td class="titleSettoreTd totaleSettore"></td>'+
-                                    '</tr>'+
-                                    '<tr class="trHead {{lavorazione.settore}}_head">'+
-                                        '<th class="thPreventivo"></th>'+
-                                        '<th class="thPreventivo"></th>'+
-                                        '<th class="thPreventivo numColSmall">N</th>'+
-                                        '<th class="thPreventivo numColSmall">L</th>'+
-                                        '<th class="thPreventivo numColSmall">H</th>'+
-                                        '<th class="thPreventivo numColSmall">P</th>'+
-                                        '<th class="thPreventivo colSmall">Quantità</th>'+
-                                        '<th class="thPreventivo numColSmall">Unità</th>'+
-                                        '<th class="thPreventivo colSmall">Prezzo unitario</th>'+
-                                        '<th class="thPreventivo">Totale</th>'+
-                                    '</tr>'+
-                                    rowsToAdd
-
-                                );
-
-                            }
-                            else{
-
-
-                                $(".{{lavorazione.settore}}_lastAdded").removeClass("{{lavorazione.settore}}_lastAdded");
-
-                                $('.{{lavorazione.settore}}_trFoot').last().after( rowsToAdd );
-                            }
-
-
-
-                            calcolaTotaleRigaSottolavorazione('{{lavorazione.settore}}_trSottolavorazione-'+ordineLavorazioni, 'sottolavNum-0', costoLavorazione );
-
-                            /*Ogni volta che un inputField viene modificato: ricalcola il totale della riga e aggiorna il db */
-                            $('.inputPrev-'+ordineLavorazioni).on('input', function(){
-                                     var classesOfRow = $(this).parent().parent().attr('class').split(' ');
-                                     calcolaTotaleRigaSottolavorazione( classesOfRow[0], 'sottolavNum-0', costoLavorazione );
-
-                                     ordine = classesOfRow[0].split('-')[1];
-                                     var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[2].split('-')[1];
-                                     unitaMisura = unitaMisura.split('_')[0]+' '+unitaMisura.split('_')[1];
-
-                                     numero =parseFloat($(this).val());
-                                     variabile =$(this).attr('class').split(' ')[2];
-
-                                     messaggio = '{ '+
-                                                        '"numero_preventivo" : "{{preventivo.numero_preventivo}}", '+
-                                                        '"data" : "{{preventivo.data}}", '+
-                                                        '"ordine" : "' + ordine + '", '+
-                                                        '"ordine_sottolavorazione" : "0", '+
-                                                        '"unitaMisura" : "'+ unitaMisura+ '", '+
-                                                        '"'+ variabile +'" : "'+ numero+ '"}';
-
-                                     socketPreventivo.emit("modifica_sottolavorazione", messaggio);
-                            });
-
-
-                            $('tr.trBody').draggable({ helper: "clone"});
-
-
-                            /*registro la riga nel database*/
-                            socketPreventivo.emit("add_nuova_lavorazione",
-                                                    {
-                                                        "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                                        "data" : "{{preventivo.data}}",
-                                                        "settore" : "{{lavorazione.settore}}",
-                                                        "lavorazione" : "{{lavorazione.tipologia_lavorazione}}",
-                                                        "unitaMisura" : "{{lavorazione.unitaMisura}}",
-                                                        "ordine": ordineLavorazioni,
-                                                        "prezzoUnitario" : costoLavorazione
-
-                                                    }
-
-                                                  );
-
-
-                            /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
-                            rienumeraPagina();
-
-
-                            //Aggiungo funzionalita' ai "bottoni" nelle righe del preventivo e i bottoni stessi...
-                             $('.trBody').each(function(){
-
-                                  var numEl = $(this).attr('id').split('-')[1];
-
-                                  //aggiungo i bottoni
-                                  $(this).children('td.firstCol').html( '<label>'+ numEl + '</label><br/><a class="delElement fa fa-trash"></a><a class="ctrButton addElement fa fa-plus add-'+numEl+'">' );
-
-
-                                  //aggiungo la funzione 'cancellaLavorazione' al relativo bottone
-                                  $(this).children('td.firstCol').children('a.delElement').click(function(){
-                                        var idElementToDel=$(this).parent().parent().attr('id');
-                                        var numEl = idElementToDel.split('-')[1];
-                                        var settore =idElementToDel.split('_')[0];
-                                        var lastEl = $('#'+idElementToDel).hasClass(settore+'_lastAdded'); //variabile booleana
-
-                                         //decremento il contatore delle lavorazioni del relativo settore
-                                         var countLav = countLavorazioniSettore("{{lavorazione.settore}}");
-                                         //$("."+settore).removeClass('counterLavorazioni-'+ parseInt(countLav));
-                                        // $("."+settore).addClass('counterLavorazioni-'+ parseInt(countLav-1));
-
-
-
-                                        $('#'+idElementToDel).remove();
-                                        $('.'+settore+'_trSottolavorazione-'+numEl).remove();
-                                        $('.trFoot'+numEl).remove();
-
-                                        $('#memoriaLavorazioniAggiunte-'+settore).children('div').each(function(){
-                                            if( $(this).text() == 'aggiunto-'+numEl )
-                                                $(this).remove();
-                                        });
-
-                                        $('.aggiunto-'+numEl).removeClass('aggiunto');
-                                        $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
-
-                                        socketPreventivo.emit("elimina_lavorazione",
-                                                        {
-                                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                                            "data" : "{{preventivo.data}}",
-                                                            "ordine": numEl,
-
-                                                        }
-
-                                        );
-
-                                        rienumeraPagina();
-
-                                        if( lastEl ){
-                                            settaLastElement(settore);
-                                        }
-
-                                        calcolaTotalePreventivo();
-
-
-                                        // se non ci sono piu' lavorazioni per il relativo settore
-                                        // elimina l'intestazione
-                                        countLav = countLavorazioniSettore("{{lavorazione.settore}}");
-
-                                        if( countLav == 0 ){
-
-                                            $('.'+settore).each(function(){
-                                                if($(this).hasClass('trHead'))
-                                                    $(this).remove();
-                                            });
-
-                                            $('.'+settore+'_head').remove();
-
-                                        }
-                                  });
-
-                                  //aggiungo la funzione 'aggiungiSottolavorazione' al relativo bottone
-                                  $(this).children('td.firstCol').children('a.add-'+numEl).click( function(){
-
-                                        var settore= $(this).parent().parent().attr('id').split('_')[0];
-                                        var numElement = $(this).attr('class').split(' ')[4].split('-')[1];
-
-                                        var unitaMisura = $('.trFoot'+numElement).attr('class').split(' ')[2].split('-')[1];
-
-
-                                        var prezzoUnitarioWithEuro = $('#'+settore+'_trBody-'+numElement).children('.prezzoBase').text();
-                                        var prezzoUnitario = prezzoUnitarioWithEuro.split(' ')[1];
-
-                                        //Aggiungo una nuova riga prima del totale parziale ( rappresentato dalla classe trFoot )
-                                        $('.trFoot'+numElement).before(
-                                            '<tr class="'+settore+'_trSottolavorazione-'+numElement+'">'+
-                                                '<td colspan="2"><a class="delSottolavorazione fa fa-trash"></a></td>'+
-                                                righeDimensioniSottolavorazione( unitaMisura, prezzoUnitario, numElement)+
-                                               '<td class="tdPreventivo numColSmall">'+unitaMisura+'</td>'+
-                                                '<td class="tdPreventivo colSmall"></td>'+
-                                                '<td class="totalSottolavorazione"></td>'+
-                                            '</tr>'
-
-                                        );
-
-                                        calcolaTotaleParziale(settore, numElement);
-
-                                        //numero ogni "sottoriga aggiunta" e calcolo il totale della riga
-                                        var aux=0;
-
-                                        $('.'+settore+'_trSottolavorazione-'+numElement).each(function(){
-
-                                            $(this).addClass('sottolavNum-'+aux);
-                                            calcolaTotaleRigaSottolavorazione( settore+'_trSottolavorazione-'+numElement, 'sottolavNum-'+aux ,parseFloat(prezzoUnitario));
-                                            aux+=1;
-                                        });
-
-
-                                        //Alla variazione di un InputField aggiorna i totali e il db
-                                        $('.inputPrev-'+numElement).on('input', function(){
-                                            var classesOfRow = $(this).parent().parent().attr('class').split(' ');
-                                            calcolaTotaleRigaSottolavorazione(classesOfRow[0], classesOfRow[1], prezzoUnitario);
-
-                                            //recupero le informazioni per registrare la modifica nel db
-
-                                            var ordine = parseInt(classesOfRow[0].split('-')[1]);
-                                            var ordineSottolavorazione = parseInt(classesOfRow[1].split('-')[1])+1;
-
-
-                                            var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[2].split('-')[1];
-
-
-                                            numero =parseFloat($(this).val());
-                                            variabile =$(this).attr('class').split(' ')[2];
-
-                                            messaggio = '{ '+
-                                                            '"numero_preventivo" : "{{preventivo.numero_preventivo}}", '+
-                                                            '"data" : "{{preventivo.data}}", '+
-                                                            '"ordine" : "' + ordine + '", '+
-                                                            '"ordine_sottolavorazione" : "'+  classesOfRow[1].split('-')[1] + '", '+
-                                                            '"unitaMisura" : "'+ unitaMisura+ '", '+
-                                                            '"'+ variabile +'" : "'+ numero+ '"}';
-
-                                            socketPreventivo.emit("modifica_sottolavorazione", messaggio);
-
-
-
-                                        });
-
-
-
-                                        $('.delSottolavorazione').unbind('click').on( 'click', function(){
-                                            var sottolavorazioniCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
-                                            var ordineLavorazione=sottolavorazioniCommonClass.split('-')[1];
-                                            var unitaMisura=$('.trFoot'+ordineLavorazione).attr('class').split(' ')[2].split('-')[1];
-                                            $(this).parent().parent().remove();
-
-
-                                            var ordine_sottolavorazione=$(this).parent().parent().attr('class').split(' ')[1].split('-')[1];
-
-
-                                            socketPreventivo.emit("elimina_sottolavorazione",
-                                                {
-                                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                                    "data" : "{{preventivo.data}}",
-                                                    "ordine": numElement,
-                                                    "ordine_sottolavorazione": ordine_sottolavorazione
-
-                                                }
-
-                                            );
-
-                                            var $sottolavorazioni= $('.'+sottolavorazioniCommonClass);
-
-
-                                            //rienumero i sottoelementi restanti e aggiorna il db
-                                            var aux=0;
-                                            $sottolavorazioni.each(function(){
-
-                                                var oldOrder = $(this).attr('class').split(' ')[1].split('-')[1];
-
-                                                if( !( typeof oldOrder === 'undefined') ){
-                                                    $(this).removeClass();
-                                                    $(this).addClass(sottolavorazioniCommonClass);
-                                                    $(this).addClass('sottolavNum-'+aux);
-                                                    unitaMisura = unitaMisura.split('_')[0]+ ' ' + unitaMisura.split('_')[1];
-
-                                                    socketPreventivo.emit("modifica_ordine_sottolavorazione",
-                                                        {
-                                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                                            "data" : "{{preventivo.data}}",
-                                                            "ordine": ordineLavorazione,
-                                                            "oldOrdineSottolav": oldOrder,
-                                                            "newOrdineSottolav": aux,
-                                                            "unitaMisura": unitaMisura
-
-                                                        }
-
-                                                    );
-
-                                                    aux+=1;
-                                                }
-                                            });
-
-                                            var sett=sottolavorazioniCommonClass.split('_')[0];
-                                            var num=sottolavorazioniCommonClass.split('-')[1];
-                                            calcolaTotaleParziale(sett, num);
-
-
-
-
-                                        }); // FINE delSottolavorazione
-
-                                        socketPreventivo.emit("add_nuova_sottolavorazione",
-                                        {
-                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                            "data" : "{{preventivo.data}}",
-                                            "ordine": numElement
-
-                                        }
-
-                                        );
-
-                                  }); //FINE addSottolavorazione
-
-
-
-
-                             });
-
-                             ordineLavorazioni++;
-
-                        }
-                     {% endfor %}
-                 }
-
-        } //FINE AGGIUNGI RIGA
-
-        function reimpostaClassiBottoniLavorazioni(){
-
-            $('#listaElementFattura').html("");
-            var counter=0;
-
-            {% for elemento in lavorazioni %}
-
-                if( "{{elemento.settore}}" == $('#selectSettore').val() ){
-
-                    var classesToAdd='';
-
-                   $('#listaElementFattura').append(
-                        '<li><button id="button'+ counter +'" onclick="aggiungiRiga($(this))" class="elementFattura {{elemento.settore}}"><label for="button'+ counter +'">{{elemento.tipologia_lavorazione}}</label></button></li>'
-                   );
-
-                    /*Riaggiungo le classi dinamiche che il change() toglierebbe*/
-                    $('#memoriaLavorazioniAggiunte-{{elemento.settore}}').children('div').each(function(){
-                        if($(this).hasClass('button'+counter)){
-
-                            classesToAdd="aggiunto "+ $(this).text();
-
-                            $('#button'+counter).addClass(classesToAdd);
-                        }
-
-                    });
-
-                     counter+=1;
-
                 }
 
             {% endfor %}
-        }
+        });
 
-
-        /* Calcola il totale delle sottolavorazioni, dei settori e del preventivo completo;
-            questa funzione viene invocata dopo costruisciPreventivo() */
-        function calcolaTotaliPreventivoDopoIlCostruisci(){
-
-            /* ciclo direttamente sui settori effettivamente presenti evitando di ciclare su tutti i
-                settori disponibili */
-
-
-            {% for settore in infoPreventivo[0] %}
-
-                $("tr[class^='{{settore}}_trSottolavorazione']").each(function(){
-                    var classes = $(this).attr('class').split(' ');
-                    var classeElemento = classes[0];
-                    var ordineSottolav = classes[1];
-                    var prezzoBase = 0;
-                    var tmpCount =0;
-
-                    $(this).children('td.inputField').first().each(function(){
-                        prezzoBase=parseFloat($(this).attr('class').split(' ')[3].split('-')[1]);
-                        tmpCount++;
-                    });
-
-                    if( tmpCount == 0 )
-                        $(this).children('td.aCorpoTd').first().each(function(){
-                            prezzoBase=parseFloat($(this).attr('class').split(' ')[3].split('-')[1]);
-
-                        });
-
-
-                    calcolaTotaleRigaSottolavorazione(classeElemento, ordineSottolav, prezzoBase);
-                });
-
-                {% for lav in infoPreventivo[1] %}
-                    {% if settore == lav.settore %}
-
-                        calcolaTotaleParziale('{{settore}}', lav.ordine);
-
-                    {% endif %}
-                {% endfor %}
-
-                calcolaTotaleParzialeSettore( '{{settore}}' );
-
-            {% endfor %}
-
-            calcolaTotalePreventivo();
-
-        }
-
+        /**********************************************************/
 
         /* Questa funzione 'fa qualcosa' quando la pagina e' aperta in modalita' modifica */
 
-        function costruisciPreventivo(){
+        var costruisciPreventivo =function(){
 
             var lastLavAdded = "";
             {% for settore in infoPreventivo[0] %}
@@ -963,6 +150,7 @@
                 {% for lavorazione in infoPreventivo[1] %}
 
                     {% if lavorazione[0].settore == settore %}
+
 
                         //trovo il numero che indica l'ordine nel select del bottone
                         //associato alla lavorazione
@@ -988,428 +176,75 @@
                             {% endif %}
                         {% endfor %}
 
-
-                        $("#memoriaLavorazioniAggiunte-{{settore}}").append(
-                            '<div class="button'+ordineBottone+'">'+
-                                '<span class="classeToAdd">aggiunto-{{lavorazione[0].ordine}}</span>'+
-                            '</div>'
-
-                        );
+                        var settore = '{{settore}}'.replace(/&#39;/g, "'");
+                        var tipologia_lavorazione ='{{lavorazione[0].tipologia_lavorazione}}'.replace(/&#39;/g, "'");
+                        var unitaMisura = '{{lavorazione[0].unitaMisura}}'
 
 
-                        lastLavAdded = "{{settore}}_trBody-{{lavorazione[0].ordine}}";
+                        var classSettore = trovaClassSettore(settore);
+                        var idButton = trovaIdButtonLavorazione(classSettore, tipologia_lavorazione);
 
-                        //Preparo la riga della lavorazione
-                        rowsToAdd+='<tr id="{{settore}}_trBody-{{lavorazione[0].ordine}}" class="trBody {{settore}}">'+
-                                        '<td class="firstCol'+ordineLavorazioni+' firstCol"></td>'+
-                                        '<td class="tdPreventivo tdLavorazione"><textarea>{{lavorazione[0].tipologia_lavorazione}}</textarea></td>'+
-                                        '<td class="tdPreventivo numColSmall"></td>'+
-                                        '<td class="tdPreventivo numColSmall"></td>'+
-                                        '<td class="tdPreventivo numColSmall"></td>'+
-                                        '<td class="tdPreventivo numColSmall"></td>'+
-                                        '<td class="tdPreventivo numColSmall"></td>'+
-                                        '<td class="tdPreventivo numColSmall"></td>'+
-                                        '<td class="tdPreventivo prezzoBase colSmall">&euro; {{lavorazione[0].prezzoUnitario}}</td>'+
-                                        '<td></td>'+
-                                    '</tr>';
+                        $('#selectSettore').val(settore);
 
+                        settaDisabilitaSocketio(true);
+
+                        $('#'+idButton).trigger('click');
+
+                        var firstSottolav = true
 
                         {% for sottolavorazione in lavorazione[3] %}
-                            var unitaMisura = '{{lavorazione[0].unitaMisura}}';
-                            if( unitaMisura == 'a corpo' )
-                                unitaMisura = 'a_corpo';
 
+                            if( !firstSottolav ){
+                                $('#'+classSettore+'_trBody-{{lavorazione[0].ordine}} td.firstCol').children('a.addElement').trigger('click');
+                            }
+                            else{
+                                firstSottolav=false;
+                            }
 
-                            rowsToAdd+='<tr class="{{settore}}_trSottolavorazione-{{lavorazione[0].ordine}} sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}">'+
-                                            '<td colspan="2"><a class="delSottolavorazione fa fa-trash"></a></td>'+
-                                            righeDimensioniSottolavorazione( unitaMisura,
-                                                                             '{{lavorazione[0].prezzoUnitario}}',
-                                                                              '{{lavorazione[0].ordine}}')+
-                                            '<td class="tdPreventivo numColSmall">{{lavorazione[0].unitaMisura}}</td>'+
-                                            '<td class="tdPreventivo colSmall"></td>'+
-                                            '<td class="totalSottolavorazione"></td>'+
-                                        '</tr>'
+                            $('tr.'+classSettore+'_trSottolavorazione-{{lavorazione[0].ordine}}.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').each(function(){
+
+                                $(this).children('td.inputField').each(function(){
+                                    $(this).children('input').each(function(){
+
+                                        if( $(this).hasClass('numero') ){
+                                            $(this).val('{{sottolavorazione.numero}}');
+                                            $(this).trigger('input');
+                                        }
+                                        else if( $(this).hasClass('larghezza') ){
+                                            $(this).val('{{sottolavorazione.larghezza}}');
+                                            $(this).trigger('input');
+                                        }
+                                        else if( $(this).hasClass('altezza') ){
+                                            $(this).val('{{sottolavorazione.altezza}}');
+                                            $(this).trigger('input');
+                                        }
+                                        else if( $(this).hasClass('profondita') ){
+                                            $(this).val('{{sottolavorazione.profondita}}');
+                                            $(this).trigger('input');
+                                        }
+
+                                    });
+                                });
+                            });
 
 
                         {% endfor %}
 
-                        var unitaMisura = '{{lavorazione[0].unitaMisura}}';
-
-                        if( unitaMisura == 'a corpo')
-                            unitaMisura ='a_corpo';
-
-                        /*aggiungo il footer */
-                        rowsToAdd += '<tr class="trFoot {{settore}}_trFoot unitaMisura-'+unitaMisura+' trFoot{{lavorazione[0].ordine}}">'+
-                                        '<td colspan="6"></td>'+
-                                        '<td class="quantita colSmall"></td>'+
-                                        '<td>{{lavorazione[0].unitaMisura}}</td>'+
-                                        '<td colSmall"></td>'+
-                                        '<td class="footTot"></td>'+
-                                    '</tr>';
+                        settaDisabilitaSocketio(false);
 
                     {% endif %}
                 {% endfor %}
 
-
-                $('#bodyPreventivo').append(
-
-                    '<tr class="trHead {{settore}}">'+
-                        '<td  colspan="9"  class="titleSettoreTd">{{settore}}</td>'+
-                        '<td class="titleSettoreTd totaleSettore"></td>'+
-                    '</tr>'+
-                    '<tr class="trHead {{settore}}_head">'+
-                        '<th class="thPreventivo"></th>'+
-                        '<th class="thPreventivo"></th>'+
-                        '<th class="thPreventivo numColSmall">N</th>'+
-                        '<th class="thPreventivo numColSmall">L</th>'+
-                        '<th class="thPreventivo numColSmall">H</th>'+
-                        '<th class="thPreventivo numColSmall">P</th>'+
-                        '<th class="thPreventivo colSmall">Quantità</th>'+
-                        '<th class="thPreventivo numColSmall">Unità</th>'+
-                        '<th class="thPreventivo colSmall">Prezzo unitario</th>'+
-                        '<th class="thPreventivo">Totale</th>'+
-                    '</tr>'+
-                    rowsToAdd
-
-
-                );
-
-                /*Ogni volta che un inputField viene modificato: ricalcola il totale della riga e aggiorna il db */
-                $('.inputPrev-'+ordineLavorazioni).on('input', function(){
-
-                         var prezzoBase = parseFloat($(this).parent().attr('class').split(' ')[3].split('-')[1]);
-                         var classesOfRow = $(this).parent().parent().attr('class').split(' ');
-                         calcolaTotaleRigaSottolavorazione( classesOfRow[0], 'sottolavNum-0', prezzoBase );
-
-                         ordine = classesOfRow[0].split('-')[1];
-                         var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[2].split('-')[1];
-                         unitaMisura = unitaMisura.split('_')[0] + ' ' +unitaMisura.split('_')[1];
-                         numero =parseFloat($(this).val());
-                         variabile =$(this).attr('class').split(' ')[2];
-
-                         messaggio = '{ '+
-                                            '"numero_preventivo" : "{{preventivo.numero_preventivo}}", '+
-                                            '"data" : "{{preventivo.data}}", '+
-                                            '"ordine" : "' + ordine + '", '+
-                                            '"ordine_sottolavorazione" : "0", '+
-                                            '"unitaMisura" : "'+ unitaMisura+ '", '+
-                                            '"'+ variabile +'" : "'+ numero+ '"}';
-
-                         socketPreventivo.emit("modifica_sottolavorazione", messaggio);
-                });
-
-
-                /* aggiungo la classe last_added */
-                settaLastElement('{{settore}}')
-                ordineLavorazioni = parseInt(lastLavAdded.split('-')[1])+1;
             {% endfor %}
 
-
-
-            //Aggiungo funzionalita' ai "bottoni" nelle righe del preventivo e i bottoni stessi...
-            $('.trBody').each(function(){
-
-                  var numEl = $(this).attr('id').split('-')[1];
-                  var settore = $(this).attr('id').split('_')[0];
-
-                  //aggiungo i bottoni del/add/edit a tutte le righe del preventivo
-                  $(this).children('td.firstCol').html( '<label>'+ numEl + '</label><br/><a class="delElement fa fa-trash"></a><a class="ctrButton addElement fa fa-plus add-'+numEl+'">' );
-
-
-                  //aggiungo la funzione 'cancellaLavorazione' al relativo bottone
-                  $(this).children('td.firstCol').children('a.delElement').click(function(){
-                        var idElementToDel=$(this).parent().parent().attr('id');
-                        var numEl = idElementToDel.split('-')[1];
-                        var settore =idElementToDel.split('_')[0];
-                        var lastEl = $('#'+idElementToDel).hasClass(settore+'_lastAdded'); //variabile booleana
-
-                         //decremento il contatore delle lavorazioni del relativo settore
-                         var countLav = countLavorazioniSettore(settore);
-                         //$("."+settore).removeClass('counterLavorazioni-'+ parseInt(countLav));
-                         //$("."+settore).addClass('counterLavorazioni-'+ parseInt(countLav-1));
-
-
-
-                        $('#'+idElementToDel).remove();
-                        $('.'+settore+'_trSottolavorazione-'+numEl).remove();
-                        $('.trFoot'+numEl).remove();
-
-                        $('#memoriaLavorazioniAggiunte-'+settore).children('div').each(function(){
-                            if( $(this).text() == 'aggiunto-'+numEl )
-                                $(this).remove();
-                        });
-
-                        $('.aggiunto-'+numEl).removeClass('aggiunto');
-                        $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
-
-                        socketPreventivo.emit("elimina_lavorazione",
-                                        {
-                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                            "data" : "{{preventivo.data}}",
-                                            "ordine": numEl,
-
-                                        }
-
-                        );
-
-                        rienumeraPagina();
-
-                        if( lastEl ){
-                            settaLastElement(settore);
-                        }
-
-                        calcolaTotalePreventivo();
-
-
-                        // se non ci sono piu' lavorazioni per il relativo settore
-                        // elimina l'intestazione
-                        countLav = countLavorazioniSettore(settore);
-
-                        if( countLav == 0 ){
-
-                            $('.'+settore).each(function(){
-                                if($(this).hasClass('trHead'))
-                                    $(this).remove();
-                            });
-
-                            $('.'+settore+'_head').remove();
-
-                        }
-                  });
-
-                  $('.delSottolavorazione').unbind('click').on( 'click', function(){
-                    var sottolavorazioniCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
-                    var ordineLavorazione=sottolavorazioniCommonClass.split('-')[1];
-                    var unitaMisura=$('.trFoot'+ordineLavorazione).attr('class').split(' ')[3].split('-')[1];
-                    $(this).parent().parent().remove();
-
-
-                    var ordine_sottolavorazione=$(this).parent().parent().attr('class').split(' ')[1].split('-')[1];
-
-
-                    socketPreventivo.emit("elimina_sottolavorazione",
-                        {
-                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                            "data" : "{{preventivo.data}}",
-                            "ordine": ordineLavorazione,
-                            "ordine_sottolavorazione": ordine_sottolavorazione
-
-                        }
-
-                    );
-
-                    var $sottolavorazioni= $('.'+sottolavorazioniCommonClass);
-
-
-                    //rienumero i sottoelementi restanti e aggiorna il db
-                    var aux=0;
-                    $sottolavorazioni.each(function(){
-
-                        var oldOrder = $(this).attr('class').split(' ')[1].split('-')[1];
-
-                        if( !( typeof oldOrder === 'undefined') ){
-                            $(this).removeClass();
-                            $(this).addClass(sottolavorazioniCommonClass);
-                            $(this).addClass('sottolavNum-'+aux);
-                            unitaMisura = unitaMisura.split('_')[0] + ' ' +unitaMisura.split('_')[1];
-
-                            socketPreventivo.emit("modifica_ordine_sottolavorazione",
-                                {
-                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                    "data" : "{{preventivo.data}}",
-                                    "ordine": ordineLavorazione,
-                                    "oldOrdineSottolav": oldOrder,
-                                    "newOrdineSottolav": aux,
-                                    "unitaMisura": unitaMisura
-
-                                }
-
-                            );
-
-                            aux+=1;
-                        }
-                    });
-
-                    var sett=sottolavorazioniCommonClass.split('_')[0];
-                    var num=sottolavorazioniCommonClass.split('-')[1];
-                    calcolaTotaleParziale(sett, num);
-
-
-
-
-                }); // FINE delSottolavorazione
-
-                  //aggiungo la funzione 'aggiungiSottolavorazione' al relativo bottone
-                  $(this).children('td.firstCol').children('a.add-'+numEl).click( function(){
-
-                        var settore= $(this).parent().parent().attr('id').split('_')[0];
-                        var numElement = $(this).attr('class').split(' ')[4].split('-')[1];
-
-                        var unitaMisura = $('.trFoot'+numElement).attr('class').split(' ')[2].split('-')[1];
-
-
-                        var prezzoUnitarioWithEuro = $('#'+settore+'_trBody-'+numElement).children('.prezzoBase').text();
-                        var prezzoUnitario = prezzoUnitarioWithEuro.split(' ')[1];
-
-                        console.log('unitamisura: ' + unitaMisura + ' prezzpUnitario: '+ prezzoUnitario + ' numElement: '+numElement);
-
-                        //Aggiungo una nuova riga prima del totale parziale ( rappresentato dalla classe trFoot )
-                        $('.trFoot'+numElement).before(
-                            '<tr class="'+settore+'_trSottolavorazione-'+numElement+'">'+
-                                '<td colspan="2"><a class="delSottolavorazione fa fa-trash"></a></td>'+
-                                righeDimensioniSottolavorazione( unitaMisura, prezzoUnitario, numElement)+
-                               '<td class="tdPreventivo numColSmall">'+unitaMisura+'</td>'+
-                                '<td class="tdPreventivo colSmall"></td>'+
-                                '<td class="totalSottolavorazione"></td>'+
-                            '</tr>'
-
-                        );
-
-
-                        calcolaTotaleParziale(settore, numElement);
-
-                        //numero ogni "sottoriga aggiunta" e calcolo il totale della riga
-                        var aux=0;
-
-                        $('.'+settore+'_trSottolavorazione-'+numElement).each(function(){
-
-                            $(this).addClass('sottolavNum-'+aux);
-                            calcolaTotaleRigaSottolavorazione( settore+'_trSottolavorazione-'+numElement, 'sottolavNum-'+aux ,parseFloat(prezzoUnitario));
-                            aux+=1;
-                        });
-
-
-                        //Alla variazione di un InputField aggiorna i totali e il db
-                        $('.inputPrev-'+numElement).on('input', function(){
-                            var classesOfRow = $(this).parent().parent().attr('class').split(' ');
-                            calcolaTotaleRigaSottolavorazione(classesOfRow[0], classesOfRow[1], prezzoUnitario);
-
-                            //recupero le informazioni per registrare la modifica nel db
-
-                            var ordine = parseInt(classesOfRow[0].split('-')[1]);
-                            var ordineSottolavorazione = parseInt(classesOfRow[1].split('-')[1])+1;
-
-
-                            var unitaMisura = $('.trFoot'+ordine).attr('class').split(' ')[3].split('-')[1];
-                            unitaMisura = unitaMisura.split('_')[0] + ' ' +unitaMisura.split('_')[1];
-
-                            numero =parseFloat($(this).val());
-                            variabile =$(this).attr('class').split(' ')[2];
-
-                            messaggio = '{ '+
-                                            '"numero_preventivo" : "{{preventivo.numero_preventivo}}", '+
-                                            '"data" : "{{preventivo.data}}", '+
-                                            '"ordine" : "' + ordine + '", '+
-                                            '"ordine_sottolavorazione" : "'+  classesOfRow[1].split('-')[1] + '", '+
-                                            '"unitaMisura" : "'+ unitaMisura+ '", '+
-                                            '"'+ variabile +'" : "'+ numero+ '"}';
-
-                            socketPreventivo.emit("modifica_sottolavorazione", messaggio);
-
-
-
-                        });
-
-
-
-                        $('.delSottolavorazione').unbind('click').on( 'click', function(){
-                            var sottolavorazioniCommonClass=$(this).parent().parent().attr('class').split(' ')[0];
-                            var ordineLavorazione=sottolavorazioniCommonClass.split('-')[1];
-                            var unitaMisura=$('.trFoot'+ordineLavorazione).attr('class').split(' ')[3].split('-')[1];
-                            $(this).parent().parent().remove();
-
-
-                            var ordine_sottolavorazione=$(this).parent().parent().attr('class').split(' ')[1].split('-')[1];
-
-
-                            socketPreventivo.emit("elimina_sottolavorazione",
-                                {
-                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                    "data" : "{{preventivo.data}}",
-                                    "ordine": numElement,
-                                    "ordine_sottolavorazione": ordine_sottolavorazione
-
-                                }
-
-                            );
-
-                            var $sottolavorazioni= $('.'+sottolavorazioniCommonClass);
-
-
-                            //rienumero i sottoelementi restanti e aggiorna il db
-                            var aux=0;
-                            $sottolavorazioni.each(function(){
-
-                                var oldOrder = $(this).attr('class').split(' ')[1].split('-')[1];
-
-                                if( !( typeof oldOrder === 'undefined') ){
-                                    $(this).removeClass();
-                                    $(this).addClass(sottolavorazioniCommonClass);
-                                    $(this).addClass('sottolavNum-'+aux);
-                                    unitaMisura = unitaMisura.split('_')[0] +' ' + unitaMisura.split('_')[1];
-
-                                    socketPreventivo.emit("modifica_ordine_sottolavorazione",
-                                        {
-                                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                            "data" : "{{preventivo.data}}",
-                                            "ordine": ordineLavorazione,
-                                            "oldOrdineSottolav": oldOrder,
-                                            "newOrdineSottolav": aux,
-                                            "unitaMisura": unitaMisura
-
-                                        }
-
-                                    );
-
-                                    aux+=1;
-                                }
-                            });
-
-                            var sett=sottolavorazioniCommonClass.split('_')[0];
-                            var num=sottolavorazioniCommonClass.split('-')[1];
-                            calcolaTotaleParziale(sett, num);
-
-
-
-
-                        }); // FINE delSottolavorazione
-
-                        socketPreventivo.emit("add_nuova_sottolavorazione",
-                        {
-                            "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                            "data" : "{{preventivo.data}}",
-                            "ordine": numElement
-
-                        }
-
-                        );
-
-                  }); //FINE addSottolavorazione
-
-
-
-
-            });
-
-            // questa istruzione ha lo scopo sfruttare il codice gia' scritto per l'evento change
-            // associato a questo select allo scopo di completare l'associazione
-            // tra i bottoni delle lavorazioni del select e la 'memoriaLavorazioniAggiunte'
-           reimpostaClassiBottoniLavorazioni();
-
-           calcolaTotaliPreventivoDopoIlCostruisci()
         }
 
+        /************************************************************/
 
-      costruisciPreventivo();
+        $(function(){
+            costruisciPreventivo();
 
-
-      $('#selectSettore').change(function(){
-
-        reimpostaClassiBottoniLavorazioni();
-
-      });
-
-
+        });
 
 </script>
 

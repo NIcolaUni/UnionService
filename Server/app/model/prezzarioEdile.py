@@ -49,4 +49,4 @@ class PrezzarioEdile(PrezzarioEdileDBmodel):
 
     def returnLavorazioni():
 
-        return LavorazioneEdile.query.all()
+        return LavorazioneEdile.query.order_by(LavorazioneEdile.settore, LavorazioneEdile.tipologia_lavorazione)
