@@ -43,18 +43,7 @@
                        del "dropDownSelect2"; per far cio' creo un div perennemente invisibile
                         in cui memorizzo i dati che voglio -->
                     <div id="memoriaProdottiAggiunti">
-                        {% for tipologia in tipologie %}
-                          <!--
-                                Esempio struttura di #memoriaProdottiAggiunti
 
-                                '<div class="<id-del-bottone>">'+
-                                    '<span class="classeToAdd">aggiunto-'+count+'</span>'+
-                                '</div>'
-                             -->
-                            <div id="memoriaProdottiAggiunti-{{tipologia.nome}}" class="tipologiaMemorizzata">
-
-                            </div>
-                        {% endfor %}
                     </div>
                 </div>
                 <div class="row rowProdotti">
@@ -128,13 +117,13 @@
         {% for modelloProdotto in modelliProdotto %}
             {% if modelloProdotto.tipologia == tipologia.nome %}
 
-                var listProdotti.push(['{{modelloProdotto.marchio}}', '{{modelloProdotto.nome}}',
-                                        '{{modelloProdotto.prodotto}}']);
+                listProdotti.push(['{{modelloProdotto.marchio}}'.replace(/&#39;/g, "'"), '{{modelloProdotto.nome}}'.replace(/&#39;/g, "'"),
+                                        '{{modelloProdotto.prodotto}}'.replace(/&#39;/g, "'")]);
 
-            {% endfor %}
+            {% endif %}
         {% endfor %}
 
-        listProdottiPerTipologia.push(['{{tipologia.nome}}', listProdotti ]);
+        listProdottiPerTipologia.push(['{{tipologia.nome}}'.replace(/&#39;/g, "'"), listProdotti ]);
 
     {% endfor %}
 
@@ -147,7 +136,7 @@
 
         listModelli.forEach(function(modello){
 
-            if( modello == '{{modelloProdotto.nome}}' ){
+            if( modello == '{{modelloProdotto.nome}}'.replace(/&#39;/g, "'") ){
 
                 modelloToIns = false;
 
@@ -157,7 +146,7 @@
 
         listMarchi.forEach(function(marchio){
 
-            if( marchio == '{{modelloProdotto.marchio}}' ){
+            if( marchio == '{{modelloProdotto.marchio}}'.replace(/&#39;/g, "'") ){
 
                 marchioToIns = false;
 
@@ -166,23 +155,63 @@
 
         if( marchioToIns ){
 
-            listMarchi.push('{{modelloProdotto.marchio}}');
+            listMarchi.push('{{modelloProdotto.marchio}}'.replace(/&#39;/g, "'"));
         }
 
         if( modelloToIns ){
 
-            listModello.push('{{modelloProdotto.nome}}');
+            listModelli.push('{{modelloProdotto.nome}}'.replace(/&#39;/g, "'"));
         }
 
     {% endfor %}
 
 
-    aggiungiProdottiToSelectElement(listaProdottiPerTipologia, listMarchi, listModello);
 
+    aggiungiProdottiToSelectElement(listProdottiPerTipologia, listMarchi, listModelli);
 
+    /********************************************************/
 
-    /******************************************************************************/
+    $('button.elementFattura').click(function(){
 
+        /* i replace all'interno del codice servono perchè gli apostrofi
+            dei nomi recuperati dal database vengono ritornati con il
+            loro codice e non con il simbolo che li rappresenta */
+
+        var tipologia = $('#selectTipologia option:selected').text();
+        var marchio = $('#selectMarchio option:selected').text();
+        var modello = $('#selectModello option:selected').text();
+
+        var prodotto = $(this).text();
+
+        {% for modelloProdotto in modelliProdotto %}
+
+            var tipologiaToCompare = '{{modelloProdotto.tipologia}}'.replace(/&#39;/g, "'");
+            var marchioToCompare = '{{modelloProdotto.marchio}}'.replace(/&#39;/g, "'");
+            var modelloToCompare = '{{modelloProdotto.nome}}'.replace(/&#39;/g, "'");
+            var prodottoToCompare = '{{modelloProdotto.prodotto}}'.replace(/&#39;/g, "'");
+
+            if( tipologiaToCompare == tipologia )
+            {
+                if( marchioToCompare == marchio ){
+
+                    if( modelloToCompare == modello ){
+
+                        if( prodottoToCompare == prodotto ){
+
+                            aggiungiRiga($(this), );
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        {% endfor %}
+    });
+
+    /**********************************************************/
 
 </script>
 

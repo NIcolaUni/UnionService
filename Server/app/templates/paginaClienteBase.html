@@ -149,8 +149,15 @@
 
 		{%if preventivoFullPage %}
 		    <link href="{{url_for('static', filename='paginaCliente/assets/css/preventivo.css') }}" rel="stylesheet">
-            <script src="{{url_for('static', filename='paginaCliente/assets/js/preventivoEdile.js') }}"></script>
+
 		{% endif %}
+        {% if preventivoEdile %}
+            <script src="{{url_for('static', filename='paginaCliente/assets/js/preventivoEdile.js') }}"></script>
+        {% endif %}
+        {% if preventivoFiniture %}
+            <script src="{{url_for('static', filename='paginaCliente/assets/js/preventivoFiniture.js') }}"></script>
+        {% endif %}
+
 
          <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/swal-forms.css') }}">
          <link rel="stylesheet" href="{{url_for('static', filename='swal-forms/sweet-alert.css') }}">

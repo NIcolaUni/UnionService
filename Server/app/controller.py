@@ -146,7 +146,7 @@ def newPreventivoEdile():
 
     return render_template('preventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
                             preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
-                            lavorazioni=lavorazioni, preventivo=preventivo)
+                            lavorazioni=lavorazioni, preventivo=preventivo, preventivoEdile=True)
 
 
 @server.route('/apriPreventivoEdile')
@@ -163,7 +163,7 @@ def apriPreventivoEdile():
 
     return render_template('preventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
                             preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile, lavorazioni=lavorazioni,
-                            preventivo=preventivo, infoPreventivo=infoPreventivo, dipendente=dip)
+                            preventivo=preventivo, preventivoEdile=True, infoPreventivo=infoPreventivo, dipendente=dip)
 
 @server.route('/downloadPreventivoEdile')
 @login_required
@@ -190,6 +190,7 @@ def apriPreventivoFiniture():
 
 
 
+
     preventivo = PreventivoFiniture.query.filter_by(numero_preventivo=app.preventivoFinitureSelezionato[0], data=app.preventivoFinitureSelezionato[1]).first()
     prodottiPreventivo = PreventivoFiniture.returnProdottiPreventivo(numero_preventivo=app.preventivoFinitureSelezionato[0], data=app.preventivoFinitureSelezionato[1])
 
@@ -199,7 +200,7 @@ def apriPreventivoFiniture():
     return render_template('preventivoFiniture.html', codicePreventivo=codicePreventivo, tipologie=tipologie,
                             modelliProdotto=modelliProdotto,
                             preventivoFullPage=True, cliente=cliente, prezzarioProdotti=prezzarioProdotti,
-                            preventivo=preventivo, prodottiPreventivo=prodottiPreventivo, dipendente=dip)
+                            preventivo=preventivo, preventivoFiniture=True, prodottiPreventivo=prodottiPreventivo, dipendente=dip)
 
 @server.route('/apriPreventivoVarianti')
 @login_required
@@ -214,7 +215,7 @@ def apriPreventivoVarianti():
 
     return render_template('preventivoVarianti.html', codicePreventivo=codicePreventivo, settori=settori,
                             preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
-                            preventivo=preventivo, infoPreventivo=infoPreventivo, dipendente=dip)
+                            preventivo=preventivo, preventivoFiniture=True, infoPreventivo=infoPreventivo, dipendente=dip)
 
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required

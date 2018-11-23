@@ -688,7 +688,7 @@ var trovaIdButtonLavorazione = function(classSettore, tipologia_lavorazione){
 
     var toRet;
 
-    $('button[id^='+classSettore).each(function(){
+    $('button[id^='+classSettore+']').each(function(){
 
         if($(this).text() == tipologia_lavorazione )
             toRet = $(this).attr('id');
