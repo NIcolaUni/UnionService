@@ -180,8 +180,58 @@
         var tipologia = $('#selectTipologia option:selected').text();
         var marchio = $('#selectMarchio option:selected').text();
         var modello = $('#selectModello option:selected').text();
+        var modelloClass = $('#selectModello option:selected').attr('class');
 
         var prodotto = $(this).text();
+
+        var capitolatoTipologia;
+        var capitolatoMarchio;
+        var capitolatoModello;
+        var capitolatoProdotto;
+        var capitolatoCosto;
+
+        /* Cerco il capitolato della relativa tipologia di prodotti */
+
+        {% for capitolato in capitolatiProdotto %}
+
+            if( '{{capitolato.tipologia}}' == tipologia ){
+
+
+                capitolatoTipologia = '{{capitolato.tipologia}}'.replace(/&#39;/g, "'");
+                capitolatoMarchio = '{{capitolato.marchio}}'.replace(/&#39;/g, "'");
+                capitolatoModello = '{{capitolato.modello}}'.replace(/&#39;/g, "'");
+                capitolatoProdotto = '{{capitolato.nome}}'.replace(/&#39;/g, "'");
+
+                /*cerco il costo del capitolato*/
+                {% for modelloProdotto in modelliProdotto %}
+
+                    {% if modelloProdotto.tipologia == capitolato.tipologia %}
+
+                        {% if modelloProdotto.marchio == capitolato.marchio %}
+
+                            {% if modelloProdotto.nome == capitolato.modello %}
+
+                                {% if modelloProdotto.prodotto == capitolato.nome %}
+
+                                    capitolatoCosto = parseFloat('{{modelloProdotto.prezzoListinoFornituraPosa}}')
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endfor %}
+
+            }
+
+        {% endfor %}
+
+
+
+        /*Aggiungo la riga richiesta */
 
         {% for modelloProdotto in modelliProdotto %}
 
@@ -189,6 +239,7 @@
             var marchioToCompare = '{{modelloProdotto.marchio}}'.replace(/&#39;/g, "'");
             var modelloToCompare = '{{modelloProdotto.nome}}'.replace(/&#39;/g, "'");
             var prodottoToCompare = '{{modelloProdotto.prodotto}}'.replace(/&#39;/g, "'");
+            var costoProdotto = parseFloat('{{modelloProdotto.prezzoListinoFornituraPosa}}');
 
             if( tipologiaToCompare == tipologia )
             {
@@ -198,7 +249,9 @@
 
                         if( prodottoToCompare == prodotto ){
 
-                            aggiungiRiga($(this), );
+                            aggiungiRiga($(this), "{{preventivo.numero_preventivo}}", "{{preventivo.data}}",
+                                tipologiaToCompare, marchioToCompare, modelloToCompare, prodottoToCompare,
+                                modelloClass, costoProdotto, capitolatoCosto );
 
                         }
 

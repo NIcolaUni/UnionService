@@ -1466,6 +1466,7 @@
 
             var tipoEsistente=false;
 
+
             $table1.children('tbody').each(function(){
                 if( $(this).attr('class') == $tipologiaProdotto.val() ){
                     tipoEsistente = true;
@@ -1970,13 +1971,20 @@
 
             });
 
+            if( !tipoEsistente ){
+                $("#capitolato_check_"+ counter_riga).trigger('click');
+            }
+
             $('.delProdotto').unbind('click').click(function(){
 
                 var $thisRow=$(this).parent().parent().parent();
+                var exCapitolato = $thisRow.children('td.primaCol').children('div').last().children('input.check_cap').is(':checked');
                 var prodotto=$thisRow.children('td.nome_prodotto').children('label').text();
                 var modello=$thisRow.children('td.nome_modello').children('label').text();
                 var tipologia=$thisRow.children('td.tipologia').children('label').text();
                 var marchio;
+
+
 
                 $thisRow.children('td.marchio').each(function(){
                     if(!$(this).hasClass('hiddenInput')){
@@ -2014,7 +2022,7 @@
 
 
                 /*se una sezione rimane senza fornitori elimino il settoreMerceologico */
-                var eliminaSettore= function($this){
+                var eliminaSettore= function($this, controlloCapitolato){
                    var counter = 0;
 
                    $this.children('tr').each(function(){
@@ -2027,16 +2035,22 @@
 
                     $this.remove();
                    }
+                   else if( controlloCapitolato && exCapitolato ){
+
+                       $this.children('tr.datiScheda').first().children('td.primaCol').children('div').last().children('input').trigger('click');
+
+                   }
+
 
                 }
 
                 $('#tabellaContainer1 tbody').each(function(){
-                   eliminaSettore($(this));
+                   eliminaSettore($(this), true);
                 });
 
 
                 $('#tabellaContainer2 tbody').each(function(){
-                   eliminaSettore($(this));
+                   eliminaSettore($(this), false);
                 });
 
 

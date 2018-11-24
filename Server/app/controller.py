@@ -187,6 +187,7 @@ def apriPreventivoFiniture():
     tipologie = TipologiaProdotto.query.all()
     prezzarioProdotti = ProdottoPrezzario.query.all()
     modelliProdotto = ModelloProdotto.query.all()
+    capitolatiProdotto = CapitolatoProdotto.query.all()
 
 
 
@@ -200,7 +201,8 @@ def apriPreventivoFiniture():
     return render_template('preventivoFiniture.html', codicePreventivo=codicePreventivo, tipologie=tipologie,
                             modelliProdotto=modelliProdotto,
                             preventivoFullPage=True, cliente=cliente, prezzarioProdotti=prezzarioProdotti,
-                            preventivo=preventivo, preventivoFiniture=True, prodottiPreventivo=prodottiPreventivo, dipendente=dip)
+                            preventivo=preventivo, preventivoFiniture=True, prodottiPreventivo=prodottiPreventivo,
+                            dipendente=dip, capitolatiProdotto=capitolatiProdotto )
 
 @server.route('/apriPreventivoVarianti')
 @login_required
@@ -212,10 +214,12 @@ def apriPreventivoVarianti():
     infoPreventivo = PreventivoVarianti.returnSinglePreventivo(numero_preventivo=app.preventivoVariantiSelezionato[0], data=app.preventivoVariantiSelezionato[1])
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
+    capitolatiProdotto = CapitolatoProdotto.query.all()
 
     return render_template('preventivoVarianti.html', codicePreventivo=codicePreventivo, settori=settori,
                             preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
-                            preventivo=preventivo, preventivoFiniture=True, infoPreventivo=infoPreventivo, dipendente=dip)
+                            preventivo=preventivo, preventivoFiniture=True, infoPreventivo=infoPreventivo,
+                            dipendente=dip, capitolatiProdotto=capitolatiProdotto )
 
 @server.route('/apriPaginaCliente', methods=['POST'])
 @login_required
