@@ -239,7 +239,6 @@
             var marchioToCompare = '{{modelloProdotto.marchio}}'.replace(/&#39;/g, "'");
             var modelloToCompare = '{{modelloProdotto.nome}}'.replace(/&#39;/g, "'");
             var prodottoToCompare = '{{modelloProdotto.prodotto}}'.replace(/&#39;/g, "'");
-            var costoProdotto = parseFloat('{{modelloProdotto.prezzoListinoFornituraPosa}}');
 
             if( tipologiaToCompare == tipologia )
             {
@@ -249,9 +248,13 @@
 
                         if( prodottoToCompare == prodotto ){
 
+                            var costoProdotto = parseFloat('{{modelloProdotto.prezzoListinoFornituraPosa}}');
+                            var codiceProdotto = '{{modelloProdotto.codice}}';
+                            var nettoUsProdotto = parseFloat('{{modelloProdotto.nettoUsFornituraPosa}}');
+
                             aggiungiRiga($(this), "{{preventivo.numero_preventivo}}", "{{preventivo.data}}",
                                 tipologiaToCompare, marchioToCompare, modelloToCompare, prodottoToCompare,
-                                modelloClass, costoProdotto, capitolatoCosto );
+                                modelloClass, codiceProdotto, costoProdotto, capitolatoCosto, nettoUsProdotto );
 
                         }
 

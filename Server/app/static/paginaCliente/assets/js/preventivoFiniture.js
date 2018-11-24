@@ -4,7 +4,8 @@ var ordineProdotti = 1; // variabile globale usata per tener conto del numero de
 
 /********************************************************************************************/
 function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametro, tipologia,
-                        marchio, modello, prodotto, modelloClass, costoProdotto, costoCapitolato ){
+                        marchio, modello, prodotto, modelloClass, codiceProdotto, costoProdotto,
+                        costoCapitolato, nettoUsProdotto ){
 
     if( !$button.hasClass('aggiunto') ){
 
@@ -19,9 +20,10 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
         var idTipologia = splitModelloClass[0].split('-')[1];
         var idMarchio = splitModelloClass[1].split('-')[1];
         var idModello = splitModelloClass[2].split('-')[1];
+        var idTipMarcMod = idTipologia+"_"+idMarchio+"_"+idModello;
 
         /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineProdotti al bottone*/
-        $("#memoriaProdottiAggiunti-"+idTipologia+"_"+idMarchio+"_"+idModello).append(
+        $("#memoriaProdottiAggiunti-"+idTipologia ).append(
             '<div class="'+$button.attr('id')+'">'+
                 '<span class="classeToAdd">aggiunto-'+ordineProdotti+'</span>'+
             '</div>'
@@ -31,7 +33,7 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
 
         var tipologiaProdotto =  $('#bodyPreventivo').children('.{{prodotto.tipologia}}');
 
-        var diffCapitolato = Math.abs( parseFloat('{{capitolato.prezzoListinoFornituraPosa}}') - parseFloat('{{modello.prezzoListinoFornituraPosa}}') )
+        var diffCapitolato = Math.abs(  costoCapitolato-costoProdotto )
         var diffCapitolatoNum = diffCapitolato
 
         if( diffCapitolato == 0 ){
@@ -41,16 +43,16 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
             diffCapitolato = '&euro; '+diffCapitolato;
 
         //Preparo la riga del prodotto
-        var rowsToAdd='<tr id="{{modello.tipologia}}_trBody-'+ordineProdotti+'" class="trBody {{modello.tipologia}}_lastAdded">'+
+        var rowsToAdd='<tr id="tipologia-'+idTipologia+'_trBody-'+ordineProdotti+'" class="trBody tipologia'+idTipologia+'_lastAdded">'+
                         '<td class="firstCol'+ordineProdotti+' firstCol"></td>'+
-                        '<td class="tdPreventivo tdProdotto"><textarea>{{modello.prodotto}}</textarea></td>'+
-                        '<td class="tdPreventivo tdModello">{{modello.nome}}</td>'+
-                        '<td class="tdPreventivo tdCodice">{{modello.codice}}</td>'+
+                        '<td class="tdPreventivo tdProdotto"><textarea>'+prodotto+'</textarea></td>'+
+                        '<td class="tdPreventivo tdModello">'+modello+'</td>'+
+                        '<td class="tdPreventivo tdCodice">'+codiceProdotto+'</td>'+
                         '<td class="tdPreventivo numColSmall tdQuantita"><input class="numInput numero" type="number" name="numero" placeholder="quantità" step="0.01" value="1.0"></td>'+
                         '<td class="tdPreventivo numColSmall"><input name="unitaMisura" placeholder="unita misura" value="cad"></td>'+
                         '<td class="tdPreventivo numColSmall tdDiffCapitolato">'+diffCapitolato+'</td>'+
-                        '<td class="tdPreventivo tdAdded">&euro; {{modello.prezzoListinoFornituraPosa}}</td>'+
-                        '<td class="tdPreventivo tdAdded">&euro; {{modello.nettoUsFornituraPosa}}</td>'+
+                        '<td class="tdPreventivo tdAdded">&euro; '+ costoProdotto  +'</td>'+
+                        '<td class="tdPreventivo tdAdded">&euro; '+ nettoUsProdotto +'</td>'+
                     '</tr>';
 
         //se non e' gia' stata aggiunta una sezione lo faccio e subito sotto metto il prodotto
@@ -371,7 +373,7 @@ var aggiungiProdottiToSelectElement = function( listaProdottiPerTipologia, lista
                 $('#selectModello').append('<option class="tipologia-'+counterTipologia+'_marchio-'+counterMarchio+'_modello-'+counterModello+'">'+modello[0]+'</option>');
 
                 $('#memoriaProdottiAggiunti').append(
-                     '<div id="memoriaProdottiAggiunti-'+counterTipologia+'_'+counterMarchio+'_'+counterModello+'" class="tipologiaMemorizzata"></div>'
+                     '<div id="memoriaProdottiAggiunti-'+counterTipologia" class="tipologiaMemorizzata"></div>'
                 );
 
                 var counterProdotto = 0;
