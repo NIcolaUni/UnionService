@@ -6,7 +6,8 @@
 <div id="wrapper" class="col-md-8">
     <section id="one" class="wrapper style2 spotlights">
         <div class="inner innerPreventivo">
-            <h2 class="titleInCentro">Preventivo US{{codicePreventivo}}F <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a><input type="checkbox" value="true" id="cbx" style="display:none"/>
+            <h2 class="titleInCentro">Preventivo US{{codicePreventivo}}F <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a>
+                <input onchange="espandiTabella()" type="checkbox" value="true" id="cbx" style="display:none"/>
                 <label for="cbx" class="toggle"><span></span></label></h2>
             <div id="divFattura" class="features row">
 
@@ -77,13 +78,13 @@
 
             </div>
             <div id="divSalvaPreventivo" class="features">
-                <a id="printButton">STAMPA</a>
+                <a onclick="stampaPreventivo({{dipendente.username}})" id="printButton">STAMPA</a>
             </div>
             <div id="divTitoloNote" >
                 <span>Note:</span>
             </div>
             <div id="divNote" class="features">
-                <textarea id="note"></textarea>
+                <textarea oninput="aggiungiNote($(this))" id="note"></textarea>
             </div>
         </div>
     </section>
@@ -100,6 +101,9 @@
 
     var socketFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 
+    socketFiniture.on( 'procediADownload', function(){
+        window.open('{{url_for("downloadPreventivoFiniture")}}', '_blank');
+    });
 
     /****** Popolo la lista dei prodotti dati dai select **************************/
 

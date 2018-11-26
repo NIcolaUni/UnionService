@@ -56,13 +56,13 @@
 
             </div>
             <div id="divSalvaPreventivo" class="features">
-                <a id="printButton">STAMPA</a>
+                <a onclick="stampaPreventivo({{dipendente.username}})" id="printButton">STAMPA</a>
             </div>
             <div id="divTitoloNote" >
                 <span>Note:</span>
             </div>
             <div id="divNote" class="features">
-                <textarea id="note"></textarea>
+                <textarea oninput="aggiungiNote($(this))" id="note"></textarea>
             </div>
         </div>
     </section>
@@ -77,6 +77,10 @@
         });
 
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+
+        socketPreventivo.on( 'procediADownload', function(){
+            window.open('{{url_for("downloadPreventivoEdile")}}', '_blank');
+        });
 
 
         /**** popolo la lista delle lavorazioni per settore ******/

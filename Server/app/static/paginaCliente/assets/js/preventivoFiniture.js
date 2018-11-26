@@ -1,11 +1,362 @@
 
 var ordineProdotti = 1; // variabile globale usata per tener conto del numero dell'ultimo prodotto aggiunto
+var numeroPreventivo;
+var dataPreventivo;
+var cbxStatus=true;
+
+/********************************************************************************************/
+
+var stampaPreventivo = function(usernameDip){
+
+    swal.withFormAsync({
+        title: 'Scelte pre-stampa:',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Ok',
+        cancelButtonText: 'annulla',
+        closeOnConfirm: false,
+        formFields: [
+
+            { id: 'iva', label: 'Iva (%)', name: 'iva', type: 'number', placeholder: 'intervento commessa', value: '0' },
+            { id: 'scontoTipo',
+                type: 'select-hidden',
+                options: [
+                  {value: '1', text: 'non applicare sconto'},
+                  {value: '2', text: 'applica sconto netto'},
+                  {value: '3', text: 'applica sconto percentuale'},
+                  {value: '4', text: 'forza totale'},
+                ]},
+            { id: 'sumisura', label: 'Preventivo su misura', name: 'sumisura', value: 'sumisura', type: 'checkbox' },
+            { id: 'chiudi', label: 'Chiudi preventivo', name: 'chiudi', value: 'chiudi', type: 'checkbox' },
+
+        ]
+    }).then(function (context) {
+        if(context._isConfirm){
+
+            var sceltaSconto=parseInt(context.swalForm['scontoTipo']);
+            var chiudiPrev=false;
+            var sumisura=false;
+            var iva=parseInt(context.swalForm['iva']);
+
+            console.log( 'sto stampando: ' + iva );
+            if( context.swalForm['scontoTipo'] == 'chiudi' )
+                chiudiPrev=true;
+
+            if( context.swalForm['sumisura'] == 'sumisura' )
+                sumisura=true;
+
+            if( sceltaSconto == 1 ){
+                socketFiniture.emit('stampa_preventivo', {
+                                                'dip': usernameDip,
+                                                'numero_preventivo': numeroPreventivo,
+                                                'data': dataPreventivo,
+                                                'iva': iva,
+                                                'tipoSconto': sceltaSconto,
+                                                'sconto': 0,
+                                                'chiudiPreventivo': chiudiPrev,
+                                                'sumisura': sumisura });
+                sweetAlert.close();
+            }
+            else{
+                var toPrint="";
+
+                if( sceltaSconto == 2 ){
+                    toPrint ="Inserire sconto netto da applicare:";
+                }
+                else if( sceltaSconto == 3 ){
+                    toPrint ="Inserire sconto percentuale da applicare:";
+                }
+                else if( sceltaSconto == 4 ){
+                    toPrint = "Forza totale:";
+                }
+
+
+
+                swal.withFormAsync({
+                    title: toPrint,
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Ok',
+                    cancelButtonText: 'annulla',
+                    closeOnConfirm: true,
+                    formFields: [
+
+                        { id: 'sconto', label: 'Sconto: ', name: 'sconto', type: 'number', placeholder: 'sconto', value: '0' },
+
+
+                    ]
+                }).then(function (context) {
+                    if(context._isConfirm){
+                         socketFiniture.emit('stampa_preventivo', {
+                                                'dip': usernameDip,
+                                                'numero_preventivo': numeroPreventivo,
+                                                'data': dataPreventivo,
+                                                'iva': iva,
+                                                'tipoSconto': sceltaSconto,
+                                                'sconto': parseFloat(context.swalForm['sconto']),
+                                                'chiudiPreventivo': chiudiPrev,
+                                                'sumisura': sumisura });
+
+                    }
+
+                });
+
+            }
+
+
+
+        }
+
+    });
+
+}
+
+/********************************************************************************************/
+
+var aggiungiNote = function($this){
+
+    socketFiniture.emit('inserisci_note', {   'numero_preventivo': numeroPreventivo,
+                                                        'data': dataPreventivo,
+                                                        'nota': $this.val() });
+}
+
+/********************************************************************************************/
+
+var espandiTabella = function(){
+
+    if(cbxStatus == true ){
+
+        $('.titleTipologiaTd').attr('colspan', 9 );
+        $('.thAdded').show();
+        $('.tdAdded').show();
+        cbxStatus=false;
+    }
+    else{
+
+        $('.titleTipologiaTd').attr('colspan', 7 );
+        $('.thAdded').hide();
+        $('.tdAdded').hide();
+        cbxStatus=true;
+
+    }
+}
+
+/********************************************************************************************/
+
+var calcolaTotalePreventivo = function(){
+
+    var totale =0;
+    $('.tdDiffCapitolato').each(function(){
+        var costo = $(this).html();
+
+        if( costo == "-" ){
+
+            costo = 0;
+        }
+        else {
+            costo = parseFloat(costo.split(' ')[1]);
+        }
+
+        totale += costo;
+    });
+
+    $('#divTotale').html("<span> <u>Totale: </u> &euro; "+ Math.round(totale*100)/100 +"</span>");
+}
 
 
 /********************************************************************************************/
-function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametro, tipologia,
+
+var modificaQuantitaProdotto = function( $inputQuantita, diffCapitolato ){
+
+    var quantitaValue = parseFloat( $inputQuantita.val() );
+    var newCap = 0;
+
+    if( diffCap != '-' )
+    {
+        newCap = Math.round(diffCap*quantitaValue*100)/100;
+
+        if( newCap == 0 )
+            $inputQuantita.parent().parent().children('td.tdDiffCapitolato').html('-');
+        else
+            $inputQuantita.parent().parent().children('td.tdDiffCapitolato').html('&euro; '+newCap);
+
+
+
+        calcolaTotalePreventivo();
+
+        var ordineProdotto = $inputQuantita.parent().parent().attr('id').split('_trBody-')[1];
+
+        socketFiniture.emit("modifica_prodotto",
+                        {
+                            "numero_preventivo" : numeroPreventivo,
+                            "data" : dataPreventivo,
+                            "ordine": ordineProdotto,
+                            "quantita": quantitaValue,
+                            "diffCapitolato": newCap
+
+                        }
+        );
+
+    }
+
+
+}
+
+/********************************************************************************************/
+
+var rienumeraMemoriaLavorazioni = function(){
+
+    var counter = 1;
+    $('#memoriaProdottiAggiunti').children('.tipologiaMemorizzata').each(function(){
+        $(this).children('div').each(function(){
+            $(this).text('aggiunto-'+counter);
+            counter+=1;
+        });
+
+    });
+}
+
+
+/********************************************************************************************/
+
+var rienumeraPagina = function(){
+
+    var counter = 1;
+    var oldNum="";
+
+    //rinomino tutti gli id degli elementi per non rischiare di
+    //averne due uguali nella renumerazione.
+    $('.trBody').each(function(){
+        var idTrBodySplitted = $(this).attr('id').split('_trBody-');
+        var tipologia=idTrBodySplitted[0];
+
+
+
+        oldNum = idTrBodySplitted[1]
+
+        $(this).attr('id', tipologia+'-old_trBody-'+oldNum);
+
+        $(this).children('.firstCol'+oldNum).addClass('firstCol-old'+oldNum);
+        $(this).children('.firstCol'+oldNum).removeClass('firstCol'+oldNum);
+
+        /*modifico i pulsanti "aggiungi elemento" degli elementi presenti*/
+        $('.aggiunto-'+oldNum).addClass('aggiunto-old'+oldNum);
+        $('.aggiunto-'+oldNum).removeClass('aggiunto-'+oldNum);
+    });
+
+
+    $('.trBody').each(function(){
+
+        var idTrBodySplitted = $(this).attr('id').split('-old_trBody-');
+        var tipologia=idTrBodySplitted[0];
+        oldNum = idTrBodySplitted[1]
+
+
+        $('.aggiunto-old'+oldNum).addClass('aggiunto-'+counter);
+        $('.aggiunto-old'+oldNum).removeClass('aggiunto-old'+oldNum);
+
+        $(this).attr('id', tipologia+'_trBody-'+counter);
+
+        $(this).children('.firstCol-old'+oldNum).addClass('firstCol'+counter);
+        $(this).children('.firstCol-old'+oldNum).removeClass('firstCol-old'+oldNum);
+
+        $(this).children('.firstCol'+counter).children('label').text(counter);
+
+
+
+        socketFiniture.emit("modifica_ordine_prodotto",
+                        {
+                            "numero_preventivo" : numeroPreventivo,
+                            "data" : dataPreventivo,
+                            "ordineVecchio": -oldNum,
+                            "ordineNuovo" : counter
+
+                        }
+              );
+        counter+=1;
+    });
+
+    rienumeraMemoriaLavorazioni();
+
+}
+
+/********************************************************************************************/
+
+var settaLastElement = function(tipologia){
+
+    $('tr[id^='+tipologia+'_trBody]').last().addClass(tipologia+'_lastAdded');
+}
+
+/********************************************************************************************/
+
+var countProdottiPerTipologia = function(tipologia){
+        var counter=0;
+        $('tr[id^='+tipologia+'_trBody]').each(function(){
+            counter++;
+        });
+
+        return counter;
+}
+
+
+/********************************************************************************************/
+
+var cancellaProdotto = function( $delBtn ){
+
+    var idElementToDel=$delBtn.parent().parent().attr('id');
+    var numEl = idElementToDel.split('_trBody-')[1];
+    var tipologia =idElementToDel.split('_trBody-')[0];
+    var lastEl = $('#'+idElementToDel).hasClass(tipologia+'_lastAdded'); //variabile booleana
+
+    var idTipologia = tipologia.split('-')[1];
+
+    $('#'+idElementToDel).remove();
+
+    $('#memoriaProdottiAggiunti-'+idTipologia).children('div').each(function(){
+        if( $(this).children('span').text() == 'aggiunto-'+numEl )
+            $(this).remove();
+    });
+
+    $('.aggiunto-'+numEl).removeClass('aggiunto');
+    $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
+
+    socketFiniture.emit("elimina_prodotto",
+                    {
+                        "numero_preventivo" : numeroPreventivo,
+                        "data" : dataPreventivo,
+                        "ordine": numEl,
+
+                    }
+
+    );
+
+    rienumeraPagina();
+
+    if( lastEl ){
+        settaLastElement(tipologia);
+    }
+
+    // se non ci sono piu' prodotti per la relativo tipologia
+    // elimina l'intestazione
+    countProd = countProdottiPerTipologia(tipologia);
+
+    if( countProd == 0 ){
+
+        $('.trHead.'+tipologia).remove();
+
+        $('.trHead.'+tipologia+'_head').remove();
+
+    }
+
+}
+
+/********************************************************************************************/
+var aggiungiRiga = function($button, numeroPreventivoParametro, dataPreventivoParametro, tipologia,
                         marchio, modello, prodotto, modelloClass, codiceProdotto, costoProdotto,
                         costoCapitolato, nettoUsProdotto ){
+
+    numeroPreventivo = numeroPreventivoParametro;
+    dataPreventivo = dataPreventivoParametro;
 
     if( !$button.hasClass('aggiunto') ){
 
@@ -31,7 +382,7 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
         );
 
 
-        var tipologiaProdotto =  $('#bodyPreventivo').children('.{{prodotto.tipologia}}');
+        var tipologiaProdotto =  $('#bodyPreventivo').children('.tipologia-'+idTipologia);
 
         var diffCapitolato = Math.abs(  costoCapitolato-costoProdotto )
         var diffCapitolatoNum = diffCapitolato
@@ -43,12 +394,15 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
             diffCapitolato = '&euro; '+diffCapitolato;
 
         //Preparo la riga del prodotto
-        var rowsToAdd='<tr id="tipologia-'+idTipologia+'_trBody-'+ordineProdotti+'" class="trBody tipologia'+idTipologia+'_lastAdded">'+
-                        '<td class="firstCol'+ordineProdotti+' firstCol"></td>'+
+        var rowsToAdd='<tr id="tipologia-'+idTipologia+'_trBody-'+ordineProdotti+'" class="trBody tipologia-'+idTipologia+'_lastAdded">'+
+                        '<td class="firstCol'+ordineProdotti+' firstCol">'+
+                            '<label></label><br/>'+
+                            '<a onclick="cancellaProdotto($(this))" class="delElement fa fa-trash"></a>'+
+                        '</td>'+
                         '<td class="tdPreventivo tdProdotto"><textarea>'+prodotto+'</textarea></td>'+
                         '<td class="tdPreventivo tdModello">'+modello+'</td>'+
                         '<td class="tdPreventivo tdCodice">'+codiceProdotto+'</td>'+
-                        '<td class="tdPreventivo numColSmall tdQuantita"><input class="numInput numero" type="number" name="numero" placeholder="quantità" step="0.01" value="1.0"></td>'+
+                        '<td class="tdPreventivo numColSmall tdQuantita"><input oninput="modificaQuantitaProdotto($(this), '+diffCapitolato+')" class="numInput numero" type="number" name="numero" placeholder="quantità" step="0.01" value="1.0"></td>'+
                         '<td class="tdPreventivo numColSmall"><input name="unitaMisura" placeholder="unita misura" value="cad"></td>'+
                         '<td class="tdPreventivo numColSmall tdDiffCapitolato">'+diffCapitolato+'</td>'+
                         '<td class="tdPreventivo tdAdded">&euro; '+ costoProdotto  +'</td>'+
@@ -60,10 +414,10 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
 
             $('#bodyPreventivo').append(
 
-                '<tr class="trHead {{modello.tipologia}}">'+
-                    '<td  colspan="7"  class="titleTipologiaTd">{{modello.tipologia}}</td>'+
+                '<tr class="trHead tipologia-'+idTipologia'">'+
+                    '<td  colspan="7"  class="titleTipologiaTd">'+tipologia+'</td>'+
                 '</tr>'+
-                '<tr class="trHead {{modello.tipologia}}_head intestazione_head">'+
+                '<tr class="trHead tipologia-'+idTipologia+'_head intestazione_head">'+
                     '<th class="thPreventivo"></th>'+
                     '<th class="thPreventivo">Nome prodotto</th>'+
                     '<th class="thPreventivo">Modello</th>'+
@@ -82,9 +436,9 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
         }
         else{
 
-            var ultimoProdottoInserito=$(".{{modello.tipologia}}_lastAdded");
+            var ultimoProdottoInserito=$(".tipologia-"+idTipologia+"_lastAdded");
 
-            ultimoProdottoInserito.removeClass("{{modello.tipologia}}_lastAdded");
+            ultimoProdottoInserito.removeClass("tipologia-"+idTipologia+"_lastAdded");
 
             ultimoProdottoInserito.after( rowsToAdd );
             $('.tdAdded').hide();
@@ -96,14 +450,14 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
         /*registro la riga nel database*/
         socketFiniture.emit("add_nuovo_prodotto",
             {
-                "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                "data" : "{{preventivo.data}}",
+                "numero_preventivo" : numeroPreventivo,
+                "data" : dataPreventivo,
                 "ordine": ordineProdotti,
-                "tipologia" : "{{modello.tipologia}}",
-                "prodotto" : "{{modello.prodotto}}",
-                "modello" : "{{modello.nome}}",
-                "marchio": "{{modello.marchio}}",
-                "codice" : "{{modello.codice}}",
+                "tipologia" : tipologia,
+                "prodotto" : prodotto,
+                "modello" : modello,
+                "marchio": marchio,
+                "codice" : codiceProdotto,
                 "quantita": 1,
                 "unitaMisura": 'cad',
                 "diffCapitolato": diffCapitolatoNum
@@ -115,109 +469,8 @@ function aggiungiRiga($button, numeroPreventivoParametro, dataPreventivoParametr
         /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
         rienumeraPagina();
 
-
-        //Aggiungo funzionalita' ai "bottoni" nelle righe del preventivo e i bottoni stessi...
-        $('.trBody').each(function(){
-
-          var numEl = $(this).attr('id').split('-')[1];
-
-          var diffCap = $(this).children('td.tdDiffCapitolato').html();
-
-          if( diffCap != '-' )
-            diffCap=parseFloat(diffCap.split(' ')[1]);
-
-          $(this).children('td.tdQuantita').children('input').change(function(){
-
-                var numValue = parseFloat($(this).val());
-                var newCap = 0;
-
-                if( diffCap != '-' )
-                {
-                    newCap = Math.round(diffCap*numValue*100)/100;
-
-                    if( newCap == 0 )
-                        $(this).parent().parent().children('td.tdDiffCapitolato').html('-');
-                    else
-                        $(this).parent().parent().children('td.tdDiffCapitolato').html('&euro; '+newCap);
-
-                }
-
-                calcolaTotalePreventivo();
-
-                socketFiniture.emit("modifica_prodotto",
-                                {
-                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                    "data" : "{{preventivo.data}}",
-                                    "ordine": numEl,
-                                    "quantita": numValue,
-                                    "diffCapitolato": newCap
-
-                                }
-                );
-
-          });
-
-          //aggiungo il bottoni di cancellazioni e il numero elemento
-          $(this).children('td.firstCol').html( '<label>'+ numEl + '</label><br/><a class="delElement fa fa-trash"></a>' );
-
-
-          //aggiungo la funzione 'cancellaLavorazione' al relativo bottone
-          $(this).children('td.firstCol').children('a.delElement').click(function(){
-                var idElementToDel=$(this).parent().parent().attr('id');
-                var numEl = idElementToDel.split('-')[1];
-                var tipologia =idElementToDel.split('_')[0];
-                var lastEl = $('#'+idElementToDel).hasClass(tipologia+'_lastAdded'); //variabile booleana
-
-
-                $('#'+idElementToDel).remove();
-
-                $('#memoriaProdottiAggiunti-'+tipologia).children('div').each(function(){
-                    if( $(this).text() == 'aggiunto-'+numEl )
-                        $(this).remove();
-                });
-
-                $('.aggiunto-'+numEl).removeClass('aggiunto');
-                $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
-
-                socketFiniture.emit("elimina_prodotto",
-                                {
-                                    "numero_preventivo" : "{{preventivo.numero_preventivo}}",
-                                    "data" : "{{preventivo.data}}",
-                                    "ordine": numEl,
-
-                                }
-
-                );
-
-                rienumeraPagina();
-
-                if( lastEl ){
-                    settaLastElement(tipologia);
-                }
-
-                // se non ci sono piu' prodotti per la relativo tipologia
-                // elimina l'intestazione
-                countProd = countProdottiPerTipologia(tipologia);
-
-                if( countProd == 0 ){
-
-                    $('.'+tipologia).each(function(){
-                        if($(this).hasClass('trHead'))
-                            $(this).remove();
-                    });
-
-                    $('.'+tipologia+'_head').remove();
-
-                }
-          });
-
-        });
-
         calcolaTotalePreventivo();
         ordineProdotti++;
-
-
-
 
 
     }
@@ -373,7 +626,7 @@ var aggiungiProdottiToSelectElement = function( listaProdottiPerTipologia, lista
                 $('#selectModello').append('<option class="tipologia-'+counterTipologia+'_marchio-'+counterMarchio+'_modello-'+counterModello+'">'+modello[0]+'</option>');
 
                 $('#memoriaProdottiAggiunti').append(
-                     '<div id="memoriaProdottiAggiunti-'+counterTipologia" class="tipologiaMemorizzata"></div>'
+                     '<div id="memoriaProdottiAggiunti-'+counterTipologia+'" class="tipologiaMemorizzata"></div>'
                 );
 
                 var counterProdotto = 0;
