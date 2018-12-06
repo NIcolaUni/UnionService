@@ -5,6 +5,29 @@ var dataPreventivo;
 var ordineLavorazioni = 1;
 
 var disabilitaSocketio = false;
+var cbxStatus = true;
+
+/********************************************************************************************/
+
+var espandiTabella = function(){
+
+    if(cbxStatus == true ){
+
+        $('.titleSettoreTd').attr('colspan', 11 );
+        $('.thAdded').show();
+        $('.tdAdded').show();
+        cbxStatus=false;
+    }
+    else{
+
+        $('.titleSettoreTd').attr('colspan', 9 );
+        $('.thAdded').hide();
+        $('.tdAdded').hide();
+        cbxStatus=true;
+
+    }
+}
+
 
 /***********************************************************************************************/
 
@@ -39,8 +62,10 @@ var stampaPreventivo = function(usernameDip){
             var chiudiPrev=false;
             var sumisura=false;
             var iva=parseInt(context.swalForm['iva']);
-            if( context.swalForm['scontoTipo'] == 'chiudi' )
+            if( context.swalForm['chiudi'] == 'chiudi' ){
                 chiudiPrev=true;
+
+            }
 
             if( context.swalForm['sumisura'] == 'sumisura' )
                 sumisura=true;
@@ -348,9 +373,12 @@ var calcolaTotaleRigaSottolavorazione = function(classeElemento, ordineSottolav,
 
 /**********************************************************************************************/
 
-var modificaQuantitaSottolavorazione = function($this, prezzoBase){
+var modificaQuantitaSottolavorazione = function($this){
 
     var classesOfRow = $this.parent().parent().attr('class').split(' ');
+
+    var prezzoBase = parseFloat($this.parent().parent().children('td.tdCostoUnitario').text().split(' ')[1]);
+
     calcolaTotaleRigaSottolavorazione( classesOfRow[0], classesOfRow[1], prezzoBase );
 
     ordine = classesOfRow[0].split('_trSottolavorazione-')[1];
@@ -379,31 +407,31 @@ var righeDimensioniSottolavorazione = function( unita, prezzoBase, numElement){
 
     if( unita == "cad" ){
 
-        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
                 '<td class="tdPreventivo numColSmall"></td>'+
                 '<td class="tdPreventivo numColSmall"></td>'+
                 '<td class="tdPreventivo numColSmall"></td>'+
                 '<td class="tdPreventivo totDimensioni colSmall"></td>'
     }
     else if ( unita == "ml" ){
-        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
                 '<td class="tdPreventivo numColSmall"></td>'+
                 '<td class="tdPreventivo numColSmall"></td>'+
                 '<td class="tdPreventivo totDimensioni colSmall"></td>'
     }
     else if ( unita == "mq" ){
-        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
                 '<td class="tdPreventivo numColSmall"></td>'+
                 '<td class="tdPreventivo totDimensioni colSmall"></td>'
     }
     else if( unita == "mc" ){
-        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
-                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
-                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
-                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this), '+ prezzoBase +')" class="numInput inputPrev-'+numElement+' profondita" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
+        return  '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' numero" type="number" name="numero" placeholder="numero" value=1></td>'+
+                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' larghezza" type="number" step="0.01" name="L" placeholder="L" value=1.00></td>'+
+                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' altezza" type="number" step="0.01" name="L" placeholder="H" value=1.00></td>'+
+                '<td class="tdPreventivo inputField numColSmall basePrezzo-'+prezzoBase+' inputPrev"><input oninput="modificaQuantitaSottolavorazione($(this))" class="numInput inputPrev-'+numElement+' profondita" type="number" step="0.01" name="L" placeholder="P" value=1.00></td>'+
                 '<td class="tdPreventivo totDimensioni colSmall"></td>'
 
     }
@@ -602,6 +630,56 @@ var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione){
 
 }
 
+/********************************************************************************************/
+var modificaNomeLavorazione = function($this){
+
+    var nuovoValore = $this.val();
+    var ordineLav = $this.parent().parent().children('td.firstCol').children('label').text();
+
+    socketPreventivo.emit('modifica_nome_lavorazione', {
+
+        'numero_preventivo': numeroPreventivo,
+        'data' : dataPreventivo,
+        'ordine_lavorazione' : ordineLav,
+        'value' : nuovoValore
+
+    });
+}
+
+/*******************************************************************************************/
+
+var modificaRicarico = function($this){
+
+    var costoUs = parseFloat($this.parent().parent().children('td.tdCostoUs').text().split(' ')[1]);
+    var nuovoRicarico = $this.val();
+
+    var costoCliente = costoUs + (costoUs*nuovoRicarico/100);
+
+    var classe1Sottolav =$this.parent().parent().attr('class').split(' ')[0];
+    var classe2Sottolav =$this.parent().parent().attr('class').split(' ')[1];
+
+    var ordineLav = classe1Sottolav.split('_trSottolavorazione-')[1];
+    var ordineSottolav = classe2Sottolav.split('-')[1];
+
+    var unitaMisura = $('tr.trFoot'+ordineLav).attr('class').split(' ')[2].split('-')[1];
+
+    $this.parent().parent().children('td.tdCostoUnitario').html('&euro; '+costoCliente)
+    calcolaTotaleRigaSottolavorazione(  classe1Sottolav, classe2Sottolav, costoCliente);
+
+    if(!disabilitaSocketio){
+        socketPreventivo.emit('modifica_ricarico_sottolav', {
+            'numero_preventivo': numeroPreventivo,
+            'data' : dataPreventivo,
+            'ordine_lavorazione' : ordineLav,
+            'ordine_sottolav' : ordineSottolav,
+            'unitaMisura' : unitaMisura,
+            'prezzoBase' : costoCliente,
+            'ricarico' : nuovoRicarico
+        });
+    }
+
+}
+
 /*******************************************************************************************/
 
 var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoParametro, settore, tipologia, costoLavorazione, ricaricoAzienda, unitaMisura ){
@@ -627,6 +705,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
 
         );
 
+        costoUs = costoLavorazione;
         costoLavorazione = costoLavorazione+(costoLavorazione*ricaricoAzienda/100);
 
 
@@ -637,13 +716,15 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
                             '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+')" class="ctrButton addElement fa fa-plus"></a>'+
                         '</td>'+
-                        '<td class="tdPreventivo tdLavorazione"><textarea>'+tipologia+'</textarea></td>'+
+                        '<td class="tdPreventivo tdLavorazione"><textarea oninput="modificaNomeLavorazione($(this))" >'+tipologia+'</textarea></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo tdAdded"></td>'+
+                        '<td class="tdPreventivo numColSmall tdAdded"></td>'+
                         '<td class="tdPreventivo prezzoBase colSmall"></td>'+
                         '<td></td>'+
                     '</tr>'+
@@ -653,7 +734,9 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
                                                               costoLavorazione,
                                                                ordineLavorazioni)+
                             '<td class="tdPreventivo numColSmall">'+unitaMisura+'</td>'+
-                            '<td class="tdPreventivo colSmall">&euro; '+costoLavorazione+'</td>'+
+                            '<td class="tdPreventivo tdCostoUnitario colSmall">&euro; '+costoLavorazione+'</td>'+
+                            '<td class="tdPreventivo tdCostoUs tdAdded">&euro; '+costoUs+'</td>'+
+                            '<td class="tdPreventivo tdRicarico numColSmall tdAdded">+ <input oninput="modificaRicarico($(this))" type="number" min="0" max="100" class="inputRicarico" value="'+parseInt(ricaricoAzienda)+'">%</td>'+
                             '<td class="totalSottolavorazione"></td>'+
                     '</tr>'+
                     '<tr class="trFoot '+classSettore+'_trFoot unitaMisura-'+ unitaMisura +' trFoot'+parseInt(ordineLavorazioni)+'">'+
@@ -661,6 +744,8 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
                             '<td class="quantita colSmall"></td>'+
                             '<td>'+unitaMisura+'</td>'+
                             '<td colSmall"></td>'+
+                            '<td class="tdPreventivo tdAdded"></td>'+
+                            '<td class="tdPreventivo tdAdded"></td>'+
                             '<td class="footTot"></td>'+
                      '</tr>';
 
@@ -670,10 +755,15 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
         // e il relativo footer
         if( !sezioneSettore.length ){
 
+            var colspanNum = 9;
+
+            if( !cbxStatus )
+                colspanNum = 11;
+
             $('#bodyPreventivo').append(
 
                 '<tr class="trHead '+classSettore+'">'+
-                    '<td  colspan="9"  class="titleSettoreTd">'+settore+'</td>'+
+                    '<td  colspan="'+colspanNum+'"  class="titleSettoreTd">'+settore+'</td>'+
                     '<td class="titleSettoreTd totaleSettore"></td>'+
                 '</tr>'+
                 '<tr class="trHead '+classSettore+'_head">'+
@@ -683,9 +773,11 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
                     '<th class="thPreventivo numColSmall">L</th>'+
                     '<th class="thPreventivo numColSmall">H</th>'+
                     '<th class="thPreventivo numColSmall">P</th>'+
-                    '<th class="thPreventivo colSmall">Quantità</th>'+
-                    '<th class="thPreventivo numColSmall">Unità</th>'+
-                    '<th class="thPreventivo colSmall">Prezzo unitario</th>'+
+                    '<th class="thPreventivo thQuantita">Quantità</th>'+
+                    '<th class="thPreventivo unitaClass">Unità</th>'+
+                    '<th class="thPreventivo thPrezzoUnitario">Prezzo unitario</th>'+
+                    '<th class="thPreventivo thAdded">Prezzo US</th>'+
+                    '<th class="thPreventivo numColSmall thAdded">ricarico</th>'+
                     '<th class="thPreventivo">Totale</th>'+
                 '</tr>'+
                 rowsToAdd
@@ -698,6 +790,11 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
             $("."+classSettore+"_lastAdded").removeClass(classSettore+"_lastAdded");
             $('.'+classSettore+'_trFoot').last().after( rowsToAdd );
 
+        }
+
+        if( cbxStatus ){
+            $('.thAdded').hide();
+            $('.tdAdded').hide();
         }
 
         calcolaTotaleRigaSottolavorazione(classSettore+'_trSottolavorazione-'+ordineLavorazioni, 'sottolavNum-0', costoLavorazione );
@@ -722,6 +819,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
         /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
         rienumeraPagina(numeroPreventivo, dataPreventivo);
 
+        $('.inputRicarico').trigger('input');
         ordineLavorazioni++;
     }
 

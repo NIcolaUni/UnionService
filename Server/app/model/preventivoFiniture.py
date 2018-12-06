@@ -22,6 +22,7 @@ class __ProdottoPreventivo__(ProdottoPreventivoFinitureDBmodel):
 
         self.tipologia = tipologia
         self.nome_prodotto = nome_prodotto
+        self.nome_modificato = nome_prodotto
         self.unitaMisura = unitaMisura
         self.modello = modello
         self.marchio = marchio
@@ -193,6 +194,7 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         PreventivoFiniture.commit()
 
+
     def eliminaProdotto(numero_preventivo, data, ordine):
 
         toDel = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first()
@@ -344,6 +346,13 @@ class PreventivoFiniture(PreventivoDBmodel):
 
             else:
                 PreventivoFiniture.delRow(prev)
+
+    def modificaNomeProdotto(numero_preventivo, data, ordine, nuovo_nome):
+
+        __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+                                                  tipologia_preventivo='finiture', ordine=ordine).update({'nome_modificato': nuovo_nome})
+
+        PreventivoDBmodel.commit()
 
     def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura):
 

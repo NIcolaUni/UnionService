@@ -30,7 +30,12 @@
 <script>
 
     var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
+    var numPrevSelected;
+    var dataPrevSelected;
 
+    var stampaBudget = function(){
+        alert( numPrevSelected + ' ' + dataPrevSelected );
+    }
 
     function calcolaTotalePreventivo(numero_preventivo, data){
         var totale = 0;
@@ -44,7 +49,7 @@
 
         {% endfor %}
 
-        $('#totalePrev').html( '<span>Totale: &euro; '+ totale +'</span>');
+        $('#totalePrev').html( '<button onclick="stampaBudget();" style="display:none" id="btnBudget">Budget</button><span>Totale: &euro; '+ totale +'</span>');
 
     }
 
@@ -110,6 +115,7 @@
     function impostaSelectDataPreventivoEdile(numero_preventivo){
 
         var firstCycle=true;
+        var preventivoStatus = true;
 
         //resetto il select togliendo tutti i tag option
         $('#dataSelect').html('');
@@ -126,16 +132,53 @@
                 }
                 else
                     optionElement = '<option value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+
+                {% if not preventivo[0].stato %}
+
+                    $('.aCtrlPreventivo').children('a').hide();
+                    preventivoStatus = false;
+
+                {% else %}
+
+                    $('.aCtrlPreventivo').children('a').show();
+
+
+                {% endif %}
+
+                numPrevSelected = '{{preventivo[0].numero_preventivo}}';
+                dataPrevSelected = '{{preventivo[0].data}}';
+
+
             }
 
 
             $('#dataSelect').append( optionElement );
 
 
+
+
+
+
         {% endfor %}
+
+        return preventivoStatus;
     }
 
+    var mostraBudgetBtn = function(){
+        $('#totalePrev').css('height', 'unset');
+        $('#btnBudget').show();
+
+    }
+
+    var nascondiBudgetBtn = function(){
+        $('#totalePrev').css('height', '40px');
+        $('#btnBudget').hide();
+
+    }
+
+
     {% if countPreventivi > 0 %}
+
         $('.aCtrlPreventivo').html(
                 '<a id="modificaPreventivo" class="fa fa-edit expandPreventivoIcon"></a>'+
                 '<a id="cancellaPreventivo" class="fa fa-trash expandPreventivoIcon"></a>'
@@ -160,8 +203,17 @@
 
         });
 
-        impostaSelectDataPreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
+
+        var statusPreventivo = impostaSelectDataPreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
         stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
+
+        if( !statusPreventivo ){
+            mostraBudgetBtn();
+        }
+        else{
+            nascondiBudgetBtn();
+        }
+
     {% endif %}
 
 
@@ -204,7 +256,7 @@
 
 
     $('#modificaPreventivo').click(function(){
-        console.log('Allorraaaaa');
+
         var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
         var selDate = $('#dataSelect').val();
 
@@ -216,11 +268,17 @@
     $('#preventivoSelect').change(function(){
         var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
 
-        impostaSelectDataPreventivoEdile(selectedPreventivo);
+        var statusPreventivo =impostaSelectDataPreventivoEdile(selectedPreventivo);
 
         var selectedData = $('#dataSelect').val();
         stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
 
+        if( !statusPreventivo ){
+            mostraBudgetBtn();
+        }
+        else{
+            nascondiBudgetBtn();
+        }
 
     });
 
@@ -228,8 +286,8 @@
         var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
         var selectedData = $('#dataSelect').val();
         stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
-    });
 
+    });
 
 
 

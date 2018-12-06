@@ -40,6 +40,11 @@ div#wrapper {
 }
 
 .titleSettoreTd{
+    width: 90%;
+    background-color: indigo;
+}
+
+.titleTipologiaTd{
     width: 100%;
     background-color: indigo;
 }
@@ -51,9 +56,7 @@ div#wrapper {
 }
 
 .colSmall {
-    width: 60px !important;
-    min-width: 60px !important;
-    max-width: 80px !important;
+
 }
 
 
@@ -398,4 +401,8 @@ label {
 
 button.elementFattura{
     height: unset !important;
+}
+
+.labelInputPercentuale{
+
 }

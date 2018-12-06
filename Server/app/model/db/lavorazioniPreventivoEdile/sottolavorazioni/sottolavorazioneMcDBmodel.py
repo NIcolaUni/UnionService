@@ -23,4 +23,6 @@ class SottolavorazioneMcDBmodel(app.database.Model):
     larghezza = Column(Float())
     altezza = Column(Float())
     profondita = Column(Float())
+    prezzoBase = Column(Float())
+    ricarico = Column(Integer())
 

@@ -3,6 +3,31 @@ var ordineProdotti = 1; // variabile globale usata per tener conto del numero de
 var numeroPreventivo;
 var dataPreventivo;
 var cbxStatus=true;
+var prodottiPerTipologiaMarchioModello;
+var disabilitaSocketio = false;
+
+/**********************************************************************************************/
+var settaDisabilitaSocketio = function(value){
+    //value è un booleano
+
+    disabilitaSocketio = value;
+}
+
+/********************************************************************************************/
+
+var calcolaPrezzoProdotto = function( prezzoListino, posa, posaPerc, rincaroCliente){
+
+    prezzoListino = parseFloat(prezzoListino);
+    posa = parseFloat(posa);
+    posaPerc = parseInt(posaPerc);
+    rincaroCliente = parseInt(rincaroCliente);
+
+    var prezzo = prezzoListino+posa+(posa*posaPerc/100);
+
+    prezzo = prezzo + (prezzo*rincaroCliente/100);
+
+    return prezzo;
+}
 
 /********************************************************************************************/
 
@@ -115,9 +140,11 @@ var stampaPreventivo = function(usernameDip){
 
 var aggiungiNote = function($this){
 
-    socketFiniture.emit('inserisci_note', {   'numero_preventivo': numeroPreventivo,
-                                                        'data': dataPreventivo,
-                                                        'nota': $this.val() });
+    if(!disabilitaSocketio){
+        socketFiniture.emit('inserisci_note', {   'numero_preventivo': numeroPreventivo,
+                                                            'data': dataPreventivo,
+                                                            'nota': $this.val() });
+    }
 }
 
 /********************************************************************************************/
@@ -170,10 +197,11 @@ var modificaQuantitaProdotto = function( $inputQuantita, diffCapitolato ){
 
     var quantitaValue = parseFloat( $inputQuantita.val() );
     var newCap = 0;
+    var diffCapitolato = parseFloat(diffCapitolato);
 
-    if( diffCap != '-' )
+    if( diffCapitolato != 0)
     {
-        newCap = Math.round(diffCap*quantitaValue*100)/100;
+        newCap = Math.round(diffCapitolato*quantitaValue*100)/100;
 
         if( newCap == 0 )
             $inputQuantita.parent().parent().children('td.tdDiffCapitolato').html('-');
@@ -186,16 +214,18 @@ var modificaQuantitaProdotto = function( $inputQuantita, diffCapitolato ){
 
         var ordineProdotto = $inputQuantita.parent().parent().attr('id').split('_trBody-')[1];
 
-        socketFiniture.emit("modifica_prodotto",
-                        {
-                            "numero_preventivo" : numeroPreventivo,
-                            "data" : dataPreventivo,
-                            "ordine": ordineProdotto,
-                            "quantita": quantitaValue,
-                            "diffCapitolato": newCap
+        if(!disabilitaSocketio){
+            socketFiniture.emit("modifica_prodotto",
+                            {
+                                "numero_preventivo" : numeroPreventivo,
+                                "data" : dataPreventivo,
+                                "ordine": ordineProdotto,
+                                "quantita": quantitaValue,
+                                "diffCapitolato": newCap
 
-                        }
-        );
+                            }
+            );
+        }
 
     }
 
@@ -263,16 +293,18 @@ var rienumeraPagina = function(){
         $(this).children('.firstCol'+counter).children('label').text(counter);
 
 
+        if(!disabilitaSocketio){
+            socketFiniture.emit("modifica_ordine_prodotto",
+                            {
+                                "numero_preventivo" : numeroPreventivo,
+                                "data" : dataPreventivo,
+                                "ordineVecchio": -oldNum,
+                                "ordineNuovo" : counter
 
-        socketFiniture.emit("modifica_ordine_prodotto",
-                        {
-                            "numero_preventivo" : numeroPreventivo,
-                            "data" : dataPreventivo,
-                            "ordineVecchio": -oldNum,
-                            "ordineNuovo" : counter
+                            }
+                  );
+        }
 
-                        }
-              );
         counter+=1;
     });
 
@@ -320,15 +352,17 @@ var cancellaProdotto = function( $delBtn ){
     $('.aggiunto-'+numEl).removeClass('aggiunto');
     $('.aggiunto-'+numEl).removeClass('aggiunto-'+numEl);
 
-    socketFiniture.emit("elimina_prodotto",
-                    {
-                        "numero_preventivo" : numeroPreventivo,
-                        "data" : dataPreventivo,
-                        "ordine": numEl,
+    if(!disabilitaSocketio){
+        socketFiniture.emit("elimina_prodotto",
+                        {
+                            "numero_preventivo" : numeroPreventivo,
+                            "data" : dataPreventivo,
+                            "ordine": numEl,
 
-                    }
+                        }
 
-    );
+        );
+    }
 
     rienumeraPagina();
 
@@ -348,6 +382,39 @@ var cancellaProdotto = function( $delBtn ){
 
     }
 
+}
+
+/********************************************************************************************/
+
+var modificaUnitaMisura = function($this){
+
+    var nuovoValore = $this.val();
+    var ordineProdotto = $this.parent().parent().children('td.firstCol').children('label').text();
+
+    socketFiniture.emit('modifica_unita_misura', {
+
+        'numero_preventivo': numeroPreventivo,
+        'data' : dataPreventivo,
+        'ordine_prodotto' : ordineProdotto,
+        'value' : nuovoValore
+
+    });
+}
+
+/********************************************************************************************/
+var modificaNomeProdotto = function($this){
+
+    var nuovoValore = $this.val();
+    var ordineProdotto = $this.parent().parent().children('td.firstCol').children('label').text();
+
+    socketFiniture.emit('modifica_nome_prodotto', {
+
+        'numero_preventivo': numeroPreventivo,
+        'data' : dataPreventivo,
+        'ordine_prodotto' : ordineProdotto,
+        'value' : nuovoValore
+
+    });
 }
 
 /********************************************************************************************/
@@ -399,11 +466,11 @@ var aggiungiRiga = function($button, numeroPreventivoParametro, dataPreventivoPa
                             '<label></label><br/>'+
                             '<a onclick="cancellaProdotto($(this))" class="delElement fa fa-trash"></a>'+
                         '</td>'+
-                        '<td class="tdPreventivo tdProdotto"><textarea>'+prodotto+'</textarea></td>'+
+                        '<td class="tdPreventivo tdProdotto"><textarea oninput="modificaNomeProdotto($(this))" >'+prodotto+'</textarea></td>'+
                         '<td class="tdPreventivo tdModello">'+modello+'</td>'+
                         '<td class="tdPreventivo tdCodice">'+codiceProdotto+'</td>'+
-                        '<td class="tdPreventivo numColSmall tdQuantita"><input oninput="modificaQuantitaProdotto($(this), '+diffCapitolato+')" class="numInput numero" type="number" name="numero" placeholder="quantità" step="0.01" value="1.0"></td>'+
-                        '<td class="tdPreventivo numColSmall"><input name="unitaMisura" placeholder="unita misura" value="cad"></td>'+
+                        '<td class="tdPreventivo numColSmall tdQuantita"><input oninput="modificaQuantitaProdotto($(this), '+diffCapitolatoNum+')" class="numInput numero" type="number" name="numero" placeholder="quantità" step="0.01" value="1.0"></td>'+
+                        '<td class="tdPreventivo numColSmall tdUnita"><input oninput="modificaUnitaMisura($(this))" class="inputUnitaMisura" name="unitaMisura" placeholder="unita misura" value="cad"></td>'+
                         '<td class="tdPreventivo numColSmall tdDiffCapitolato">'+diffCapitolato+'</td>'+
                         '<td class="tdPreventivo tdAdded">&euro; '+ costoProdotto  +'</td>'+
                         '<td class="tdPreventivo tdAdded">&euro; '+ nettoUsProdotto +'</td>'+
@@ -412,10 +479,15 @@ var aggiungiRiga = function($button, numeroPreventivoParametro, dataPreventivoPa
         //se non e' gia' stata aggiunta una sezione lo faccio e subito sotto metto il prodotto
         if( !tipologiaProdotto.length ){
 
+            var colspanNum = 7;
+
+            if( !cbxStatus )
+                colspanNum = 9;
+
             $('#bodyPreventivo').append(
 
-                '<tr class="trHead tipologia-'+idTipologia'">'+
-                    '<td  colspan="7"  class="titleTipologiaTd">'+tipologia+'</td>'+
+                '<tr class="trHead tipologia-'+idTipologia+'">'+
+                    '<td  colspan="'+colspanNum+'"  class="titleTipologiaTd">'+tipologia+'</td>'+
                 '</tr>'+
                 '<tr class="trHead tipologia-'+idTipologia+'_head intestazione_head">'+
                     '<th class="thPreventivo"></th>'+
@@ -431,8 +503,11 @@ var aggiungiRiga = function($button, numeroPreventivoParametro, dataPreventivoPa
                 rowsToAdd
 
             );
-            $('.thAdded').hide();
-            $('.tdAdded').hide();
+
+            if( cbxStatus ){
+                $('.thAdded').hide();
+                $('.tdAdded').hide();
+            }
         }
         else{
 
@@ -441,30 +516,37 @@ var aggiungiRiga = function($button, numeroPreventivoParametro, dataPreventivoPa
             ultimoProdottoInserito.removeClass("tipologia-"+idTipologia+"_lastAdded");
 
             ultimoProdottoInserito.after( rowsToAdd );
-            $('.tdAdded').hide();
+
+            if( cbxStatus ){
+                $('.thAdded').hide();
+                $('.tdAdded').hide();
+
+            }
         }
 
         $('tr.trBody').draggable({ helper: "clone"});
 
+        if(!disabilitaSocketio){
+            /*registro la riga nel database*/
+            socketFiniture.emit("add_nuovo_prodotto",
+                {
+                    "numero_preventivo" : numeroPreventivo,
+                    "data" : dataPreventivo,
+                    "ordine": ordineProdotti,
+                    "tipologia" : tipologia,
+                    "prodotto" : prodotto,
+                    "modello" : modello,
+                    "marchio": marchio,
+                    "codice" : codiceProdotto,
+                    "quantita": 1,
+                    "unitaMisura": 'cad',
+                    "diffCapitolato": diffCapitolatoNum
 
-        /*registro la riga nel database*/
-        socketFiniture.emit("add_nuovo_prodotto",
-            {
-                "numero_preventivo" : numeroPreventivo,
-                "data" : dataPreventivo,
-                "ordine": ordineProdotti,
-                "tipologia" : tipologia,
-                "prodotto" : prodotto,
-                "modello" : modello,
-                "marchio": marchio,
-                "codice" : codiceProdotto,
-                "quantita": 1,
-                "unitaMisura": 'cad',
-                "diffCapitolato": diffCapitolatoNum
+                }
 
-            }
+            );
+        }
 
-        );
 
         /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
         rienumeraPagina();
@@ -590,6 +672,32 @@ var suddividiProdottiPerMarchio = function(listaProdottiPerTipologia, listaMarch
 
 }
 
+
+/*************************************************************************/
+
+var filtraTipologieSenzaProdotti = function(prodottiSuddivisi){
+
+    var removeTipologia = false;
+
+    var arrayToReturn = [];
+
+
+    prodottiSuddivisi.forEach(function(tipologia){
+
+        if( tipologia[1].length > 0 ){
+
+            arrayToReturn.push(tipologia);
+
+        }
+
+    });
+
+
+
+    return arrayToReturn;
+}
+
+
 /*************************************************************************/
 
 var suddividiProdottiPerTipologiaMarchioModello = function(listaProdottiPerTipologia, listaMarchiDistinti, listaModelliDistinti){
@@ -597,8 +705,10 @@ var suddividiProdottiPerTipologiaMarchioModello = function(listaProdottiPerTipol
     var prodottiPerTipologiaMarchio = suddividiProdottiPerMarchio( listaProdottiPerTipologia, listaMarchiDistinti );
 
 
-    var prodottiSuddivisi = suddividiProdottiPerModello( prodottiPerTipologiaMarchio, listaModelliDistinti )
+    var prodottiSuddivisi = suddividiProdottiPerModello( prodottiPerTipologiaMarchio, listaModelliDistinti );
 
+
+    prodottiSuddivisi = filtraTipologieSenzaProdotti(prodottiSuddivisi);
 
     return prodottiSuddivisi;
 
@@ -608,7 +718,7 @@ var suddividiProdottiPerTipologiaMarchioModello = function(listaProdottiPerTipol
 
 var aggiungiProdottiToSelectElement = function( listaProdottiPerTipologia, listaMarchiDistinti, listaModelliDistinti){
 
-    var prodottiPerTipologiaMarchioModello = suddividiProdottiPerTipologiaMarchioModello( listaProdottiPerTipologia, listaMarchiDistinti, listaModelliDistinti );
+    prodottiPerTipologiaMarchioModello = suddividiProdottiPerTipologiaMarchioModello( listaProdottiPerTipologia, listaMarchiDistinti, listaModelliDistinti );
 
     var counterTipologia = 0;
     prodottiPerTipologiaMarchioModello.forEach(function(tipologia){
@@ -655,16 +765,29 @@ var aggiungiProdottiToSelectElement = function( listaProdottiPerTipologia, lista
 /***********************************************************************/
 var showMarchiPerTipologia = function(tipologiaClass){
 
-    $('#selectMarchio').children('option').hide();
+    var counterTipologia = 0;
 
-    $('#selectMarchio').children('option').each(function(){
+    var idTipologiaSelected = parseInt(tipologiaClass.split('-')[1]);
 
-        if( $(this).attr('class').startsWith(tipologiaClass) ){
+    $('#selectMarchio').children('option').remove();
 
-            $(this).show();
+    prodottiPerTipologiaMarchioModello.forEach(function(tipologia){
+
+        if( counterTipologia == idTipologiaSelected ){
+
+            var counterMarchio = 0;
+
+            tipologia[1].forEach(function(marchio){
+
+                $('#selectMarchio').append('<option class="'+tipologiaClass+'_marchio-'+counterMarchio+'">'+marchio[0]+'</option>');
+
+                counterMarchio++;
+
+            });
 
         }
 
+        counterTipologia++;
     });
 
 }
@@ -673,17 +796,44 @@ var showMarchiPerTipologia = function(tipologiaClass){
 
 var showModelliPerMarchio = function(marchioClass){
 
-    $('#selectModello').children('option').hide();
 
-    $('#selectModello').children('option').each(function(){
+    var counterTipologia = 0;
 
-        if( $(this).attr('class').startsWith(marchioClass) ){
+    var marchioClassSplitted = marchioClass.split('_');
+    var idTipologiaSelected = parseInt(marchioClassSplitted[0].split('-')[1]);
+    var idMarchioSelected = parseInt(marchioClassSplitted[1].split('-')[1]);
 
-            $(this).show();
 
+    $('#selectModello').children('option').remove();
+
+    prodottiPerTipologiaMarchioModello.forEach(function(tipologia){
+
+        var counterMarchio = 0;
+
+        if( counterTipologia == idTipologiaSelected ){
+
+            tipologia[1].forEach(function(marchio){
+
+                if( counterMarchio == idMarchioSelected ){
+                    var counterModello = 0;
+
+                    marchio[1].forEach(function(modello){
+
+                        $('#selectModello').append('<option class="'+marchioClass+'_modello-'+counterModello+'">'+modello[0]+'</option>');
+
+                        counterModello++;
+                    });
+                }
+
+                counterMarchio++;
+
+            });
         }
 
+        counterTipologia++;
+
     });
+
 
 }
 
@@ -705,30 +855,7 @@ var showProdottiPerModello = function(modelloClass){
 
 }
 
-/***************************************************************************/
-/* Quando nascondo le opzioni in un select il valore del select non cambia e questo
-    porta alla possibilità che come valore del select ne rimanga uno che debba
-    sparire. Questa funzione reimposta il valore del select alla prima opzione
-    non nascosta */
 
-var impostaSelectedOptionVisibile = function($select){
-
-    var firstOption = true;
-
-    $select.children('option').each(function(){
-
-        if( firstOption ){
-
-            if( $(this).css('display') != 'none' ){
-                $(this).attr('selected', 'selected')
-                $select.trigger('change');
-                firstOption = false;
-            }
-        }
-
-
-    });
-}
 /**************************************************************************/
 
 
@@ -752,7 +879,14 @@ $(function(){
             showMarchiPerTipologia($(this).attr('class'));
         });
 
-        impostaSelectedOptionVisibile($('#selectMarchio'));
+        $('#selectMarchio option:selected').each(function(){
+            showModelliPerMarchio($(this).attr('class'));
+        });
+
+        $('#selectModello option:selected').each(function(){
+            showProdottiPerModello($(this).attr('class'));
+        });
+
 
     });
 
@@ -762,13 +896,16 @@ $(function(){
             showModelliPerMarchio($(this).attr('class'));
         });
 
-        impostaSelectedOptionVisibile($('#selectModello'));
+        $('#selectModello option:selected').each(function(){
+            showProdottiPerModello($(this).attr('class'));
+        });
 
     });
 
     $('#selectModello').change(function(){
 
         $(this).children('option:selected').each(function(){
+
             showProdottiPerModello($(this).attr('class'));
         });
 

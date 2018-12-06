@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2018.1.11)  17 JUL 2018 13:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2018.10.3)  5 DEC 2018 23:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -159,18 +159,18 @@ Package: everysel 2011/10/28 v1.2 EverySelectfont Package (MS)
 ) (./newPrev.aux)
 \openout1 = `newPrev.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -240,11 +240,11 @@ e
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
 * h-part:(L,W,R)=(73.97733pt, 449.55322pt, 73.97733pt)
-* v-part:(T,H,B)=(48.36958pt, 748.30768pt, 48.36958pt)
+* v-part:(T,H,B)=(48.36958pt, 668.63986pt, 128.0374pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
 * \textwidth=449.55322pt
-* \textheight=748.30768pt
+* \textheight=668.63986pt
 * \oddsidemargin=1.70734pt
 * \evensidemargin=1.70734pt
 * \topmargin=-60.9004pt
@@ -266,120 +266,124 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 35.
+LaTeX Info: Redefining \selectfont on input line 53.
 
 <./Immagini/intestazioneAlta2.jpg, id=1, 559.3698pt x 94.9146pt>
 File: ./Immagini/intestazioneAlta2.jpg Graphic file (type jpg)
 
 <use ./Immagini/intestazioneAlta2.jpg>
-Package pdftex.def Info: ./Immagini/intestazioneAlta2.jpg used on input line 38
+Package pdftex.def Info: ./Immagini/intestazioneAlta2.jpg used on input line 56
 .
 (pdftex.def)             Requested size: 449.57051pt x 85.35716pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 41.
+(Font)              <7> on input line 59.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 41.
+(Font)              <5> on input line 59.
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--59
+Underfull \hbox (badness 10000) in paragraph at lines 77--78
  []| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--61
- []\OT1/cmr/bx/n/10 CLIENTE
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 62--62
- []|
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
- []| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 65--65
- []\OT1/cmr/m/n/10 Nicola Pancheri
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 66--66
- []\OT1/cmr/m/n/10 tel. 339521832
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 69--69
- []|
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 79--80
- []| 
+ []\OT1/cmr/bx/n/10 CLIENTE
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 81--82
- []\OT1/cmr/m/n/10 15/07/2018
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 83--83
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
  []|
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 88--89
+Underfull \hbox (badness 10000) in paragraph at lines 82--83
  []| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 92--92
+Underfull \hbox (badness 10000) in paragraph at lines 84--84
+ []\OT1/cmr/m/n/10 Nicola Pancheri
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--85
+ []\OT1/cmr/m/n/10 tel. 339521832
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+ []|
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 98--99
+ []| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+ []\OT1/cmr/m/n/10 15/07/2018
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--102
+ []|
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 107--108
+ []| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 111--111
  []|
  []
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
  <./Immagini/intestazioneAlta2.jpg>]
+Overfull \vbox (13.81381pt too high) has occurred while \output is active []
+
+
+[2]
 File: ./Immagini/intestazioneAlta2.jpg Graphic file (type jpg)
  <use ./Immagini/intestazioneAlta2.jpg>
-Package pdftex.def Info: ./Immagini/intestazioneAlta2.jpg used on input line 33
-9.
+Package pdftex.def Info: ./Immagini/intestazioneAlta2.jpg used on input line 89
+0.
 (pdftex.def)             Requested size: 449.57051pt x 85.35716pt.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 343.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 894.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 343.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 894.
 
-Underfull \hbox (badness 10000) in paragraph at lines 360--366
+Underfull \hbox (badness 10000) in paragraph at lines 911--917
 
  []
 
-[2] (./newPrev.aux) ) 
+[3] (./newPrev.aux) ) 
 Here is how much of TeX's memory you used:
- 2840 strings out of 493013
- 39532 string characters out of 6135682
- 124288 words of memory out of 5000000
- 6352 multiletter control sequences out of 15000+600000
- 4492 words of font info for 18 fonts, out of 8000000 for 9000
+ 2842 strings out of 493013
+ 39549 string characters out of 6135682
+ 142717 words of memory out of 5000000
+ 6353 multiletter control sequences out of 15000+600000
+ 4790 words of font info for 19 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,11n,43p,249b,295s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 39i,18n,43p,249b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-bx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/s
+bx8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/eurosym/feybr10.pfb></usr/share/texlive/te
 xmf-dist/fonts/type1/public/eurosym/feymr10.pfb>
-Output written on newPrev.pdf (2 pages, 260288 bytes).
+Output written on newPrev.pdf (3 pages, 262670 bytes).
 PDF statistics:
- 40 PDF objects out of 1000 (max. 8388607)
- 27 compressed objects within 1 object stream
+ 43 PDF objects out of 1000 (max. 8388607)
+ 29 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

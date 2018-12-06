@@ -1,0 +1,5 @@
+1- se si cambia il valore del rincaroAzienda, trasportoAzienda, imballoAzienda la modifica viene apportata localmente
+    ma non nel database
+
+2- se aggiungo un prodotto avente tutti i costi a zero mi imposta il totale locale al totale dell' ultimo
+    prodotto inserito ( invece che mettere anch'esso a zero )

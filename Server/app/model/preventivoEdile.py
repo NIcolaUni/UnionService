@@ -23,7 +23,7 @@ class __SottolavorazioneCorpoPreventivo__(SottolavorazioneCorpoDBmodel):
         self.tipologia = 'edile'
 
 class __SottolavorazioneCadPreventivo__(SottolavorazioneCadDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero):
+    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, prezzoBase):
         self.numero_preventivo=numero_preventivo
         self.data = data
         self.ordine = ordine
@@ -34,7 +34,7 @@ class __SottolavorazioneCadPreventivo__(SottolavorazioneCadDBmodel):
 
 
 class __SottolavorazioneMlPreventivo__(SottolavorazioneMlDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza ):
+    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, prezzoBase ):
         self.numero_preventivo=numero_preventivo
         self.data = data
         self.ordine = ordine
@@ -47,7 +47,7 @@ class __SottolavorazioneMlPreventivo__(SottolavorazioneMlDBmodel):
 
 
 class __SottolavorazioneMqPreventivo__(SottolavorazioneMqDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, altezza ):
+    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, altezza, prezzoBase ):
         self.numero_preventivo=numero_preventivo
         self.data = data
         self.ordine = ordine
@@ -61,7 +61,7 @@ class __SottolavorazioneMqPreventivo__(SottolavorazioneMqDBmodel):
 
 
 class __SottolavorazioneMcPreventivo__(SottolavorazioneMcDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, altezza, profondita ):
+    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, altezza, profondita, prezzoBase ):
         self.numero_preventivo=numero_preventivo
         self.data = data
         self.ordine = ordine
@@ -83,6 +83,7 @@ class __LavorazionePreventivo__(LavorazionePreventivoDBmodel):
 
         self.settore = settore
         self.tipologia_lavorazione = tipologia_lavorazione
+        self.nome_modificato = tipologia_lavorazione
         self.unitaMisura=unitaMisura
         self.prezzoUnitario=prezzoUnitario
 
@@ -330,29 +331,31 @@ class PreventivoEdile(PreventivoDBmodel):
         return ordine_sottolavorazione
 
     def __registraSottolavorazione__( numero_preventivo, data, ordine, ordine_sottolavorazione, unitaMisura,
-                                        numero,  larghezza=None, altezza=None, profondita=None):
+                                        numero, prezzoBase, larghezza=None, altezza=None, profondita=None):
 
         lavorazione = None
         if unitaMisura == 'cad':
             lavorazione = __SottolavorazioneCadPreventivo__(numero_preventivo=numero_preventivo, data=data,
-                                                             ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione, numero=numero )
+                                                             ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione, numero=numero,
+                                                             prezzoBase=prezzoBase)
         elif unitaMisura == 'ml':
             lavorazione = __SottolavorazioneMlPreventivo__(numero_preventivo=numero_preventivo, data=data,
                                                            ordine=ordine,
                                                            ordine_sottolavorazione=ordine_sottolavorazione,
-                                                           numero=numero, larghezza=larghezza )
+                                                           numero=numero, larghezza=larghezza, prezzoBase=prezzoBase )
 
         elif unitaMisura == 'mq':
             lavorazione = __SottolavorazioneMqPreventivo__(numero_preventivo=numero_preventivo, data=data,
                                                            ordine=ordine,
                                                            ordine_sottolavorazione=ordine_sottolavorazione,
-                                                           numero=numero, larghezza=larghezza, altezza=altezza )
+                                                           numero=numero, larghezza=larghezza, altezza=altezza, prezzoBase=prezzoBase )
 
         elif unitaMisura == 'mc':
             lavorazione = __SottolavorazioneMcPreventivo__(numero_preventivo=numero_preventivo, data=data,
                                                            ordine=ordine,
                                                            ordine_sottolavorazione=ordine_sottolavorazione,
-                                                           numero=numero, larghezza=larghezza, altezza=altezza, profondita=profondita)
+                                                           numero=numero, larghezza=larghezza, altezza=altezza, profondita=profondita,
+                                                           prezzoBase=prezzoBase)
         elif unitaMisura == 'a corpo':
             lavorazione = __SottolavorazioneCorpoPreventivo__(numero_preventivo=numero_preventivo, data=data,
                                                             ordine=ordine,
@@ -364,21 +367,21 @@ class PreventivoEdile(PreventivoDBmodel):
     def nuovaSottolavorazione(numero_preventivo, data, ordine):
 
         unitaMisura = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first().unitaMisura
-
+        prezzoBase = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first().prezzoUnitario
 
         if unitaMisura == 'cad':
             last_sottolav_cad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
                                                                                   data=data, ordine=ordine).order_by( desc(__SottolavorazioneCadPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
 
             PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
-                                                             ordine=ordine, ordine_sottolavorazione=last_sottolav_cad+1, numero=1 )
+                                                             ordine=ordine, ordine_sottolavorazione=last_sottolav_cad+1, numero=1, prezzoBase=prezzoBase )
         elif unitaMisura == 'ml':
             last_sottolav_ml = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
                                                                                 data=data, ordine=ordine).order_by( desc(__SottolavorazioneMlPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
 
             PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
                                                          ordine=ordine, ordine_sottolavorazione=last_sottolav_ml+1,
-                                                         numero=1, larghezza=1)
+                                                         numero=1, larghezza=1, prezzoBase=prezzoBase)
 
         elif unitaMisura == 'mq':
             last_sottolav_mq = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
@@ -386,7 +389,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
             PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
                                                          ordine=ordine, ordine_sottolavorazione=last_sottolav_mq+1,
-                                                         numero=1, larghezza=1, altezza=1)
+                                                         numero=1, larghezza=1, altezza=1, prezzoBase=prezzoBase)
 
 
         elif unitaMisura == 'mc':
@@ -395,7 +398,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
             PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
                                                          ordine=ordine, ordine_sottolavorazione=last_sottolav_mc+1,
-                                                         numero=1, larghezza=1, altezza=1, profondita=1)
+                                                         numero=1, larghezza=1, altezza=1, profondita=1, prezzoBase=prezzoBase)
 
         elif unitaMisura == 'a corpo':
             last_sottolav_corpo = __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
@@ -447,7 +450,8 @@ class PreventivoEdile(PreventivoDBmodel):
 
         PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
                                                      ordine=ordine, ordine_sottolavorazione=ordineSottolavorazione,
-                                                     numero=numero, larghezza=larghezza, altezza=altezza, profondita=profondita)
+                                                     numero=numero, larghezza=larghezza, altezza=altezza, profondita=profondita,
+                                                     prezzoBase=prezzoUnitario)
 
 
     def eliminaLavorazione(numero_preventivo, data, ordine ):
@@ -685,10 +689,14 @@ class PreventivoEdile(PreventivoDBmodel):
                                         __SottolavorazioneCadPreventivo__.ordine_sottolavorazione).all()
                 quantitaTotale = 0
 
+                sommaPrezziSottolav = 0
+
                 for sottolav in sottolavorazioni:
                     quantitaTotale += sottolav.numero
+                    sommaPrezziSottolav += sottolav.numero * sottolav.prezzoBase
 
-                prezzoTotale = quantitaTotale * lav.prezzoUnitario
+                #prezzoTotale = quantitaTotale * lav.prezzoUnitario
+                prezzoTotale = sommaPrezziSottolav
 
                 resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
 
@@ -699,11 +707,13 @@ class PreventivoEdile(PreventivoDBmodel):
                                         __SottolavorazioneMlPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
+                sommaPrezziSottolav = 0
 
                 for sottolav in sottolavorazioni:
                     quantitaTotale += (sottolav.numero * sottolav.larghezza)
+                    sommaPrezziSottolav += (sottolav.numero * sottolav.larghezza) * sottolav.prezzoBase
 
-                prezzoTotale = quantitaTotale * lav.prezzoUnitario
+                prezzoTotale = sommaPrezziSottolav
 
                 resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
 
@@ -715,11 +725,13 @@ class PreventivoEdile(PreventivoDBmodel):
                                         __SottolavorazioneMqPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
+                sommaPrezziSottolav = 0
 
                 for sottolav in sottolavorazioni:
                     quantitaTotale += (sottolav.numero * sottolav.larghezza * sottolav.altezza)
+                    sommaPrezziSottolav += (sottolav.numero * sottolav.larghezza * sottolav.altezza)*sottolav.prezzoBase
 
-                prezzoTotale = quantitaTotale * lav.prezzoUnitario
+                prezzoTotale = sommaPrezziSottolav
 
                 resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
 
@@ -732,11 +744,13 @@ class PreventivoEdile(PreventivoDBmodel):
                                         __SottolavorazioneMcPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
+                sommaPrezziSottolav = 0
 
                 for sottolav in sottolavorazioni:
                     quantitaTotale += (sottolav.numero * sottolav.larghezza * sottolav.altezza * sottolav.profondita)
+                    sommaPrezziSottolav += (sottolav.numero * sottolav.larghezza * sottolav.altezza * sottolav.profondita)*sottolav.prezzoBase
 
-                prezzoTotale = quantitaTotale * lav.prezzoUnitario
+                prezzoTotale = sommaPrezziSottolav
 
                 resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
 
@@ -821,8 +835,537 @@ class PreventivoEdile(PreventivoDBmodel):
             else:
                 PreventivoEdile.delRow(prev)
 
+    def __calcolaIndiceLastLavorazionePagineIntermedie__(startingIndex, grandezzaRighe):
+
+        index = startingIndex
+        tmpGrandezzaRighe = 0
+
+        for lunghezza in grandezzaRighe:
+
+            tmpGrandezzaRighe += lunghezza
+
+            if tmpGrandezzaRighe <= 21.6:
+                index += 1
+
+            else:
+                break
+
+        if tmpGrandezzaRighe <= 18:
+            return [index, False]
+        else:
+            return [index, True]
+
+    def __calcoraIndiceLastLavorazionePrimaPagina__(grandezzaRighe):
+        index = -1
+        tmpGrandezzaRighe = 0
+
+        for lunghezza in grandezzaRighe:
+
+            tmpGrandezzaRighe += lunghezza
+
+            if tmpGrandezzaRighe <= 11.7:
+                index += 1
+
+            else:
+                break
+
+        if tmpGrandezzaRighe <= 9:
+            return [index, False]
+        else:
+            return [index, True]
+
+
+    def __calcolaLavorazioniPerPaginaPreventivo__(lavorazioni):
+        '''
+
+        Una lavorazione il cui nome occupa una sola riga è altra 0.9 cm ed ogni riga extra aggiunge un 0.4cm;
+        Una lavorazione occupa una sola riga se il suo numero di caratteri <= 50.
+        Per quanto riguarda la prima facciata, un insieme di lavorazioni sta tutto
+        in una pagina ( compreso del totale ) se l'altezza dell'insieme di
+        righe delle lavorazioni ( escluso il totale ) è <= 9cm; se la riga dello sconto non compare il limite di
+        9cm si trasforma in 9.9cm. Se l'insieme di lavorazioni supera questo limite allora nella prima facciata
+        l'insieme delle lavorazioni non potrà superare gli 11.7 cm.
+        Nelle pagine successive alla prima, se il totale è presente, il numero di righe avrà come limite i 18cm
+        mentre, se il totale va su un'altra pagina ancora, sarà di 21.6cm.
+        Se il totale finisce sull'ultima pagina assieme ad esso potremmo avere al massimo un numero di lavorazioni
+        che non superi i 4.5cm;
+
+
+        :return: ritorna una tupla di due elementi dove_
+                -prima pos: una lista dove il numero di elementi indica il numero di pagine necessarie per
+                            stampare il preventivo e ogni elemento indica il numero dell'ultima lavorazione
+                            nella pagina;
+                -seconda pos: un booleano indicante se nell'ultima pagina il numero di lavorazioni supera i 4.5cm
+
+        '''
+
+        grandezzaRighe = []
+
+        #Per ogni lavorazione calcolo l'altezza della corrispondente riga nel preventivo
+        for lav in lavorazioni:
+            numeroRighe = int(len( lav[0].nome_modificato )/50)
+            resto = len( lav[0].nome_modificato )%50
+
+            lunghezzaRigaCm = 0
+
+            if numeroRighe <= 1:
+                lunghezzaRigaCm = 0.9
+
+            else:
+                addedCm = 0
+                for i in range( 1, numeroRighe):
+                    addedCm += 0.4
+
+                lunghezzaRigaCm = 0.9+addedCm
+
+            if numeroRighe >= 1 and resto > 0:
+                lunghezzaRigaCm += 0.4
+
+            grandezzaRighe.append(round(lunghezzaRigaCm*100)/100)
+
+        if len(grandezzaRighe) > 0:
+            indexesToRet = []
+            numPag = 1
+
+            index, continua = PreventivoEdile.__calcoraIndiceLastLavorazionePrimaPagina__(grandezzaRighe)
+
+
+            indexesToRet.append(index)
+
+            while continua and index+1 < len(grandezzaRighe):
+
+                index, continua = PreventivoEdile.__calcolaIndiceLastLavorazionePagineIntermedie__(index, grandezzaRighe[index+1:len(grandezzaRighe)])
+                indexesToRet.append(index)
+                numPag += 1
+
+            if continua:
+                numPag += 1
+
+
+            if len(indexesToRet) < numPag:
+                indexesToRet.append(len(grandezzaRighe)-1)
+
+            totLunghezzaUltimaPag = 0
+
+            for lunghezza in grandezzaRighe[indexesToRet[-2]:indexesToRet[-1]]:
+                totLunghezzaUltimaPag+=lunghezza
+
+            if totLunghezzaUltimaPag <= 4.5:
+                return ( indexesToRet, False )
+            else:
+                return ( indexesToRet, True )
+
+        else:
+            return ([], False)
+
+
 
     def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura ):
+
+        preventivo = PreventivoEdile.query.filter_by(tipologia='edile', numero_preventivo=numero_preventivo,
+                                                     data=data).first()
+
+        dipendente = DipendenteDBmodel.query.filter_by(username=preventivo.dipendente_generatore).first()
+
+        cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente,
+                                                 indirizzo=preventivo.indirizzo_cliente).first()
+
+        infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
+
+        codicePrev = PreventivoEdile.calcolaCodicePreventivoNoObj(numero_preventivo, data)
+
+        commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo, intervento=preventivo.intervento_commessa).first()
+
+        contaLavorazioni = 0
+
+        now = datetime.datetime.now()
+        oggi = "{}/{}/{}".format(now.day, now.month, now.year)
+
+        latexScript = '''
+                        \\documentclass[a4paper]{article}
+                        \\usepackage{graphicx}
+                        \\graphicspath{ {./Immagini/} }
+                        \\usepackage{setspace}
+                        \\usepackage{eurosym}
+                        \\usepackage{xcolor}
+                        \\usepackage{tabularx}
+                        \\usepackage[top=1.7cm, bottom=4.5cm, left=2.6cm, right=2.6cm]{geometry}
+
+                        \\usepackage{fancyhdr}
+                        \\pagestyle{fancy}
+                        \\lhead{}
+                        \\chead{} 
+                      '''
+
+        latexScript += '\\rhead{US' + codicePrev + 'E}'
+
+        latexScript += '''
+                        \\cfoot{
+                                {\\normalsize
+                                  \\begin{center}
+                                  \\begin{tabular}{|L{105mm} | L{44mm}| }
+                                  \\hline
+                                  \\begin{spacing}{0.3}
+                                    \\textbf{NOTE} \\newline
+                                    \\hfill
+                                    {\\centering
+                        '''
+        if preventivo.note is not None:
+            latexScript += preventivo.note
+
+        latexScript +=  '''
+                                    }
+                                  \\end{spacing}&
+                                  \\begin{spacing}{0.3}
+                                  \\textbf{Firma per accettazione}
+                                  \\end{spacing}\\\\
+                                  \\hline
+                                  \\end{tabular}
+                                  \\end{center}
+                                  \\noindent\\rule{\\textwidth}{0.4pt}
+                                }
+                                {\\footnotesize
+                                  \\raggedright\\thepage \\\\ \\centering\\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
+                                  Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
+                                }
+                        }
+                        \\rfoot{}
+                        \\renewcommand{\\headrulewidth}{0pt}
+
+                        \\usepackage{array}
+                        \\usepackage{ragged2e}
+                        \\newcolumntype{R}[1]{>{\\RaggedLeft\\hspace{0pt}}p{#1}}
+                        \\newcolumntype{L}[1]{>{\\RaggedRight\\hspace{0pt}}p{#1}}
+
+                        \\renewcommand{\\arraystretch}{0}
+
+                        \\begin{document}
+
+                        \\begin{figure}[!t]
+                        \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
+                        \\end{figure}
+
+                        \\noindent\\begin{tabular}{| L{72.2mm} |}
+                            \\hline
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                            \\textbf{COMMESSA}
+                            \\end{spacing}\\\\
+                            \\hline
+                            \\vspace{4mm}
+                            \\begin{spacing}{1.2}
+
+                        '''
+        latexScript += commessa.intervento.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                                  "\\'u").replace(
+            "ì", "\\'i") + ' \\newline '
+        latexScript += commessa.indirizzo.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                                 "\\'u").replace(
+            "ì", "\\'i") + ' \\newline ' + commessa.comune.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                             "\\'o").replace(
+            "ù", "\\'u").replace("ì", "\\'i")
+
+        latexScript += '''
+                          \\end{spacing}\\\\
+                            \\hline
+                          \\end{tabular}
+                          \\quad
+                          \\begin{tabular}{ | R{72.2mm} | }
+                            \\hline
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                            \\textbf{CLIENTE}
+                            \\end{spacing}\\\\
+                            \\hline
+                            \\vspace{4mm}
+                            \\begin{spacing}{1.2}
+
+                       '''
+        latexScript += cliente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                           "\\'u").replace(
+            "ì", "\\'i") + ' ' + cliente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace(
+            "ù", "\\'u").replace("ì", "\\'i") + ' \\newline '
+        latexScript += 'tel. ' + str(cliente.telefono) + ' \\newline '
+        latexScript += cliente.indirizzo.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                                "\\'u").replace(
+            "ì", "\\'i")
+
+        latexScript += '''
+                          \\end{spacing}\\\\
+                            \\hline
+                          \\end{tabular}
+
+                          \\begin{center}
+                          \\begin{tabular}{|L{89mm} R{60mm}| }
+                          \\hline
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Preventivo Edile}
+                          \\end{spacing}&
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+
+                     '''
+
+        latexScript += oggi
+
+        latexScript += '''
+
+                          \\end{spacing}\\\\
+                          \\hline
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Validit\\'a:}
+                       '''
+        validita = datetime.timedelta(days=30) + datetime.datetime.now()
+
+        validita = "{}/{}/{}".format(validita.day, validita.month, validita.year)
+
+        latexScript += validita
+        latexScript += '''
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Operatore:}
+
+                       '''
+
+        latexScript += dipendente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+                                                                                                              "\\'u").replace(
+            "ì", "\\'i") + ' ' + dipendente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                      "\\'o").replace(
+            "ù", "\\'u").replace("ì", "\\'i")
+
+        latexScript += '''
+                          \\end{spacing} \\\\
+                          \\hline
+                          \\end{tabular}
+                          \\end{center}
+                          \\noindent\\begin{tabular}{ | L{10mm} |  L{86mm} | L{12mm} | L{12mm} | L{16mm} | }
+                          \\hline
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Pos.}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Descrizione}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Qnt.}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{U.M.}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{Importo}
+                          \\end{spacing} \\\\
+                          \\hline
+                          %FINE HEADER
+                       '''
+
+        numPagine = PreventivoEdile.calcolaLunghezzaPreventivo(infoPreventivo[1])
+
+        #############################################################
+
+        totalePreventivo = 0
+
+        for lav in infoPreventivo[1]:
+            contaLavorazioni += 1
+            latexScript += '''
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+            latexScript += '{} - {}'.format(contaLavorazioni, numPagine[contaLavorazioni-1])
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+
+            latexScript += lav[0].nome_modificato.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                    "\\'o").replace("ù",
+                                                                                                                    "\\'u").replace(
+                "ì", "\\'i")
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+
+            if sumisura:
+                latexScript += '{}'.format(lav[1])
+            else:
+                latexScript += '-'
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                           '''
+
+            if sumisura:
+                latexScript += lav[0].unitaMisura
+
+            else:
+                latexScript += 'a corpo'
+
+            latexScript += '''
+                              \\end{spacing} &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                                \\euro\\hfill 
+                            '''
+            latexScript += '{}'.format(lav[2])
+            totalePreventivo += lav[2]
+
+            latexScript += '''
+                              \\end{spacing} \\\\
+                              \\hline
+                              %FINE RIGA
+
+                            '''
+
+        latexScript += '''
+                          \\end{tabular}
+
+                          \\noindent\\begin{tabular}{|L{108.5mm} | L{8mm} | L{8mm} |  L{16mm}| }
+                          \\hline
+                          \\multicolumn{3}{ | L{124.5mm} | }{
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{Totale imponibile}
+                            \\end{spacing}
+                          } &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\euro\\hfill
+                       '''
+
+        latexScript += '{}'.format(totalePreventivo)
+
+        latexScript += '''
+                          \\end{spacing}\\\\
+                          \\hline
+                       '''
+
+        totaleScontato = totalePreventivo
+        laberForSconto = ""
+
+        if tipoSconto == 2:
+            totaleScontato -= sconto;
+            laberForSconto = "Sconto netto"
+        elif tipoSconto == 3:
+            totaleScontato += totalePreventivo * sconto / 100
+            laberForSconto = "\%"
+        elif tipoSconto == 4:
+            totaleScontato = sconto
+            laberForSconto = "Totale con sconto"
+
+        totaleConIva = totaleScontato + (totaleScontato * iva / 100)
+
+        totaleScontato = math.floor(totaleScontato * 100) / 100
+        totaleConIva = math.floor(totaleConIva * 100) / 100
+
+        if tipoSconto != 1:
+            latexScript += '''
+                              \\multicolumn{1}{  L{108.5mm} | }{} &
+                              \\multicolumn{2}{  L{16mm} | }{
+                                \\vspace{2.5mm}
+                                \\begin{spacing}{0}
+                            '''
+
+            latexScript += '\\textbf{' + laberForSconto + '}'
+
+            latexScript += '''
+                                \\end{spacing}
+                              } &
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                              \\euro\\hfill 
+                           '''
+
+            latexScript += '{}'.format(totaleScontato) + '\\end{spacing}\\\\ \\cline{2-4}'
+
+        latexScript += '''
+                          \\multicolumn{1}{  L{108.5mm} | }{} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                            \\textbf{IVA}
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                        '''
+
+        if iva == 0:
+            latexScript += '\\textbf{\%}'
+        else:
+            latexScript += '\\textbf{' + str(iva) + '\%}'
+
+        latexScript += '''
+                          \\end{spacing} &
+                          \\vspace{2.5mm}
+                          \\begin{spacing}{0}
+                          \\euro\\hfill
+                        '''
+
+        latexScript += '{}'.format(totaleConIva)
+
+        latexScript += '''
+                          \\end{spacing}\\\\
+                          \\cline{2-4}
+                          \\end{tabular}
+
+                       '''
+
+        latexScript += '''
+                      \\begin{figure}[!t]
+                      \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
+                      \\end{figure}
+
+                      \\newpage
+                      \\begin{itemize}
+                          \\item \\textbf{Ipotizzati \\euro 2.500,00 per smaltimenti materiali}
+                      \\end{itemize}
+
+                      \\noindent\\textbf{Dalla seguente offera sono escluse:}
+                      \\begin{itemize}
+                          \\item IVA e qualsiasi altro onere fiscale;
+                          \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
+                          \\item Costi di energia elettrica e acqua ad uso cantiere;
+                          \\item Qualsiasi altra voce non citata;
+                          \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
+                          \\item Pratica per detrazioni fiscali da quantificare;
+                      \\end{itemize}
+
+                      \\noindent\\textbf{Pagamenti}
+                      \\begin{itemize}
+                          \\item Da concordare in fase di accettazione.
+                      \\end{itemize}
+
+                      \\textcolor{red}{La presente offerta ha validit\'a 30 giorni dalla data odierna.}\\\\
+
+                      Castel d'Azzano, il 11 - 7 - 2018
+                      \\vspace{1cm}\\\\
+                      Per accettazione ..............................................................
+
+                    \\end{document}
+
+                       '''
+
+        with open('app/preventiviLatexDir/preventivoEdile.tex', mode='w') as prova:
+            prova.write(latexScript)
+
+        os.system("cd app/preventiviLatexDir && pdflatex preventivoEdile.tex")
+
+    #############################################################################
+
+    def OldstampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura ):
 
 
         if chiudiPreventivo :
@@ -1018,7 +1561,7 @@ class PreventivoEdile(PreventivoDBmodel):
                               \\begin{spacing}{0}
                            '''
 
-            latexScript += lav[0].tipologia_lavorazione.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i")
+            latexScript += lav[0].nome_modificato.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i")
 
             latexScript += '''
                               \\end{spacing} &

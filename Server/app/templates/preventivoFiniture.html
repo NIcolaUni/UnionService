@@ -78,7 +78,7 @@
 
             </div>
             <div id="divSalvaPreventivo" class="features">
-                <a onclick="stampaPreventivo({{dipendente.username}})" id="printButton">STAMPA</a>
+                <a onclick="stampaPreventivo('{{dipendente.username}}')" id="printButton">STAMPA</a>
             </div>
             <div id="divTitoloNote" >
                 <span>Note:</span>
@@ -217,7 +217,10 @@
 
                                 {% if modelloProdotto.prodotto == capitolato.nome %}
 
-                                    capitolatoCosto = parseFloat('{{modelloProdotto.prezzoListinoFornituraPosa}}')
+
+                                    capitolatoCosto = calcolaPrezzoProdotto('{{modelloProdotto.prezzoListinoFornitura}}', '{{modelloProdotto.posa}}',
+                                                        '{{modelloProdotto.posaPerc}}', '{{modelloProdotto.rincaroCliente}}');
+
 
                                 {% endif %}
 
@@ -252,9 +255,14 @@
 
                         if( prodottoToCompare == prodotto ){
 
-                            var costoProdotto = parseFloat('{{modelloProdotto.prezzoListinoFornituraPosa}}');
+                            var costoProdotto = calcolaPrezzoProdotto('{{modelloProdotto.prezzoListinoFornitura}}', '{{modelloProdotto.posa}}',
+                                                        '{{modelloProdotto.posaPerc}}', '{{modelloProdotto.rincaroCliente}}');
+
                             var codiceProdotto = '{{modelloProdotto.codice}}';
-                            var nettoUsProdotto = parseFloat('{{modelloProdotto.nettoUsFornituraPosa}}');
+
+
+                            var nettoUsProdotto = calcolaPrezzoProdotto('{{modelloProdotto.nettoUsFornitura}}', '{{modelloProdotto.posa}}',
+                                                        '{{modelloProdotto.posaPerc}}', 0 );
 
                             aggiungiRiga($(this), "{{preventivo.numero_preventivo}}", "{{preventivo.data}}",
                                 tipologiaToCompare, marchioToCompare, modelloToCompare, prodottoToCompare,
@@ -273,6 +281,98 @@
 
     /**********************************************************/
 
+    var applicaModificheRegistrate = function(){
+
+        {% for prodotto in prodottiPreventivo[1] %}
+
+            var quantitaProdotto = parseFloat('{{prodotto.quantita}}');
+            var nome_modificato = '{{prodotto.nome_modificato}}';
+            var unita = '{{prodotto.unitaMisura}}';
+
+
+            $('tr.trBody').each(function(){
+
+                if( $(this).children('td.firstCol').children('label').text() == '{{prodotto.ordine}}' ){
+
+                    $(this).children('td.tdQuantita').children('input').val(quantitaProdotto);
+                    $(this).children('td.tdQuantita').children('input').trigger('input');
+
+                    $(this).children('td.tdProdotto').children('textarea').val(nome_modificato);
+                    $(this).children('td.tdUnita').children('input').val(unita);
+
+                }
+            });
+
+
+        {% endfor %}
+
+        if( '{{preventivo.note}}' != 'None' )
+            $('#divNote').children('textarea').val('{{preventivo.note}}')
+    }
+
+    /**********************************************************/
+
+    var costruisciPreventivo = function(){
+
+        {% for tipologia in prodottiPreventivo[0] %}
+
+
+            $('#selectTipologia').val('{{tipologia}}');
+            $('#selectTipologia').trigger('change');
+
+
+            {% for prodotto in prodottiPreventivo[1] %}
+
+                {% if prodotto.tipologia == tipologia %}
+
+                    $('#selectMarchio').val('{{prodotto.marchio}}');
+                    $('#selectMarchio').trigger('change');
+
+                    $('#selectModello').val('{{prodotto.modello}}');
+                    $('#selectModello').trigger('change');
+
+                    var modelloClass =  $('#selectModello').children('option:selected').attr('class');
+
+
+                    $('button.elementFattura').each(function(){
+
+                        if( $(this).attr('id').startsWith(modelloClass) ){
+
+                            if( $(this).children('label').text() == '{{prodotto.nome_prodotto}}' ){
+
+                                $(this).trigger('click');
+
+                                /* ricorda di disabilitare il socketio e dopo l'aggiunta del bottone e di
+                                 di modificare il nome con il nome modificato */
+                            }
+
+                        }
+
+                    });
+
+
+
+
+                {% endif %}
+
+            {% endfor %}
+
+        {% endfor %}
+
+
+
+    }
+
+    /****************************************************************/
+
+    $(function(){
+
+        settaDisabilitaSocketio(true);
+        costruisciPreventivo();
+        applicaModificheRegistrate();
+        settaDisabilitaSocketio(false);
+
+    });
 </script>
 
 {% endblock %}

@@ -378,5 +378,13 @@
     $.getScript("{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}");
     $.getScript("{{url_for('static', filename='form/vendor/select2/select2.min.js') }}");
     $.getScript("{{url_for('static', filename='form/js/main.js')}}");
+
+    $('input').on('mouseover', function(){
+        $(this).focus();
+    });
+
+    $('textarea').on('mouseover', function(){
+        $(this).focus();
+    });
     </script>
 

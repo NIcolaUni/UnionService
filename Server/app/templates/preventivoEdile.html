@@ -5,7 +5,10 @@
 <div id="wrapper" class="col-md-8">
     <section id="one" class="wrapper style2 spotlights">
         <div class="inner innerPreventivo">
-            <h2 class="titleInCentro">Preventivo US{{codicePreventivo}}E <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a></h2>
+            <h2 class="titleInCentro">Preventivo US{{codicePreventivo}}E <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a>
+                <input onchange="espandiTabella()" type="checkbox" value="true" id="cbx" style="display:none"/>
+                <label for="cbx" class="toggle"><span></span></label>
+            </h2>
             <div id="divFattura" class="features row">
                 <div class="col-md-4">
                     <span>Settore di Lavorazione</span></br>
@@ -56,7 +59,7 @@
 
             </div>
             <div id="divSalvaPreventivo" class="features">
-                <a onclick="stampaPreventivo({{dipendente.username}})" id="printButton">STAMPA</a>
+                <a onclick="stampaPreventivo('{{dipendente.username}}')" id="printButton">STAMPA</a>
             </div>
             <div id="divTitoloNote" >
                 <span>Note:</span>
@@ -142,6 +145,41 @@
 
         /**********************************************************/
 
+        var applicaModificheRegistrate = function(){
+
+            {% for lavorazione in infoPreventivo[1] %}
+
+                var nome_modificato = '{{lavorazione[0].nome_modificato}}';
+
+                $('tr.trBody').each(function(){
+
+                    if( $(this).children('td.firstCol').children('label').text() == '{{lavorazione[0].ordine}}' ){
+
+                        var idSettore = $(this).attr('id').split('_trBody-')[0];
+                        var idLavorazione = $(this).attr('id').split('_trBody-')[1];
+
+                        $(this).children('td.tdLavorazione').children('textarea').val(nome_modificato);
+
+                        {% for sottolavorazione in lavorazione[3] %}
+
+                            $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').val('{{sottolavorazione.ricarico}}');
+                            $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').trigger('input');
+
+                        {% endfor %}
+                    }
+
+                });
+
+            {% endfor %}
+
+            if( '{{preventivo.note}}' != 'None' )
+                $('#divNote').children('textarea').val('{{preventivo.note}}')
+
+
+        }
+
+        /**********************************************************/
+
         /* Questa funzione 'fa qualcosa' quando la pagina e' aperta in modalita' modifica */
 
         var costruisciPreventivo =function(){
@@ -190,8 +228,6 @@
 
                         $('#selectSettore').val(settore);
 
-                        settaDisabilitaSocketio(true);
-
                         $('#'+idButton).trigger('click');
 
                         var firstSottolav = true
@@ -234,8 +270,6 @@
 
                         {% endfor %}
 
-                        settaDisabilitaSocketio(false);
-
                     {% endif %}
                 {% endfor %}
 
@@ -246,7 +280,14 @@
         /************************************************************/
 
         $(function(){
+            settaDisabilitaSocketio(true);
             costruisciPreventivo();
+            applicaModificheRegistrate();
+            settaDisabilitaSocketio(false);
+
+            $('input').on('mouseover', function(){
+                $(this).focus();
+            });
 
         });
 

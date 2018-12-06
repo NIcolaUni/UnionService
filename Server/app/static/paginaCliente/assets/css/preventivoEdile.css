@@ -1,0 +1,28 @@
+input.inputUnitaMisura{
+
+    width: 100%;
+
+}
+
+input.inputRicarico{
+
+    width: 40%;
+
+}
+
+
+th.thPreventivo.unitaClass {
+    width: 6% !important;
+}
+
+th.thPreventivo.thAdded {
+    width: 11%;
+}
+
+th.thPrezzoUnitario {
+    width: 11%;
+}
+
+th.thPreventivo.thQUantita {
+    width: 8%;
+}

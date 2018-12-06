@@ -1080,6 +1080,7 @@ def handle_modifica_prodotto_dati(message):
                                'marchio': message['marchio'], 'toEdit': message['toEdit'], 'value': message['value']},namespace='/prezzarioProdotti', room=dip.session_id)
 
 
+
 @socketio.on('modifica_prodotto_calcoli', namespace='/prezzarioProdotti')
 def handle_modifica_prodotto_calcoli(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
@@ -1191,6 +1192,17 @@ def handle_modifica_prodotto(message):
     PreventivoFiniture.modificaProdotto(numero_preventivo=message['numero_preventivo'], data=message['data'],
                                         ordine=message['ordine'], modifica={'quantita': message['quantita'],
                                                                             'diffCapitolato': message['diffCapitolato']})
+
+
+@socketio.on('modifica_unita_misura', namespace='/preventivoFiniture')
+def handle_modifica_prodotto(message):
+    PreventivoFiniture.modificaProdotto(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                        ordine=message['ordine_prodotto'], modifica={'unitaMisura': message['value'] })
+
+@socketio.on('modifica_nome_prodotto', namespace='/preventivoFiniture')
+def handle_modifica_prodotto(message):
+    PreventivoFiniture.modificaProdotto(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                        ordine=message['ordine_prodotto'], modifica={'nome_modificato': message['value'] })
 
 @socketio.on('elimina_preventivo', namespace='/preventivoFiniture')
 def handle_elimina_preventivo(message):
@@ -1347,6 +1359,14 @@ def handle_inserisci_note(message):
 def handle_inserisci_note(message):
     PreventivoEdile.inserisciNote(numero_preventivo=message['numero_preventivo'], data=message['data'], nota=message['nota'])
 
+
+@socketio.on('modifica_ricarico_sottolav', namespace='/preventivoEdile')
+def handle_modifica_ricarico_sottolav(message):
+
+    PreventivoEdile.modificaSottolavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                             ordine=message['ordine_lavorazione'], ordine_sottolavorazione=message['ordine_sottolav'],
+                                             unitaMisura=message['unitaMisura'], modifica={'ricarico' : message['ricarico'], 'prezzoBase' : message['prezzoBase']});
+
 @socketio.on('registra_nuovo_preventivo', namespace='/preventivoEdile')
 def handle_registra_nuovo_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
@@ -1359,6 +1379,12 @@ def handle_registra_nuovo_preventivo(message):
 
     app.preventivoEdileSelezionato=idPreventivo
     emit('confermaRegistrazionePreventivo', namespace='/preventivoEdile', room=dip.session_id)
+
+
+@socketio.on('modifica_nome_lavorazione', namespace='/preventivoEdile')
+def handle_modifica_prodotto(message):
+    PreventivoEdile.modificaLavorazione(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                        ordine=message['ordine_lavorazione'], modifica={'nome_modificato': message['value'] })
 
 @socketio.on('elimina_preventivo', namespace='/preventivoEdile')
 def handle_elimina_preventivo(message):
@@ -1463,6 +1489,7 @@ def handle_stampa_preventivo(message):
                                      chiudiPreventivo=message['chiudiPreventivo'], sumisura=message['sumisura'])
 
     emit('procediADownload', namespace='/preventivoEdile', room=dip.session_id)
+
 
 @socketio.on('imposta appuntamento', namespace='/agenda')
 def handle_imposta_appuntamento(message):

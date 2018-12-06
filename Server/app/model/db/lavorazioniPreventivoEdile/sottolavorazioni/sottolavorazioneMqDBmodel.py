@@ -23,6 +23,8 @@ class SottolavorazioneMqDBmodel(app.database.Model):
     numero = Column(Integer())
     larghezza = Column(Float())
     altezza = Column(Float())
+    prezzoBase = Column(Float())
+    ricarico = Column(Integer())
 
 
 

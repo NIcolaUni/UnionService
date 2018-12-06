@@ -21,6 +21,8 @@ class SottolavorazioneMlDBmodel(app.database.Model):
 
     numero = Column(Integer())
     larghezza = Column(Float())
+    prezzoBase = Column(Float())
+    ricarico = Column(Integer())
 
 
 

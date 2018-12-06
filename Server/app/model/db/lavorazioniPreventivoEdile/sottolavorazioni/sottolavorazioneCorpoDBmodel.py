@@ -18,6 +18,8 @@ class SottolavorazioneCorpoDBmodel(app.database.Model):
     ordine = Column(Integer()) # dov e' posizionata  la lavorazione nel preventivo
     ordine_sottolavorazione = Column(Integer())
     tipologia = Column(String(20))
+    prezzoBase = Column(Float())
+    ricarico = Column(Integer())
 
 
 

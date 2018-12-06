@@ -19,5 +19,7 @@ class SottolavorazioneCadDBmodel(app.database.Model):
     ordine_sottolavorazione = Column(Integer())
     tipologia = Column(String(20))
     numero = Column(Integer())
+    prezzoBase = Column(Float())
+    ricarico = Column(Integer())
 
 
