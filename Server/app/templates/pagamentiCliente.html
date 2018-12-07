@@ -37,18 +37,18 @@
             if( totale > 15000 )
             {
                 strToAdd= '<ul> \
-                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"></li>  \
-                                <li>Prima Rata: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li> \
+                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="pagamentoCheckbox acconto num_prev-'+numPrevSelected+'"></li>  \
+                                <li>Prima Rata: &euro; {{pagamento.prima_rata}} <input type="checkbox" class="pagamentoCheckbox prima_rata num_prev-'+numPrevSelected+'"><</li> \
                                 <li>Saldo: {{pagamento.saldo}} %</li> \
                             </ul>'
             }
             else{
 
                 strToAdd= '<ul> \
-                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li>  \
-                                <li>Prima Rata: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li> \
-                                <li>Seconda Rata: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li> \
-                                <li>Terza Rata: &euro; {{pagamento.acconto} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><}</li> \
+                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="pagamentoCheckbox acconto num_prev-'+numPrevSelected+'"><</li>  \
+                                <li>Prima Rata: &euro; {{pagamento.prima_rata}} <input type="checkbox" class="pagamentoCheckbox prima_rata num_prev-'+numPrevSelected+'"><</li> \
+                                <li>Seconda Rata: &euro; {{pagamento.seconda_rata}} <input type="checkbox" class="pagamentoCheckbox seconda_rata num_prev-'+numPrevSelected+'"><</li> \
+                                <li>Terza Rata: &euro; {{pagamento.terza_rata} <input type="checkbox" class="pagamentoCheckbox terza_rata num_prev-'+numPrevSelected+'"><}</li> \
                                 <li>Saldo: {{pagamento.saldo}} %</li> \
                             </ul>'
 
