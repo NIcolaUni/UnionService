@@ -149,7 +149,7 @@
 
             {% for lavorazione in infoPreventivo[1] %}
 
-                var nome_modificato = '{{lavorazione[0].nome_modificato}}';
+                var nome_modificato = '{{lavorazione[0].nome_modificato}}'.replace(/&#39;/g, "'");
 
                 $('tr.trBody').each(function(){
 
@@ -227,6 +227,7 @@
                         var idButton = trovaIdButtonLavorazione(classSettore, tipologia_lavorazione);
 
                         $('#selectSettore').val(settore);
+                        $('#selectSettore').trigger('change');
 
                         $('#'+idButton).trigger('click');
 

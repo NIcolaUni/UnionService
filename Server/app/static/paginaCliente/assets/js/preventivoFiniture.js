@@ -34,100 +34,30 @@ var calcolaPrezzoProdotto = function( prezzoListino, posa, posaPerc, rincaroClie
 var stampaPreventivo = function(usernameDip){
 
     swal.withFormAsync({
-        title: 'Scelte pre-stampa:',
+        title: '',
         showCancelButton: true,
         confirmButtonColor: '#DD6B55',
         confirmButtonText: 'Ok',
         cancelButtonText: 'annulla',
-        closeOnConfirm: false,
+        closeOnConfirm: true,
         formFields: [
 
-            { id: 'iva', label: 'Iva (%)', name: 'iva', type: 'number', placeholder: 'intervento commessa', value: '0' },
-            { id: 'scontoTipo',
-                type: 'select-hidden',
-                options: [
-                  {value: '1', text: 'non applicare sconto'},
-                  {value: '2', text: 'applica sconto netto'},
-                  {value: '3', text: 'applica sconto percentuale'},
-                  {value: '4', text: 'forza totale'},
-                ]},
-            { id: 'sumisura', label: 'Preventivo su misura', name: 'sumisura', value: 'sumisura', type: 'checkbox' },
             { id: 'chiudi', label: 'Chiudi preventivo', name: 'chiudi', value: 'chiudi', type: 'checkbox' },
 
         ]
     }).then(function (context) {
         if(context._isConfirm){
 
-            var sceltaSconto=parseInt(context.swalForm['scontoTipo']);
             var chiudiPrev=false;
-            var sumisura=false;
-            var iva=parseInt(context.swalForm['iva']);
 
-            console.log( 'sto stampando: ' + iva );
-            if( context.swalForm['scontoTipo'] == 'chiudi' )
+            if( context.swalForm['chiudi'] == 'chiudi' )
                 chiudiPrev=true;
 
-            if( context.swalForm['sumisura'] == 'sumisura' )
-                sumisura=true;
-
-            if( sceltaSconto == 1 ){
-                socketFiniture.emit('stampa_preventivo', {
-                                                'dip': usernameDip,
-                                                'numero_preventivo': numeroPreventivo,
-                                                'data': dataPreventivo,
-                                                'iva': iva,
-                                                'tipoSconto': sceltaSconto,
-                                                'sconto': 0,
-                                                'chiudiPreventivo': chiudiPrev,
-                                                'sumisura': sumisura });
-                sweetAlert.close();
-            }
-            else{
-                var toPrint="";
-
-                if( sceltaSconto == 2 ){
-                    toPrint ="Inserire sconto netto da applicare:";
-                }
-                else if( sceltaSconto == 3 ){
-                    toPrint ="Inserire sconto percentuale da applicare:";
-                }
-                else if( sceltaSconto == 4 ){
-                    toPrint = "Forza totale:";
-                }
-
-
-
-                swal.withFormAsync({
-                    title: toPrint,
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: 'Ok',
-                    cancelButtonText: 'annulla',
-                    closeOnConfirm: true,
-                    formFields: [
-
-                        { id: 'sconto', label: 'Sconto: ', name: 'sconto', type: 'number', placeholder: 'sconto', value: '0' },
-
-
-                    ]
-                }).then(function (context) {
-                    if(context._isConfirm){
-                         socketFiniture.emit('stampa_preventivo', {
-                                                'dip': usernameDip,
-                                                'numero_preventivo': numeroPreventivo,
-                                                'data': dataPreventivo,
-                                                'iva': iva,
-                                                'tipoSconto': sceltaSconto,
-                                                'sconto': parseFloat(context.swalForm['sconto']),
-                                                'chiudiPreventivo': chiudiPrev,
-                                                'sumisura': sumisura });
-
-                    }
-
-                });
-
-            }
-
+            socketFiniture.emit('stampa_preventivo', {
+                                            'dip': usernameDip,
+                                            'numero_preventivo': numeroPreventivo,
+                                            'data': dataPreventivo,
+                                            'chiudiPreventivo': chiudiPrev });
 
 
         }

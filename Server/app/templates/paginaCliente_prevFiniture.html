@@ -81,9 +81,28 @@
 
         {% endfor %}
 
-        $('#totalePrevFiniture').html( '<span>Totale: &euro; '+ Math.round(totale*100)/100 +'</span>');
+        $('#totalePrevFiniture').html( '<button style="display:none" id="btnPrevFin">Preventivo</button><span>Totale: &euro; '+ Math.round(totale*100)/100 +'</span>');
+
 
     }
+
+    var mostraPrevBtn = function(numero_preventivo, data){
+        $('#totalePrevFiniture').css('height', 'unset');
+        $('#btnPrevFin').show();
+
+        $('#btnPrevFin').unbind('click').click(function(){
+
+            window.open('/downloadPreventivoFinitureChiuso/'+numero_preventivo, '_blank');
+        });
+
+    }
+
+    var nascondiPrevBtn = function(){
+        $('#totalePrevFiniture').css('height', '40px');
+        $('#btnPrevFin').hide();
+
+    }
+
 
     /*Stampa l'antemprima del preventivo edile*/
     function stampaRiassuntoPreventivoFiniture( numero_preventivo, data ){
@@ -152,6 +171,7 @@
     function impostaSelectDataPreventivoFiniture(numero_preventivo){
 
         var firstCycle=true;
+        var preventivoStatus = true;
 
         //resetto il select togliendo tutti i tag option
         $('#dataFinitureSelect').html('');
@@ -168,6 +188,18 @@
                 }
                 else
                     optionElement = '<option value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+
+                {% if not preventivo[0].stato %}
+
+                    $('.aCtrlPreventivoFiniture').children('a').hide();
+                    preventivoStatus = false;
+
+                {% else %}
+
+                    $('.aCtrlPreventivoFiniture').children('a').show();
+
+
+                {% endif %}
             }
 
 
@@ -175,6 +207,8 @@
 
 
         {% endfor %}
+
+        return preventivoStatus;
     }
 
     {% if countPreventiviFiniture > 0 %}
@@ -195,8 +229,16 @@
 
         });
 
-        impostaSelectDataPreventivoFiniture('{{lastPreventivoFiniture[0].numero_preventivo}}');
+        var statusPreventivo = impostaSelectDataPreventivoFiniture('{{lastPreventivoFiniture[0].numero_preventivo}}');
         stampaRiassuntoPreventivoFiniture('{{lastPreventivoFiniture[0].numero_preventivo}}', '{{lastPreventivoFiniture[0].data}}');
+
+        if( !statusPreventivo ){
+            mostraPrevBtn('{{lastPreventivoFiniture[0].numero_preventivo}}', '{{lastPreventivoFiniture[0].data}}');
+        }
+        else{
+            nascondiPrevBtn();
+        }
+
     {% endif %}
 
 
@@ -205,10 +247,17 @@
     $('#preventivoFinitureSelect').change(function(){
         var selectedPreventivo = parseInt($('#preventivoFinitureSelect option:selected').attr('class').split('-')[1]);
 
-        impostaSelectDataPreventivoFiniture(selectedPreventivo);
+        var statusPreventivo = impostaSelectDataPreventivoFiniture(selectedPreventivo);
 
         var selectedData = $('#dataFinitureSelect').val();
         stampaRiassuntoPreventivoFiniture(selectedPreventivo, selectedData);
+
+        if( !statusPreventivo ){
+            mostraPrevBtn(selectedPreventivo, selectedData);
+        }
+        else{
+            nascondiPrevBtn();
+        }
 
 
     });

@@ -1,5 +1,2 @@
-1- va implementata la modifica del nome della lavorazione
-2- va verificato lo stampa preventivo
-3- va modificato il preventivo pdf generato con le modifiche richieste
-4- aggiungi le note quando apri in modalità modifica
-5- verifica che in modalità modifica vengano riportate le corrette quantita
+
+4- c'è un problema al apertura in modalità modifica durante un'altro giorno rispetto a quello di creazione

@@ -1,3 +1,4 @@
+from .db.lavorazioneEdileDBmodel import LavorazioneEdileDBmodel
 from .db.preventivoDBmodel import PreventivoDBmodel
 from .db.commessaDBmodel import CommessaDBmodel
 from .db.dipendenteDBmodel import DipendenteDBmodel
@@ -7,6 +8,7 @@ from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneCadDBmodel 
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMlDBmodel import SottolavorazioneMlDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMqDBmodel import SottolavorazioneMqDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMcDBmodel import SottolavorazioneMcDBmodel
+from .pagamentiCliente import PagamentiCliente
 from .clienteAccolto import  ClienteAccolto
 from sqlalchemy import desc, func
 import datetime
@@ -596,7 +598,6 @@ class PreventivoEdile(PreventivoDBmodel):
                                        new_ordine_sottolavorazione):
 
 
-        app.server.logger.info('\n\nInizio modifica ordine {}\n\n'.format(unitaMisura))
         if unitaMisura == 'cad':
             __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
                                                               ordine=ordine,
@@ -651,6 +652,117 @@ class PreventivoEdile(PreventivoDBmodel):
                 modifica)
 
         PreventivoDBmodel.commit()
+
+    def returnSingleBudget(numero_preventivo, data):
+        '''
+        si differenzia da returnSinglePreventivo() solo per il fatto che i totali sono calcolati basandosi
+        sui prezzi per l'azienda presi dal prezzario (senza il ricarico per il cliente)
+        '''
+
+        lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).order_by(
+                                                                __LavorazionePreventivo__.ordine).all()
+
+        ordineSettori = []
+        resultLav = []
+
+        for lav in lavorazioni:
+            sottolavorazioni = []
+
+            if not ordineSettori.__contains__(lav.settore):
+                ordineSettori.append(lav.settore)
+
+            lavFromPrezzario = LavorazioneEdileDBmodel.query.filter_by(settore=lav.settore, tipologia_lavorazione=lav.tipologia_lavorazione).first()
+            prezzoBase = float(lavFromPrezzario.prezzoMax)
+
+            if lav.unitaMisura == 'cad':
+
+                sottolavorazioni = __SottolavorazioneCadPreventivo__.query.filter_by(
+                                        numero_preventivo=numero_preventivo,
+                                        data=data, ordine=lav.ordine).order_by(
+                                        __SottolavorazioneCadPreventivo__.ordine_sottolavorazione).all()
+                quantitaTotale = 0
+
+                sommaPrezziSottolav = 0
+
+                for sottolav in sottolavorazioni:
+                    quantitaTotale += sottolav.numero
+                    sommaPrezziSottolav += sottolav.numero * prezzoBase
+
+                #prezzoTotale = quantitaTotale * lav.prezzoUnitario
+                prezzoTotale = sommaPrezziSottolav
+
+                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
+
+            elif lav.unitaMisura == 'ml':
+                sottolavorazioni = __SottolavorazioneMlPreventivo__.query.filter_by(
+                                        numero_preventivo=numero_preventivo,
+                                        data=data, ordine=lav.ordine).order_by(
+                                        __SottolavorazioneMlPreventivo__.ordine_sottolavorazione).all()
+
+                quantitaTotale = 0
+                sommaPrezziSottolav = 0
+
+                for sottolav in sottolavorazioni:
+                    quantitaTotale += (sottolav.numero * sottolav.larghezza)
+                    sommaPrezziSottolav += (sottolav.numero * sottolav.larghezza) * prezzoBase
+
+                prezzoTotale = sommaPrezziSottolav
+
+                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
+
+
+            elif lav.unitaMisura == 'mq':
+                sottolavorazioni = __SottolavorazioneMqPreventivo__.query.filter_by(
+                                        numero_preventivo=numero_preventivo,
+                                        data=data, ordine=lav.ordine).order_by(
+                                        __SottolavorazioneMqPreventivo__.ordine_sottolavorazione).all()
+
+                quantitaTotale = 0
+                sommaPrezziSottolav = 0
+
+                for sottolav in sottolavorazioni:
+                    quantitaTotale += (sottolav.numero * sottolav.larghezza * sottolav.altezza)
+                    sommaPrezziSottolav += (sottolav.numero * sottolav.larghezza * sottolav.altezza)*prezzoBase
+
+                prezzoTotale = sommaPrezziSottolav
+
+                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
+
+
+
+            elif lav.unitaMisura == 'mc':
+                sottolavorazioni = __SottolavorazioneMcPreventivo__.query.filter_by(
+                                        numero_preventivo=numero_preventivo,
+                                        data=data, ordine=lav.ordine).order_by(
+                                        __SottolavorazioneMcPreventivo__.ordine_sottolavorazione).all()
+
+                quantitaTotale = 0
+                sommaPrezziSottolav = 0
+
+                for sottolav in sottolavorazioni:
+                    quantitaTotale += (sottolav.numero * sottolav.larghezza * sottolav.altezza * sottolav.profondita)
+                    sommaPrezziSottolav += (sottolav.numero * sottolav.larghezza * sottolav.altezza * sottolav.profondita)*prezzoBase
+
+                prezzoTotale = sommaPrezziSottolav
+
+                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
+
+            elif lav.unitaMisura == 'a corpo':
+                sottolavorazioni = __SottolavorazioneCorpoPreventivo__.query.filter_by(
+                                        numero_preventivo=numero_preventivo,
+                                        data=data, ordine=lav.ordine).order_by(
+                                        __SottolavorazioneCorpoPreventivo__.ordine_sottolavorazione).all()
+
+                quantitaTotale = 0
+
+                for sottolav in sottolavorazioni:
+                    quantitaTotale += 1
+
+                prezzoTotale = quantitaTotale * lav.prezzoUnitario
+
+                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
+
+        return ( ordineSettori, resultLav)
 
     def returnSinglePreventivo(numero_preventivo, data):
 
@@ -943,24 +1055,35 @@ class PreventivoEdile(PreventivoDBmodel):
 
 
             if len(indexesToRet) < numPag:
-                indexesToRet.append(len(grandezzaRighe)-1)
+                indexesToRet.append( indexesToRet[-1])
+                indexesToRet[-2] = indexesToRet[-2]-1
+
 
             totLunghezzaUltimaPag = 0
 
-            for lunghezza in grandezzaRighe[indexesToRet[-2]:indexesToRet[-1]]:
-                totLunghezzaUltimaPag+=lunghezza
+            if len(indexesToRet) > 1:
 
-            if totLunghezzaUltimaPag <= 4.5:
-                return ( indexesToRet, False )
+                for lunghezza in grandezzaRighe[indexesToRet[-2]:indexesToRet[-1]]:
+                    totLunghezzaUltimaPag+=lunghezza
+
+                if totLunghezzaUltimaPag <= 4.5:
+                    return ( indexesToRet, False )
+                else:
+                    return ( indexesToRet, True )
             else:
-                return ( indexesToRet, True )
+
+                return (indexesToRet, True)
+
 
         else:
             return ([], False)
 
 
 
-    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura ):
+    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura, budget=False ):
+
+        if chiudiPreventivo :
+            PreventivoEdile.chiudiPreventivo(numero_preventivo)
 
         preventivo = PreventivoEdile.query.filter_by(tipologia='edile', numero_preventivo=numero_preventivo,
                                                      data=data).first()
@@ -970,7 +1093,10 @@ class PreventivoEdile(PreventivoDBmodel):
         cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente,
                                                  indirizzo=preventivo.indirizzo_cliente).first()
 
-        infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
+        if not budget:
+            infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
+        else:
+            infoPreventivo = PreventivoEdile.returnSingleBudget(numero_preventivo=numero_preventivo, data=data)
 
         codicePrev = PreventivoEdile.calcolaCodicePreventivoNoObj(numero_preventivo, data)
 
@@ -989,8 +1115,14 @@ class PreventivoEdile(PreventivoDBmodel):
                         \\usepackage{eurosym}
                         \\usepackage{xcolor}
                         \\usepackage{tabularx}
-                        \\usepackage[top=1.7cm, bottom=4.5cm, left=2.6cm, right=2.6cm]{geometry}
+                      '''
 
+        if not budget:
+            latexScript +=  '\\usepackage[top=1.7cm, bottom=4.5cm, left=2.6cm, right=2.6cm]{geometry}'
+        else:
+            latexScript += '\\usepackage[top=1.7cm, bottom=2cm, left=2.6cm, right=2.6cm]{geometry}'
+
+        latexScript += '''
                         \\usepackage{fancyhdr}
                         \\pagestyle{fancy}
                         \\lhead{}
@@ -999,39 +1131,58 @@ class PreventivoEdile(PreventivoDBmodel):
 
         latexScript += '\\rhead{US' + codicePrev + 'E}'
 
-        latexScript += '''
-                        \\cfoot{
-                                {\\normalsize
-                                  \\begin{center}
-                                  \\begin{tabular}{|L{105mm} | L{44mm}| }
-                                  \\hline
-                                  \\begin{spacing}{0.3}
-                                    \\textbf{NOTE} \\newline
-                                    \\hfill
-                                    {\\centering
-                        '''
-        if preventivo.note is not None:
-            latexScript += preventivo.note
+        if not budget:
+            latexScript += '''
+                            \\cfoot{
+                                    {\\normalsize
+                                      \\begin{center}
+                                      \\begin{tabular}{|L{105mm} | L{44mm}| }
+                                      \\hline
+                                      \\begin{spacing}{0.3}
+                                        \\textbf{NOTE} \\newline
+                                        \\hfill
+                            '''
+            if preventivo.note is not None:
+                latexScript += '{\\centering '+preventivo.note+'}'
+            else:
+                latexScript += '{\\centering }'
 
-        latexScript +=  '''
+            latexScript +=  '''
+                                      \\end{spacing}&
+                                      \\begin{spacing}{0.3}
+                                      \\textbf{Firma per accettazione}
+                                      \\end{spacing}\\\\
+                                      \\hline
+                                      \\end{tabular}
+                                      \\end{center}
+                                      \\noindent\\rule{\\textwidth}{0.4pt}
                                     }
-                                  \\end{spacing}&
-                                  \\begin{spacing}{0.3}
-                                  \\textbf{Firma per accettazione}
-                                  \\end{spacing}\\\\
-                                  \\hline
-                                  \\end{tabular}
-                                  \\end{center}
-                                  \\noindent\\rule{\\textwidth}{0.4pt}
-                                }
+                                    {\\footnotesize
+                                      \\raggedright\\thepage \\\\ \\centering\\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
+                                      Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
+                                    }
+                            }
+                            \\rfoot{}
+                            \\renewcommand{\\headrulewidth}{0pt}
+                        '''
+        else:
+            latexScript += '''
+                            \\lfoot{\\thepage}
+                            \\cfoot{
+                                \\begin{spacing}{0.5}
                                 {\\footnotesize
-                                  \\raggedright\\thepage \\\\ \\centering\\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
+                                  \\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
                                   Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
                                 }
-                        }
-                        \\rfoot{}
-                        \\renewcommand{\\headrulewidth}{0pt}
-
+                                \\end{spacing}
+                            }
+                            
+                            \\rfoot{}
+                            \\renewcommand{\\headrulewidth}{0pt}
+                            \\renewcommand{\\footrulewidth}{0.4pt}
+                         '''
+                        
+        latexScript +=  '''
                         \\usepackage{array}
                         \\usepackage{ragged2e}
                         \\newcolumntype{R}[1]{>{\\RaggedLeft\\hspace{0pt}}p{#1}}
@@ -1090,6 +1241,13 @@ class PreventivoEdile(PreventivoDBmodel):
                                                                                                                 "\\'u").replace(
             "ì", "\\'i")
 
+        typeOfDoc = ''
+
+        if not budget:
+            typeOfDoc = 'Preventivo Edile'
+        else:
+            typeOfDoc = 'Budget'
+
         latexScript += '''
                           \\end{spacing}\\\\
                             \\hline
@@ -1100,12 +1258,16 @@ class PreventivoEdile(PreventivoDBmodel):
                           \\hline
                           \\vspace{2.5mm}
                           \\begin{spacing}{0}
-                            \\textbf{Preventivo Edile}
+                        '''
+
+        latexScript += '\\textbf{'+typeOfDoc+'}'
+
+        latexScript +=  '''
                           \\end{spacing}&
                           \\vspace{2.5mm}
                           \\begin{spacing}{0}
 
-                     '''
+                        '''
 
         latexScript += oggi
 
@@ -1141,6 +1303,9 @@ class PreventivoEdile(PreventivoDBmodel):
                           \\hline
                           \\end{tabular}
                           \\end{center}
+                       '''
+
+        headerLavorazioni = '''
                           \\noindent\\begin{tabular}{ | L{10mm} |  L{86mm} | L{12mm} | L{12mm} | L{16mm} | }
                           \\hline
                           \\vspace{2.5mm}
@@ -1167,599 +1332,256 @@ class PreventivoEdile(PreventivoDBmodel):
                           %FINE HEADER
                        '''
 
-        numPagine = PreventivoEdile.calcolaLunghezzaPreventivo(infoPreventivo[1])
-
-        #############################################################
+        numPagine, lastPageAlone = PreventivoEdile.__calcolaLavorazioniPerPaginaPreventivo__(infoPreventivo[1])
 
         totalePreventivo = 0
-
-        for lav in infoPreventivo[1]:
-            contaLavorazioni += 1
-            latexScript += '''
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-            latexScript += '{} - {}'.format(contaLavorazioni, numPagine[contaLavorazioni-1])
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            latexScript += lav[0].nome_modificato.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
-                                                                                                    "\\'o").replace("ù",
-                                                                                                                    "\\'u").replace(
-                "ì", "\\'i")
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            if sumisura:
-                latexScript += '{}'.format(lav[1])
-            else:
-                latexScript += '-'
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            if sumisura:
-                latexScript += lav[0].unitaMisura
-
-            else:
-                latexScript += 'a corpo'
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                                \\euro\\hfill 
-                            '''
-            latexScript += '{}'.format(lav[2])
-            totalePreventivo += lav[2]
-
-            latexScript += '''
-                              \\end{spacing} \\\\
-                              \\hline
-                              %FINE RIGA
-
-                            '''
-
-        latexScript += '''
-                          \\end{tabular}
-
-                          \\noindent\\begin{tabular}{|L{108.5mm} | L{8mm} | L{8mm} |  L{16mm}| }
-                          \\hline
-                          \\multicolumn{3}{ | L{124.5mm} | }{
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                              \\textbf{Totale imponibile}
-                            \\end{spacing}
-                          } &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\euro\\hfill
-                       '''
-
-        latexScript += '{}'.format(totalePreventivo)
-
-        latexScript += '''
-                          \\end{spacing}\\\\
-                          \\hline
-                       '''
-
-        totaleScontato = totalePreventivo
-        laberForSconto = ""
-
-        if tipoSconto == 2:
-            totaleScontato -= sconto;
-            laberForSconto = "Sconto netto"
-        elif tipoSconto == 3:
-            totaleScontato += totalePreventivo * sconto / 100
-            laberForSconto = "\%"
-        elif tipoSconto == 4:
-            totaleScontato = sconto
-            laberForSconto = "Totale con sconto"
-
-        totaleConIva = totaleScontato + (totaleScontato * iva / 100)
-
-        totaleScontato = math.floor(totaleScontato * 100) / 100
-        totaleConIva = math.floor(totaleConIva * 100) / 100
-
-        if tipoSconto != 1:
-            latexScript += '''
-                              \\multicolumn{1}{  L{108.5mm} | }{} &
-                              \\multicolumn{2}{  L{16mm} | }{
-                                \\vspace{2.5mm}
-                                \\begin{spacing}{0}
-                            '''
-
-            latexScript += '\\textbf{' + laberForSconto + '}'
-
-            latexScript += '''
-                                \\end{spacing}
-                              } &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                              \\euro\\hfill 
-                           '''
-
-            latexScript += '{}'.format(totaleScontato) + '\\end{spacing}\\\\ \\cline{2-4}'
-
-        latexScript += '''
-                          \\multicolumn{1}{  L{108.5mm} | }{} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{IVA}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                        '''
-
-        if iva == 0:
-            latexScript += '\\textbf{\%}'
-        else:
-            latexScript += '\\textbf{' + str(iva) + '\%}'
-
-        latexScript += '''
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                          \\euro\\hfill
-                        '''
-
-        latexScript += '{}'.format(totaleConIva)
-
-        latexScript += '''
-                          \\end{spacing}\\\\
-                          \\cline{2-4}
-                          \\end{tabular}
-
-                       '''
-
-        latexScript += '''
-                      \\begin{figure}[!t]
-                      \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
-                      \\end{figure}
-
-                      \\newpage
-                      \\begin{itemize}
-                          \\item \\textbf{Ipotizzati \\euro 2.500,00 per smaltimenti materiali}
-                      \\end{itemize}
-
-                      \\noindent\\textbf{Dalla seguente offera sono escluse:}
-                      \\begin{itemize}
-                          \\item IVA e qualsiasi altro onere fiscale;
-                          \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
-                          \\item Costi di energia elettrica e acqua ad uso cantiere;
-                          \\item Qualsiasi altra voce non citata;
-                          \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
-                          \\item Pratica per detrazioni fiscali da quantificare;
-                      \\end{itemize}
-
-                      \\noindent\\textbf{Pagamenti}
-                      \\begin{itemize}
-                          \\item Da concordare in fase di accettazione.
-                      \\end{itemize}
-
-                      \\textcolor{red}{La presente offerta ha validit\'a 30 giorni dalla data odierna.}\\\\
-
-                      Castel d'Azzano, il 11 - 7 - 2018
-                      \\vspace{1cm}\\\\
-                      Per accettazione ..............................................................
-
-                    \\end{document}
-
-                       '''
-
-        with open('app/preventiviLatexDir/preventivoEdile.tex', mode='w') as prova:
-            prova.write(latexScript)
-
-        os.system("cd app/preventiviLatexDir && pdflatex preventivoEdile.tex")
-
-    #############################################################################
-
-    def OldstampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura ):
-
-
-        if chiudiPreventivo :
-            PreventivoEdile.chiudiPreventivo(numero_preventivo)
-
-
-        preventivo = PreventivoEdile.query.filter_by(tipologia='edile', numero_preventivo=numero_preventivo,
-                                                     data=data).first()
-
-        dipendente = DipendenteDBmodel.query.filter_by(username=preventivo.dipendente_generatore).first()
-
-        cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente,
-                                                 indirizzo=preventivo.indirizzo_cliente).first()
-
-        infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
-
-        codicePrev = PreventivoEdile.calcolaCodicePreventivoNoObj(numero_preventivo, data)
-
-        commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo, intervento=preventivo.intervento_commessa).first()
-
-        contaLavorazioni = 0
-
-        now = datetime.datetime.now()
-        oggi = "{}/{}/{}".format(now.day, now.month, now.year)
-
-        latexScript = '''
-                        \\documentclass[a4paper]{article}
-                        \\usepackage{graphicx}
-                        \\graphicspath{ {./Immagini/} }
-                        \\usepackage{setspace}
-                        \\usepackage{eurosym}
-                        \\usepackage{xcolor}
-                        \\usepackage{tabularx}
-                        \\usepackage[top=1.7cm, bottom=1.7cm, left=2.6cm, right=2.6cm]{geometry}
-                        
-                        \\usepackage{fancyhdr}
-                        \\pagestyle{fancy}
-                        \\lhead{}
-                        \\chead{} 
-                      '''
-
-        latexScript += '\\rhead{US'+codicePrev+'E}'
-
-
-
-        latexScript += '''
-                        \\lfoot{\\thepage}
-                        \\cfoot{
-                            \\begin{spacing}{0.5}
-                            {\\scriptsize
-                              \\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
-                              Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
-                            }
-                            \\end{spacing}
-                        }
-                        \\rfoot{}
-                        \\renewcommand{\\headrulewidth}{0pt}
-                        \\renewcommand{\\footrulewidth}{0.4pt}
-                        
-                        \\usepackage{array}
-                        \\usepackage{ragged2e}
-                        \\newcolumntype{R}[1]{>{\\RaggedLeft\\hspace{0pt}}p{#1}}
-                        \\newcolumntype{L}[1]{>{\\RaggedRight\\hspace{0pt}}p{#1}}
-                        
-                        \\renewcommand{\\arraystretch}{0}
-                        
-                        \\begin{document}
-                        
-                        \\begin{figure}[!t]
-                        \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
-                        \\end{figure}
-                        
-                        \\noindent\\begin{tabular}{| L{72.2mm} |}
-                            \\hline
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                            \\textbf{COMMESSA}
-                            \\end{spacing}\\\\
-                            \\hline
-                            \\vspace{4mm}
-                            \\begin{spacing}{1.2}
-
-                        '''
-        latexScript += commessa.intervento.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i") +' \\newline '
-        latexScript += commessa.indirizzo.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i") + ' \\newline ' +  commessa.comune.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i")
-        latexScript += '''
-                          \\end{spacing}\\\\
-                            \\hline
-                          \\end{tabular}
-                          \\quad
-                          \\begin{tabular}{ | R{72.2mm} | }
-                            \\hline
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                            \\textbf{CLIENTE}
-                            \\end{spacing}\\\\
-                            \\hline
-                            \\vspace{4mm}
-                            \\begin{spacing}{1.2}
-                        
-                       '''
-        latexScript += cliente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i") + ' '+ cliente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i") + ' \\newline '
-        latexScript += 'tel. '+ str(cliente.telefono) + ' \\newline '
-        latexScript += cliente.indirizzo.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i")
-
-        latexScript+= '''
-                          \\end{spacing}\\\\
-                            \\hline
-                          \\end{tabular}
-                        
-                          \\begin{center}
-                          \\begin{tabular}{|L{89mm} R{60mm}| }
-                          \\hline
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Preventivo Edile}
-                          \\end{spacing}&
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-        
-                     '''
-
-        latexScript += oggi
-
-        latexScript += '''
-
-                          \\end{spacing}\\\\
-                          \\hline
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Validit\\'a:}
-                       '''
-        validita = datetime.timedelta(days=30) + datetime.datetime.now()
-
-        validita = "{}/{}/{}".format(validita.day, validita.month, validita.year)
-
-        latexScript += validita
-        latexScript += '''
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Operatore:}
-
-                       '''
-
-        latexScript += dipendente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i") + ' ' + dipendente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i")
-
-        latexScript += '''
-                          \\end{spacing} \\\\
-                          \\hline
-                          \\end{tabular}
-                          \\end{center}
-                        
-                          \\noindent\\begin{tabular}{ | L{10mm} |  L{86mm} | L{12mm} | L{12mm} | L{16mm} | }
-                          \\hline
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Pos.}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Descrizione}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Qnt.}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{U.M.}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Importo}
-                          \\end{spacing} \\\\
-                          \\hline
-                          %FINE HEADER
-                       '''
-
-        totalePreventivo = 0
-
-        for lav in infoPreventivo[1]:
-            contaLavorazioni+=1
-            latexScript += '''
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-            latexScript += '{}'.format(contaLavorazioni)
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            latexScript += lav[0].nome_modificato.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù", "\\'u").replace("ì", "\\'i")
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            if sumisura:
-                latexScript += '{}'.format(lav[1])
-            else:
-                latexScript += '-'
-
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            if sumisura:
-                latexScript += lav[0].unitaMisura
+        lastStartingIndex = 0
+        indexActualPage = 0
+
+        for numLastLav in numPagine:
+            latexScript += headerLavorazioni
+
+            for lav in infoPreventivo[1][lastStartingIndex:numLastLav+1]:
+
+                contaLavorazioni += 1
+                latexScript += '''
+                                   \\vspace{2.5mm}
+                                   \\begin{spacing}{0}
+                                '''
+                latexScript += '{}'.format(contaLavorazioni)
+
+                latexScript += '''
+                                   \\end{spacing} &
+                                   \\vspace{2.5mm}
+                                   \\begin{spacing}{0}
+                                '''
+
+                latexScript += lav[0].nome_modificato.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                        "\\'o").replace(
+                    "ù",
+                    "\\'u").replace(
+                    "ì", "\\'i")
+
+
+                latexScript += '''
+                                   \\end{spacing} &
+                                   \\vspace{2.5mm}
+                                   \\begin{spacing}{0}
+                                '''
+
+                if sumisura:
+                    latexScript += '{}'.format(lav[1])
+                else:
+                    latexScript += '-'
+
+                latexScript += '''
+                                   \\end{spacing} &
+                                   \\vspace{2.5mm}
+                                   \\begin{spacing}{0}
+                                '''
+
+                if sumisura:
+                    latexScript += lav[0].unitaMisura
+
+                else:
+                    latexScript += 'a corpo'
+
+                latexScript += '''
+                                   \\end{spacing} &
+                                   \\vspace{2.5mm}
+                                   \\begin{spacing}{0}
+                                     \\euro\\hfill 
+                                 '''
+                latexScript += '{}'.format(lav[2])
+                totalePreventivo += lav[2]
+
+                latexScript += '''
+                                   \\end{spacing} \\\\
+                                   \\hline
+                                   %FINE RIGA
+
+                                 '''
+
+
+            latexScript +=  '\\end{tabular} \\\\'
+
+
+
+            if indexActualPage+1 == len(numPagine):
+
+                if not budget:
+
+                    latexScript += '''
+                                      \\noindent\\begin{tabular}{|L{108.5mm} | L{8mm} | L{8mm} |  L{16mm}| }
+                                      \\hline
+                                      \\multicolumn{3}{ | L{124.5mm} | }{
+                                        \\vspace{2.5mm}
+                                        \\begin{spacing}{0}
+                                          \\textbf{Totale imponibile}
+                                        \\end{spacing}
+                                      } &
+                                      \\vspace{2.5mm}
+                                      \\begin{spacing}{0}
+                                        \\euro\\hfill
+                                   '''
+
+                    latexScript += '{}'.format(totalePreventivo)
+
+                    latexScript += '''
+                                      \\end{spacing}\\\\
+                                      \\hline
+                                   '''
+
+                    totaleScontato = totalePreventivo
+                    laberForSconto = ""
+
+                    if tipoSconto == 2:
+                        totaleScontato -= sconto;
+                        laberForSconto = "Sconto netto"
+                    elif tipoSconto == 3:
+                        totaleScontato += totalePreventivo * sconto / 100
+                        laberForSconto = "\%"
+                    elif tipoSconto == 4:
+                        totaleScontato = sconto
+                        laberForSconto = "Totale con sconto"
+
+                    totaleConIva = totaleScontato + (totaleScontato * iva / 100)
+
+                    totaleScontato = math.floor(totaleScontato * 100) / 100
+                    totaleConIva = math.floor(totaleConIva * 100) / 100
+
+                    if tipoSconto != 1:
+                        latexScript += '''
+                                          \\multicolumn{1}{  L{108.5mm} | }{} &
+                                          \\multicolumn{2}{  L{16mm} | }{
+                                            \\vspace{2.5mm}
+                                            \\begin{spacing}{0}
+                                        '''
+
+                        latexScript += '\\textbf{' + laberForSconto + '}'
+
+                        latexScript += '''
+                                            \\end{spacing}
+                                          } &
+                                          \\vspace{2.5mm}
+                                          \\begin{spacing}{0}
+                                          \\euro\\hfill 
+                                       '''
+
+                        latexScript += '{}'.format(totaleScontato) + '\\end{spacing}\\\\ \\cline{2-4}'
+
+                    latexScript += '''
+                                      \\multicolumn{1}{  L{108.5mm} | }{} &
+                                      \\vspace{2.5mm}
+                                      \\begin{spacing}{0}
+                                        \\textbf{IVA}
+                                      \\end{spacing} &
+                                      \\vspace{2.5mm}
+                                      \\begin{spacing}{0}
+                                    '''
+
+                    if iva == 0:
+                        latexScript += '\\textbf{\%}'
+                    else:
+                        latexScript += '\\textbf{' + str(iva) + '\%}'
+
+                    latexScript += '''
+                                      \\end{spacing} &
+                                      \\vspace{2.5mm}
+                                      \\begin{spacing}{0}
+                                      \\euro\\hfill
+                                    '''
+
+                    latexScript += '{}'.format(totaleConIva)
+
+                    latexScript += '''
+                                      \\end{spacing}\\\\
+                                      \\cline{2-4}
+                                      \\end{tabular}
+                                   '''
+
+                    if lastPageAlone:
+                        latexScript += '\\newpage'
+                    else:
+                        latexScript += '\\vspace{19mm}'
+
+                else:
+                    latexScript += '''
+                                      \\noindent\\begin{tabular}{|L{133.1mm} |  L{16mm}| }
+                                      \\hline
+                                        \\vspace{2.5mm}
+                                        \\begin{spacing}{0}
+                                          \\textbf{Totale}
+                                        \\end{spacing} &
+                                      \\vspace{2.5mm}
+                                      \\begin{spacing}{0}
+                                        \\euro\\hfill
+                                   '''
+
+                    latexScript += '{}'.format(totalePreventivo)
+
+                    latexScript += '''
+                                      \\end{spacing}\\\\
+                                      \\hline
+                                      \\end{tabular}
+                                      \\end{document}
+                                   '''
 
             else:
-                latexScript += 'a corpo'
+                latexScript += '\\newpage'
+                lastStartingIndex = numLastLav+1
+                indexActualPage += 1
 
+        if chiudiPreventivo:
+            PagamentiCliente.generaPagamentoPerPreventivo(numero_preventivo)
+            PagamentiCliente.modificaPagamento(numero_preventivo, {'totale_prev_edile': totalePreventivo })
 
+        if not budget:
             latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                                \\euro\\hfill 
-                            '''
-            latexScript += '{}'.format(lav[2])
-            totalePreventivo += lav[2]
-
-            latexScript +=  '''
-                              \\end{spacing} \\\\
-                              \\hline
-                              %FINE RIGA
-            
-                            '''
-
-        latexScript += '''
-                          \\end{tabular}
-                          
-                          \\noindent\\begin{tabular}{|L{108.5mm} | L{8mm} | L{8mm} |  L{16mm}| }
-                          \\hline
-                          \\multicolumn{3}{ | L{124.5mm} | }{
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                              \\textbf{Totale imponibile}
-                            \\end{spacing}
-                          } &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\euro\\hfill
-                       '''
-
-        latexScript += '{}'.format(totalePreventivo)
-
-        latexScript += '''
-                          \\end{spacing}\\\\
-                          \\hline
-                       '''
-
-        totaleScontato = totalePreventivo
-        laberForSconto = ""
-
-
-        if tipoSconto == 2:
-            totaleScontato -= sconto;
-            laberForSconto = "Sconto netto"
-        elif tipoSconto == 3:
-            totaleScontato += totalePreventivo * sconto / 100
-            laberForSconto = "\%"
-        elif tipoSconto == 4:
-            totaleScontato = sconto
-            laberForSconto = "Totale con sconto"
-
-        totaleConIva = totaleScontato + (totaleScontato * iva / 100)
-
-        totaleScontato = math.floor(totaleScontato * 100) / 100
-        totaleConIva = math.floor(totaleConIva * 100) / 100
-
-
-        if tipoSconto != 1:
-            latexScript += '''
-                              \\multicolumn{1}{  L{108.5mm} | }{} &
-                              \\multicolumn{2}{  L{16mm} | }{
-                                \\vspace{2.5mm}
-                                \\begin{spacing}{0}
-                            '''
-
-            latexScript += '\\textbf{' + laberForSconto + '}'
-
-            latexScript += '''
-                                \\end{spacing}
-                              } &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                              \\euro\\hfill 
+                              \\begin{figure}[!t]
+                              \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
+                              \\end{figure}
                            '''
 
-            latexScript += '{}'.format(totaleScontato)+'\\end{spacing}\\\\ \\cline{2-4}'
-
-
-        latexScript += '''
-                          \\multicolumn{1}{  L{108.5mm} | }{} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{IVA}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                        '''
-
-        if iva == 0:
-            latexScript += '\\textbf{\%}'
-        else:
-            latexScript += '\\textbf{' + str(iva) + '\%}'
-
-        latexScript += '''
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                          \\euro\\hfill
-                        '''
-
-        latexScript += '{}'.format(totaleConIva)
-
-        latexScript += '''
-                          \\end{spacing}\\\\
-                          \\cline{2-4}
-                          \\end{tabular}
-        
-                       '''
-
-        latexScript += '''
-                      \\vspace{19mm}
-
-
-                      \\begin{center}
-                      \\begin{tabular}{|L{105mm} | L{44mm}| }
-                      \\hline
-                      \\begin{spacing}{0.3}
-                        \\textbf{NOTE} \\newline
-                        \\hfill
-                      '''
-
-        if preventivo.note is not None:
-            latexScript += preventivo.note
-
-        latexScript += '''
-                      \\end{spacing}&
-                      \\begin{spacing}{0.3}
-                      \\textbf{Firma per accettazione}
-                      \\end{spacing}\\\\
-                      \\hline
-                      \\end{tabular}
-                      \\end{center}
-                    
-                      \\newpage
-                    
-                      \\begin{figure}[!t]
-                      \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
-                      \\end{figure}
-                    
-                      \\begin{itemize}
-                          \\item \\textbf{Ipotizzati \\euro 2.500,00 per smaltimenti materiali}
-                      \\end{itemize}
-                    
-                      \\noindent\\textbf{Dalla seguente offera sono escluse:}
-                      \\begin{itemize}
-                          \\item IVA e qualsiasi altro onere fiscale;
-                          \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
-                          \\item Costi di energia elettrica e acqua ad uso cantiere;
-                          \\item Qualsiasi altra voce non citata;
-                          \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
-                          \\item Pratica per detrazioni fiscali da quantificare;
-                      \\end{itemize}
-                    
-                      \\noindent\\textbf{Pagamenti}
-                      \\begin{itemize}
-                          \\item Da concordare in fase di accetazione.
-                      \\end{itemize}
-                      
-                      \\textcolor{red}{La presente offerta ha validit\'a 30 giorni dalla data odierna.}\\\\
-                      
-                      Castel d'Azzano, il 11 - 7 - 2018
-                      \\vspace{1cm}\\\\
-                      Per accettazione ..............................................................
-                    
-                    \\end{document}
-        
-                       '''
+            latexScript += '''
+                          \\begin{itemize}
+                              \\item \\textbf{Ipotizzati \\euro 2.500,00 per smaltimenti materiali}
+                          \\end{itemize}
+    
+                          \\noindent\\textbf{Dalla seguente offera sono escluse:}
+                          \\begin{itemize}
+                              \\item IVA e qualsiasi altro onere fiscale;
+                              \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
+                              \\item Costi di energia elettrica e acqua ad uso cantiere;
+                              \\item Qualsiasi altra voce non citata;
+                              \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
+                              \\item Pratica per detrazioni fiscali da quantificare;
+                          \\end{itemize}
+    
+                          \\noindent\\textbf{Pagamenti}
+                          \\begin{itemize}
+                              \\item Da concordare in fase di accettazione.
+                          \\end{itemize}
+    
+                          \\textcolor{red}{La presente offerta ha validit\'a 30 giorni dalla data odierna.}\\\\
+    
+                          Castel d'Azzano, il 11 - 7 - 2018
+                          \\vspace{1cm}\\\\
+                          Per accettazione ..............................................................
+    
+                        \\end{document}
+    
+                           '''
 
 
         with open('app/preventiviLatexDir/preventivoEdile.tex', mode='w') as prova:
             prova.write(latexScript)
 
+        if not budget:
+            with open('app/preventiviLatexDir/preventivoEdile-{}.tex'.format(numero_preventivo), mode='w') as prova:
+                prova.write(latexScript)
+
         os.system("cd app/preventiviLatexDir && pdflatex preventivoEdile.tex")
+
+        if not budget:
+            os.system("cd app/preventiviLatexDir && pdflatex preventivoEdile-{}.tex".format(numero_preventivo))

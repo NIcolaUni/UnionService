@@ -3997,6 +3997,12 @@ button.elementFattura {
     margin-left: 20%;
   }
 
+  #pagamentiSelect{
+    width: 40%;
+    display: inline-block;
+    margin-left: 20%;
+  }
+
   #dataFinitureSelect{
     width: 14%;
     display: inline-block;
@@ -4029,6 +4035,12 @@ button.elementFattura {
         width: 100%;
     }
 
+    #ctrlSpanPagamenti {
+        height: 50%;
+        display: inline-block;
+        width: 100%;
+    }
+
      #ctrlSpanPreventivoVarianti {
         height: 50%;
         display: inline-block;
@@ -4046,6 +4058,13 @@ button.elementFattura {
         display: inline-block;
         width: 100%;
     }
+
+    span#titlePagamentiSpan {
+        height: 100%;
+        display: inline-block;
+        width: 100%;
+    }
+
 
     span#titlePreventivoVariantiSpan {
         height: 100%;
@@ -4072,10 +4091,31 @@ button.elementFattura {
     }
 
     #btnBudget{
-        margin-left: 42%;
+        margin-left: 4%;
         margin-bottom: 2%;
     }
 
+    button#btnPrev {
+        margin-left: 3%;
+    }
+
+    button#btnPrevFin {
+        margin-left: 3%;
+        margin-bottom: 2%;
+    }
+
+    #selectHiddenSelect {
+        display: inline;
+        font-size: 25px;
+        cursor: pointer;
+        margin-left: 20%;
+     }
+
+     select#scontoTipo {
+        width: 10%;
+        display: none;
+        height: 30px;
+    }
 
     #totalePrev > span{
         right: 8%;

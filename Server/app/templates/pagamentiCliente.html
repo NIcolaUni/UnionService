@@ -1,0 +1,62 @@
+<div class="inner">
+
+    <span id="titlePagamentiSpan">
+        <span><h2>Pagamenti</h2></span>
+
+        <span id="ctrlSpanPagamenti">
+
+            <select id="pagamentiSelect" >
+
+                {% for prev in preventiviEdili_distinti %}
+                <option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}</option>
+                {% endfor %}
+
+            </select>
+
+        </span>
+
+    </span>
+
+
+</div>
+<script>
+
+    var numPrevSelected =  $('#pagamentiSelect option:selected').attr('class').split('-')[1]
+
+    var strToAdd='';
+
+    {% for pagamento in pagamenti %}
+
+        if( numPrevSelected == '{{pagamento.numero_preventivo}}' ){
+
+            alert('mmm ' + numPrevSelected + ' {{pagamento.numero_preventivo}}')
+            strToAdd ='<div class="features">'
+
+            var totale = parseFloat('') + parseFloat('') + parseFloat('');
+
+            if( totale > 15000 )
+            {
+                strToAdd= '<ul> \
+                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"></li>  \
+                                <li>Prima Rata: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li> \
+                                <li>Saldo: {{pagamento.saldo}} %</li> \
+                            </ul>'
+            }
+            else{
+
+                strToAdd= '<ul> \
+                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li>  \
+                                <li>Prima Rata: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li> \
+                                <li>Seconda Rata: &euro; {{pagamento.acconto}} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><</li> \
+                                <li>Terza Rata: &euro; {{pagamento.acconto} <input type="checkbox" class="acconto num_prev-'+numPrevSelected+'"><}</li> \
+                                <li>Saldo: {{pagamento.saldo}} %</li> \
+                            </ul>'
+
+            }
+
+        }
+    {% endfor %}
+
+    $(strToAdd).insertAfter("#titlePagamentiSpan");
+
+</script>

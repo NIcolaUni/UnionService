@@ -33,10 +33,6 @@
     var numPrevSelected;
     var dataPrevSelected;
 
-    var stampaBudget = function(){
-        alert( numPrevSelected + ' ' + dataPrevSelected );
-    }
-
     function calcolaTotalePreventivo(numero_preventivo, data){
         var totale = 0;
 
@@ -49,7 +45,7 @@
 
         {% endfor %}
 
-        $('#totalePrev').html( '<button onclick="stampaBudget();" style="display:none" id="btnBudget">Budget</button><span>Totale: &euro; '+ totale +'</span>');
+        $('#totalePrev').html( '<button style="display:none" id="btnPrev">Preventivo</button><button style="display:none" id="btnBudget">Budget</button><span>Totale: &euro; '+ totale +'</span>');
 
     }
 
@@ -164,15 +160,31 @@
         return preventivoStatus;
     }
 
-    var mostraBudgetBtn = function(){
+
+    var mostraBudgetBtn = function(numero_preventivo, data){
         $('#totalePrev').css('height', 'unset');
         $('#btnBudget').show();
+        $('#btnPrev').show();
+
+        $('#btnBudget').unbind('click').click(function(){
+            socketPreventivo.emit('stampa_budget', {
+                'dip' : '{{dipendente.username}}',
+                'numero_preventivo' : numero_preventivo,
+                'data' : data
+            });
+        });
+
+        $('#btnPrev').unbind('click').click(function(){
+
+            window.open('/downloadPreventivoEdileChiuso/'+numero_preventivo, '_blank');
+        });
 
     }
 
     var nascondiBudgetBtn = function(){
         $('#totalePrev').css('height', '40px');
         $('#btnBudget').hide();
+        $('#btnPrev').hide();
 
     }
 
@@ -208,7 +220,7 @@
         stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
 
         if( !statusPreventivo ){
-            mostraBudgetBtn();
+            mostraBudgetBtn('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
         }
         else{
             nascondiBudgetBtn();
@@ -274,7 +286,7 @@
         stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
 
         if( !statusPreventivo ){
-            mostraBudgetBtn();
+            mostraBudgetBtn(selectedPreventivo, selectedData);
         }
         else{
             nascondiBudgetBtn();

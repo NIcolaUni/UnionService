@@ -31,6 +31,7 @@ from .model.agenda import Agenda
 from .model.calendario import Calendario
 from .model.richiestaFerie import RichiestaFerie
 from .model.messaggio import Messaggio
+from .model.pagamentiCliente import PagamentiCliente
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 import app
@@ -168,6 +169,21 @@ def apriPreventivoEdile():
 @server.route('/downloadPreventivoEdile')
 @login_required
 def downloadPreventivoEdile():
+    return send_from_directory(directory='preventiviLatexDir', filename='preventivoEdile.pdf')
+
+@server.route('/downloadPreventivoEdileChiuso/<num_prev>')
+@login_required
+def downloadPreventivoEdileChiuso(num_prev):
+    return send_from_directory(directory='preventiviLatexDir', filename='preventivoEdile-'+num_prev+'.pdf')
+
+@server.route('/downloadPreventivoFinitureChiuso/<num_prev>')
+@login_required
+def downloadPreventivoFinitureChiuso(num_prev):
+    return send_from_directory(directory='preventiviLatexDir', filename='preventivoFiniture-'+num_prev+'.pdf')
+
+@server.route('/downloadBudgetEdile')
+@login_required
+def downloadBudgetEdile():
     return send_from_directory(directory='preventiviLatexDir', filename='preventivoEdile.pdf')
 
 @server.route('/downloadPreventivoVarianti')
@@ -392,6 +408,35 @@ def anteprimaPreventivoVarianti():
                            preventiviVarianti=preventiviVarianti, preventiviVarianti_distinti=preventiviVarianti_distinti,
                            preventiviEdili_distinti=preventiviEdili_distinti,
                            lastPreventivoVarianti=lastPrev, countPreventiviVarianti=countPreventiviVarianti)
+
+@server.route('/pagamentiCliente')
+@login_required
+def pagamentiCliente():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+
+    preventiviEdili = PreventivoEdile.returnAllPreventiviCliente(nome_cliente=app.clienteSelezionato.nome, cognome_cliente=app.clienteSelezionato.cognome,
+                                                        indirizzo_cliente=app.clienteSelezionato.indirizzo )
+
+    preventiviEdili_distinti = []
+
+    for preventivo in preventiviEdili:
+
+        if not preventivo[0].stato:
+            preventivo_presente = False
+            for prev_dist in preventiviEdili_distinti:
+                if preventivo[0].numero_preventivo == prev_dist[2]:
+                    preventivo_presente = True
+
+            if not preventivo_presente:
+                preventiviEdili_distinti.append((preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
+                                            preventivo[0].numero_preventivo))
+
+    pagamenti = []
+    for preventivo in preventiviEdili_distinti:
+        pagamenti.append(PagamentiCliente.query.filter_by(numero_preventivo=preventivo[2]).first())
+
+    return render_template('pagamentiCliente.html', dipendente=dip, cliente=app.clienteSelezionato, preventiviEdili_distinti=preventiviEdili_distinti,
+                           pagamenti=pagamenti)
 
 @server.route('/accoglienza/<int:error>', methods=['GET','POST'])
 @login_required
@@ -1231,9 +1276,8 @@ def handle_elimina_prodotto(message):
 def handle_stampa_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
 
-    PreventivoFiniture.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=message['iva'],
-                                     tipoSconto=message['tipoSconto'], sconto=message['sconto'],
-                                     chiudiPreventivo=message['chiudiPreventivo'], sumisura=message['sumisura'])
+    PreventivoFiniture.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'],
+                                     chiudiPreventivo=message['chiudiPreventivo'])
 
     emit('procediADownload', namespace='/preventivoFiniture', room=dip.session_id)
 
@@ -1479,6 +1523,14 @@ def handle_modifica_sottolavorazione(message):
                                                  ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione,
                                                  modifica=toChange, unitaMisura=unitaMisura)
 
+@socketio.on('stampa_budget', namespace='/preventivoEdile')
+def handle_stampa_preventivo(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PreventivoEdile.stampaPreventivo(numero_preventivo=message['numero_preventivo'], data=message['data'], iva=0,
+                                     tipoSconto=0, sconto=0, chiudiPreventivo=False, sumisura=True, budget=True)
+
+    emit('procediADownloadBudget', namespace='/preventivoEdile', room=dip.session_id)
 
 @socketio.on('stampa_preventivo', namespace='/preventivoEdile')
 def handle_stampa_preventivo(message):

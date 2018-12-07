@@ -177,6 +177,7 @@
 							<li><a class="menuBar local" href="#one">Preventivo edile</a></li>
                             <li><a class="menuBar local" href="#two">Preventivo finiture</a></li>
 							<li><a class="menuBar local" href="#three">Preventivo varianti</a></li>
+                            <li><a class="menuBar local" href="#four">Pagamenti</a></li>
                         </ul>
 					</nav>
 				</div>
@@ -300,6 +301,11 @@
 
 					</section>
 
+                <!-- Four -->
+					<section id="four" class="wrapper style1-alt fade-up">
+
+					</section>
+
 			</div>
 
 		<!-- Scripts -->
@@ -372,6 +378,12 @@
 
 				});
 
+				socketPreventivoEdile.on('procediADownloadBudget', function(){
+
+					window.open('{{url_for("downloadBudgetEdile")}}', '_blank');
+				});
+
+
                 socketPreventivoFiniture.on('confermaRegistrazionePreventivo', function(){
 
 					window.location = "{{url_for('apriPreventivoFiniture')}}";
@@ -404,9 +416,11 @@
 
 
 
+
     			$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
 				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
 				$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
+				$('section#four').load('{{url_for("pagamentiCliente")}}');
 
 				$('#closeAgenda').click( function(){
 					$('#agendaDipendente').css('display', 'none');

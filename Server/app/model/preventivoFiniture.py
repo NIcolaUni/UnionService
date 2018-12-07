@@ -3,6 +3,7 @@ from .db.commessaDBmodel import CommessaDBmodel
 from .db.dipendenteDBmodel import DipendenteDBmodel
 from .db.prodottiPreventivoFiniture.prodottoPreventivoFinitureDBmodel import ProdottoPreventivoFinitureDBmodel
 from .clienteAccolto import ClienteAccolto
+from .pagamentiCliente import  PagamentiCliente
 from sqlalchemy import desc, func
 import datetime
 import app
@@ -354,12 +355,171 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         PreventivoDBmodel.commit()
 
-    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura):
 
+    def __calcolaIndiceLastProdottoPagineIntermedie__(startingIndex, grandezzaRighe):
+
+        index = startingIndex
+        tmpGrandezzaRighe = 0
+
+        for lunghezza in grandezzaRighe:
+
+            tmpGrandezzaRighe += lunghezza
+
+            if tmpGrandezzaRighe <= 21.6:
+                index += 1
+
+            else:
+                break
+
+        if tmpGrandezzaRighe <= 18:
+            return [index, False]
+        else:
+            return [index, True]
+
+    def __calcoraIndiceLastProdottoPrimaPagina__(grandezzaRighe):
+        index = -1
+        tmpGrandezzaRighe = 0
+
+        for lunghezza in grandezzaRighe:
+
+            tmpGrandezzaRighe += lunghezza
+
+            if tmpGrandezzaRighe <= 11.7:
+                index += 1
+
+            else:
+                break
+
+        if tmpGrandezzaRighe <= 9:
+            return [index, False]
+        else:
+            return [index, True]
+
+    def __calcolaProdottiPerPaginaPreventivo__(prodotti):
+        '''
+
+        Una lavorazione il cui nome occupa una sola riga è altra 0.9 cm ed ogni riga extra aggiunge un 0.4cm;
+        Una lavorazione occupa una sola riga se il suo numero di caratteri <= 50.
+        Per quanto riguarda la prima facciata, un insieme di lavorazioni sta tutto
+        in una pagina ( compreso del totale ) se l'altezza dell'insieme di
+        righe delle lavorazioni ( escluso il totale ) è <= 9cm; se la riga dello sconto non compare il limite di
+        9cm si trasforma in 9.9cm. Se l'insieme di lavorazioni supera questo limite allora nella prima facciata
+        l'insieme delle lavorazioni non potrà superare gli 11.7 cm.
+        Nelle pagine successive alla prima, se il totale è presente, il numero di righe avrà come limite i 18cm
+        mentre, se il totale va su un'altra pagina ancora, sarà di 21.6cm.
+        Se il totale finisce sull'ultima pagina assieme ad esso potremmo avere al massimo un numero di lavorazioni
+        che non superi i 4.5cm;
+
+
+        :return: ritorna una tupla di due elementi dove_
+                -prima pos: una lista dove il numero di elementi indica il numero di pagine necessarie per
+                            stampare il preventivo e ogni elemento indica il numero dell'ultima lavorazione
+                            nella pagina;
+                -seconda pos: un booleano indicante se nell'ultima pagina il numero di lavorazioni supera i 4.5cm
+
+        '''
+
+        grandezzaRighe = []
+
+        #Per ogni lavorazione calcolo l'altezza della corrispondente riga nel preventivo
+        for prod in prodotti:
+            numeroRighe = int(len( prod[0].nome_modificato )/50)
+            resto = len( prod[0].nome_modificato )%50
+
+            lunghezzaRigaCm = 0
+
+            if numeroRighe <= 1:
+                lunghezzaRigaCm = 0.9
+
+            else:
+                addedCm = 0
+                for i in range( 1, numeroRighe):
+                    addedCm += 0.4
+
+                lunghezzaRigaCm = 0.9+addedCm
+
+            if numeroRighe >= 1 and resto > 0:
+                lunghezzaRigaCm += 0.4
+
+            grandezzaRighe.append(round(lunghezzaRigaCm*100)/100)
+
+        if len(grandezzaRighe) > 0:
+            indexesToRet = []
+            numPag = 1
+
+            index, continua = PreventivoFiniture.__calcoraIndiceLastProdottoPrimaPagina__(grandezzaRighe)
+
+
+            indexesToRet.append(index)
+
+            while continua and index+1 < len(grandezzaRighe):
+
+                index, continua = PreventivoFiniture.__calcolaIndiceLastProdottoPagineIntermedie__(index, grandezzaRighe[index+1:len(grandezzaRighe)])
+                indexesToRet.append(index)
+                numPag += 1
+
+            if continua:
+                numPag += 1
+
+
+            if len(indexesToRet) < numPag:
+                indexesToRet.append( indexesToRet[-1])
+                indexesToRet[-2] = indexesToRet[-2]-1
+
+
+            totLunghezzaUltimaPag = 0
+
+            if len(indexesToRet) > 1:
+
+                for lunghezza in grandezzaRighe[indexesToRet[-2]:indexesToRet[-1]]:
+                    totLunghezzaUltimaPag+=lunghezza
+
+                if totLunghezzaUltimaPag <= 4.5:
+                    return ( indexesToRet, False )
+                else:
+                    return ( indexesToRet, True )
+            else:
+
+                return (indexesToRet, True)
+
+
+        else:
+            return ([], False)
+
+    def returnSinglePreventivo(numero_preventivo, data):
+
+        '''
+
+        :param: la chiave di un preventivo
+        :return: una coppia dalla forma: ( ordineSettori, resultProd )
+            dove:
+            - ordineSettori = lista ordinata di nomi di settore; ogni elemento appare una sola volta
+                                e l'ordine riflette quello di comparsa nel relativo preventivo;
+            - resultLav = lista di tuple; ogni tupla racchiude tutta l'informazione utile su uno specifico
+                            prodotto nel preventivo.
+
+        '''
+
+        prodotti = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).order_by(
+                                                                __ProdottoPreventivo__.ordine).all()
+
+        ordineTipologie = []
+        resultProd = []
+
+        for prodotto in prodotti:
+
+            if not ordineTipologie.__contains__(prodotto.tipologia):
+                ordineTipologie.append(prodotto.tipologia)
+
+            prezzoTotale = prodotto.quantita*prodotto.diffCapitolato
+
+            resultProd.append((prodotto,  prezzoTotale))
+
+        return (ordineTipologie, resultProd)
+
+    def stampaPreventivo(numero_preventivo, data, chiudiPreventivo):
         if chiudiPreventivo:
             PreventivoFiniture.chiudiPreventivo(numero_preventivo)
-
-
 
         preventivo = PreventivoFiniture.query.filter_by(tipologia='finiture', numero_preventivo=numero_preventivo,
                                                      data=data).first()
@@ -369,74 +529,103 @@ class PreventivoFiniture(PreventivoDBmodel):
         cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente,
                                                  indirizzo=preventivo.indirizzo_cliente).first()
 
-        prodotti = PreventivoFiniture.returnProdottiPreventivo(numero_preventivo=numero_preventivo, data=data)
+
+        infoPreventivo = PreventivoFiniture.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
+
 
         codicePrev = PreventivoFiniture.calcolaCodicePreventivoNoObj(numero_preventivo, data)
 
         commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=preventivo.intervento_commessa).first()
 
-        contaProdotti = 0
+        contaLavorazioni = 0
 
         now = datetime.datetime.now()
         oggi = "{}/{}/{}".format(now.day, now.month, now.year)
 
         latexScript = '''
-                        \\documentclass[a4paper]{article}
-                        \\usepackage{graphicx}
-                        \\graphicspath{ {./Immagini/} }
-                        \\usepackage{setspace}
-                        \\usepackage{eurosym}
-                        \\usepackage{xcolor}
-                        \\usepackage{tabularx}
-                        \\usepackage[top=1.7cm, bottom=1.7cm, left=2.6cm, right=2.6cm]{geometry}
+                          \\documentclass[a4paper]{article}
+                          \\usepackage{graphicx}
+                          \\graphicspath{ {./Immagini/} }
+                          \\usepackage{setspace}
+                          \\usepackage{eurosym}
+                          \\usepackage{xcolor}
+                          \\usepackage{tabularx}
+                        '''
 
-                        \\usepackage{fancyhdr}
-                        \\pagestyle{fancy}
-                        \\lhead{}
-                        \\chead{} 
-                      '''
+        latexScript += '\\usepackage[top=1.7cm, bottom=4.5cm, left=2.6cm, right=2.6cm]{geometry}'
 
-        latexScript += '\\rhead{US' + codicePrev + 'F}'
 
         latexScript += '''
-                        \\lfoot{\\thepage}
-                        \\cfoot{
-                            \\begin{spacing}{0.5}
-                            {\\scriptsize
-                              \\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
-                              Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
-                            }
-                            \\end{spacing}
-                        }
-                        \\rfoot{}
-                        \\renewcommand{\\headrulewidth}{0pt}
-                        \\renewcommand{\\footrulewidth}{0.4pt}
-
-                        \\usepackage{array}
-                        \\usepackage{ragged2e}
-                        \\newcolumntype{R}[1]{>{\\RaggedLeft\\hspace{0pt}}p{#1}}
-                        \\newcolumntype{L}[1]{>{\\RaggedRight\\hspace{0pt}}p{#1}}
-
-                        \\renewcommand{\\arraystretch}{0}
-
-                        \\begin{document}
-
-                        \\begin{figure}[!t]
-                        \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
-                        \\end{figure}
-
-                        \\noindent\\begin{tabular}{| L{72.2mm} |}
-                            \\hline
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                            \\textbf{COMMESSA}
-                            \\end{spacing}\\\\
-                            \\hline
-                            \\vspace{4mm}
-                            \\begin{spacing}{1.2}
-
+                          \\usepackage{fancyhdr}
+                          \\pagestyle{fancy}
+                          \\lhead{}
+                          \\chead{} 
                         '''
+
+        latexScript += '\\rhead{US' + codicePrev + 'E}'
+
+
+        latexScript += '''
+                          \\cfoot{
+                                  {\\normalsize
+                                    \\begin{center}
+                                    \\begin{tabular}{|L{105mm} | L{44mm}| }
+                                    \\hline
+                                    \\begin{spacing}{0.3}
+                                      \\textbf{NOTE} \\newline
+                                      \\hfill
+                          '''
+        if preventivo.note is not None:
+            latexScript += '{\\centering ' + preventivo.note + '}'
+        else:
+            latexScript += '{\\centering }'
+
+        latexScript += '''
+                                    \\end{spacing}&
+                                    \\begin{spacing}{0.3}
+                                    \\textbf{Firma per accettazione}
+                                    \\end{spacing}\\\\
+                                    \\hline
+                                    \\end{tabular}
+                                    \\end{center}
+                                    \\noindent\\rule{\\textwidth}{0.4pt}
+                                  }
+                                  {\\footnotesize
+                                    \\raggedright\\thepage \\\\ \\centering\\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
+                                    Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
+                                  }
+                          }
+                          \\rfoot{}
+                          \\renewcommand{\\headrulewidth}{0pt}
+                      '''
+
+
+        latexScript += '''
+                          \\usepackage{array}
+                          \\usepackage{ragged2e}
+                          \\newcolumntype{R}[1]{>{\\RaggedLeft\\hspace{0pt}}p{#1}}
+                          \\newcolumntype{L}[1]{>{\\RaggedRight\\hspace{0pt}}p{#1}}
+    
+                          \\renewcommand{\\arraystretch}{0}
+    
+                          \\begin{document}
+    
+                          \\begin{figure}[!t]
+                          \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
+                          \\end{figure}
+    
+                          \\noindent\\begin{tabular}{| L{72.2mm} |}
+                              \\hline
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                              \\textbf{COMMESSA}
+                              \\end{spacing}\\\\
+                              \\hline
+                              \\vspace{4mm}
+                              \\begin{spacing}{1.2}
+    
+                          '''
         latexScript += commessa.intervento.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
                                                                                                                   "\\'u").replace(
             "ì", "\\'i") + ' \\newline '
@@ -445,23 +634,23 @@ class PreventivoFiniture(PreventivoDBmodel):
             "ì", "\\'i") + ' \\newline ' + commessa.comune.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
                                                                                                              "\\'o").replace(
             "ù", "\\'u").replace("ì", "\\'i")
+
         latexScript += '''
-                          \\end{spacing}\\\\
-                            \\hline
-                          \\end{tabular}
-                          \\quad
-                          \\begin{tabular}{ | R{72.2mm} | }
-                            \\hline
-                            \\vspace{2.5mm}
-                            \\begin{spacing}{0}
-                            \\textbf{CLIENTE}
                             \\end{spacing}\\\\
-                            \\hline
-                            \\vspace{4mm}
-                            \\begin{spacing}{1.2}
-
-                       '''
-
+                              \\hline
+                            \\end{tabular}
+                            \\quad
+                            \\begin{tabular}{ | R{72.2mm} | }
+                              \\hline
+                              \\vspace{2.5mm}
+                              \\begin{spacing}{0}
+                              \\textbf{CLIENTE}
+                              \\end{spacing}\\\\
+                              \\hline
+                              \\vspace{4mm}
+                              \\begin{spacing}{1.2}
+    
+                         '''
         latexScript += cliente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
                                                                                                            "\\'u").replace(
             "ì", "\\'i") + ' ' + cliente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace(
@@ -471,45 +660,56 @@ class PreventivoFiniture(PreventivoDBmodel):
                                                                                                                 "\\'u").replace(
             "ì", "\\'i")
 
+        typeOfDoc = ''
+
+
+        typeOfDoc = 'Preventivo Scelta Finiture'
+
+
         latexScript += '''
-                          \\end{spacing}\\\\
+                            \\end{spacing}\\\\
+                              \\hline
+                            \\end{tabular}
+    
+                            \\begin{center}
+                            \\begin{tabular}{|L{89mm} R{60mm}| }
                             \\hline
-                          \\end{tabular}
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                          '''
 
-                          \\begin{center}
-                          \\begin{tabular}{|L{89mm} R{60mm}| }
-                          \\hline
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Preventivo Finiture}
-                          \\end{spacing}&
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
+        latexScript += '\\textbf{' + typeOfDoc + '}'
 
-                     '''
+        latexScript += '''
+                            \\end{spacing}&
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+    
+                          '''
 
         latexScript += oggi
 
         latexScript += '''
-
-                          \\end{spacing}\\\\
-                          \\hline
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Validit\\'a:}
-                       '''
+    
+                            \\end{spacing}\\\\
+                            \\hline
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{Validit\\'a:}
+                         '''
         validita = datetime.timedelta(days=30) + datetime.datetime.now()
 
         validita = "{}/{}/{}".format(validita.day, validita.month, validita.year)
 
         latexScript += validita
         latexScript += '''
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Operatore:}
+                            \\end{spacing} &
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{Operatore:}
+    
+                         '''
 
-                       '''
         latexScript += dipendente.nome.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
                                                                                                               "\\'u").replace(
             "ì", "\\'i") + ' ' + dipendente.cognome.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
@@ -517,258 +717,201 @@ class PreventivoFiniture(PreventivoDBmodel):
             "ù", "\\'u").replace("ì", "\\'i")
 
         latexScript += '''
-                          \\end{spacing} \\\\
-                          \\hline
-                          \\end{tabular}
-                          \\end{center}
+                            \\end{spacing} \\\\
+                            \\hline
+                            \\end{tabular}
+                            \\end{center}
+                         '''
 
-                          \\noindent\\begin{tabular}{ | L{10mm} |  L{86mm} | L{12mm} | L{12mm} | L{16mm} | }
-                          \\hline
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Pos.}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Descrizione}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Qnt.}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{U.M.}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{Importo}
-                          \\end{spacing} \\\\
-                          \\hline
-                          %FINE HEADER
-                       '''
-        app.server.logger.info('fine del header')
-        totalePreventivo = 0
-
-        for prod in prodotti[1]:
-            contaProdotti += 1
-            latexScript += '''
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-            latexScript += '{}'.format(contaProdotti)
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            latexScript += prod.nome_prodotto.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
-                                                                                                          "\\'o").replace(
-                "ù", "\\'u").replace("ì", "\\'i") + " - " + prod.modello.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
-                                                                                                          "\\'o").replace(
-                "ù", "\\'u").replace("ì", "\\'i") + " - " + prod.marchio.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
-                                                                                                          "\\'o").replace(
-                "ù", "\\'u").replace("ì", "\\'i")
-
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            if sumisura:
-                latexScript += '{}'.format(prod.quantita)
-
-            else:
-                latexScript += '-'
-
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                           '''
-
-            if sumisura:
-                latexScript += prod.unitaMisura
-
-            else:
-                latexScript += 'a corpo'
-
-
-            latexScript += '''
-                              \\end{spacing} &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                                \\euro\\hfill 
-                            '''
-            latexScript += '{}'.format(prod.diffCapitolato)
-            totalePreventivo += prod.diffCapitolato
-
-            latexScript += '''
-                              \\end{spacing} \\\\
-                              \\hline
-                              %FINE RIGA
-
-                            '''
-
-        latexScript += '''
-                          \\end{tabular}
-
-                          \\noindent\\begin{tabular}{|L{108.5mm} | L{8mm} | L{8mm} |  L{16mm}| }
-                          \\hline
-                          \\multicolumn{3}{ | L{124.5mm} | }{
+        headerProdotti = '''
+                            \\noindent\\begin{tabular}{ | L{10mm} |  L{86mm} | L{12mm} | L{12mm} | L{16mm} | }
+                            \\hline
                             \\vspace{2.5mm}
                             \\begin{spacing}{0}
-                              \\textbf{Totale imponibile}
-                            \\end{spacing}
-                          } &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\euro\\hfill
-                       '''
-        latexScript += '{}'.format(totalePreventivo)
+                              \\textbf{Pos.}
+                            \\end{spacing} &
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{Descrizione}
+                            \\end{spacing} &
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{Qnt.}
+                            \\end{spacing} &
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{U.M.}
+                            \\end{spacing} &
+                            \\vspace{2.5mm}
+                            \\begin{spacing}{0}
+                              \\textbf{Diff. Capitolato}
+                            \\end{spacing} \\\\
+                            \\hline
+                            %FINE HEADER
+                         '''
+
+        numPagine, lastPageAlone = PreventivoFiniture.__calcolaProdottiPerPaginaPreventivo__(infoPreventivo[1])
+
+        totalePreventivo = 0
+        lastStartingIndex = 0
+        indexActualPage = 0
+
+        for numLastLav in numPagine:
+            latexScript += headerProdotti
+
+            for prod in infoPreventivo[1][lastStartingIndex:numLastLav + 1]:
+
+                contaLavorazioni += 1
+                latexScript += '''
+                                     \\vspace{2.5mm}
+                                     \\begin{spacing}{0}
+                                  '''
+                latexScript += '{}'.format(contaLavorazioni)
+
+                latexScript += '''
+                                     \\end{spacing} &
+                                     \\vspace{2.5mm}
+                                     \\begin{spacing}{0}
+                                  '''
+
+                marchio = prod[0].marchio.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                "\\'o").replace(
+                    "ù",
+                    "\\'u").replace(
+                    "ì", "\\'i")
+
+                modello = prod[0].modello.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                "\\'o").replace(
+                    "ù",
+                    "\\'u").replace(
+                    "ì", "\\'i")
+
+                nome= prod[0].nome_modificato.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+                                                                                                        "\\'o").replace(
+                    "ù",
+                    "\\'u").replace(
+                    "ì", "\\'i")
+
+                latexScript += marchio + ' - ' + modello + ' - ' + prod[0].codice + '\\newline '
+                latexScript += nome
+
+                latexScript += '''
+                                     \\end{spacing} &
+                                     \\vspace{2.5mm}
+                                     \\begin{spacing}{0}
+                                  '''
+
+
+                latexScript += '{}'.format(prod[0].quantita)
+
+
+                latexScript += '''
+                                     \\end{spacing} &
+                                     \\vspace{2.5mm}
+                                     \\begin{spacing}{0}
+                                  '''
+
+                latexScript += prod[0].unitaMisura
+
+
+                latexScript += '''
+                                     \\end{spacing} &
+                                     \\vspace{2.5mm}
+                                     \\begin{spacing}{0}
+                                       \\euro\\hfill 
+                                   '''
+                latexScript += '{}'.format(prod[1])
+                totalePreventivo += prod[1]
+
+                latexScript += '''
+                                     \\end{spacing} \\\\
+                                     \\hline
+                                     %FINE RIGA
+    
+                                   '''
+
+            latexScript += '\\end{tabular} \\\\'
+
+            if indexActualPage + 1 == len(numPagine):
+                latexScript += '''
+                                                        \\noindent\\begin{tabular}{|L{133.1mm} |  L{16mm}| }
+                                                        \\hline
+                                                          \\vspace{2.5mm}
+                                                          \\begin{spacing}{0}
+                                                            \\textbf{Totale}
+                                                          \\end{spacing} &
+                                                        \\vspace{2.5mm}
+                                                        \\begin{spacing}{0}
+                                                          \\euro\\hfill
+                                                     '''
+
+                latexScript += '{}'.format(totalePreventivo)
+
+                latexScript += '''
+                                                        \\end{spacing}\\\\
+                                                        \\hline
+                                                        \\end{tabular}
+                               '''
+
+
+                if lastPageAlone:
+                    latexScript += '\\newpage'
+                else:
+                    latexScript += '\\vspace{19mm}'
+
+
+
+            else:
+                latexScript += '\\newpage'
+                lastStartingIndex = numLastLav + 1
+                indexActualPage += 1
+
+        if chiudiPreventivo:
+            PagamentiCliente.generaPagamentoPerPreventivo(numero_preventivo)
+            PagamentiCliente.modificaPagamento(numero_preventivo, {'totale_prev_finiture': totalePreventivo })
 
         latexScript += '''
-                          \\end{spacing}\\\\
-                          \\hline
-                       '''
-
-        totaleScontato = totalePreventivo
-        laberForSconto = ""
-
-
-        if tipoSconto == 2:
-            totaleScontato -= sconto;
-            laberForSconto = "Sconto netto"
-        elif tipoSconto == 3:
-            totaleScontato += totalePreventivo * sconto / 100
-            laberForSconto = "\%"
-        elif tipoSconto == 4:
-            totaleScontato = sconto
-            laberForSconto = "Totale con sconto"
-
-        totaleConIva = totaleScontato + (totaleScontato * iva / 100)
-
-        totaleScontato = math.floor(totaleScontato * 100) / 100
-        totaleConIva = math.floor(totaleConIva * 100) / 100
-
-
-        if tipoSconto != 1:
-            latexScript += '''
-                              \\multicolumn{1}{  L{108.5mm} | }{} &
-                              \\multicolumn{2}{  L{16mm} | }{
-                                \\vspace{2.5mm}
-                                \\begin{spacing}{0}
-                            '''
-
-            latexScript += '\\textbf{' + laberForSconto + '}'
-
-            latexScript += '''
-                                \\end{spacing}
-                              } &
-                              \\vspace{2.5mm}
-                              \\begin{spacing}{0}
-                              \\euro\\hfill 
-                           '''
-
-            latexScript += '{}'.format(totaleScontato)+'\\end{spacing}\\\\ \\cline{2-4}'
-
+                            \\begin{figure}[!t]
+                            \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
+                            \\end{figure}
+                         '''
 
         latexScript += '''
-                          \\multicolumn{1}{  L{108.5mm} | }{} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                            \\textbf{IVA}
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                        '''
-        if iva == 0:
-            latexScript += '\\textbf{\%}'
-        else:
-            latexScript += '\\textbf{' + str(iva) + '\%}'
+                        \\begin{itemize}
+                            \\item \\textbf{Ipotizzati \\euro 2.500,00 per smaltimenti materiali}
+                        \\end{itemize}
 
-        latexScript += '''
-                          \\end{spacing} &
-                          \\vspace{2.5mm}
-                          \\begin{spacing}{0}
-                          \\euro\\hfill
-                        '''
+                        \\noindent\\textbf{Dalla seguente offera sono escluse:}
+                        \\begin{itemize}
+                            \\item IVA e qualsiasi altro onere fiscale;
+                            \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
+                            \\item Costi di energia elettrica e acqua ad uso cantiere;
+                            \\item Qualsiasi altra voce non citata;
+                            \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
+                            \\item Pratica per detrazioni fiscali da quantificare;
+                        \\end{itemize}
 
-        latexScript += '{}'.format(totaleConIva)
+                        \\noindent\\textbf{Pagamenti}
+                        \\begin{itemize}
+                            \\item Da concordare in fase di accettazione.
+                        \\end{itemize}
 
-        latexScript += '''
-                          \\end{spacing}\\\\
-                          \\cline{2-4}
-                          \\end{tabular}
+                        \\textcolor{red}{La presente offerta ha validit\'a 30 giorni dalla data odierna.}\\\\
 
-                       '''
+                        Castel d'Azzano, il 11 - 7 - 2018
+                        \\vspace{1cm}\\\\
+                        Per accettazione ..............................................................
 
-        latexScript += '''
-                      \\vspace{19mm}
+                      \\end{document}
 
-
-                      \\begin{center}
-                      \\begin{tabular}{|L{105mm} | L{44mm}| }
-                      \\hline
-                      \\begin{spacing}{0.3}
-                        \\textbf{NOTE} \\newline
-                        \\hfill
-                      '''
-
-
-        if preventivo.note is not None:
-            latexScript += preventivo.note
-
-        latexScript += '''
-                      \\end{spacing}&
-                      \\begin{spacing}{0.3}
-                      \\textbf{Firma per accettazione}
-                      \\end{spacing}\\\\
-                      \\hline
-                      \\end{tabular}
-                      \\end{center}
-
-                      \\newpage
-
-                      \\begin{figure}[!t]
-                      \\includegraphics[width=15.8cm, height=3cm]{intestazioneAlta2.jpg}
-                      \\end{figure}
-
-                      \\begin{itemize}
-                          \\item \\textbf{Ipotizzati \\euro 2.500,00 per smaltimenti materiali}
-                      \\end{itemize}
-
-                      \\noindent\\textbf{Dalla seguente offera sono escluse:}
-                      \\begin{itemize}
-                          \\item IVA e qualsiasi altro onere fiscale;
-                          \\item Ore in economia per opere extra-capitolato (\\euro/h 23,00);
-                          \\item Costi di energia elettrica e acqua ad uso cantiere;
-                          \\item Qualsiasi altra voce non citata;
-                          \\item Sul totale preventivato ci si riserva di un errore del 5\\% come imprevisti cantiere;
-                          \\item Pratica per detrazioni fiscali da quantificare;
-                      \\end{itemize}
-
-                      \\noindent\\textbf{Pagamenti}
-                      \\begin{itemize}
-                          \\item Da concordare in fase di accetazione.
-                      \\end{itemize}
-
-                      \\textcolor{red}{La presente offerta ha validit\'a 30 giorni dalla data odierna.}\\\\
-
-                      Castel d'Azzano, il 11 - 7 - 2018
-                      \\vspace{1cm}\\\\
-                      Per accettazione ..............................................................
-
-                    \\end{document}
-
-                       '''
+                         '''
 
         with open('app/preventiviLatexDir/preventivoFiniture.tex', mode='w') as prova:
             prova.write(latexScript)
 
+        with open('app/preventiviLatexDir/preventivoFiniture-{}.tex'.format(numero_preventivo), mode='w') as prova:
+            prova.write(latexScript)
+
         os.system("cd app/preventiviLatexDir && pdflatex preventivoFiniture.tex")
+
+        os.system("cd app/preventiviLatexDir && pdflatex preventivoFiniture-{}.tex".format(numero_preventivo))
