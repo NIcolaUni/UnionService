@@ -378,9 +378,9 @@
 
 				});
 
-				socketPreventivoEdile.on('procediADownloadBudget', function(){
+				socketPreventivoEdile.on('procediADownloadBudget', function(msg){
 
-					window.open('{{url_for("downloadBudgetEdile")}}', '_blank');
+					window.open('/downloadBudgetEdile/'+msg['numero_preventivo']+'/'+msg['revisione'], '_blank');
 				});
 
 

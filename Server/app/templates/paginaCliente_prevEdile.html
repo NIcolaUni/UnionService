@@ -11,13 +11,13 @@
                 <select id="preventivoSelect" >
                     {% for prev in preventivi_distinti %}
                         {% if prev[2] == lastPreventivo[0].numero_preventivo %}
-                            <option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}E</option>
+                            <option class="numeroPreventivo-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}E - {{prev[4]}} </option>
                         {% else %}
-                            <option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}E</option>
+                            <option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}E - {{prev[4]}}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
-                <select id="dataSelect" >
+                <select id="revisioneSelect" >
                 </select>
 
 
@@ -31,13 +31,26 @@
 
     var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
     var numPrevSelected;
-    var dataPrevSelected;
+    var revisionePrevSelected;
 
-    function calcolaTotalePreventivo(numero_preventivo, data){
+    var revisionaPreventivo = function(){
+
+
+        var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
+        var selRevisione = $('#revisioneSelect').val();
+
+
+        socketPreventivo.emit('revisiona_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'revisione': selRevisione,
+                                                            'dip': '{{dipendente.username}}' });
+
+
+    }
+
+    function calcolaTotalePreventivo(numero_preventivo, revisione){
         var totale = 0;
 
         {% for preventivo in preventivi %}
-            if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
+            if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].revisione}}"  == revisione ){
                 {% for lavorazione in preventivo[1][1] %}
                     totale += parseFloat('{{lavorazione[2]}}');
                 {% endfor %}
@@ -45,20 +58,30 @@
 
         {% endfor %}
 
-        $('#totalePrev').html( '<button style="display:none" id="btnPrev">Preventivo</button><button style="display:none" id="btnBudget">Budget</button><span>Totale: &euro; '+ totale +'</span>');
+        $('#totalePrev').html( '<button style="display:none" id="btnPrev">Preventivo</button><button style="display:none" id="btnBudget">Budget</button><button onclick="revisionaPreventivo();" style="display:none" id="btnRevisione">Revisiona</button><span>Totale: &euro; '+ totale +'</span>');
 
     }
 
     /*Stampa l'antemprima del preventivo edile*/
-    function stampaRiassuntoPreventivo( numero_preventivo, data ){
+    function stampaRiassuntoPreventivo( numero_preventivo, revisione ){
 
                     $('section#one').children('.inner').children('.features').remove();
 
                     strToAdd = '';
                     {% for preventivo in preventivi %}
-                        if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].data}}"  == data ){
-                            strToAdd = '<div class="features"> \
-                                            <div id="tabFatturaPaginaCliente" class="table-wrapper"> \
+                        if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].revisione}}"  == revisione ){
+
+                            var labelUltimaModifica;
+
+                            {% if preventivo[0].stato %}
+                                labelUltimaModifica = '<label id="labelUltimaModifica">Ultima modifica: {{preventivo[0].data_ultima_modifica}}</label>';
+                            {% else %}
+                                labelUltimaModifica = '<label id="labelUltimaModifica">Data chiusura: {{preventivo[0].data_ultima_modifica}}</label>';
+                            {% endif %}
+
+                            strToAdd = '<div class="features">'+
+                                           labelUltimaModifica +
+                                            '<div id="tabFatturaPaginaCliente" class="table-wrapper"> \
                                                     <table class="alt"> \
                                                         <thead> \
                                                             <tr> \
@@ -83,7 +106,7 @@
                                         var roundedQuantita = Math.round(parseFloat('{{lavorazione[1]}}')*100)/100;
                                         var roundedTotale =  Math.round(parseFloat('{{lavorazione[2]}}')*100)/100;
                                         strToAdd +=	'<tr> \
-                                                        <td class="tdTipoLav">{{lavorazione[0].tipologia_lavorazione}}</td> \
+                                                        <td class="tdTipoLav">{{lavorazione[0].nome_modificato}}</td> \
                                                         <td class="tdQuantita">'+roundedQuantita+'</td> \
                                                         <td class="tdUnitaMisura">{{lavorazione[0].unitaMisura}}</td> \
                                                         <td class="tdTotale">&euro; '+roundedTotale+'</td> \
@@ -104,51 +127,54 @@
                     {% endfor %}
 
                     $(strToAdd).insertAfter("#titlePreventivoSpan");
-                    calcolaTotalePreventivo(numero_preventivo, data);
+                    calcolaTotalePreventivo(numero_preventivo, revisione);
 
     }
 
-    function impostaSelectDataPreventivoEdile(numero_preventivo){
+    function impostaSelectRevisionePreventivoEdile(numero_preventivo){
 
         var firstCycle=true;
         var preventivoStatus = true;
 
         //resetto il select togliendo tutti i tag option
-        $('#dataSelect').html('');
+        $('#revisioneSelect').html('');
 
         {% for preventivo in preventivi %}
             var optionElement = "";
 
-            // di default setto come data quella piu' recente del piu' recente preventivo
+            // di default setto come revisione quella piu' recente del piu' recente preventivo
             // generato per questo cliente
             if( "{{preventivo[0].numero_preventivo}}" == numero_preventivo ){
                 if( firstCycle ){
-                    optionElement = '<option selected="selected" value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+                    optionElement = '<option selected="selected" value="{{preventivo[0].revisione}}">revisione #{{preventivo[0].revisione}}</option>';
                     firstCycle=false;
+
+                    {% if not preventivo[0].stato %}
+
+                        $('.aCtrlPreventivo').children('a').hide();
+                        preventivoStatus = false;
+
+                    {% else %}
+
+                        $('.aCtrlPreventivo').children('a').show();
+
+
+                    {% endif %}
+
+                    numPrevSelected = '{{preventivo[0].numero_preventivo}}';
+                    revisionePrevSelected = '{{preventivo[0].revisione}}';
+
+
                 }
                 else
-                    optionElement = '<option value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+                    optionElement = '<option value="{{preventivo[0].revisione}}">revisione #{{preventivo[0].revisione}}</option>';
 
-                {% if not preventivo[0].stato %}
-
-                    $('.aCtrlPreventivo').children('a').hide();
-                    preventivoStatus = false;
-
-                {% else %}
-
-                    $('.aCtrlPreventivo').children('a').show();
-
-
-                {% endif %}
-
-                numPrevSelected = '{{preventivo[0].numero_preventivo}}';
-                dataPrevSelected = '{{preventivo[0].data}}';
 
 
             }
 
 
-            $('#dataSelect').append( optionElement );
+            $('#revisioneSelect').append( optionElement );
 
 
 
@@ -161,22 +187,23 @@
     }
 
 
-    var mostraBudgetBtn = function(numero_preventivo, data){
+    var mostraBudgetBtn = function(numero_preventivo, revisione){
         $('#totalePrev').css('height', 'unset');
         $('#btnBudget').show();
         $('#btnPrev').show();
+        $('#btnRevisione').show();
 
         $('#btnBudget').unbind('click').click(function(){
             socketPreventivo.emit('stampa_budget', {
                 'dip' : '{{dipendente.username}}',
                 'numero_preventivo' : numero_preventivo,
-                'data' : data
+                'revisione' : revisione
             });
         });
 
         $('#btnPrev').unbind('click').click(function(){
 
-            window.open('/downloadPreventivoEdileChiuso/'+numero_preventivo, '_blank');
+            window.open('/downloadPreventivoEdile/'+numero_preventivo+'/'+revisione, '_blank');
         });
 
     }
@@ -185,6 +212,7 @@
         $('#totalePrev').css('height', '40px');
         $('#btnBudget').hide();
         $('#btnPrev').hide();
+        $('#btnRevisione').hide();
 
     }
 
@@ -196,31 +224,39 @@
                 '<a id="cancellaPreventivo" class="fa fa-trash expandPreventivoIcon"></a>'
         );
 
-        /*$('#modificaPreventivo').click(function(){
-            var selPrev = $('#preventivoSelect option:selected');
-            var selDate = $('#dataSelect').val();
-
-            socketPreventivo.emit('modifica_preventivo_edile', {'dip': '{{dipendente.username}}',
-                                                          'numero_preventivo': selPrev,
-                                                          'data': selDate });
-        });*/
 
         $('#cancellaPreventivo').click(function(){
+
+
              var selPrev = $('#preventivoSelect option:selected').attr('class').split('-')[1];
-             var selData = $('#dataSelect').val();
-             socketPreventivo.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
+             var selRevisione = $('#revisioneSelect').val();
+             var codicePreventivo =  $('#preventivoSelect option:selected').text().split(' - ')[1];
+
+             swal({
+                title: 'Si sta per la cancellare il preventivo '+ codicePreventivo +' rev.' +selRevisione,
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'Annulla',
+                closeOnConfirm: true,
+
+             }, function(isConfirm){
+                  if (isConfirm) {
+                    socketPreventivo.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
                                                           'numero_preventivo': selPrev,
-                                                           'data': selData });
+                                                           'revisione': selRevisione});
+                  }
+             });
 
 
         });
 
 
-        var statusPreventivo = impostaSelectDataPreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
-        stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
+        var statusPreventivo = impostaSelectRevisionePreventivoEdile('{{lastPreventivo[0].numero_preventivo}}');
+        stampaRiassuntoPreventivo('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].revisione}}');
 
         if( !statusPreventivo ){
-            mostraBudgetBtn('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].data}}');
+            mostraBudgetBtn('{{lastPreventivo[0].numero_preventivo}}', '{{lastPreventivo[0].revisione}}');
         }
         else{
             nascondiBudgetBtn();
@@ -270,23 +306,70 @@
     $('#modificaPreventivo').click(function(){
 
         var selectedPreventivo = $('#preventivoSelect option:selected').attr('class').split('-')[1];
-        var selDate = $('#dataSelect').val();
+        var selRevisione = $('#revisioneSelect').val();
 
-        socketPreventivo.emit('modifica_preventivo_edile', {'numero_preventivo': selectedPreventivo, 'data': selDate,
-                                                            'dip': '{{dipendente.username}}' });
+        var codicePreventivo =  $('#preventivoSelect option:selected').text().split(' - ')[1];
+        var interventoCommessa = $('#preventivoSelect option:selected').text().split(' - ')[0];
+
+        var indirizzo_commessa, comune_commessa;
+
+        {% for commessa in commesse_distinte %}
+            if( '{{commessa.numero_preventivo}}' == selectedPreventivo &&
+                    '{{commessa.intervento}}' == interventoCommessa ){
+                indirizzo_commessa = '{{commessa.indirizzo}}';
+                comune_commessa = '{{commessa.comune}}';
+            }
+        {% endfor %}
+
+        swal.withFormAsync({
+            title: 'Si sta per modificare il preventivo ' + codicePreventivo + ' rev.'+selRevisione,
+            text: 'I dati della commessa sono:',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Ok',
+            cancelButtonText: 'annulla',
+            closeOnConfirm: true,
+            formFields: [
+
+             { id: 'intervento', label: 'Tipologia intervento:', value: interventoCommessa, name: 'intervento',  placeholder: 'tipologia intervento' },
+             { id: 'indirizzo',  label: 'Indirizzo:', value: indirizzo_commessa, name: 'indirizzo',  placeholder: 'indirizzo' },
+             { id: 'comune', label: 'Comune:', value: comune_commessa, name: 'comune',  placeholder: 'comune' }
+
+
+            ]
+        }).then(function (context) {
+
+            if(context._isConfirm){
+
+                socketPreventivo.emit('modifica_preventivo_edile',
+                    {
+                        'numero_preventivo': selectedPreventivo,
+                        'revisione': selRevisione,
+                        'vecchio_intervento_commessa' : interventoCommessa,
+                        'nuovo_intervento_commessa' : context.swalForm['intervento'],
+                        'indirizzo_commessa' : context.swalForm['indirizzo'],
+                        'comune_commessa' : context.swalForm['comune'],
+                        'dip': '{{dipendente.username}}'
+                    });
+
+
+            }
+        });
+
+
     });
 
 
     $('#preventivoSelect').change(function(){
         var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
 
-        var statusPreventivo =impostaSelectDataPreventivoEdile(selectedPreventivo);
+        var statusPreventivo =impostaSelectRevisionePreventivoEdile(selectedPreventivo);
 
-        var selectedData = $('#dataSelect').val();
-        stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
+        var selectedRevisione = $('#revisioneSelect').val();
+        stampaRiassuntoPreventivo(selectedPreventivo, selectedRevisione);
 
         if( !statusPreventivo ){
-            mostraBudgetBtn(selectedPreventivo, selectedData);
+            mostraBudgetBtn(selectedPreventivo, selectedRevisione);
         }
         else{
             nascondiBudgetBtn();
@@ -294,10 +377,40 @@
 
     });
 
-    $('#dataSelect').change(function(){
+    $('#revisioneSelect').change(function(){
         var selectedPreventivo = parseInt($('#preventivoSelect option:selected').attr('class').split('-')[1]);
-        var selectedData = $('#dataSelect').val();
-        stampaRiassuntoPreventivo(selectedPreventivo, selectedData);
+        var selectedRevisione = parseInt($('#revisioneSelect').val());
+        stampaRiassuntoPreventivo(selectedPreventivo, selectedRevisione);
+
+        statusPreventivo = true;
+
+        {% for preventivo in preventivi %}
+
+            if( parseInt('{{preventivo[0].numero_preventivo}}') == selectedPreventivo ){
+
+                if( parseInt('{{preventivo[0].revisione}}') == selectedRevisione ){
+
+                    statusPreventivo = '{{preventivo[0].stato}}';
+
+                    if( statusPreventivo == 'True' )
+                        statusPreventivo = true;
+                    else
+                        statusPreventivo = false;
+
+                }
+            }
+
+
+        {% endfor %}
+
+        if( !statusPreventivo ){
+            $('.aCtrlPreventivo').children('a').hide();
+            mostraBudgetBtn( selectedPreventivo, selectedRevisione);
+        }
+        else{
+            $('.aCtrlPreventivo').children('a').show();
+            nascondiBudgetBtn();
+        }
 
     });
 

@@ -11,13 +11,13 @@
                 <select id="preventivoFinitureSelect" >
                     {% for prev in preventiviFiniture_distinti %}
                         {% if prev[2] == lastPreventivoFiniture[0].numero_preventivo %}
-                            <option class="numeroPreventivoFiniture-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}F</option>
+                            <option class="numeroPreventivoFiniture-{{prev[2]}}" selected="selected">{{prev[0]}} - US{{prev[1]}}F - {{prev[3]}}</option>
                         {% else %}
-                            <option class="numeroPreventivoFiniture-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}F</option>
+                            <option class="numeroPreventivoFiniture-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}F - {{prev[3]}}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
-                <select id="dataFinitureSelect" >
+                <select id="revisioneFinitureSelect" >
                 </select>
 
 
@@ -69,6 +69,20 @@
 
     });
 
+
+    var revisionaPreventivo = function(){
+
+
+        var selectedPreventivo = $('#preventivoFinitureSelect option:selected').attr('class').split('-')[1];
+        var selRevisione = $('#revisioneFinitureSelect').val();
+
+
+        socketFiniture.emit('revisiona_preventivo_finiture ', {'numero_preventivo': selectedPreventivo, 'revisione': selRevisione,
+                                                            'dip': '{{dipendente.username}}' });
+
+
+    }
+
     function calcolaTotalePreventivoFiniture(numero_preventivo, data){
         var totale = 0;
 
@@ -81,25 +95,28 @@
 
         {% endfor %}
 
-        $('#totalePrevFiniture').html( '<button style="display:none" id="btnPrevFin">Preventivo</button><span>Totale: &euro; '+ Math.round(totale*100)/100 +'</span>');
+        $('#totalePrevFiniture').html( '<button style="display:none" id="btnPrevFin">Preventivo</button><button onclick="revisionaPreventivo()" style="display:none" id="btnRevisionaFin">Revisiona</button><span>Totale: &euro; '+ Math.round(totale*100)/100 +'</span>');
 
 
     }
 
-    var mostraPrevBtn = function(numero_preventivo, data){
+    var mostraPrevBtn = function(numero_preventivo, revisione){
         $('#totalePrevFiniture').css('height', 'unset');
         $('#btnPrevFin').show();
+        $('#btnRevisionaFin').show();
 
         $('#btnPrevFin').unbind('click').click(function(){
 
-            window.open('/downloadPreventivoFinitureChiuso/'+numero_preventivo, '_blank');
+            window.open('/downloadPreventivoFiniture/'+numero_preventivo+'/'+revisione, '_blank');
         });
+
 
     }
 
     var nascondiPrevBtn = function(){
         $('#totalePrevFiniture').css('height', '40px');
         $('#btnPrevFin').hide();
+        $('#btnRevisionaFin').hide();
 
     }
 
@@ -139,7 +156,7 @@
                                 {% for prodotto in preventivo[1][1] %}
                                     {% if prodotto.tipologia == tipologia %}
                                         strToAdd +=	'<tr> \
-                                                         <td class="tdProdotto tdString">{{prodotto.nome_prodotto}}</td> \
+                                                         <td class="tdProdotto tdString">{{prodotto.nome_modificato}}</td> \
                                                          <td class="tdCodice tdString">{{prodotto.codice}}</td> \
                                                          <td class="tdMarchio tdString">{{prodotto.marchio}}</td> \
                                                          <td class="tdModello tdString">{{prodotto.modello}}</td> \
@@ -174,7 +191,7 @@
         var preventivoStatus = true;
 
         //resetto il select togliendo tutti i tag option
-        $('#dataFinitureSelect').html('');
+        $('#revisioneFinitureSelect').html('');
 
         {% for preventivo in preventiviFiniture %}
             var optionElement = "";
@@ -183,11 +200,11 @@
             // generato per questo cliente
             if( "{{preventivo[0].numero_preventivo}}" == numero_preventivo ){
                 if( firstCycle ){
-                    optionElement = '<option selected="selected" value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+                    optionElement = '<option selected="selected" value="{{preventivo[0].revisione}}">revisione #{{preventivo[0].revisione}}</option>';
                     firstCycle=false;
                 }
                 else
-                    optionElement = '<option value="{{preventivo[0].data}}">{{preventivo[0].data}}</option>';
+                    optionElement = '<option value="{{preventivo[0].revisione}}">revisione #{{preventivo[0].revisione}}</option>';
 
                 {% if not preventivo[0].stato %}
 
@@ -203,7 +220,7 @@
             }
 
 
-            $('#dataFinitureSelect').append( optionElement );
+            $('#revisioneFinitureSelect').append( optionElement );
 
 
         {% endfor %}
@@ -221,10 +238,11 @@
 
         $('#cancellaPreventivoFiniture').click(function(){
              var selPrev = $('#preventivoFinitureSelect option:selected').attr('class').split('-')[1];
-             var selData = $('#dataFinitureSelect').val();
+             var selRevisione = $('#revisioneFinitureSelect').val();
+
              socketFiniture.emit('elimina_preventivo', {'dip': '{{dipendente.username}}',
                                                           'numero_preventivo': selPrev,
-                                                           'data': selData });
+                                                           'revisione': selRevisione });
 
 
         });
@@ -233,7 +251,7 @@
         stampaRiassuntoPreventivoFiniture('{{lastPreventivoFiniture[0].numero_preventivo}}', '{{lastPreventivoFiniture[0].data}}');
 
         if( !statusPreventivo ){
-            mostraPrevBtn('{{lastPreventivoFiniture[0].numero_preventivo}}', '{{lastPreventivoFiniture[0].data}}');
+            mostraPrevBtn('{{lastPreventivoFiniture[0].numero_preventivo}}', '{{lastPreventivoFiniture[0].revisione}}');
         }
         else{
             nascondiPrevBtn();
@@ -249,11 +267,11 @@
 
         var statusPreventivo = impostaSelectDataPreventivoFiniture(selectedPreventivo);
 
-        var selectedData = $('#dataFinitureSelect').val();
-        stampaRiassuntoPreventivoFiniture(selectedPreventivo, selectedData);
+        var selectedRevisione = $('#revisioneFinitureSelect').val();
+        stampaRiassuntoPreventivoFiniture(selectedPreventivo, selectedRevisione);
 
         if( !statusPreventivo ){
-            mostraPrevBtn(selectedPreventivo, selectedData);
+            mostraPrevBtn(selectedPreventivo, selectedRevisione);
         }
         else{
             nascondiPrevBtn();
@@ -262,22 +280,52 @@
 
     });
 
-    $('#dataFinitureSelect').change(function(){
+    $('#revisioneFinitureSelect').change(function(){
         var selectedPreventivo = parseInt($('#preventivoFinitureSelect option:selected').attr('class').split('-')[1]);
-        var selectedData = $('#dataFinitureSelect').val();
-        stampaRiassuntoPreventivoFiniture(selectedPreventivo, selectedData);
+        var selectedRevisione = $('#revisioneFinitureSelect').val();
+        stampaRiassuntoPreventivoFiniture(selectedPreventivo, selectedRevisione);
+
+        statusPreventivo = true;
+
+        {% for preventivo in preventiviFiniture %}
+
+            if( parseInt('{{preventivo[0].numero_preventivo}}') == selectedPreventivo ){
+
+                if( parseInt('{{preventivo[0].revisione}}') == selectedRevisione ){
+
+                    statusPreventivo = '{{preventivo[0].stato}}';
+
+                    if( statusPreventivo == 'True' )
+                        statusPreventivo = true;
+                    else
+                        statusPreventivo = false;
+
+                }
+            }
+
+
+        {% endfor %}
+
+        if( !statusPreventivo ){
+            $('.aCtrlPreventivoFiniture').children('a').hide();
+            mostraBudgetBtn( selectedPreventivo, selectedRevisione);
+        }
+        else{
+            $('.aCtrlPreventivoFiniture').children('a').show();
+            nascondiBudgetBtn();
+        }
     });
 
     $('#modificaPreventivoFiniture').click(function(){
-            console.log('che problema hai???112');
-            var selPrev = $('#preventivoFinitureSelect option:selected').attr('class').split('-')[1];
-            var selData = $('#dataFinitureSelect').val();
 
-            console.log('che problema hai??? '+selPrev);
+            var selPrev = $('#preventivoFinitureSelect option:selected').attr('class').split('-')[1];
+            var selectedRevisione = $('#revisioneFinitureSelect').val();
+
+
 
            socketFiniture.emit('modifica_preventivo_finiture', {'dip': '{{dipendente.username}}',
                                                                   'numero_preventivo': selPrev,
-                                                                  'data': selData});
+                                                                  'revisione': selectedRevisione});
     });
 
 

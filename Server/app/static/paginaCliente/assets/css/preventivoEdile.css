@@ -26,3 +26,8 @@ th.thPrezzoUnitario {
 th.thPreventivo.thQUantita {
     width: 8%;
 }
+
+input#sconto {
+    width: 20%;
+    margin-left: 39%;
+}

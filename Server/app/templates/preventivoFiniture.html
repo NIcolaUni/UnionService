@@ -102,7 +102,7 @@
     var socketFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
 
     socketFiniture.on( 'procediADownload', function(){
-        window.open('{{url_for("downloadPreventivoFiniture")}}', '_blank');
+        window.open('/downloadPreventivoFiniture/'+numeroPreventivo+'/'+revisionePreventivo, '_blank');
     });
 
     /****** Popolo la lista dei prodotti dati dai select **************************/
@@ -264,7 +264,7 @@
                             var nettoUsProdotto = calcolaPrezzoProdotto('{{modelloProdotto.nettoUsFornitura}}', '{{modelloProdotto.posa}}',
                                                         '{{modelloProdotto.posaPerc}}', 0 );
 
-                            aggiungiRiga($(this), "{{preventivo.numero_preventivo}}", "{{preventivo.data}}",
+                            aggiungiRiga($(this), "{{preventivo.numero_preventivo}}", "{{preventivo.revisione}}",
                                 tipologiaToCompare, marchioToCompare, modelloToCompare, prodottoToCompare,
                                 modelloClass, codiceProdotto, costoProdotto, capitolatoCosto, nettoUsProdotto );
 

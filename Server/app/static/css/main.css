@@ -661,3 +661,7 @@ a#addImpegno {
     top: 17% !important;
     left: 51% !important;
 }
+
+.fc-list-empty {
+    color: black;
+}

@@ -5,7 +5,7 @@
 
         <span id="ctrlSpanPagamenti">
 
-            <select id="pagamentiSelect" >
+            <select onchange="impostaTabellaPagamenti()" id="pagamentiSelect" >
 
                 {% for prev in preventiviEdili_distinti %}
                 <option class="numeroPreventivo-{{prev[2]}}">{{prev[0]}} - US{{prev[1]}}</option>
@@ -21,42 +21,117 @@
 </div>
 <script>
 
-    var numPrevSelected =  $('#pagamentiSelect option:selected').attr('class').split('-')[1]
 
-    var strToAdd='';
+    var socketPagamenti= io.connect("{{sockUrl}}"+'/pagamentiCliente');
 
-    {% for pagamento in pagamenti %}
+    var impostaTabellaPagamenti = function(){
 
-        if( numPrevSelected == '{{pagamento.numero_preventivo}}' ){
+        $('.features.pagamenti').remove();
 
-            alert('mmm ' + numPrevSelected + ' {{pagamento.numero_preventivo}}')
-            strToAdd ='<div class="features">'
+        var numPrevSelected =  $('#pagamentiSelect option:selected').attr('class').split('-')[1]
 
-            var totale = parseFloat('') + parseFloat('') + parseFloat('');
+        var strToAdd='';
 
-            if( totale > 15000 )
-            {
-                strToAdd= '<ul> \
-                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="pagamentoCheckbox acconto num_prev-'+numPrevSelected+'"></li>  \
-                                <li>Prima Rata: &euro; {{pagamento.prima_rata}} <input type="checkbox" class="pagamentoCheckbox prima_rata num_prev-'+numPrevSelected+'"><</li> \
-                                <li>Saldo: {{pagamento.saldo}} %</li> \
-                            </ul>'
+        {% for pagamento in pagamenti %}
+
+            if( numPrevSelected == '{{pagamento.numero_preventivo}}' ){
+
+
+                strToAdd ='<div class="features pagamenti"><table id="pagamentiTable"><thead><th>Preventivo Edile  </th><th> Scelta Finiture </th><th> Varianti </th><th>Totale</th>';
+                var totale = parseFloat('{{pagamento.totale_prev_edile}}') + parseFloat('{{pagamento.totale_prev_finiture}}') + parseFloat('{{pagamento.totale_prev_varianti}}');
+
+                totaliStr = '<td> &euro; {{pagamento.totale_prev_edile}} </td><td> &euro; {{pagamento.totale_prev_finiture}} </td><td> &euro;  {{pagamento.totale_prev_varianti}} </td><td> &euro; '+ totale +'</td>'
+                if( totale < 15000 )
+                {
+                    strToAdd += '<th> Acconto </th><th> Prima rata </th><th> Saldo 20% </th></thead><tbody>';
+
+                    strToAdd += totaliStr;
+
+                    {% if pagamento.acconto_pagato %}
+                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+' pagato"></span> </td>'
+                    {% else %}
+                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+'"></span> </td>'
+                    {% endif %}
+
+                    {% if pagamento.prima_rata_pagata %}
+                        strToAdd += '<td> &euro; {{pagamento.prima_rata}}  <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+' pagato"></span> </td>'
+                    {% else %}
+                        strToAdd += '<td> &euro; {{pagamento.prima_rata}}  <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+'"></span></td>'
+                    {% endif %}
+
+
+                }
+                else{
+
+                    strToAdd += '<th> Acconto </th><th> Prima rata </th><th> Seconda rata </th><th> Terza rata </th><th> Saldo 10% </th></thead><tbody>';
+                    strToAdd += totaliStr;
+
+                    {% if pagamento.acconto_pagato %}
+                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+' pagato"></td>'
+                    {% else %}
+                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+'"></td>'
+                    {% endif %}
+
+                    {% if pagamento.prima_rata_pagata %}
+                        strToAdd += '<td> &euro; {{pagamento.prima_rata}} <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+' pagato"></td>'
+                    {% else %}
+                        strToAdd += '<td> &euro; {{pagamento.prima_rata}} <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+'"></td>'
+                    {% endif %}
+
+                    {% if pagamento.seconda_rata_pagata %}
+                        strToAdd += '<td> &euro; {{pagamento.seconda_rata}} <span class="checkPagamento seconda_rata num_prev-'+numPrevSelected+' pagato"></td>'
+                    {% else %}
+                        strToAdd += '<td> &euro; {{pagamento.seconda_rata}} <span class="checkPagamento seconda_rata num_prev-'+numPrevSelected+'"></td>'
+                    {% endif %}
+
+                    {% if pagamento.terza_rata_pagata %}
+                        strToAdd += '<td> &euro; {{pagamento.terza_rata}} <span class="checkPagamento terza_rata num_prev-'+numPrevSelected+' pagato"></td>'
+                    {% else %}
+                        strToAdd += '<td> &euro; {{pagamento.terza_rata}} <span class="checkPagamento terza_rata num_prev-'+numPrevSelected+'"></td>'
+                    {% endif %}
+
+
+
+                }
+
+
+                {% if pagamento.saldo_pagato%}
+                    strToAdd += '<td> &euro; {{pagamento.saldo}} <span class="checkPagamento saldo num_prev-'+numPrevSelected+' pagato"></td>'
+                {% else %}
+                    strToAdd += '<td> &euro; {{pagamento.saldo}} <span class="checkPagamento saldo num_prev-'+numPrevSelected+'"></td>'
+                {% endif %}
+
+
+                strToAdd += '</tbody></table></div>';
+
             }
-            else{
+        {% endfor %}
 
-                strToAdd= '<ul> \
-                                <li>Acconto: &euro; {{pagamento.acconto}} <input type="checkbox" class="pagamentoCheckbox acconto num_prev-'+numPrevSelected+'"><</li>  \
-                                <li>Prima Rata: &euro; {{pagamento.prima_rata}} <input type="checkbox" class="pagamentoCheckbox prima_rata num_prev-'+numPrevSelected+'"><</li> \
-                                <li>Seconda Rata: &euro; {{pagamento.seconda_rata}} <input type="checkbox" class="pagamentoCheckbox seconda_rata num_prev-'+numPrevSelected+'"><</li> \
-                                <li>Terza Rata: &euro; {{pagamento.terza_rata} <input type="checkbox" class="pagamentoCheckbox terza_rata num_prev-'+numPrevSelected+'"><}</li> \
-                                <li>Saldo: {{pagamento.saldo}} %</li> \
-                            </ul>'
+        $(strToAdd).insertAfter("#titlePagamentiSpan");
 
-            }
 
-        }
-    {% endfor %}
+        $('span.checkPagamento').unbind('click').click(function(){
 
-    $(strToAdd).insertAfter("#titlePagamentiSpan");
+            var toMod = $(this).attr('class').split(' ')[1];
+            var numeroPreventivo = $(this).attr('class').split(' ')[2].split('-')[1];
+
+            if( $(this).hasClass('pagato') )
+                $(this).removeClass('pagato');
+            else
+                $(this).addClass('pagato');
+
+
+
+            socketPagamenti.emit('checkaRata', {
+               'numero_preventivo' : numeroPreventivo ,
+               'attributo' : toMod
+            });
+
+        });
+
+    }
+
+    impostaTabellaPagamenti();
+
 
 </script>

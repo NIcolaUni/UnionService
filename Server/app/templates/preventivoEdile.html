@@ -33,6 +33,17 @@
                              -->
 
                     </div>
+
+                    <span id="ricaricoGeneraleSpan" style="display:none">Ricarico generale</span></br>
+                    <div id="ricaricoGeneraleContainer" style="display:none" class="features">
+
+                        <div id="ricaricoGeneraleDiv">
+                            <input id="inputRicaricoGenerale" oninput="modificaRicaricoGenerale($(this));" class="ricaricoPrezzario-{{prezzarioEdile.ricaricoAzienda}}" type="number" min="0" max="100" value="{{prezzarioEdile.ricaricoAzienda}}">
+                            <label id="percLabelRincaro">%</label>
+                        </div>
+
+                    </div>
+
                 </div>
                 <div  id="divElementFattura" class="features col-md-8">
                     <ul id="listaElementFattura">
@@ -43,6 +54,8 @@
 
 
             </div>
+
+
             <div id="tabContainer" class="features">
                 <div id="tabFattura" class="table-wrapper">
                         <table class="alt">
@@ -81,8 +94,13 @@
 
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
 
-        socketPreventivo.on( 'procediADownload', function(){
-            window.open('{{url_for("downloadPreventivoEdile")}}', '_blank');
+        socketPreventivo.on( 'procediADownload', function(msg){
+            window.open('/downloadPreventivoEdile/'+msg['numero_preventivo']+'/'+msg['revisione'], '_blank');
+        });
+
+        socketPreventivo.on( 'errore_commessa_incompleta', function(){
+
+            alert('Impossibile chiudere il preventivo: completare la commessa');
         });
 
 
@@ -133,9 +151,9 @@
                     if( lavorazioneToCompare == tipologia){
 
 
-                        aggiungiRiga( $(this), "{{preventivo.numero_preventivo}}", "{{preventivo.data}}",
+                        aggiungiRiga( $(this), "{{preventivo.numero_preventivo}}", "{{preventivo.revisione}}",
                                 settoreToCompare, lavorazioneToCompare,
-                                parseFloat('{{lavorazione.prezzoMax}}'), parseInt('{{prezzarioEdile.ricaricoAzienda}}'),
+                                parseFloat('{{lavorazione.prezzoMax}}'),
                                 '{{lavorazione.unitaMisura}}' );
                     }
                 }
@@ -184,8 +202,14 @@
 
         var costruisciPreventivo =function(){
 
+            var primoGiro = true;
             var lastLavAdded = "";
             {% for settore in infoPreventivo[0] %}
+
+                if( primoGiro ){
+                    primoGiro = false;
+                    $('#inputRicaricoGenerale').val('{{infoPreventivo[2]}}');
+                }
 
                 var rowsToAdd = "";
 

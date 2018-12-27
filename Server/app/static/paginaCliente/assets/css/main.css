@@ -3985,7 +3985,7 @@ button.elementFattura {
     margin-left: 20%;
   }
 
-  #dataSelect{
+  #revisioneSelect{
     width: 14%;
     display: inline-block;
 
@@ -4003,7 +4003,7 @@ button.elementFattura {
     margin-left: 20%;
   }
 
-  #dataFinitureSelect{
+  #revisioneFinitureSelect{
     width: 14%;
     display: inline-block;
 
@@ -4065,6 +4065,12 @@ button.elementFattura {
         width: 100%;
     }
 
+    .pagamentoCheckbox{
+        opacity: unset !important;
+        float: unset !important;
+        display: inline !important;
+        -webkit-appearance: checkbox !important;
+    }
 
     span#titlePreventivoVariantiSpan {
         height: 100%;
@@ -4092,6 +4098,7 @@ button.elementFattura {
 
     #btnBudget{
         margin-left: 4%;
+        margin-right: 4%;
         margin-bottom: 2%;
     }
 
@@ -4325,3 +4332,27 @@ button.elementPreventivo {
     display: inline;
     font-size: 25px;
   }
+
+  span.checkPagamento {
+        height: 20px;
+        width: 20px;
+        background-color: red;
+        display: inline-block;
+        border-radius: 50%;
+        cursor: pointer;
+  }
+
+  span.checkPagamento.pagato {
+
+    background-color: green;
+  }
+
+  .features.pagamenti {
+    margin-top: 3%;
+  }
+
+  table#pagamentiTable {
+    font-size: 20px;
+    /* margin-top: 5%; */
+  }
+

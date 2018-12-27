@@ -4,17 +4,17 @@ import app
 class SottolavorazioneVariantiCadDBmodel(app.database.Model):
     __tablename__ = "sottolavorazione_cad_preventivo_varianti"
     __table_args__ = (
-            PrimaryKeyConstraint( 'numero_preventivo', 'data', 'ordine', 'ordine_sottolavorazione', 'tipologia' ),
-            ForeignKeyConstraint(['numero_preventivo', 'data', 'ordine', 'tipologia'],
+            PrimaryKeyConstraint( 'numero_preventivo', 'revisione', 'ordine', 'ordine_sottolavorazione', 'tipologia' ),
+            ForeignKeyConstraint(['numero_preventivo', 'revisione', 'ordine', 'tipologia'],
                                  ['lavorazione_preventivo_varianti.numero_preventivo',
-                                  'lavorazione_preventivo_varianti.data',
+                                  'lavorazione_preventivo_varianti.revisione',
                                   'lavorazione_preventivo_varianti.ordine',
                                   'lavorazione_preventivo_varianti.tipologia'],
                                  ondelete='CASCADE', onupdate='CASCADE')
             )
 
     numero_preventivo = Column(Integer())
-    data = Column(Date)
+    revisione = Column(Integer())
     ordine = Column(Integer()) # dov e' posizionata  la lavorazione nel preventivo
     ordine_sottolavorazione = Column(Integer())
     tipologia = Column(String(20))

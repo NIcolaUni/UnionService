@@ -14,11 +14,11 @@ import math
 
 
 class __ProdottoPreventivo__(ProdottoPreventivoFinitureDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, tipologia, nome_prodotto, modello, marchio, quantita,
+    def __init__(self, numero_preventivo, revisione, ordine, tipologia, nome_prodotto, modello, marchio, quantita,
                  unitaMisura, codice, diffCapitolato):
 
         self.numero_preventivo = numero_preventivo
-        self.data = data
+        self.revisione = revisione
         self.ordine = ordine
 
         self.tipologia = tipologia
@@ -43,7 +43,7 @@ class PreventivoFiniture(PreventivoDBmodel):
 
     def __init__(self, numero_preventivo, data, nome_cliente, cognome_cliente,
                  indirizzo_cliente, dipendente_generatore, intervento_commessa, 
-                 indirizzo_commessa, comune_commessa, stato=True, note=None):
+                 indirizzo_commessa, comune_commessa, stato=True, note=None, revisione=1):
 
 
         oldCommessa = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo, intervento=intervento_commessa).first()
@@ -63,6 +63,7 @@ class PreventivoFiniture(PreventivoDBmodel):
         self.tipologia='finiture'
         self.stato = stato
         self.note=note
+        self.revisione=revisione
 
 
 
@@ -75,9 +76,9 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         return str(self.numero_preventivo) + dipendente + str(annoPreventivo)
 
-    def calcolaCodicePreventivoNoObj(numero_preventivo, data):
+    def calcolaCodicePreventivoNoObj(numero_preventivo, revisione):
 
-        prev = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='finiture').first()
+        prev = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, tipologia='finiture').first()
 
         #recupero le ultime due cifre dell'anno di creazione
         annoPreventivo = prev.data.year%100
@@ -86,7 +87,7 @@ class PreventivoFiniture(PreventivoDBmodel):
         dipendente = prev.dipendente_generatore.split('_')[1][0:3].upper()
 
         return str(prev.numero_preventivo)+dipendente+str(annoPreventivo)
-
+    '''
     def registraPreventivo_nuovaCommessa( nome_cliente, cognome_cliente, indirizzo_cliente,
                            dipendente_generatore, intervento_commessa, indirizzo_commessa, comune_commessa):
 
@@ -112,6 +113,7 @@ class PreventivoFiniture(PreventivoDBmodel):
         PreventivoDBmodel.addRow(preventivo)
 
         return (lastNumPrev+1, oggi)
+    '''
 
     def registraPreventivo_vecchiaCommessa( dipendente_generatore, numero_preventivo ):
 
@@ -119,10 +121,10 @@ class PreventivoFiniture(PreventivoDBmodel):
         oggi = "{}/{}/{}".format(now.day, now.month, now.year)
 
         oldPrev = PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo,
-                                                     tipologia='finiture').order_by(desc(PreventivoFiniture.data)).first()
+                                                     tipologia='finiture').order_by(desc(PreventivoFiniture.revisione)).first()
 
         if oldPrev is not None:
-            return PreventivoFiniture.modificaPreventivo(numero_preventivo=numero_preventivo, data=oldPrev.data, dipendente_generatore=dipendente_generatore)
+            return PreventivoFiniture.revisionaPreventivo(numero_preventivo=numero_preventivo, revisone=oldPrev.revisione, dipendente_generatore=dipendente_generatore)
 
 
 
@@ -132,28 +134,28 @@ class PreventivoFiniture(PreventivoDBmodel):
         commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=prevEdile.intervento_commessa).first()
 
-        app.server.logger.info('allora cominciamo piano {}'.format(commessa.intervento))
+
         preventivo = PreventivoFiniture(numero_preventivo=numero_preventivo, data=oggi, nome_cliente=prevEdile.nome_cliente,
                                      cognome_cliente=prevEdile.cognome_cliente, indirizzo_cliente=prevEdile.indirizzo_cliente,
                                      intervento_commessa=commessa.intervento, indirizzo_commessa=commessa.indirizzo,
                                      comune_commessa=commessa.comune,
-                                     dipendente_generatore=dipendente_generatore)
+                                     dipendente_generatore=dipendente_generatore, revisione=1)
 
         PreventivoDBmodel.addRow(preventivo)
 
-        return (numero_preventivo, oggi)
+        return (numero_preventivo, 1)
 
-    def eliminaPreventivo(numero_preventivo, data):
+    def eliminaPreventivo(numero_preventivo, revisione):
 
-        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data).first()
+        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).first()
 
         PreventivoDBmodel.delRow(toDel)
 
-    def registraProdotto(numero_preventivo, data, ordine, tipologia, nome_prodotto,
+    def registraProdotto(numero_preventivo, revisione, ordine, tipologia, nome_prodotto,
                             modello, marchio, quantita, unitaMisura, codice, diffCapitolato ):
 
-        app.server.logger.info('ma perche\n\n\n')
-        prodotto=__ProdottoPreventivo__(numero_preventivo=numero_preventivo, data=data, ordine=ordine,
+
+        prodotto=__ProdottoPreventivo__(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine,
                                         tipologia=tipologia, nome_prodotto=nome_prodotto, modello=modello, marchio=marchio,
                                         quantita=quantita, unitaMisura=unitaMisura, codice=codice, diffCapitolato=diffCapitolato)
 
@@ -163,12 +165,12 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         newOrdine = int(-prodotto.ordine)
 
-        queryClass.filter_by(numero_preventivo=prodotto.numero_preventivo, data=prodotto.data,
+        queryClass.filter_by(numero_preventivo=prodotto.numero_preventivo, revisione=prodotto.revisione,
                                            ordine=prodotto.ordine).update({'ordine': newOrdine})
 
-    def iniziaRiordinoProdotti(numero_preventivo, data):
+    def iniziaRiordinoProdotti(numero_preventivo, revisione):
 
-        prodottiPreventivo=__ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data)
+        prodottiPreventivo=__ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione)
 
         iniziaNuovoRiordino = True
 
@@ -183,28 +185,28 @@ class PreventivoFiniture(PreventivoDBmodel):
 
             PreventivoDBmodel.commit()
 
-    def modificaOrdineProdotto(numero_preventivo, data, oldOrdine, ordine):
+    def modificaOrdineProdotto(numero_preventivo, revisione, oldOrdine, ordine):
 
-        PreventivoFiniture.modificaProdotto(numero_preventivo=numero_preventivo, data=data, ordine=oldOrdine, modifica={'ordine': ordine})
-
-        PreventivoFiniture.commit()
-
-    def modificaProdotto(numero_preventivo, data, ordine, modifica):
-
-        __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).update(modifica)
+        PreventivoFiniture.modificaProdotto(numero_preventivo=numero_preventivo, revisione=revisione, ordine=oldOrdine, modifica={'ordine': ordine})
 
         PreventivoFiniture.commit()
 
+    def modificaProdotto(numero_preventivo, revisione, ordine, modifica):
 
-    def eliminaProdotto(numero_preventivo, data, ordine):
+        __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).update(modifica)
 
-        toDel = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first()
+        PreventivoFiniture.commit()
+
+
+    def eliminaProdotto(numero_preventivo, revisione, ordine):
+
+        toDel = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first()
 
         PreventivoFiniture.delRow(toDel)
 
-    def returnProdottiPreventivo(numero_preventivo, data):
+    def returnProdottiPreventivo(numero_preventivo, revisione):
 
-        prodotti = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).order_by(__ProdottoPreventivo__.ordine).all()
+        prodotti = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).order_by(__ProdottoPreventivo__.ordine).all()
 
         tipologie = []
 
@@ -219,7 +221,7 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         returnList = []
         for prodotto in prodotti:
-            newProd = __ProdottoPreventivo__(numero_preventivo=prodotto.numero_preventivo, data=prodotto.data, ordine=prodotto.ordine,
+            newProd = __ProdottoPreventivo__(numero_preventivo=prodotto.numero_preventivo, revisione=prodotto.revisione, ordine=prodotto.ordine,
                                         tipologia=prodotto.tipologia, nome_prodotto=prodotto.nome_prodotto, modello=prodotto.modello, marchio=prodotto.marchio,
                                         quantita=prodotto.quantita, unitaMisura=prodotto.unitaMisura, codice=prodotto.codice, diffCapitolato=prodotto.diffCapitolato)
             returnList.append(newProd)
@@ -233,89 +235,84 @@ class PreventivoFiniture(PreventivoDBmodel):
         '''
 
         preventivi = PreventivoFiniture.query.filter_by( tipologia='finiture', nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
-                                                        indirizzo_cliente=indirizzo_cliente ).order_by(PreventivoFiniture.numero_preventivo, desc(PreventivoFiniture.data)).all()
+                                                        indirizzo_cliente=indirizzo_cliente ).order_by(PreventivoFiniture.numero_preventivo, desc(PreventivoFiniture.revisione)).all()
         listToReturn = []
 
         for preventivo in preventivi:
             listToReturn.append( (preventivo, PreventivoFiniture.returnProdottiPreventivo(numero_preventivo=preventivo.numero_preventivo,
-                                                                                          data=preventivo.data)) )
+                                                                                          revisione=preventivo.revisione)) )
 
         return listToReturn
 
     def returnLastPreventivoCliente( nome_cliente, cognome_cliente, indirizzo_cliente ):
         last_prev = PreventivoFiniture.query.filter_by(tipologia='finiture',  nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
                                                     indirizzo_cliente=indirizzo_cliente).order_by(
-            desc(PreventivoFiniture.data), desc(PreventivoFiniture.numero_preventivo)).first()
+            desc(PreventivoFiniture.revisione), desc(PreventivoFiniture.numero_preventivo)).first()
 
         if last_prev is None:
             return (None, [], [])
 
         preventivoInfo = PreventivoFiniture.returnProdottiPreventivo(numero_preventivo=last_prev.numero_preventivo,
-                                                                     data=last_prev.data)
+                                                                     revisione=last_prev.revisione)
 
         return (last_prev,) + preventivoInfo
 
-    def inserisciNote(numero_preventivo, data, nota):
-        PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+    def inserisciNote(numero_preventivo, revisione, nota):
+        PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                   tipologia='finiture').update({'note': nota})
 
         PreventivoDBmodel.commit()
 
-    def modificaPreventivo(numero_preventivo, data, dipendente_generatore):
+    def revisionaPreventivo(numero_preventivo, revisione, dipendente_generatore):
         '''
                  Prende il preventivo che corrisponde al "numero_preventivo" passato come argomento e con la data
                  piu' recente, ne fa una copia cambiando unicamente
                  gli attributi "data", settata alla data odierna
         '''
 
-        app.server.logger.info("inzizzissimo mod {} {} {}".format(numero_preventivo, data, dipendente_generatore))
 
-        lastPrev = PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='finiture').first()
 
-        app.server.logger.info("prima di commessa")
+        lastPrev = PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, tipologia='finiture').first()
+        ultimaRevisione = PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo,
+                                                          tipologia='finiture').order_by(
+            desc(PreventivoFiniture.revisione)).first().revisione
 
         commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo, intervento=lastPrev.intervento_commessa).first()
 
-        app.server.logger.info("inziio mod")
+
 
         now = datetime.datetime.now()
         oggi = "{}-{}-{}".format(now.year, now.month, now.day)
 
-        # se il preventivo viene modificato piu' volte lo stesso giorno non viene fatta alcuna copia
 
-        if str(now).split(' ')[0] != str(lastPrev.data):
+        preventivo = PreventivoFiniture(numero_preventivo=numero_preventivo, data=oggi, nome_cliente=lastPrev.nome_cliente,
+                                 cognome_cliente=lastPrev.cognome_cliente, indirizzo_cliente=lastPrev.indirizzo_cliente,
+                                 dipendente_generatore=dipendente_generatore,
+                                 intervento_commessa=commessa.intervento, indirizzo_commessa=commessa.indirizzo,
+                                 comune_commessa=commessa.comune, revisione=ultimaRevisione+1)
 
-            preventivo = PreventivoFiniture(numero_preventivo=numero_preventivo, data=oggi, nome_cliente=lastPrev.nome_cliente,
-                                     cognome_cliente=lastPrev.cognome_cliente, indirizzo_cliente=lastPrev.indirizzo_cliente,
-                                     dipendente_generatore=dipendente_generatore,
-                                     intervento_commessa=commessa.intervento, indirizzo_commessa=commessa.indirizzo,
-                                     comune_commessa=commessa.comune)
+        PreventivoDBmodel.addRow(preventivo)
 
-            PreventivoDBmodel.addRow(preventivo)
 
-            app.server.logger.info("centro mod")
 
-            prodotti = __ProdottoPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo,
-                                                                    data=lastPrev.data).all()
+        prodotti = __ProdottoPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo,
+                                                                data=lastPrev.data).all()
 
-            prodotti = PreventivoFiniture.__duplicaProdotti__(prodotti)
+        prodotti = PreventivoFiniture.__duplicaProdotti__(prodotti)
 
-            for prodotto in prodotti:
-                prodotto.data = oggi
-                PreventivoDBmodel.addRowNoCommit(prodotto)
+        for prodotto in prodotti:
+            prodotto.revisione = ultimaRevisione+1
+            PreventivoDBmodel.addRowNoCommit(prodotto)
 
-            app.server.logger.info("fine mod")
+        PreventivoDBmodel.commit()
 
-            PreventivoDBmodel.commit()
+        return (numero_preventivo, ultimaRevisione+1)
 
-            return (numero_preventivo, oggi)
 
-        else:
-            return (numero_preventivo, lastPrev.data)
 
-    def eliminaPreventivo(numero_preventivo, data):
+    def eliminaPreventivo(numero_preventivo, revisione):
 
-        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='finiture').first()
+        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, tipologia='finiture').first()
 
 
         PreventivoDBmodel.delRow(toDel)
@@ -335,7 +332,7 @@ class PreventivoFiniture(PreventivoDBmodel):
     def chiudiPreventivo(numero_preventivo):
 
         preventivi = PreventivoFiniture.query.filter_by(numero_preventivo=numero_preventivo, tipologia='finiture').order_by(
-            desc(PreventivoFiniture.data)).all()
+            desc(PreventivoFiniture.revisione)).all()
 
         primo_giro = True
 
@@ -348,9 +345,9 @@ class PreventivoFiniture(PreventivoDBmodel):
             else:
                 PreventivoFiniture.delRow(prev)
 
-    def modificaNomeProdotto(numero_preventivo, data, ordine, nuovo_nome):
+    def modificaNomeProdotto(numero_preventivo, revisione, ordine, nuovo_nome):
 
-        __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+        __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                   tipologia_preventivo='finiture', ordine=ordine).update({'nome_modificato': nuovo_nome})
 
         PreventivoDBmodel.commit()
@@ -486,7 +483,7 @@ class PreventivoFiniture(PreventivoDBmodel):
         else:
             return ([], False)
 
-    def returnSinglePreventivo(numero_preventivo, data):
+    def returnSinglePreventivo(numero_preventivo, revisione):
 
         '''
 
@@ -500,7 +497,7 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         '''
 
-        prodotti = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).order_by(
+        prodotti = __ProdottoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).order_by(
                                                                 __ProdottoPreventivo__.ordine).all()
 
         ordineTipologie = []
@@ -517,12 +514,12 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         return (ordineTipologie, resultProd)
 
-    def stampaPreventivo(numero_preventivo, data, chiudiPreventivo):
+    def stampaPreventivo(numero_preventivo, revisione, chiudiPreventivo):
         if chiudiPreventivo:
             PreventivoFiniture.chiudiPreventivo(numero_preventivo)
 
         preventivo = PreventivoFiniture.query.filter_by(tipologia='finiture', numero_preventivo=numero_preventivo,
-                                                     data=data).first()
+                                                     revisione=revisione).first()
 
         dipendente = DipendenteDBmodel.query.filter_by(username=preventivo.dipendente_generatore).first()
 
@@ -530,10 +527,10 @@ class PreventivoFiniture(PreventivoDBmodel):
                                                  indirizzo=preventivo.indirizzo_cliente).first()
 
 
-        infoPreventivo = PreventivoFiniture.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
+        infoPreventivo = PreventivoFiniture.returnSinglePreventivo(numero_preventivo=numero_preventivo, revisione=revisione)
 
 
-        codicePrev = PreventivoFiniture.calcolaCodicePreventivoNoObj(numero_preventivo, data)
+        codicePrev = PreventivoFiniture.calcolaCodicePreventivoNoObj(numero_preventivo, revisione)
 
         commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=preventivo.intervento_commessa).first()
@@ -592,8 +589,8 @@ class PreventivoFiniture(PreventivoDBmodel):
                                     \\noindent\\rule{\\textwidth}{0.4pt}
                                   }
                                   {\\footnotesize
-                                    \\raggedright\\thepage \\\\ \\centering\\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
-                                    Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
+                                    \\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
+                                    Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097 \\\\ \\begin{flushright} \\thepage \\end{flushright}            
                                   }
                           }
                           \\rfoot{}
@@ -678,7 +675,7 @@ class PreventivoFiniture(PreventivoDBmodel):
                             \\begin{spacing}{0}
                           '''
 
-        latexScript += '\\textbf{' + typeOfDoc + '}'
+        latexScript += '\\textbf{'+typeOfDoc+' - } \\textcolor{red}{revisione n.'+'{}'.format(revisione)+'}'
 
         latexScript += '''
                             \\end{spacing}&
@@ -820,7 +817,7 @@ class PreventivoFiniture(PreventivoDBmodel):
                                      \\begin{spacing}{0}
                                        \\euro\\hfill 
                                    '''
-                latexScript += '{}'.format(prod[1])
+                latexScript += '{}'.format(round(prod[1]*100)/100)
                 totalePreventivo += prod[1]
 
                 latexScript += '''
@@ -845,7 +842,7 @@ class PreventivoFiniture(PreventivoDBmodel):
                                                           \\euro\\hfill
                                                      '''
 
-                latexScript += '{}'.format(totalePreventivo)
+                latexScript += '{}'.format(round(totalePreventivo*100)/100)
 
                 latexScript += '''
                                                         \\end{spacing}\\\\
@@ -868,7 +865,7 @@ class PreventivoFiniture(PreventivoDBmodel):
 
         if chiudiPreventivo:
             PagamentiCliente.generaPagamentoPerPreventivo(numero_preventivo)
-            PagamentiCliente.modificaPagamento(numero_preventivo, {'totale_prev_finiture': totalePreventivo })
+            PagamentiCliente.modificaPagamento(numero_preventivo, {'totale_prev_finiture': round(totalePreventivo*100)/100 })
 
         latexScript += '''
                             \\begin{figure}[!t]
@@ -906,12 +903,8 @@ class PreventivoFiniture(PreventivoDBmodel):
 
                          '''
 
-        with open('app/preventiviLatexDir/preventivoFiniture.tex', mode='w') as prova:
+        with open('app/preventiviLatexDir/preventivoFiniture-{}_{}.tex'.format(numero_preventivo, revisione), mode='w') as prova:
             prova.write(latexScript)
 
-        with open('app/preventiviLatexDir/preventivoFiniture-{}.tex'.format(numero_preventivo), mode='w') as prova:
-            prova.write(latexScript)
 
-        os.system("cd app/preventiviLatexDir && pdflatex preventivoFiniture.tex")
-
-        os.system("cd app/preventiviLatexDir && pdflatex preventivoFiniture-{}.tex".format(numero_preventivo))
+        os.system("cd app/preventiviLatexDir && pdflatex preventivoFiniture-{}_{}.tex".format(numero_preventivo, revisione))

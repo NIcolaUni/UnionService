@@ -406,3 +406,24 @@ button.elementFattura{
 .labelInputPercentuale{
 
 }
+
+div#ricaricoGeneraleContainer {
+    height: 52px;
+    width: 100px;
+}
+
+div#ricaricoGeneraleDiv {
+    height: 100%;
+    width: 100%;
+}
+
+input#inputRicaricoGenerale {
+    width: 50%;
+    background-color: #7b73c7;
+    margin: 11% 0 0 23%;
+}
+
+label#percLabelRincaro {
+    font-size: 85%;
+    display: inline;
+}

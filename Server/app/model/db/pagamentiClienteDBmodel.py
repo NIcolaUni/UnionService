@@ -13,6 +13,7 @@ class PagamentiClienteDBmodel(DbUSinterface, DbUSinterface.db.Model):
     totale_prev_finiture = Column(Float(), default=0)
     totale_prev_varianti = Column(Float(), default=0)
     acconto = Column(Float(), default=0)
+    acconto_pagato = Column(Boolean())
     prima_rata = Column(Float(), default=0)
     prima_rata_pagata = Column(Boolean(), default=False)
     seconda_rata =  Column(Float(), default=0)
@@ -20,5 +21,6 @@ class PagamentiClienteDBmodel(DbUSinterface, DbUSinterface.db.Model):
     terza_rata = Column(Float(), default=0)
     terza_rata_pagata = Column(Boolean(), default=False)
     saldo = Column(Integer(), default=0)
+    saldo_pagato = Column(Boolean(), default=False)
 
 

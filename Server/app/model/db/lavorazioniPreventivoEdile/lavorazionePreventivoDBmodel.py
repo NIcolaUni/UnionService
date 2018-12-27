@@ -4,14 +4,14 @@ import app
 class LavorazionePreventivoDBmodel(app.database.Model):
     __tablename__ = "lavorazione_preventivo_edile"
     __table_args__ = (
-            PrimaryKeyConstraint( 'numero_preventivo', 'data', 'tipologia', 'ordine' ),
-            ForeignKeyConstraint(['numero_preventivo', 'data', 'tipologia'],
-                                 ['preventivo.numero_preventivo', 'preventivo.data', 'preventivo.tipologia'],
+            PrimaryKeyConstraint( 'numero_preventivo', 'revisione', 'tipologia', 'ordine' ),
+            ForeignKeyConstraint(['numero_preventivo', 'revisione', 'tipologia'],
+                                 ['preventivo.numero_preventivo', 'preventivo.revisione', 'preventivo.tipologia'],
                                  ondelete='CASCADE', onupdate='CASCADE'),
             )
 
     numero_preventivo = Column(Integer())
-    data = Column(Date)
+    revisione = Column(Integer())
     ordine = Column(Integer()) # dov e' posizionata  la lavorazione nel preventivo
     tipologia = Column(String(20))
 

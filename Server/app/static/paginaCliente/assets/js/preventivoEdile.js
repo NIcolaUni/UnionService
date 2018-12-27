@@ -1,6 +1,6 @@
 /************************************************************************************************/
 var numeroPreventivo;
-var dataPreventivo;
+var revisionePreventivo;
 /* variabile globale usata per tener conto del numero dell'ultima lavorazione aggiunta */
 var ordineLavorazioni = 1;
 
@@ -16,6 +16,8 @@ var espandiTabella = function(){
         $('.titleSettoreTd').attr('colspan', 11 );
         $('.thAdded').show();
         $('.tdAdded').show();
+        $('#ricaricoGeneraleSpan').show();
+        $('#ricaricoGeneraleContainer').show();
         cbxStatus=false;
     }
     else{
@@ -23,6 +25,8 @@ var espandiTabella = function(){
         $('.titleSettoreTd').attr('colspan', 9 );
         $('.thAdded').hide();
         $('.tdAdded').hide();
+        $('#ricaricoGeneraleSpan').hide();
+        $('#ricaricoGeneraleContainer').hide();
         cbxStatus=true;
 
     }
@@ -51,7 +55,7 @@ var stampaPreventivo = function(usernameDip){
                   {value: '3', text: 'applica sconto percentuale'},
                   {value: '4', text: 'forza totale'},
                 ]},
-            { id: 'sumisura', label: 'Preventivo su misura', name: 'sumisura', value: 'sumisura', type: 'checkbox' },
+            { id: 'sumisura', label: 'Preventivo a misura', name: 'sumisura', value: 'sumisura', type: 'checkbox' },
             { id: 'chiudi', label: 'Chiudi preventivo', name: 'chiudi', value: 'chiudi', type: 'checkbox' },
 
         ]
@@ -70,11 +74,12 @@ var stampaPreventivo = function(usernameDip){
             if( context.swalForm['sumisura'] == 'sumisura' )
                 sumisura=true;
 
+
             if( sceltaSconto == 1 ){
                 socketPreventivo.emit('stampa_preventivo', {
                                                 'dip': usernameDip,
                                                 'numero_preventivo': numeroPreventivo,
-                                                'data': dataPreventivo,
+                                                'revisione': revisionePreventivo,
                                                 'iva': iva,
                                                 'tipoSconto': sceltaSconto,
                                                 'sconto': 0,
@@ -84,6 +89,8 @@ var stampaPreventivo = function(usernameDip){
             }
             else{
                 var toPrint="";
+                var valueSconto = '0'
+
 
                 if( sceltaSconto == 2 ){
                     toPrint ="Inserire sconto netto da applicare:";
@@ -93,7 +100,9 @@ var stampaPreventivo = function(usernameDip){
                 }
                 else if( sceltaSconto == 4 ){
                     toPrint = "Forza totale:";
+                    valueSconto = $('#divTotale').children('span').text().split(' ')[2];
                 }
+
 
 
 
@@ -106,7 +115,7 @@ var stampaPreventivo = function(usernameDip){
                     closeOnConfirm: true,
                     formFields: [
 
-                        { id: 'sconto', label: 'Sconto: ', name: 'sconto', type: 'number', placeholder: 'sconto', value: '0' },
+                        { id: 'sconto', name: 'sconto', type: 'number', placeholder: 'sconto', value: valueSconto },
 
 
                     ]
@@ -115,7 +124,7 @@ var stampaPreventivo = function(usernameDip){
                          socketPreventivo.emit('stampa_preventivo', {
                                                 'dip': usernameDip,
                                                 'numero_preventivo': numeroPreventivo,
-                                                'data': dataPreventivo,
+                                                'revisione': revisionePreventivo,
                                                 'iva': iva,
                                                 'tipoSconto': sceltaSconto,
                                                 'sconto': parseFloat(context.swalForm['sconto']),
@@ -141,7 +150,7 @@ var stampaPreventivo = function(usernameDip){
 var aggiungiNote = function($this){
 
     socketPreventivo.emit('inserisci_note', {   'numero_preventivo': numeroPreventivo,
-                                                        'data': dataPreventivo,
+                                                        'revisione': revisionePreventivo,
                                                         'nota': $this.val() });
 
 }
@@ -163,7 +172,7 @@ function rienumeraMemoriaLavorazioni(){
 
 /************************************************************************************************/
 
-var rienumeraPagina = function(numeroPreventivo, dataPreventivo, ){
+var rienumeraPagina = function( ){
 
     var counter = 1;
     var oldNum="";
@@ -269,7 +278,7 @@ var rienumeraPagina = function(numeroPreventivo, dataPreventivo, ){
             socketPreventivo.emit("modifica_ordine_lavorazione",
                             {
                                 "numero_preventivo" : numeroPreventivo,
-                                "data" : dataPreventivo,
+                                "revisione" : revisionePreventivo,
                                 "unitaMisura" : unitaMisura,
                                 "ordineVecchio": oldNum,
                                 "ordineNuovo" : counter
@@ -391,7 +400,7 @@ var modificaQuantitaSottolavorazione = function($this){
     if( !disabilitaSocketio ){
         socketPreventivo.emit("modifica_sottolavorazione", {
             'numero_preventivo': numeroPreventivo,
-            'data' : dataPreventivo,
+            'revisione' : revisionePreventivo,
             'ordine' : ordine,
             'ordine_sottolavorazione' : classesOfRow[1].split('-')[1],
             'unitaMisura': unitaMisura,
@@ -482,7 +491,7 @@ var eliminaLavorazione = function($this){
         socketPreventivo.emit("elimina_lavorazione",
                         {
                             "numero_preventivo" : numeroPreventivo,
-                            "data" : dataPreventivo,
+                            "revisione" : revisionePreventivo,
                             "ordine": numEl,
 
                         }
@@ -533,7 +542,7 @@ var eliminaSottolavorazione = function($this, unitaMisura){
         socketPreventivo.emit("elimina_sottolavorazione",
             {
                 "numero_preventivo" : numeroPreventivo,
-                "data" : dataPreventivo,
+                "revisione" : revisionePreventivo,
                 "ordine": ordineLavorazione,
                 "ordine_sottolavorazione": ordine_sottolavorazione
 
@@ -560,7 +569,7 @@ var eliminaSottolavorazione = function($this, unitaMisura){
                 socketPreventivo.emit("modifica_ordine_sottolavorazione",
                     {
                         "numero_preventivo" : numeroPreventivo,
-                        "data" : dataPreventivo,
+                        "revisione" : revisionePreventivo,
                         "ordine": ordineLavorazione,
                         "oldOrdineSottolav": oldOrder,
                         "newOrdineSottolav": aux,
@@ -585,7 +594,7 @@ var eliminaSottolavorazione = function($this, unitaMisura){
 
 /*******************************************************************************************/
 
-var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione){
+var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione, costoUs, ricaricoAzienda){
 
     var classSettore= $this.parent().parent().attr('id').split('_trBody-')[0];
     var numElement = $this.parent().parent().attr('id').split('_trBody-')[1];
@@ -595,14 +604,21 @@ var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione){
     //Aggiungo una nuova riga prima del totale parziale ( rappresentato dalla classe trFoot )
     $('.trFoot'+numElement).before(
         '<tr class="'+classSettore+'_trSottolavorazione-'+numElement+'">'+
-            '<td colspan="2"><a onclick="eliminaSottolavorazione($(this), \''+unitaMisura+'\')" class="delSottolavorazione fa fa-trash"></a></td>'+
+            '<td><a onclick="eliminaSottolavorazione($(this), \''+unitaMisura+'\')" class="delSottolavorazione fa fa-trash"></a></td>'+
+            '<td class="tdPreventivo tdNomeSottolavorazione"><textarea></textarea></td>'+
             righeDimensioniSottolavorazione( unitaMisura, costoLavorazione, numElement)+
            '<td class="tdPreventivo numColSmall">'+unitaMisura+'</td>'+
-            '<td class="tdPreventivo colSmall">&euro; '+costoLavorazione+'</td>'+
+            '<td class="tdPreventivo tdCostoUnitario colSmall">&euro; '+costoLavorazione+'</td>'+
+            '<td class="tdPreventivo tdCostoUs tdAdded">&euro; '+costoUs+'</td>'+
+            '<td class="tdPreventivo tdRicarico numColSmall tdAdded">+ <input oninput="modificaRicarico($(this))" type="number" min="0" max="100" class="inputRicarico" value="'+parseInt(ricaricoAzienda)+'">%</td>'+
             '<td class="totalSottolavorazione"></td>'+
         '</tr>'
 
     );
+
+    if( cbxStatus ){
+        $('.tdAdded').hide();
+    }
 
     calcolaTotaleParziale(classSettore, numElement);
 
@@ -620,7 +636,7 @@ var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione){
         socketPreventivo.emit("add_nuova_sottolavorazione",
             {
                 "numero_preventivo" : numeroPreventivo,
-                "data" : dataPreventivo,
+                "revisione" : revisionePreventivo,
                 "ordine": numElement
 
             }
@@ -639,11 +655,50 @@ var modificaNomeLavorazione = function($this){
     socketPreventivo.emit('modifica_nome_lavorazione', {
 
         'numero_preventivo': numeroPreventivo,
-        'data' : dataPreventivo,
+        'revisione' : revisionePreventivo,
         'ordine_lavorazione' : ordineLav,
         'value' : nuovoValore
 
     });
+}
+
+/*******************************************************************************************/
+
+var modificaRicaricoGenerale = function($this){
+
+    var nuovoRicarico = $this.val();
+    var vecchioRicaricoGenerale = $this.attr('class').split('-')[1];
+
+    $('.trBody').each(function(){
+        var trBodyId = $(this).attr('id');
+        var trBodySettore = trBodyId.split('_trBody-')[0].split('-')[1];
+        var trBodyNum = trBodyId.split('_trBody-')[1];
+
+        $('.settore-'+trBodySettore+'_trSottolavorazione-'+trBodyNum).each(function(){
+
+            var ricaricoSottolav = $(this).children('td.tdRicarico').children('input').val();
+
+
+            if( ricaricoSottolav == vecchioRicaricoGenerale ){
+
+                $this.removeClass('ricaricoPrezzario-'+vecchioRicaricoGenerale);
+                $this.addClass('ricaricoPrezzario-'+nuovoRicarico);
+                $(this).children('td.tdRicarico').children('input').val(nuovoRicarico);
+                $(this).children('td.tdRicarico').children('input').trigger('input');
+
+            }
+
+
+        });
+
+    });
+
+    socketPreventivo.emit('modifica_ricarico_generale', {
+        'numero_preventivo': numeroPreventivo,
+        'revisione' : revisionePreventivo,
+        'ricarico': nuovoRicarico
+    });
+
 }
 
 /*******************************************************************************************/
@@ -663,13 +718,13 @@ var modificaRicarico = function($this){
 
     var unitaMisura = $('tr.trFoot'+ordineLav).attr('class').split(' ')[2].split('-')[1];
 
-    $this.parent().parent().children('td.tdCostoUnitario').html('&euro; '+costoCliente)
+    $this.parent().parent().children('td.tdCostoUnitario').html('&euro; '+costoCliente);
     calcolaTotaleRigaSottolavorazione(  classe1Sottolav, classe2Sottolav, costoCliente);
 
     if(!disabilitaSocketio){
         socketPreventivo.emit('modifica_ricarico_sottolav', {
             'numero_preventivo': numeroPreventivo,
-            'data' : dataPreventivo,
+            'revisione' : revisionePreventivo,
             'ordine_lavorazione' : ordineLav,
             'ordine_sottolav' : ordineSottolav,
             'unitaMisura' : unitaMisura,
@@ -682,13 +737,14 @@ var modificaRicarico = function($this){
 
 /*******************************************************************************************/
 
-var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoParametro, settore, tipologia, costoLavorazione, ricaricoAzienda, unitaMisura ){
+var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura ){
 
 
     numeroPreventivo = numeroPreventivoParametro;
-    dataPreventivo = dataPreventivoParametro;
+    revisionePreventivo = revisionePreventivoParametro;
 
     if( !$button.hasClass('aggiunto') ){
+        var ricaricoAzienda = parseInt($('#inputRicaricoGenerale').val());
 
         //Segno nel bottono cliccato che e' una lavorazione aggiunto
         $button.addClass("aggiunto");
@@ -714,7 +770,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
                         '<td class="firstCol'+ordineLavorazioni+' firstCol">'+
                             '<label></label>'+
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
-                            '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+')" class="ctrButton addElement fa fa-plus"></a>'+
+                            '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+', '+costoUs+', '+parseInt(ricaricoAzienda)+')" class="ctrButton addElement fa fa-plus"></a>'+
                         '</td>'+
                         '<td class="tdPreventivo tdLavorazione"><textarea oninput="modificaNomeLavorazione($(this))" >'+tipologia+'</textarea></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
@@ -729,7 +785,8 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
                         '<td></td>'+
                     '</tr>'+
                     '<tr class="'+classSettore+'_trSottolavorazione-'+ordineLavorazioni+' sottolavNum-0">'+
-                            '<td colspan="2"><a onclick="eliminaSottolavorazione($(this), \''+unitaMisura+'\')" class="delSottolavorazione fa fa-trash"></a></td>'+
+                            '<td><a onclick="eliminaSottolavorazione($(this), \''+unitaMisura+'\')" class="delSottolavorazione fa fa-trash"></a></td>'+
+                            '<td class="tdPreventivo tdNomeSottolavorazione"><textarea></textarea></td>'+
                             righeDimensioniSottolavorazione(  unitaMisura,
                                                               costoLavorazione,
                                                                ordineLavorazioni)+
@@ -804,7 +861,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
             socketPreventivo.emit("add_nuova_lavorazione",
                 {
                     "numero_preventivo" : numeroPreventivo,
-                    "data" : dataPreventivo,
+                    "revisione" : revisionePreventivo,
                     "settore" : settore,
                     "lavorazione" : tipologia,
                     "unitaMisura" : unitaMisura,
@@ -817,7 +874,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, dataPreventivoPar
 
 
         /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
-        rienumeraPagina(numeroPreventivo, dataPreventivo);
+        rienumeraPagina();
 
         $('.inputRicarico').trigger('input');
         ordineLavorazioni++;

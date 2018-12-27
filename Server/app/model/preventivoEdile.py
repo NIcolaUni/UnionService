@@ -1,9 +1,9 @@
 from .db.lavorazioneEdileDBmodel import LavorazioneEdileDBmodel
+from .db.prezzarioEdileDBmodel import PrezzarioEdileDBmodel
 from .db.preventivoDBmodel import PreventivoDBmodel
 from .db.commessaDBmodel import CommessaDBmodel
 from .db.dipendenteDBmodel import DipendenteDBmodel
 from .db.lavorazioniPreventivoEdile.lavorazionePreventivoDBmodel import LavorazionePreventivoDBmodel
-from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneCorpoDBmodel import SottolavorazioneCorpoDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneCadDBmodel import SottolavorazioneCadDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMlDBmodel import SottolavorazioneMlDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMqDBmodel import SottolavorazioneMqDBmodel
@@ -16,29 +16,25 @@ import app
 import os
 import math
 
-class __SottolavorazioneCorpoPreventivo__(SottolavorazioneCorpoDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione):
-        self.numero_preventivo=numero_preventivo
-        self.data = data
-        self.ordine = ordine
-        self.ordine_sottolavorazione = ordine_sottolavorazione
-        self.tipologia = 'edile'
 
 class __SottolavorazioneCadPreventivo__(SottolavorazioneCadDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, prezzoBase):
+    def __init__(self, numero_preventivo, revisione, ordine, ordine_sottolavorazione, numero, prezzoBase, ricarico):
         self.numero_preventivo=numero_preventivo
-        self.data = data
+        self.revisione = revisione
         self.ordine = ordine
         self.ordine_sottolavorazione = ordine_sottolavorazione
         self.tipologia = 'edile'
 
         self.numero = numero
 
+        self.prezzoBase = prezzoBase
+        self.ricarico = ricarico
+
 
 class __SottolavorazioneMlPreventivo__(SottolavorazioneMlDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, prezzoBase ):
+    def __init__(self, numero_preventivo, revisione, ordine, ordine_sottolavorazione, numero, larghezza, prezzoBase, ricarico ):
         self.numero_preventivo=numero_preventivo
-        self.data = data
+        self.revisione = revisione
         self.ordine = ordine
         self.ordine_sottolavorazione = ordine_sottolavorazione
         self.tipologia = 'edile'
@@ -46,12 +42,15 @@ class __SottolavorazioneMlPreventivo__(SottolavorazioneMlDBmodel):
         self.numero = numero
         self.larghezza = larghezza
 
+        self.prezzoBase = prezzoBase
+        self.ricarico = ricarico
+
 
 
 class __SottolavorazioneMqPreventivo__(SottolavorazioneMqDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, altezza, prezzoBase ):
+    def __init__(self, numero_preventivo, revisione, ordine, ordine_sottolavorazione, numero, larghezza, altezza, prezzoBase, ricarico ):
         self.numero_preventivo=numero_preventivo
-        self.data = data
+        self.revisione = revisione
         self.ordine = ordine
         self.ordine_sottolavorazione = ordine_sottolavorazione
         self.tipologia = 'edile'
@@ -60,12 +59,15 @@ class __SottolavorazioneMqPreventivo__(SottolavorazioneMqDBmodel):
         self.larghezza = larghezza
         self.altezza = altezza
 
+        self.prezzoBase = prezzoBase
+        self.ricarico = ricarico
+
 
 
 class __SottolavorazioneMcPreventivo__(SottolavorazioneMcDBmodel):
-    def __init__(self, numero_preventivo, data, ordine, ordine_sottolavorazione, numero, larghezza, altezza, profondita, prezzoBase ):
+    def __init__(self, numero_preventivo, revisione, ordine, ordine_sottolavorazione, numero, larghezza, altezza, profondita, prezzoBase, ricarico ):
         self.numero_preventivo=numero_preventivo
-        self.data = data
+        self.revisione = revisione
         self.ordine = ordine
         self.ordine_sottolavorazione = ordine_sottolavorazione
         self.tipologia = 'edile'
@@ -75,11 +77,14 @@ class __SottolavorazioneMcPreventivo__(SottolavorazioneMcDBmodel):
         self.altezza = altezza
         self.profondita = profondita
 
+        self.prezzoBase = prezzoBase
+        self.ricarico = ricarico
+
 
 class __LavorazionePreventivo__(LavorazionePreventivoDBmodel):
-    def __init__(self,  numero_preventivo, data, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario):
+    def __init__(self,  numero_preventivo, revisione, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario):
         self.numero_preventivo=numero_preventivo
-        self.data = data
+        self.revisione = revisione
         self.ordine = ordine
         self.tipologia = 'edile'
 
@@ -100,7 +105,8 @@ class PreventivoEdile(PreventivoDBmodel):
 
     def __init__(self, numero_preventivo, data, nome_cliente, cognome_cliente,
                  indirizzo_cliente, dipendente_generatore, intervento_commessa, indirizzo_commessa,  comune_commessa,
-                 stato=True, note=None):
+                 ricarico_generale,
+                 stato=True, note=None, revisione=1):
 
         oldCommessa = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=intervento_commessa).first()
@@ -112,6 +118,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
         self.numero_preventivo=numero_preventivo
         self.data = data
+        self.data_ultima_modifica = data
         self.tipologia='edile'
         self.nome_cliente = nome_cliente
         self.cognome_cliente = cognome_cliente
@@ -120,6 +127,8 @@ class PreventivoEdile(PreventivoDBmodel):
         self.intervento_commessa=intervento_commessa
         self.stato = stato
         self.note = note
+        self.revisione = revisione
+        self.ricarico_generale = ricarico_generale
 
 
 
@@ -132,9 +141,10 @@ class PreventivoEdile(PreventivoDBmodel):
 
         return str(self.numero_preventivo)+dipendente+str(annoPreventivo)
 
-    def calcolaCodicePreventivoNoObj(numero_preventivo, data):
+    def calcolaCodicePreventivoNoObj(numero_preventivo, revisione):
 
-        prev = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='edile').first()
+        prev = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, tipologia='edile').first()
+
 
         #recupero le ultime due cifre dell'anno di creazione
         annoPreventivo = prev.data.year%100
@@ -150,6 +160,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
         youngerPrev = PreventivoDBmodel.query.order_by(desc(PreventivoDBmodel.numero_preventivo)).first()
         lastNumPrev=99
+        ricaricoFromPrezzario = PrezzarioEdileDBmodel.query.first().ricaricoAzienda
 
         #se ci sono gia' preventivi registrati prende il numero_preventivo del piu' recente
         if youngerPrev is not None:
@@ -162,62 +173,66 @@ class PreventivoEdile(PreventivoDBmodel):
                                      cognome_cliente=cognome_cliente, indirizzo_cliente=indirizzo_cliente,
                                      dipendente_generatore=dipendente_generatore,
                                      intervento_commessa=intervento_commessa, indirizzo_commessa=indirizzo_commessa,
-                                     comune_commessa=comune_commessa)
+                                     comune_commessa=comune_commessa, revisione=1, ricarico_generale=ricaricoFromPrezzario)
 
         PreventivoDBmodel.addRow(preventivo)
 
-        return ( lastNumPrev+1, oggi )
+        return ( lastNumPrev+1, 1 )
 
-    def eliminaPreventivo(numero_preventivo, data):
+    def modificaRicaricoGenerale(numero_preventivo, revisione, ricarico):
 
-        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='edile').first()
+        PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).update({'ricarico_generale':ricarico})
+
+        PreventivoEdile.commit()
+
+    def eliminaPreventivo(numero_preventivo, revisione):
+
+        toDel = PreventivoDBmodel.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, tipologia='edile').first()
 
         PreventivoDBmodel.delRow(toDel)
 
-    def __duplicaSottolavorazioni__(sottolavorazioni, unitaMisura):
+    def __duplicaSottolavorazioni__(sottolavorazioni, unitaMisura ):
 
         returnList = []
 
         if unitaMisura == 'cad':
             for sottolav in sottolavorazioni:
                 newSottolav = __SottolavorazioneCadPreventivo__(numero_preventivo=sottolav.numero_preventivo,
-                                                                data=sottolav.data, ordine=sottolav.ordine,
+                                                                revisione=sottolav.revisione, ordine=sottolav.ordine,
                                                                 ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
-                                                                numero=sottolav.numero)
+                                                                numero=sottolav.numero, prezzoBase=sottolav.prezzoBase,
+                                                                ricarico=sottolav.ricarico)
                 returnList.append(newSottolav)
 
         elif unitaMisura == 'ml':
             for sottolav in sottolavorazioni:
                 newSottolav = __SottolavorazioneMlPreventivo__(numero_preventivo=sottolav.numero_preventivo,
-                                                               data=sottolav.data, ordine=sottolav.ordine,
+                                                               revisione=sottolav.revisione, ordine=sottolav.ordine,
                                                                ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
-                                                               numero=sottolav.numero, larghezza=sottolav.larghezza)
+                                                               numero=sottolav.numero, larghezza=sottolav.larghezza,
+                                                               prezzoBase=sottolav.prezzoBase, ricarico=sottolav.ricarico)
                 returnList.append(newSottolav)
 
         elif unitaMisura == 'mq':
             for sottolav in sottolavorazioni:
                 newSottolav = __SottolavorazioneMqPreventivo__(numero_preventivo=sottolav.numero_preventivo,
-                                                               data=sottolav.data, ordine=sottolav.ordine,
+                                                               revisione=sottolav.revisione, ordine=sottolav.ordine,
                                                                ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
                                                                numero=sottolav.numero, larghezza=sottolav.larghezza,
-                                                               altezza=sottolav.altezza)
+                                                               altezza=sottolav.altezza, prezzoBase=sottolav.prezzoBase,
+                                                               ricarico=sottolav.ricarico)
                 returnList.append(newSottolav)
 
         elif unitaMisura == 'mc':
             for sottolav in sottolavorazioni:
                 newSottolav = __SottolavorazioneMcPreventivo__(numero_preventivo=sottolav.numero_preventivo,
-                                                               data=sottolav.data, ordine=sottolav.ordine,
+                                                               revisione=sottolav.revisione, ordine=sottolav.ordine,
                                                                ordine_sottolavorazione=sottolav.ordine_sottolavorazione,
                                                                numero=sottolav.numero, larghezza=sottolav.larghezza,
-                                                               altezza=sottolav.altezza, profondita=sottolav.profondita)
+                                                               altezza=sottolav.altezza, profondita=sottolav.profondita,
+                                                               prezzoBase=sottolav.prezzoBase, ricarico=sottolav.ricarico)
                 returnList.append(newSottolav)
 
-        elif unitaMisura == 'corpo':
-            for sottolav in sottolavorazioni:
-                newSottolav = __SottolavorazioneCorpoPreventivo__(numero_preventivo=sottolav.numero_preventivo,
-                                                                data=sottolav.data, ordine=sottolav.ordine,
-                                                                ordine_sottolavorazione=sottolav.ordine_sottolavorazione)
-                returnList.append(newSottolav)
 
         return returnList
 
@@ -225,7 +240,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
         returnList = []
         for lav in lavorazioni:
-            newLav = __LavorazionePreventivo__(numero_preventivo=lav.numero_preventivo, data=lav.data,
+            newLav = __LavorazionePreventivo__(numero_preventivo=lav.numero_preventivo, revisione=lav.revisione,
                                                ordine=lav.ordine,
                                                settore=lav.settore, tipologia_lavorazione=lav.tipologia_lavorazione,
                                                unitaMisura=lav.unitaMisura, prezzoUnitario=lav.prezzoUnitario)
@@ -233,13 +248,20 @@ class PreventivoEdile(PreventivoDBmodel):
 
         return returnList
 
-    def inserisciNote(numero_preventivo, data, nota):
-        PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+    def inserisciNote(numero_preventivo, revisione, nota):
+        PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                   tipologia='edile').update({'note': nota})
 
         PreventivoDBmodel.commit()
 
-    def modificaPreventivo(numero_preventivo, data, dipendente_generatore):
+    def impostaDataUltimaModifica(numero_preventivo, revisione ):
+        now = datetime.datetime.now()
+        oggi = "{}-{}-{}".format(now.year, now.month, now.day)
+
+        PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).update({'data_ultima_modifica': oggi})
+        PreventivoEdile.commit()
+
+    def revisionaPreventivo(numero_preventivo, revisione, dipendente_generatore):
         '''
          Prende il preventivo che corrisponde al "numero_preventivo" passato come argomento,
          ne fa una copia ( compresa di lavorazioni e sottolavorazioni ) cambiando unicamente
@@ -252,15 +274,20 @@ class PreventivoEdile(PreventivoDBmodel):
 
 
 
-        lastPrev = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, data=data, tipologia='edile').first()
+        lastPrev = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, tipologia='edile').first()
+
+        ultimaRevisione = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, tipologia='edile').order_by(desc(PreventivoEdile.revisione)).first().revisione
+
         now = datetime.datetime.now()
         oggi = "{}-{}-{}".format(now.year, now.month, now.day)
 
+        '''
         #se il preventivo viene modificato piu' volte lo stesso giorno non viene fatta alcuna copia "
 
         if str(now).split(' ')[0] == str(lastPrev.data):
 
             return (numero_preventivo, oggi)
+        '''
 
         commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=lastPrev.intervento_commessa).first()
@@ -270,157 +297,148 @@ class PreventivoEdile(PreventivoDBmodel):
                                      dipendente_generatore=dipendente_generatore,
                                      intervento_commessa=commessa.intervento,
                                      indirizzo_commessa=commessa.indirizzo,
-                                     comune_commessa=commessa.comune )
+                                     comune_commessa=commessa.comune,
+                                     revisione = ultimaRevisione+1, ricarico_generale=lastPrev.ricarico_generale)
 
 
         PreventivoDBmodel.addRowNoCommit(preventivo)
         PreventivoDBmodel.commit()
 
-        lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+        PreventivoEdile.impostaDataUltimaModifica(numero_preventivo, ultimaRevisione+1)
+        
+        lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, revisione=lastPrev.revisione).all()
 
 
         lavorazioni = PreventivoEdile.__duplicaLavorazioni__(lavorazioni)
 
         for lav in lavorazioni:
-            lav.data = oggi
+            lav.revisione = ultimaRevisione+1
             PreventivoDBmodel.addRowNoCommit(lav)
 
         PreventivoEdile.commit()
 
-        sottolavorazioniCad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+        sottolavorazioniCad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, revisione=lastPrev.revisione).all()
 
         sottolavorazioniCad = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniCad, 'cad')
 
-        sottolavorazioniMl = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+        sottolavorazioniMl = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, revisione=lastPrev.revisione).all()
 
         sottolavorazioniMl = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniMl, 'ml')
 
-        sottolavorazioniMq = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+        sottolavorazioniMq = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, revisione=lastPrev.revisione).all()
 
         sottolavorazioniMq = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniMq, 'mq')
 
-        sottolavorazioniMc = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
+        sottolavorazioniMc = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=lastPrev.numero_preventivo, revisione=lastPrev.revisione).all()
 
         sottolavorazioniMc = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniMc, 'mc')
 
-        sottolavorazioniCorpo = __SottolavorazioneCorpoPreventivo__.query.filter_by(
-            numero_preventivo=lastPrev.numero_preventivo, data=lastPrev.data).all()
 
-        sottolavorazioniCorpo = PreventivoEdile.__duplicaSottolavorazioni__(sottolavorazioniCorpo, 'a corpo')
-
-        sottolavorazioni = sottolavorazioniCad + sottolavorazioniMl + sottolavorazioniMc + sottolavorazioniMq + sottolavorazioniCorpo
+        sottolavorazioni = sottolavorazioniCad + sottolavorazioniMl + sottolavorazioniMc + sottolavorazioniMq
 
         for sottoLav in sottolavorazioni:
-            sottoLav.data= oggi
+            sottoLav.revisione = ultimaRevisione+1
             PreventivoDBmodel.addRowNoCommit(sottoLav)
 
         PreventivoEdile.commit()
 
-        return ( numero_preventivo, oggi )
+        return ( numero_preventivo, ultimaRevisione+1 )
 
 
-    def __calcolcaOrdineSottolavorazione__( queryClass, numero_preventivo, data, ordine):
+    def __calcolcaOrdineSottolavorazione__( queryClass, numero_preventivo, revisione, ordine):
         ordine_sottolavorazione = 0
 
-        aux = queryClass.filter_by(numero_preventivo=numero_preventivo, data=data,
+        aux = queryClass.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                    ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione).first()
 
         while aux is not None:
             ordine_sottolavorazione += 1
-            aux = queryClass.filter_by(numero_preventivo=numero_preventivo, data=data,
+            aux = queryClass.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                        ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione).first()
 
         return ordine_sottolavorazione
 
-    def __registraSottolavorazione__( numero_preventivo, data, ordine, ordine_sottolavorazione, unitaMisura,
-                                        numero, prezzoBase, larghezza=None, altezza=None, profondita=None):
+    def __registraSottolavorazione__( numero_preventivo, revisione, ordine, ordine_sottolavorazione, unitaMisura,
+                                        numero, prezzoBase, ricarico, larghezza=None, altezza=None, profondita=None):
 
         lavorazione = None
         if unitaMisura == 'cad':
-            lavorazione = __SottolavorazioneCadPreventivo__(numero_preventivo=numero_preventivo, data=data,
+            lavorazione = __SottolavorazioneCadPreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
                                                              ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione, numero=numero,
-                                                             prezzoBase=prezzoBase)
+                                                             prezzoBase=prezzoBase, ricarico=ricarico)
         elif unitaMisura == 'ml':
-            lavorazione = __SottolavorazioneMlPreventivo__(numero_preventivo=numero_preventivo, data=data,
+            lavorazione = __SottolavorazioneMlPreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
                                                            ordine=ordine,
                                                            ordine_sottolavorazione=ordine_sottolavorazione,
-                                                           numero=numero, larghezza=larghezza, prezzoBase=prezzoBase )
+                                                           numero=numero, larghezza=larghezza,
+                                                           prezzoBase=prezzoBase, ricarico=ricarico)
 
         elif unitaMisura == 'mq':
-            lavorazione = __SottolavorazioneMqPreventivo__(numero_preventivo=numero_preventivo, data=data,
+            lavorazione = __SottolavorazioneMqPreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
                                                            ordine=ordine,
                                                            ordine_sottolavorazione=ordine_sottolavorazione,
-                                                           numero=numero, larghezza=larghezza, altezza=altezza, prezzoBase=prezzoBase )
+                                                           numero=numero, larghezza=larghezza, altezza=altezza,
+                                                           prezzoBase=prezzoBase, ricarico=ricarico )
 
         elif unitaMisura == 'mc':
-            lavorazione = __SottolavorazioneMcPreventivo__(numero_preventivo=numero_preventivo, data=data,
+            lavorazione = __SottolavorazioneMcPreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
                                                            ordine=ordine,
                                                            ordine_sottolavorazione=ordine_sottolavorazione,
                                                            numero=numero, larghezza=larghezza, altezza=altezza, profondita=profondita,
-                                                           prezzoBase=prezzoBase)
-        elif unitaMisura == 'a corpo':
-            lavorazione = __SottolavorazioneCorpoPreventivo__(numero_preventivo=numero_preventivo, data=data,
-                                                            ordine=ordine,
-                                                            ordine_sottolavorazione=ordine_sottolavorazione)
+                                                           prezzoBase=prezzoBase, ricarico=ricarico)
+
 
         PreventivoDBmodel.addRow(lavorazione)
 
 
-    def nuovaSottolavorazione(numero_preventivo, data, ordine):
+    def nuovaSottolavorazione(numero_preventivo, revisione, ordine):
 
-        unitaMisura = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first().unitaMisura
-        prezzoBase = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first().prezzoUnitario
+        unitaMisura = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first().unitaMisura
+        prezzoBase = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first().prezzoUnitario
+        ricaricoGenerale = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).first().ricarico_generale
 
         if unitaMisura == 'cad':
             last_sottolav_cad = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
-                                                                                  data=data, ordine=ordine).order_by( desc(__SottolavorazioneCadPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+                                                                                  revisione=revisione, ordine=ordine).order_by( desc(__SottolavorazioneCadPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
 
-            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
-                                                             ordine=ordine, ordine_sottolavorazione=last_sottolav_cad+1, numero=1, prezzoBase=prezzoBase )
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, revisione=revisione, unitaMisura=unitaMisura,
+                                                             ordine=ordine, ordine_sottolavorazione=last_sottolav_cad+1, numero=1, prezzoBase=prezzoBase,
+                                                         ricarico=ricaricoGenerale)
         elif unitaMisura == 'ml':
             last_sottolav_ml = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
-                                                                                data=data, ordine=ordine).order_by( desc(__SottolavorazioneMlPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+                                                                                revisione=revisione, ordine=ordine).order_by( desc(__SottolavorazioneMlPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
 
-            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, revisione=revisione, unitaMisura=unitaMisura,
                                                          ordine=ordine, ordine_sottolavorazione=last_sottolav_ml+1,
-                                                         numero=1, larghezza=1, prezzoBase=prezzoBase)
+                                                         numero=1, larghezza=1, prezzoBase=prezzoBase, ricarico=ricaricoGenerale)
 
         elif unitaMisura == 'mq':
             last_sottolav_mq = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
-                                                                                data=data, ordine=ordine).order_by( desc(__SottolavorazioneMqPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+                                                                                revisione=revisione, ordine=ordine).order_by( desc(__SottolavorazioneMqPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
 
-            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, revisione=revisione, unitaMisura=unitaMisura,
                                                          ordine=ordine, ordine_sottolavorazione=last_sottolav_mq+1,
-                                                         numero=1, larghezza=1, altezza=1, prezzoBase=prezzoBase)
+                                                         numero=1, larghezza=1, altezza=1, prezzoBase=prezzoBase, ricarico=ricaricoGenerale)
 
 
         elif unitaMisura == 'mc':
             last_sottolav_mc = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
-                                                                                data=data, ordine=ordine).order_by( desc(__SottolavorazioneMcPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
+                                                                                revisione=revisione, ordine=ordine).order_by( desc(__SottolavorazioneMcPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
 
-            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, revisione=revisione, unitaMisura=unitaMisura,
                                                          ordine=ordine, ordine_sottolavorazione=last_sottolav_mc+1,
-                                                         numero=1, larghezza=1, altezza=1, profondita=1, prezzoBase=prezzoBase)
-
-        elif unitaMisura == 'a corpo':
-            last_sottolav_corpo = __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo,
-                                                                                data=data, ordine=ordine).order_by(
-                desc(__SottolavorazioneCorpoPreventivo__.ordine_sottolavorazione)).first().ordine_sottolavorazione
-
-            PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data,
-                                                         unitaMisura=unitaMisura,
-                                                         ordine=ordine, ordine_sottolavorazione=last_sottolav_corpo + 1)
+                                                         numero=1, larghezza=1, altezza=1, profondita=1, prezzoBase=prezzoBase, ricarico=ricaricoGenerale)
 
 
-    def registraLavorazione( numero_preventivo, data, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario,
+    def registraLavorazione( numero_preventivo, revisione, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario,
                              numero, larghezza=None, altezza=None, profondita=None ):
 
-        controlVar = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first()
+        controlVar = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first()
         lavorazione = None
         ordineSottolavorazione = 0
 
         if controlVar is None:
-            lavorazione = __LavorazionePreventivo__(numero_preventivo=numero_preventivo, data=data,
+            lavorazione = __LavorazionePreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
                                                     ordine=ordine, settore=settore, tipologia_lavorazione=tipologia_lavorazione,
                                                     unitaMisura=unitaMisura, prezzoUnitario=prezzoUnitario)
             PreventivoDBmodel.addRow(lavorazione)
@@ -428,66 +446,61 @@ class PreventivoEdile(PreventivoDBmodel):
 
             if unitaMisura == 'cad':
                 ordineSottolavorazione=PreventivoEdile.__calcolcaOrdineSottolavorazione__(queryClass=__SottolavorazioneCadPreventivo__.query,
-                                                                   numero_preventivo=numero_preventivo, data=data,
+                                                                   numero_preventivo=numero_preventivo, revisione=revisione,
                                                                    ordine=ordine)
             elif unitaMisura == 'ml':
                 ordineSottolavorazione =PreventivoEdile.__calcolcaOrdineSottolavorazione__(queryClass=__SottolavorazioneMlPreventivo__.query,
-                                                                   numero_preventivo=numero_preventivo, data=data,
+                                                                   numero_preventivo=numero_preventivo, revisione=revisione,
                                                                    ordine=ordine)
 
             elif unitaMisura == 'mq':
                 ordineSottolavorazione =PreventivoEdile.__calcolcaOrdineSottolavorazione__(queryClass=__SottolavorazioneMqPreventivo__.query,
-                                                                   numero_preventivo=numero_preventivo, data=data,
+                                                                   numero_preventivo=numero_preventivo, revisione=revisione,
                                                                    ordine=ordine)
 
             elif unitaMisura == 'mc':
                 ordineSottolavorazione =PreventivoEdile.__calcolcaOrdineSottolavorazione__(queryClass=__SottolavorazioneMcPreventivo__.query,
-                                                                   numero_preventivo=numero_preventivo, data=data,
+                                                                   numero_preventivo=numero_preventivo, revisione=revisione,
                                                                    ordine=ordine)
-            elif unitaMisura == 'a corpo':
-                ordineSottolavorazione = PreventivoEdile.__calcolcaOrdineSottolavorazione__(
-                    queryClass=__SottolavorazioneCorpoPreventivo__.query,
-                    numero_preventivo=numero_preventivo, data=data,
-                    ordine=ordine)
 
-        PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, data=data, unitaMisura=unitaMisura,
+        ricaricoGenerale = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo,
+                                                           revisione=revisione).first().ricarico_generale
+
+        PreventivoEdile.__registraSottolavorazione__(numero_preventivo=numero_preventivo, revisione=revisione, unitaMisura=unitaMisura,
                                                      ordine=ordine, ordine_sottolavorazione=ordineSottolavorazione,
                                                      numero=numero, larghezza=larghezza, altezza=altezza, profondita=profondita,
-                                                     prezzoBase=prezzoUnitario)
+                                                     prezzoBase=prezzoUnitario, ricarico=ricaricoGenerale)
 
 
-    def eliminaLavorazione(numero_preventivo, data, ordine ):
+    def eliminaLavorazione(numero_preventivo, revisione, ordine ):
 
-        toDel = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).first()
+        toDel = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first()
 
         # essendoci il vincolo d'integrita', eliminando una lavorazione si eliminano anche le relative sottolavorazioni
         PreventivoEdile.delRow(toDel)
 
+        app.server.logger.info('fin qua ok esco')
 
-    def eliminaSottolavorazione(numero_preventivo, data, ordine, ordine_sottolavorazione):
+    def eliminaSottolavorazione(numero_preventivo, revisione, ordine, ordine_sottolavorazione):
 
-        unitaMisura = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+        unitaMisura = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                           ordine=ordine).first().unitaMisura
         toDel = None
 
         if unitaMisura == 'cad':
-            toDel = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            toDel = __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                                       ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione).first()
         elif unitaMisura == 'ml':
-            toDel = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            toDel = __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                                       ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione).first()
 
         elif unitaMisura == 'mq':
-            toDel = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            toDel = __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                                       ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione).first()
 
         elif unitaMisura == 'mc':
-            toDel = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            toDel = __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                                       ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione).first()
-        elif unitaMisura == 'a corpo':
-            toDel = __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
-                                                                     ordine=ordine,
-                                                                     ordine_sottolavorazione=ordine_sottolavorazione).first()
 
         PreventivoEdile.delRow(toDel)
 
@@ -496,11 +509,11 @@ class PreventivoEdile(PreventivoDBmodel):
 
         newOrdine = int(-lavorazione.ordine)
 
-        queryClass.filter_by(numero_preventivo=lavorazione.numero_preventivo, data=lavorazione.data,
+        queryClass.filter_by(numero_preventivo=lavorazione.numero_preventivo, revisione=lavorazione.revisione,
                                            ordine=lavorazione.ordine).update({'ordine': newOrdine})
 
 
-    def iniziaRiordinoLavorazione(numero_preventivo, data):
+    def iniziaRiordinoLavorazione(numero_preventivo, revisione):
         '''
            Prima di ogni riordino di voci all'interno del preventivo si prendono tutte le voci
            e si setta il loro campo "ordine" al negativo. Questo previene la situazione
@@ -509,7 +522,7 @@ class PreventivoEdile(PreventivoDBmodel):
            di una lavorazione) e, allo stesso tempo, di ricordare il vecchio ordine.
         '''
 
-        lavPrev = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).all()
+        lavPrev = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).all()
         iniziaNuovoRiordino = True
 
         '''
@@ -529,18 +542,18 @@ class PreventivoEdile(PreventivoDBmodel):
             PreventivoDBmodel.commit()
 
 
-    def modificaOrdineLavorazione( modifica, numero_preventivo, data, ordine):
+    def modificaOrdineLavorazione( modifica, numero_preventivo, revisione, ordine):
 
-        __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+        __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                          ordine=ordine ).update(modifica)
 
 
         PreventivoDBmodel.commit()
 
 
-    def modificaLavorazione( modifica, numero_preventivo, data, ordine):
+    def modificaLavorazione( modifica, numero_preventivo, revisione, ordine):
 
-        __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+        __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                          ordine=ordine ).update(modifica)
 
 
@@ -550,11 +563,11 @@ class PreventivoEdile(PreventivoDBmodel):
 
         newOrdine = int(-sottolavorazione.ordine_sottolavorazione)
 
-        queryClass.filter_by(numero_preventivo=sottolavorazione.numero_preventivo, data=sottolavorazione.data,
+        queryClass.filter_by(numero_preventivo=sottolavorazione.numero_preventivo, revisione=sottolavorazione.revisione,
                              ordine=sottolavorazione.ordine,
                              ordine_sottolavorazione=sottolavorazione.ordine_sottolavorazione).update({'ordine_sottolavorazione': newOrdine})
 
-    def iniziaRiordinoSottolavorazione(numero_preventivo, data, ordine, unitaMisura):
+    def iniziaRiordinoSottolavorazione(numero_preventivo, revisione, ordine, unitaMisura):
         '''
         La logica seguita da questa funzione è la stessa di iniziaRiordinoLavorazione()
         '''
@@ -572,10 +585,8 @@ class PreventivoEdile(PreventivoDBmodel):
         elif unitaMisura == 'mc':
             queryClassSottolavorazione = __SottolavorazioneMcPreventivo__.query
 
-        elif unitaMisura == 'a corpo':
-            queryClassSottolavorazione = __SottolavorazioneCorpoPreventivo__.query
 
-        sottolavPrev = queryClassSottolavorazione.filter_by(numero_preventivo=numero_preventivo, data=data, ordine=ordine).all()
+        sottolavPrev = queryClassSottolavorazione.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).all()
         iniziaNuovoRiordino = True
 
         '''
@@ -594,72 +605,63 @@ class PreventivoEdile(PreventivoDBmodel):
 
 
 
-    def modificaOrdineSottolavorazione(numero_preventivo, data, ordine, old_ordine_sottolavorazione, unitaMisura,
+    def modificaOrdineSottolavorazione(numero_preventivo, revisione, ordine, old_ordine_sottolavorazione, unitaMisura,
                                        new_ordine_sottolavorazione):
 
 
         if unitaMisura == 'cad':
-            __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                               ordine=ordine,
                                                               ordine_sottolavorazione=old_ordine_sottolavorazione).update(
                 { 'ordine_sottolavorazione': new_ordine_sottolavorazione })
         elif unitaMisura == 'ml':
-            __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                              ordine=ordine,
                                                              ordine_sottolavorazione=old_ordine_sottolavorazione).update(
                 {'ordine_sottolavorazione': new_ordine_sottolavorazione})
 
         elif unitaMisura == 'mq':
-            __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                              ordine=ordine,
                                                              ordine_sottolavorazione=old_ordine_sottolavorazione).update(
                 {'ordine_sottolavorazione': new_ordine_sottolavorazione})
 
         elif unitaMisura == 'mc':
-            __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                                              ordine=ordine,
                                                              ordine_sottolavorazione=old_ordine_sottolavorazione).update(
                 {'ordine_sottolavorazione': new_ordine_sottolavorazione})
 
-        elif unitaMisura == 'a corpo':
-            __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
-                                                             ordine=ordine,
-                                                             ordine_sottolavorazione=old_ordine_sottolavorazione).update(
-                {'ordine_sottolavorazione': new_ordine_sottolavorazione})
+
 
         PreventivoDBmodel.commit()
-    def modificaSottolavorazione(modifica, numero_preventivo, data, ordine, ordine_sottolavorazione, unitaMisura):
+    def modificaSottolavorazione(modifica, numero_preventivo, revisione, ordine, ordine_sottolavorazione, unitaMisura):
 
         if unitaMisura == 'cad':
-            __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneCadPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                              ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione ).update(modifica)
         elif unitaMisura == 'ml':
-            __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneMlPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                             ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione  ).update(modifica)
 
         elif unitaMisura == 'mq':
-            __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneMqPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                             ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione  ).update(modifica)
 
         elif unitaMisura == 'mc':
-            __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
+            __SottolavorazioneMcPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
                                             ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione  ).update(modifica)
 
-        elif unitaMisura == 'a corpo':
-            __SottolavorazioneCorpoPreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data,
-                                                             ordine=ordine,
-                                                             ordine_sottolavorazione=ordine_sottolavorazione).update(
-                modifica)
 
         PreventivoDBmodel.commit()
 
-    def returnSingleBudget(numero_preventivo, data):
+    def returnSingleBudget(numero_preventivo, revisione):
         '''
         si differenzia da returnSinglePreventivo() solo per il fatto che i totali sono calcolati basandosi
         sui prezzi per l'azienda presi dal prezzario (senza il ricarico per il cliente)
         '''
 
-        lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).order_by(
+        lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).order_by(
                                                                 __LavorazionePreventivo__.ordine).all()
 
         ordineSettori = []
@@ -678,7 +680,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
                 sottolavorazioni = __SottolavorazioneCadPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneCadPreventivo__.ordine_sottolavorazione).all()
                 quantitaTotale = 0
 
@@ -696,7 +698,7 @@ class PreventivoEdile(PreventivoDBmodel):
             elif lav.unitaMisura == 'ml':
                 sottolavorazioni = __SottolavorazioneMlPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneMlPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
@@ -714,7 +716,7 @@ class PreventivoEdile(PreventivoDBmodel):
             elif lav.unitaMisura == 'mq':
                 sottolavorazioni = __SottolavorazioneMqPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneMqPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
@@ -733,7 +735,7 @@ class PreventivoEdile(PreventivoDBmodel):
             elif lav.unitaMisura == 'mc':
                 sottolavorazioni = __SottolavorazioneMcPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneMcPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
@@ -747,29 +749,15 @@ class PreventivoEdile(PreventivoDBmodel):
 
                 resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
 
-            elif lav.unitaMisura == 'a corpo':
-                sottolavorazioni = __SottolavorazioneCorpoPreventivo__.query.filter_by(
-                                        numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
-                                        __SottolavorazioneCorpoPreventivo__.ordine_sottolavorazione).all()
-
-                quantitaTotale = 0
-
-                for sottolav in sottolavorazioni:
-                    quantitaTotale += 1
-
-                prezzoTotale = quantitaTotale * lav.prezzoUnitario
-
-                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
 
         return ( ordineSettori, resultLav)
 
-    def returnSinglePreventivo(numero_preventivo, data):
+    def returnSinglePreventivo(numero_preventivo, revisione):
 
         '''
 
         :param: la chiave di un preventivo
-        :return: una coppia dalla forma: ( ordineSettori, resultLav )
+        :return: una terna dalla forma: ( ordineSettori, resultLav, ricarico_generale )
             dove:
             - ordineSettori = lista ordinata di nomi di settore; ogni elemento appare una sola volta
                                 e l'ordine riflette quello di comparsa nel relativo preventivo;
@@ -781,7 +769,7 @@ class PreventivoEdile(PreventivoDBmodel):
             Ogni tupla elemento di resultLav ha la forma: (lavorazione, quantita, totale, sottolavorazioni).
         '''
 
-        lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, data=data).order_by(
+        lavorazioni = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).order_by(
                                                                 __LavorazionePreventivo__.ordine).all()
 
         ordineSettori = []
@@ -797,7 +785,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
                 sottolavorazioni = __SottolavorazioneCadPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneCadPreventivo__.ordine_sottolavorazione).all()
                 quantitaTotale = 0
 
@@ -815,7 +803,7 @@ class PreventivoEdile(PreventivoDBmodel):
             elif lav.unitaMisura == 'ml':
                 sottolavorazioni = __SottolavorazioneMlPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneMlPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
@@ -833,7 +821,7 @@ class PreventivoEdile(PreventivoDBmodel):
             elif lav.unitaMisura == 'mq':
                 sottolavorazioni = __SottolavorazioneMqPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneMqPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
@@ -852,7 +840,7 @@ class PreventivoEdile(PreventivoDBmodel):
             elif lav.unitaMisura == 'mc':
                 sottolavorazioni = __SottolavorazioneMcPreventivo__.query.filter_by(
                                         numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
+                                        revisione=revisione, ordine=lav.ordine).order_by(
                                         __SottolavorazioneMcPreventivo__.ordine_sottolavorazione).all()
 
                 quantitaTotale = 0
@@ -866,35 +854,40 @@ class PreventivoEdile(PreventivoDBmodel):
 
                 resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
 
-            elif lav.unitaMisura == 'a corpo':
-                sottolavorazioni = __SottolavorazioneCorpoPreventivo__.query.filter_by(
-                                        numero_preventivo=numero_preventivo,
-                                        data=data, ordine=lav.ordine).order_by(
-                                        __SottolavorazioneCorpoPreventivo__.ordine_sottolavorazione).all()
+        ricarico_generale = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).first().ricarico_generale
 
-                quantitaTotale = 0
-
-                for sottolav in sottolavorazioni:
-                    quantitaTotale += 1
-
-                prezzoTotale = quantitaTotale * lav.prezzoUnitario
-
-                resultLav.append((lav, quantitaTotale, prezzoTotale, sottolavorazioni))
-
-        return ( ordineSettori, resultLav)
+        return ( ordineSettori, resultLav, ricarico_generale )
 
     def returnLastPreventivoCliente(nome_cliente, cognome_cliente, indirizzo_cliente):
 
         last_prev = PreventivoEdile.query.filter_by(tipologia='edile', nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
-                                                     indirizzo_cliente=indirizzo_cliente).order_by(desc(PreventivoEdile.data), desc(PreventivoEdile.numero_preventivo)).first()
+                                                     indirizzo_cliente=indirizzo_cliente).order_by(desc(PreventivoEdile.revisione), desc(PreventivoEdile.numero_preventivo)).first()
 
         if last_prev is None:
             return (None, [], [])
 
-        preventivoInfo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=last_prev.numero_preventivo, data=last_prev.data)
+        preventivoInfo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=last_prev.numero_preventivo, revisione=last_prev.revisione)
 
 
         return ( last_prev, ) + preventivoInfo
+
+    def controlloModificaCommessa(numero_preventivo, vecchio_intervento_commessa,
+                                    nuovo_intervento_commessa, indirizzo_commessa, comune_commessa):
+
+        commessa_presente = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo,
+                                                         intervento=vecchio_intervento_commessa ).first()
+
+        if commessa_presente is not None:
+
+            commessa_presente.intervento = nuovo_intervento_commessa
+            commessa_presente.indirizzo = indirizzo_commessa
+            commessa_presente.comune = comune_commessa
+
+            CommessaDBmodel.commit()
+
+    def returnCommessa(numero_preventivo, intervento_commessa):
+
+        return __Commessa__.query.filter_by(numero_preventivo=numero_preventivo, intervento=intervento_commessa).first()
 
     def returnAllPreventiviCliente(nome_cliente, cognome_cliente, indirizzo_cliente):
         '''
@@ -911,12 +904,12 @@ class PreventivoEdile(PreventivoDBmodel):
 
         preventivi = PreventivoEdile.query.filter_by(tipologia='edile', nome_cliente=nome_cliente, cognome_cliente=cognome_cliente,
                                                      indirizzo_cliente=indirizzo_cliente).order_by(
-                                                        PreventivoEdile.numero_preventivo, desc(PreventivoEdile.data)).all()
+                                                        PreventivoEdile.numero_preventivo, desc(PreventivoEdile.revisione)).all()
 
         returnList = []
 
         for prev in preventivi:
-            returnList.append( ( prev, PreventivoEdile.returnSinglePreventivo(numero_preventivo=prev.numero_preventivo, data=prev.data)) )
+            returnList.append( ( prev, PreventivoEdile.returnSinglePreventivo(numero_preventivo=prev.numero_preventivo, revisione=prev.revisione)) )
 
         return returnList
 
@@ -932,20 +925,17 @@ class PreventivoEdile(PreventivoDBmodel):
         count = q.session.execute(count_q).scalar()
         return count
 
-    def chiudiPreventivo(numero_preventivo):
+    def chiudiPreventivo(numero_preventivo, revisione, sconto, tipologia, iva):
 
-        preventivi= PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, tipologia='edile').order_by(desc(PreventivoEdile.data)).all()
+        preventivo= PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, tipologia='edile').first()
 
-        primo_giro = True
+        preventivo.stato=False
+        preventivo.sconto_totale=sconto
+        preventivo.tipologia_sconto_totale=tipologia
+        preventivo.iva_totale = iva
 
-        for prev in preventivi:
-            if primo_giro:
-                primo_giro=False
-                prev.stato=False
-                PreventivoEdile.commit()
+        PreventivoEdile.commit()
 
-            else:
-                PreventivoEdile.delRow(prev)
 
     def __calcolaIndiceLastLavorazionePagineIntermedie__(startingIndex, grandezzaRighe):
 
@@ -1080,13 +1070,22 @@ class PreventivoEdile(PreventivoDBmodel):
 
 
 
-    def stampaPreventivo(numero_preventivo, data, iva, tipoSconto, sconto, chiudiPreventivo, sumisura, budget=False ):
+    def stampaPreventivo(numero_preventivo, revisione, iva, tipoSconto, sconto, chiudiPreventivo, sumisura, budget=False ):
+        '''
 
-        if chiudiPreventivo :
-            PreventivoEdile.chiudiPreventivo(numero_preventivo)
+        :return: ritorna False se la commessa non e' compilata completamente e chiudiPreventivo == True
+        '''
+
 
         preventivo = PreventivoEdile.query.filter_by(tipologia='edile', numero_preventivo=numero_preventivo,
-                                                     data=data).first()
+                                                     revisione=revisione).first()
+
+        commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo,
+                                                   intervento=preventivo.intervento_commessa).first()
+
+        if chiudiPreventivo:
+            if commessa.intervento == '' or commessa.indirizzo == '' or commessa.comune == '':
+                return False
 
         dipendente = DipendenteDBmodel.query.filter_by(username=preventivo.dipendente_generatore).first()
 
@@ -1094,13 +1093,13 @@ class PreventivoEdile(PreventivoDBmodel):
                                                  indirizzo=preventivo.indirizzo_cliente).first()
 
         if not budget:
-            infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=numero_preventivo, data=data)
+            infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=numero_preventivo, revisione=revisione)
         else:
-            infoPreventivo = PreventivoEdile.returnSingleBudget(numero_preventivo=numero_preventivo, data=data)
+            infoPreventivo = PreventivoEdile.returnSingleBudget(numero_preventivo=numero_preventivo, revisione=revisione)
 
-        codicePrev = PreventivoEdile.calcolaCodicePreventivoNoObj(numero_preventivo, data)
+        codicePrev = PreventivoEdile.calcolaCodicePreventivoNoObj(numero_preventivo, revisione)
 
-        commessa = CommessaDBmodel.query.filter_by(numero_preventivo=numero_preventivo, intervento=preventivo.intervento_commessa).first()
+
 
         contaLavorazioni = 0
 
@@ -1118,9 +1117,9 @@ class PreventivoEdile(PreventivoDBmodel):
                       '''
 
         if not budget:
-            latexScript +=  '\\usepackage[top=1.7cm, bottom=4.5cm, left=2.6cm, right=2.6cm]{geometry}'
+            latexScript +=  '\\usepackage[top=1.7cm, bottom=5.5cm, left=2.6cm, right=2.6cm]{geometry}'
         else:
-            latexScript += '\\usepackage[top=1.7cm, bottom=2cm, left=2.6cm, right=2.6cm]{geometry}'
+            latexScript += '\\usepackage[top=1.7cm, bottom=3cm, left=2.6cm, right=2.6cm]{geometry}'
 
         latexScript += '''
                         \\usepackage{fancyhdr}
@@ -1158,8 +1157,8 @@ class PreventivoEdile(PreventivoDBmodel):
                                       \\noindent\\rule{\\textwidth}{0.4pt}
                                     }
                                     {\\footnotesize
-                                      \\raggedright\\thepage \\\\ \\centering\\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
-                                      Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
+                                        \\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
+                                        Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097 \\\\ \\begin{flushright} \\thepage \\end{flushright}
                                     }
                             }
                             \\rfoot{}
@@ -1167,12 +1166,11 @@ class PreventivoEdile(PreventivoDBmodel):
                         '''
         else:
             latexScript += '''
-                            \\lfoot{\\thepage}
                             \\cfoot{
                                 \\begin{spacing}{0.5}
                                 {\\footnotesize
                                   \\textbf{UnionService Srl.} Via Roma n. 84 - 37060 Castel d'Azzano (VR) - Tel. +39 045 8521697 - Fax +39 045 8545123 \\\\
-                                  Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097
+                                  Cell. +39 342 7663538 - C.F./P.iva 04240420234 - REA: VR-404097 \\\\ \\begin{flushright} \\thepage \\end{flushright}
                                 }
                                 \\end{spacing}
                             }
@@ -1207,12 +1205,27 @@ class PreventivoEdile(PreventivoDBmodel):
                             \\begin{spacing}{1.2}
 
                         '''
-        latexScript += commessa.intervento.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+
+        intervento_commessa = commessa.intervento
+        indirizzo_commessa = commessa.indirizzo
+        comune_commessa = commessa.comune
+
+        if commessa.intervento == '':
+            intervento_commessa = '-'
+        if commessa.indirizzo == '':
+            indirizzo_commessa = '-'
+        if commessa.comune == '':
+            comune_commessa = '-'
+
+
+        latexScript += intervento_commessa.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
                                                                                                                   "\\'u").replace(
             "ì", "\\'i") + ' \\newline '
-        latexScript += commessa.indirizzo.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
+
+
+        latexScript += indirizzo_commessa.replace("à", "\\'a").replace("è", "\\'e").replace("ò", "\\'o").replace("ù",
                                                                                                                  "\\'u").replace(
-            "ì", "\\'i") + ' \\newline ' + commessa.comune.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
+            "ì", "\\'i") + ' \\newline ' + comune_commessa.replace("à", "\\'a").replace("è", "\\'e").replace("ò",
                                                                                                              "\\'o").replace(
             "ù", "\\'u").replace("ì", "\\'i")
 
@@ -1260,7 +1273,7 @@ class PreventivoEdile(PreventivoDBmodel):
                           \\begin{spacing}{0}
                         '''
 
-        latexScript += '\\textbf{'+typeOfDoc+'}'
+        latexScript += '\\textbf{'+typeOfDoc+' - } \\textcolor{red}{revisione n.'+'{}'.format(revisione)+'}'
 
         latexScript +=  '''
                           \\end{spacing}&
@@ -1277,13 +1290,19 @@ class PreventivoEdile(PreventivoDBmodel):
                           \\hline
                           \\vspace{2.5mm}
                           \\begin{spacing}{0}
-                            \\textbf{Validit\\'a:}
-                       '''
-        validita = datetime.timedelta(days=30) + datetime.datetime.now()
+                          
+                        '''
 
-        validita = "{}/{}/{}".format(validita.day, validita.month, validita.year)
+        if not budget:
+            latexScript +=  '''
+                                \\textbf{Validit\\'a:}
+                           '''
+            validita = datetime.timedelta(days=30) + datetime.datetime.now()
 
-        latexScript += validita
+            validita = "{}/{}/{}".format(validita.day, validita.month, validita.year)
+
+            latexScript += validita
+
         latexScript += '''
                           \\end{spacing} &
                           \\vspace{2.5mm}
@@ -1392,8 +1411,8 @@ class PreventivoEdile(PreventivoDBmodel):
                                    \\begin{spacing}{0}
                                      \\euro\\hfill 
                                  '''
-                latexScript += '{}'.format(lav[2])
-                totalePreventivo += lav[2]
+                latexScript += '{}'.format(round(lav[2]*100)/100)
+                totalePreventivo += round(lav[2]*100)/100
 
                 latexScript += '''
                                    \\end{spacing} \\\\
@@ -1440,10 +1459,10 @@ class PreventivoEdile(PreventivoDBmodel):
                         laberForSconto = "Sconto netto"
                     elif tipoSconto == 3:
                         totaleScontato += totalePreventivo * sconto / 100
-                        laberForSconto = "\%"
+                        laberForSconto = "Sconto {}\%".format(sconto)
                     elif tipoSconto == 4:
                         totaleScontato = sconto
-                        laberForSconto = "Totale con sconto"
+                        laberForSconto = "Totale scontato"
 
                     totaleConIva = totaleScontato + (totaleScontato * iva / 100)
 
@@ -1534,7 +1553,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
         if chiudiPreventivo:
             PagamentiCliente.generaPagamentoPerPreventivo(numero_preventivo)
-            PagamentiCliente.modificaPagamento(numero_preventivo, {'totale_prev_edile': totalePreventivo })
+            PagamentiCliente.modificaPagamento(numero_preventivo, {'totale_prev_edile': totaleConIva })
 
         if not budget:
             latexScript += '''
@@ -1573,15 +1592,20 @@ class PreventivoEdile(PreventivoDBmodel):
     
                            '''
 
-
-        with open('app/preventiviLatexDir/preventivoEdile.tex', mode='w') as prova:
-            prova.write(latexScript)
+        if chiudiPreventivo :
+            PreventivoEdile.chiudiPreventivo(numero_preventivo, revisione, sconto, tipoSconto, iva)
 
         if not budget:
-            with open('app/preventiviLatexDir/preventivoEdile-{}.tex'.format(numero_preventivo), mode='w') as prova:
+            with open('app/preventiviLatexDir/preventivoEdile-{}_{}.tex'.format(numero_preventivo, revisione), mode='w') as prova:
+                prova.write(latexScript)
+        else:
+            with open('app/preventiviLatexDir/budgetEdile-{}_{}.tex'.format(numero_preventivo, revisione), mode='w') as prova:
                 prova.write(latexScript)
 
-        os.system("cd app/preventiviLatexDir && pdflatex preventivoEdile.tex")
 
         if not budget:
-            os.system("cd app/preventiviLatexDir && pdflatex preventivoEdile-{}.tex".format(numero_preventivo))
+            os.system("cd app/preventiviLatexDir && pdflatex preventivoEdile-{}_{}.tex".format(numero_preventivo, revisione))
+        else:
+            os.system("cd app/preventiviLatexDir && pdflatex budgetEdile-{}_{}.tex".format(numero_preventivo, revisione))
+
+        return True

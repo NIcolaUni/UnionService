@@ -1,7 +1,7 @@
 
 var ordineProdotti = 1; // variabile globale usata per tener conto del numero dell'ultimo prodotto aggiunto
 var numeroPreventivo;
-var dataPreventivo;
+var revisionePreventivo;
 var cbxStatus=true;
 var prodottiPerTipologiaMarchioModello;
 var disabilitaSocketio = false;
@@ -56,7 +56,7 @@ var stampaPreventivo = function(usernameDip){
             socketFiniture.emit('stampa_preventivo', {
                                             'dip': usernameDip,
                                             'numero_preventivo': numeroPreventivo,
-                                            'data': dataPreventivo,
+                                            'revisione': revisionePreventivo,
                                             'chiudiPreventivo': chiudiPrev });
 
 
@@ -72,7 +72,7 @@ var aggiungiNote = function($this){
 
     if(!disabilitaSocketio){
         socketFiniture.emit('inserisci_note', {   'numero_preventivo': numeroPreventivo,
-                                                            'data': dataPreventivo,
+                                                            'revisione': revisionePreventivo,
                                                             'nota': $this.val() });
     }
 }
@@ -128,6 +128,7 @@ var modificaQuantitaProdotto = function( $inputQuantita, diffCapitolato ){
     var quantitaValue = parseFloat( $inputQuantita.val() );
     var newCap = 0;
     var diffCapitolato = parseFloat(diffCapitolato);
+    var ordineProdotto = $inputQuantita.parent().parent().attr('id').split('_trBody-')[1];
 
     if( diffCapitolato != 0)
     {
@@ -142,21 +143,21 @@ var modificaQuantitaProdotto = function( $inputQuantita, diffCapitolato ){
 
         calcolaTotalePreventivo();
 
-        var ordineProdotto = $inputQuantita.parent().parent().attr('id').split('_trBody-')[1];
 
-        if(!disabilitaSocketio){
-            socketFiniture.emit("modifica_prodotto",
-                            {
-                                "numero_preventivo" : numeroPreventivo,
-                                "data" : dataPreventivo,
-                                "ordine": ordineProdotto,
-                                "quantita": quantitaValue,
-                                "diffCapitolato": newCap
+    }
 
-                            }
-            );
-        }
 
+    if(!disabilitaSocketio){
+        socketFiniture.emit("modifica_prodotto",
+                        {
+                            "numero_preventivo" : numeroPreventivo,
+                            "revisione" : revisionePreventivo,
+                            "ordine": ordineProdotto,
+                            "quantita": quantitaValue,
+                            "diffCapitolato": newCap
+
+                        }
+        );
     }
 
 
@@ -227,7 +228,7 @@ var rienumeraPagina = function(){
             socketFiniture.emit("modifica_ordine_prodotto",
                             {
                                 "numero_preventivo" : numeroPreventivo,
-                                "data" : dataPreventivo,
+                                "revisione" : revisionePreventivo,
                                 "ordineVecchio": -oldNum,
                                 "ordineNuovo" : counter
 
@@ -286,7 +287,7 @@ var cancellaProdotto = function( $delBtn ){
         socketFiniture.emit("elimina_prodotto",
                         {
                             "numero_preventivo" : numeroPreventivo,
-                            "data" : dataPreventivo,
+                            "revisione" : revisionePreventivo,
                             "ordine": numEl,
 
                         }
@@ -324,7 +325,7 @@ var modificaUnitaMisura = function($this){
     socketFiniture.emit('modifica_unita_misura', {
 
         'numero_preventivo': numeroPreventivo,
-        'data' : dataPreventivo,
+        'revisione' : revisionePreventivo,
         'ordine_prodotto' : ordineProdotto,
         'value' : nuovoValore
 
@@ -340,7 +341,7 @@ var modificaNomeProdotto = function($this){
     socketFiniture.emit('modifica_nome_prodotto', {
 
         'numero_preventivo': numeroPreventivo,
-        'data' : dataPreventivo,
+        'revisione' : revisionePreventivo,
         'ordine_prodotto' : ordineProdotto,
         'value' : nuovoValore
 
@@ -348,12 +349,12 @@ var modificaNomeProdotto = function($this){
 }
 
 /********************************************************************************************/
-var aggiungiRiga = function($button, numeroPreventivoParametro, dataPreventivoParametro, tipologia,
+var aggiungiRiga = function($button, numeroPreventivoParametro, revisionePreventivoParametro, tipologia,
                         marchio, modello, prodotto, modelloClass, codiceProdotto, costoProdotto,
                         costoCapitolato, nettoUsProdotto ){
 
     numeroPreventivo = numeroPreventivoParametro;
-    dataPreventivo = dataPreventivoParametro;
+    revisionePreventivo = revisionePreventivoParametro;
 
     if( !$button.hasClass('aggiunto') ){
 
@@ -461,7 +462,7 @@ var aggiungiRiga = function($button, numeroPreventivoParametro, dataPreventivoPa
             socketFiniture.emit("add_nuovo_prodotto",
                 {
                     "numero_preventivo" : numeroPreventivo,
-                    "data" : dataPreventivo,
+                    "revisione" : revisionePreventivo,
                     "ordine": ordineProdotti,
                     "tipologia" : tipologia,
                     "prodotto" : prodotto,

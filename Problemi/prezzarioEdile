@@ -1,0 +1,11 @@
+1- la modifica di fornitura e posa non aggiorna il costo...
+
+2- la modifica del nome della lavorazione viene applicata solo al prossimo refresh
+
+4- inserire il settore "assistenza"
+
+5- ad ogni lavorazione si può associare o meno l'assistenza
+
+6- il prezzo dell'assistenza è netto o percentuale
+
+7- nel preventivo edile l'assistenza deve essere possibile forzarla ( inserirne una non presente in db )

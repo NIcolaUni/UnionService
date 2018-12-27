@@ -4,9 +4,9 @@ import app
 class ProdottoPreventivoFinitureDBmodel(app.database.Model):
     __tablename__ = "prodotto_preventivo_finiture"
     __table_args__ = (
-            PrimaryKeyConstraint( 'numero_preventivo', 'data', 'tipologia_preventivo', 'ordine' ),
-            ForeignKeyConstraint(['numero_preventivo', 'data', 'tipologia_preventivo'],
-                                 ['preventivo.numero_preventivo', 'preventivo.data', 'preventivo.tipologia'],
+            PrimaryKeyConstraint( 'numero_preventivo', 'revisione', 'tipologia_preventivo', 'ordine' ),
+            ForeignKeyConstraint(['numero_preventivo', 'revisione', 'tipologia_preventivo'],
+                                 ['preventivo.numero_preventivo', 'preventivo.revisione', 'preventivo.tipologia'],
                                  ondelete='CASCADE', onupdate='CASCADE'),
             ForeignKeyConstraint(['tipologia', 'nome_prodotto', 'modello', 'marchio'],
                                  ['modello_prodotto_prezzario.tipologia',
@@ -17,7 +17,7 @@ class ProdottoPreventivoFinitureDBmodel(app.database.Model):
             )
 
     numero_preventivo = Column(Integer())
-    data = Column(Date)
+    revisione = Column(Integer())
     ordine = Column(Integer()) # dov e' posizionata il prodotto nel preventivo
     tipologia_preventivo = Column(String(20))
 
