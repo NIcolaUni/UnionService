@@ -2,19 +2,16 @@
 1-  pdf intestazione non va nelle pagine centrali
 
 
-4-  nel pdf se non viene inserito
+2-  nel pdf se non viene inserito
 
-7-  inserire unità misura per gli sconti quando stampa
+3-  inserire unità misura per gli sconti quando stampa
 
-9-  riordino revisioni alla cancellazione di un preventivo
-10- alert imprevisti alla stampa del budget budget ( fa inserire una quantita o percentuale o netto )
-11- nome modificato per ogni sottolavorazione
-12- nella stampa a misura mettere l h p + sottolavorazioni mostrate
-13- mettere totale dimensioni prezzo Base US
-14- nel budget inserire fornitura e posa
-15- se iva a zero togliere la riga
-16- inserici ricarico generale 2
-17- drag n drop
-18- nel pdf stampa anche i settori di lavorazione
-19 - se su misura stampa anche le dimensioni
-
+4-  riordino revisioni alla cancellazione di un preventivo
+5- alert imprevisti alla stampa del budget budget ( fa inserire una quantita o percentuale o netto )
+6- nella stampa a misura mettere l h p + sottolavorazioni mostrate
+7- nel budget inserire fornitura e posa
+8- se iva a zero togliere la riga
+9- drag n drop
+10- nel pdf stampa anche i settori di lavorazione
+11 - se su misura stampa anche le dimensioni
+12-quando aperto in modalita modifica non rienumera correttamente le sottolavorazioni lavorazioni.

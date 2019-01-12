@@ -32,6 +32,8 @@ class PreventivoDBmodel(DbUSinterface, DbUSinterface.db.Model):
     note = Column(String(500))
     revisione = Column(Integer(), default=1)
     ricarico_generale = Column(Integer())
+    ricarico_extra = Column(Integer(), default=0)  # solo se tipo == edile oppure varianti
     sconto_totale = Column(Float(), default=0)
     tipologia_sconto_totale = Column(Integer(), default=1) # 1 no sconto, 2 netto, 3 percentuale, 4 forzato
     iva_totale = Column(Integer(), default=0)
+

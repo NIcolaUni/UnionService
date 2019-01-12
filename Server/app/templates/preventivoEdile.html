@@ -34,17 +34,38 @@
 
                     </div>
 
-                    <span id="ricaricoGeneraleSpan" style="display:none">Ricarico generale</span></br>
-                    <div id="ricaricoGeneraleContainer" style="display:none" class="features">
+                    <div id="ricarichiSection" style="display:none">
+                        <div id="ricaricoGeneraleSpanContainer">
+                            <span id="ricaricoGeneraleSpan">Ricarico generale</span>
+                        </div>
+                        <div id="ricaricoExtraSpanContainer">
+                            <span id="ricaricoExtraSpan">Ricarico extra</span>
+                        </div>
+                        <br/>
 
-                        <div id="ricaricoGeneraleDiv">
-                            <input id="inputRicaricoGenerale" oninput="modificaRicaricoGenerale($(this));" class="ricaricoPrezzario-{{prezzarioEdile.ricaricoAzienda}}" type="number" min="0" max="100" value="{{prezzarioEdile.ricaricoAzienda}}">
-                            <label id="percLabelRincaro">%</label>
+                        <div id="ricaridoGeneraleContainer">
+                            <div id="ricaricoGeneraleBordo" class="features">
+                                <div id="ricaricoGeneraleDiv">
+                                    <input id="inputRicaricoGenerale" oninput="modificaRicaricoGenerale($(this));" class="ricaricoPrezzario-{{prezzarioEdile.ricaricoAzienda}}" type="number" min="0" max="100" value="{{prezzarioEdile.ricaricoAzienda}}">
+                                    <label class="percLabelRincaro">%</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="ricaricoExtraContainer">
+                            <div id="ricaricoExtraBordo" class="features">
+                                <div id="ricaricoExtraDiv">
+                                    <input id="inputRicaricoExtra" oninput="modificaRicaricoExtra($(this));" class="ricaricoPrezzario-{{preventivo.ricarico_extra}}" type="number" min="0" max="100" value="{{preventivo.ricarico_extra}}">
+                                    <label class="percLabelRincaro">%</label>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
 
                 </div>
+
                 <div  id="divElementFattura" class="features col-md-8">
                     <ul id="listaElementFattura">
 
@@ -68,9 +89,10 @@
                         </table>
                     </div>
             </div>
-            <div id="divTotale" >
 
-            </div>
+            <div id="divTotale" ></div>
+            <div id="divTotaleRicaricoExtra" style="display:none"></div>
+
             <div id="divSalvaPreventivo" class="features">
                 <a onclick="stampaPreventivo('{{dipendente.username}}')" id="printButton">STAMPA</a>
             </div>
@@ -80,6 +102,7 @@
             <div id="divNote" class="features">
                 <textarea oninput="aggiungiNote($(this))" id="note"></textarea>
             </div>
+
         </div>
     </section>
 </div>
@@ -171,19 +194,28 @@
 
                 $('tr.trBody').each(function(){
 
-                    if( $(this).children('td.firstCol').children('label').text() == '{{lavorazione[0].ordine}}' ){
+                    if( !$(this).hasClass('trSottolav') ){
 
-                        var idSettore = $(this).attr('id').split('_trBody-')[0];
-                        var idLavorazione = $(this).attr('id').split('_trBody-')[1];
+                        if( $(this).children('td.firstCol').children('label').text() == '{{lavorazione[0].ordine}}' ){
 
-                        $(this).children('td.tdLavorazione').children('textarea').val(nome_modificato);
+                            var idSettore = $(this).attr('id').split('_trBody-')[0];
+                            var idLavorazione = $(this).attr('id').split('_trBody-')[1];
 
-                        {% for sottolavorazione in lavorazione[3] %}
+                            $(this).children('td.tdLavorazione').children('textarea').val(nome_modificato);
 
-                            $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').val('{{sottolavorazione.ricarico}}');
-                            $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').trigger('input');
+                            {% for sottolavorazione in lavorazione[3] %}
+    /*
+                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').val('{{sottolavorazione.ricarico}}');
+                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').trigger('input');
+                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdNomeSottolavorazione').children('textarea').text('{{sottolavorazione.nome_modificato}}');
 
-                        {% endfor %}
+
+                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdNomeSottolavorazione').children('textarea').trigger('input');
+
+    */
+                            {% endfor %}
+                        }
+
                     }
 
                 });
@@ -204,6 +236,7 @@
 
             var primoGiro = true;
             var lastLavAdded = "";
+
             {% for settore in infoPreventivo[0] %}
 
                 if( primoGiro ){
@@ -216,7 +249,6 @@
                 {% for lavorazione in infoPreventivo[1] %}
 
                     {% if lavorazione[0].settore == settore %}
-
 
                         //trovo il numero che indica l'ordine nel select del bottone
                         //associato alla lavorazione
@@ -255,45 +287,6 @@
 
                         $('#'+idButton).trigger('click');
 
-                        var firstSottolav = true
-
-                        {% for sottolavorazione in lavorazione[3] %}
-
-                            if( !firstSottolav ){
-                                $('#'+classSettore+'_trBody-{{lavorazione[0].ordine}} td.firstCol').children('a.addElement').trigger('click');
-                            }
-                            else{
-                                firstSottolav=false;
-                            }
-
-                            $('tr.'+classSettore+'_trSottolavorazione-{{lavorazione[0].ordine}}.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').each(function(){
-
-                                $(this).children('td.inputField').each(function(){
-                                    $(this).children('input').each(function(){
-
-                                        if( $(this).hasClass('numero') ){
-                                            $(this).val('{{sottolavorazione.numero}}');
-                                            $(this).trigger('input');
-                                        }
-                                        else if( $(this).hasClass('larghezza') ){
-                                            $(this).val('{{sottolavorazione.larghezza}}');
-                                            $(this).trigger('input');
-                                        }
-                                        else if( $(this).hasClass('altezza') ){
-                                            $(this).val('{{sottolavorazione.altezza}}');
-                                            $(this).trigger('input');
-                                        }
-                                        else if( $(this).hasClass('profondita') ){
-                                            $(this).val('{{sottolavorazione.profondita}}');
-                                            $(this).trigger('input');
-                                        }
-
-                                    });
-                                });
-                            });
-
-
-                        {% endfor %}
 
                     {% endif %}
                 {% endfor %}
@@ -302,13 +295,134 @@
 
         }
 
+        /***************************************************************/
+        /*Questa funzione implementa il corpo effettivo di aggiugiSottolavorazioni;
+          poiche' l'aggiunta di una sottolavorazione puo' modificare il contenuto
+          di lavToCtrl poichè si possono modificare gli ordini di riga, tale funzione
+          deve essere interrompibile, salvando accuratamente l'indice di stop e
+          ripartendo dallo stesso punto ma ciclando sul nuovo lavToCtrl*/
+
+        var aggiungiSottolavorazioniAux = function(starting_index){
+            var firstTime =true;
+            var indexReturned =0;
+
+            $.each(lavToCtrl, function(index, lav){
+
+                if( lavToCtrl_changed ){
+
+                    if( firstTime ){
+                        firstTime = false;
+                        indexReturned =index;
+                        return;
+                    }
+                }
+                else if( index >= starting_index ){
+                    var idLav = lav[0];
+                    var settore = lav[1];
+                    var firstSottolav = true;
+                    var idLavSplitted = idLav.split('_trBody-');
+                    var classSettore = idLavSplitted[0];
+                    var ordineLav = idLavSplitted[1];
+
+                    {% for lavorazione in infoPreventivo[1] %}
+
+                        if('{{lavorazione[0].settore}}' == settore ){
+                            if('{{lavorazione[0].ordine}}' == ordineLav ){
+                                {% for sottolavorazione in lavorazione[3] %}
+
+                                    if( !firstSottolav ){
+                                        $('#'+idLav+' td.firstCol').children('a.addElement').trigger('click');
+
+                                    }
+                                    else{
+                                        firstSottolav=false;
+                                    }
+
+                                    $('tr.'+classSettore+'_trSottolavorazione-'+ordineLav+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').each(function(){
+
+
+                                        $(this).children('td.inputField').each(function(){
+                                            $(this).children('input').each(function(){
+
+                                                if( $(this).hasClass('numero') ){
+                                                    $(this).val('{{sottolavorazione.numero}}');
+                                                    $(this).trigger('input');
+                                                }
+                                                else if( $(this).hasClass('larghezza') ){
+                                                    $(this).val('{{sottolavorazione.larghezza}}');
+                                                    $(this).trigger('input');
+                                                }
+                                                else if( $(this).hasClass('altezza') ){
+                                                    $(this).val('{{sottolavorazione.altezza}}');
+                                                    $(this).trigger('input');
+                                                }
+                                                else if( $(this).hasClass('profondita') ){
+                                                    $(this).val('{{sottolavorazione.profondita}}');
+                                                    $(this).trigger('input');
+                                                }
+
+                                            });
+                                        });
+
+                                        $(this).children('td.tdNomeSottolavorazione').children('textarea').val('{{sottolavorazione.nome_modificato}}');
+                                        $(this).children('td.tdNomeSottolavorazione').children('textarea').trigger('input');
+                                    });
+
+                                {% endfor %}
+
+                            }
+                        }
+
+                    {% endfor %}
+
+
+
+                    if( index == lavToCtrl.length-1 ){
+                        indexReturned= index+1;
+                    }
+                }
+
+            });
+
+            return indexReturned;
+        }
+
         /************************************************************/
 
+        /*poiche' le lavorazioni sono aggiunte con l'evento click e questo
+            a volte non si completa prima che venga generato il bottone
+            da cliccare per le sottolavorazioni relative, si aspetta che
+            tutta la pagina venga caricata prima di aggiungere le sottolavorazioni */
+
+
+
+        var aggiungiSottolavorazioni = function(){
+
+            setTimeout( function(){
+                settaDisabilitaSocketio(true);
+
+                var indexReturned = 0;
+                var lastIndex = lavToCtrl.length;
+
+                while( indexReturned < lastIndex ){
+                    indexReturned = aggiungiSottolavorazioniAux(indexReturned);
+                    lavToCtrl_changed = false;
+                    lastIndex = lavToCtrl.length;
+                }
+
+                applicaModificheRegistrate();
+                settaDisabilitaSocketio(false);
+
+
+            }, 50);
+        }
+
+        /************************************************************/
         $(function(){
             settaDisabilitaSocketio(true);
             costruisciPreventivo();
-            applicaModificheRegistrate();
             settaDisabilitaSocketio(false);
+            aggiungiSottolavorazioni();
 
             $('input').on('mouseover', function(){
                 $(this).focus();

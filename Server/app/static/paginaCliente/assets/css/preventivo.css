@@ -126,6 +126,15 @@ section#one::-webkit-scrollbar-thumb:window-inactive {
     position: absolute;
 }
 
+#divTotaleRicaricoExtra > span{
+    right: 8%;
+    position: absolute;
+}
+
+div#divTotaleRicaricoExtra {
+    height: 40px;
+}
+
 
 #printButton {
     display:inline-block;
@@ -407,9 +416,10 @@ button.elementFattura{
 
 }
 
-div#ricaricoGeneraleContainer {
+div#ricaricoGeneraleBordo {
     height: 52px;
     width: 100px;
+    display: inline-block;
 }
 
 div#ricaricoGeneraleDiv {
@@ -423,7 +433,49 @@ input#inputRicaricoGenerale {
     margin: 11% 0 0 23%;
 }
 
-label#percLabelRincaro {
+td.tdPreventivo.tdAdded.sumTotaliUs {
+    color: #be90ef;
+}
+
+label.percLabelRincaro {
     font-size: 85%;
     display: inline;
+}
+
+div#ricaricoExtraBordo {
+    height: 52px;
+    width: 100px;
+    display: inline-block;
+}
+
+div#ricaricoExtraDiv {
+    height: 100%;
+    width: 100%;
+}
+
+input#inputRicaricoExtra {
+    width: 50%;
+    background-color: #7b73c7;
+    margin: 11% 0 0 23%;
+}
+
+div#ricaricoGeneraleSpanContainer {
+    width: 50%;
+    display: inline-block;
+}
+
+
+
+div#ricaricoExtraSpanContainer {
+    display: inline-block;
+    /* width: 50%; */
+}
+
+div#ricaridoGeneraleContainer {
+    display: inline-block;
+    width: 50%;
+}
+
+div#ricaricoExtraContainer {
+    display: inline-block;
 }

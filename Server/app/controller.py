@@ -140,7 +140,7 @@ def newPreventivoEdile():
     settori = SettoreLavorazione.query.order_by( SettoreLavorazione.nome )
     prezzarioEdile = PrezzarioEdile.query.first()
     lavorazioni = PrezzarioEdile.returnLavorazioni()
-    preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], revisione=app.preventivoEdileSelezionato[1]).first()
+    preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], revisione=app.preventivoEdileSelezionato[1], tipologia="edile").first()
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
 
@@ -1439,14 +1439,30 @@ def handle_registra_nuovo_preventivo(message):
 @socketio.on('modifica_ricarico_generale', namespace='/preventivoEdile')
 def handle_modifica_ricarico_generale(message):
 
-    PreventivoEdile.modificaRicaricoGenerale(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
-                                             ricarico=message['ricarico'])
+    PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'],  revisione=message['revisione'],
+                                             modifica={'ricarico_generale': message['ricarico']})
 
+@socketio.on('modifica_ricarico_extra', namespace='/preventivoEdile')
+def handle_modifica_ricarico_extra(message):
+
+    PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'],  revisione=message['revisione'],
+                                             modifica={'ricarico_extra': message['ricarico']})
+
+@socketio.on('modifica_nome_sottolavorazione', namespace='/preventivoEdile')
+def handle_modifica_prodotto(message):
+
+    PreventivoEdile.modificaNomeSottolavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                                 ordine=message['ordine'], ordine_sottolavorazione=message['ordine_sottolavorazione'],
+                                                 unitaMisura=message['unitaMisura'] , nome_modificato=message['nome_modificato'])
 
 @socketio.on('modifica_nome_lavorazione', namespace='/preventivoEdile')
 def handle_modifica_prodotto(message):
     PreventivoEdile.modificaLavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
                                         ordine=message['ordine_lavorazione'], modifica={'nome_modificato': message['value'] })
+
+    PreventivoEdile.modificaNomeSottolavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                                 ordine=message['ordine_lavorazione'], ordine_sottolavorazione=0,
+                                                 unitaMisura=message['unitaMisura'] , nome_modificato=message['value'])
 
 @socketio.on('elimina_preventivo', namespace='/preventivoEdile')
 def handle_elimina_preventivo(message):
@@ -1510,8 +1526,7 @@ def handle_elimina_lavorazione(message):
 
 @socketio.on('modifica_ordine_lavorazione', namespace='/preventivoEdile')
 def handle_modifica_ordine_lavorazione(message):
-    app.server.logger.info('\n\nmoddsds\n')
-    app.server.logger.info('\n\nmodordiok AAAAAA {}\n\n'.format(message['numero_preventivo']))
+
     PreventivoEdile.iniziaRiordinoLavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'])
 
     PreventivoEdile.modificaOrdineLavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
@@ -1520,7 +1535,7 @@ def handle_modifica_ordine_lavorazione(message):
 @socketio.on('add_nuova_sottolavorazione', namespace='/preventivoEdile')
 def handle_add_nuova_sottolavorazione(message):
     PreventivoEdile.nuovaSottolavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
-                                           ordine=message['ordine'])
+                                           ordine=message['ordine'], nome_modificato=message['nome_modificato'])
 
 @socketio.on('elimina_sottolavorazione', namespace='/preventivoEdile')
 def handle_elimina_sottolavorazione(message):
