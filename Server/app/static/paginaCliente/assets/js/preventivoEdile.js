@@ -11,13 +11,16 @@ var lavToCtrl = []; /* array usato in modalità modifica per aggiungere corretta
                             i suoi elementi sono array della forma [ id_lav, settore ] */
 var lavToCtrl_changed = false;
 
+var arrayAssistenze = []; //memorizzo le assistenze originali di una lavorazione coi suoi dati;
+                          // l'array ha la forma: [ [ id_riga_assistenza, nome_assistenza, costo, tipo_costo ], ... ]
+
 /********************************************************************************************/
 
 var espandiTabella = function(){
 
     if(cbxStatus == true ){
 
-        $('.titleSettoreTd').attr('colspan', 12 );
+        $('.titleSettoreTd').attr('colspan', 13 );
         $('.thAdded').show();
         $('.tdAdded').show();
         $('#ricarichiSection').show();
@@ -26,7 +29,7 @@ var espandiTabella = function(){
     }
     else{
 
-        $('.titleSettoreTd').attr('colspan', 9 );
+        $('.titleSettoreTd').attr('colspan', 10 );
         $('.thAdded').hide();
         $('.tdAdded').hide();
         $('#ricarichiSection').hide();
@@ -397,11 +400,26 @@ var calcolaTotaleRigaSottolavorazione = function(classeElemento, ordineSottolav,
         Il parametro "ordineSottolav" ha la forma: "sottolavNum-<ordineSottolavorazione>"
 
     */
+    var classeElementoSplitted = classeElemento.split('_trSottolavorazione-');
+    var idContainerLav = classeElementoSplitted[0]+'_trBody-'+classeElementoSplitted[1];
+    var inputAssistenzaContainer = $('#'+idContainerLav).children('td.tdCostoAssistenza').children('div');
+    var costoAssistenza = inputAssistenzaContainer.children('input[type="number"]').val();
+    var tipoCostoAssistenza = inputAssistenzaContainer.children('input[type="radio"]:checked').val();
 
     $('.'+classeElemento+'.'+ordineSottolav).each(function(){
 
 
         var totalePrezzo=prezzoBase;
+
+        if( tipoCostoAssistenza == 'perc' ){
+           totalePrezzo += ( totalePrezzo*parseFloat(costoAssistenza)/100 )
+        }
+        else {
+            totalePrezzo +=parseFloat(costoAssistenza);
+        }
+
+
+
         var quantita=1;
 
 
@@ -705,7 +723,7 @@ var modificaNomeSottolavorazione = function($this){
         -creo una nuova lavorazione
         -riordino */
 
-
+/*
     if(!$('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).hasClass('trBody') && nome_originario != nome_modificato ){
         sottolavFirstCol = $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children().first().html();
 
@@ -739,34 +757,45 @@ var modificaNomeSottolavorazione = function($this){
 */
 
         /*rinumera tutte le lavorazione*/
-        rienumeraPagina();
+  /*      rienumeraPagina();
         $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children().first().append('<a onclick="eliminaSottolavorazione($(this), \'mq\')" class="delSottolavorazione fa fa-trash"></a>');
         $('.inputRicarico').trigger('input');
 
         ordineLavorazioni++;
-    }
+    }*/
 
 }
 
 /*******************************************************************************************/
 
-var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione, costoUs, ricaricoAzienda){
+var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione, costoUs, ricaricoAzienda, costoAssistenza, tipoCostoAssistenza ){
 
     var classSettore= $this.parent().parent().attr('id').split('_trBody-')[0];
     var numElement = $this.parent().parent().attr('id').split('_trBody-')[1];
 
     var nome_sottolavorazione = $this.parent().parent().children('td.tdLavorazione').children('textarea').val();
 
+    var labelCostoAssistenza ='<label>';
+    if( tipoCostoAssistenza ){
+            labelCostoAssistenza += costoAssistenza +' %';
+        }
+        else
+            labelCostoAssistenza += '&euro; '+ costoAssistenza;
+
+    labelCostoAssistenza +='</label>';
     //var prezzoUnitario = prezzoUnitarioWithEuro.split(' ')[1];
 
     //Aggiungo una nuova riga prima del totale parziale ( rappresentato dalla classe trFoot )
     $('.trFoot'+numElement).before(
         '<tr class="'+classSettore+'_trSottolavorazione-'+numElement+'">'+
             '<td><a onclick="eliminaSottolavorazione($(this), \''+unitaMisura+'\')" class="delSottolavorazione fa fa-trash"></a></td>'+
-            '<td class="tdPreventivo tdNomeSottolavorazione"><textarea oninput="modificaNomeSottolavorazione($(this))">'+nome_sottolavorazione+'</textarea></td>'+
+            '<td class="tdPreventivo tdNomeSottolavorazione"><textarea oninput="modificaNomeSottolavorazione($(this))"></textarea></td>'+
             righeDimensioniSottolavorazione( unitaMisura, costoLavorazione, numElement)+
            '<td class="tdPreventivo tdUnita numColSmall">'+unitaMisura+'</td>'+
             '<td class="tdPreventivo tdCostoUnitario colSmall">&euro; '+costoLavorazione+'</td>'+
+            '<td class="tdPreventivo tdCostoAssistenza">'+
+                labelCostoAssistenza+
+            '</td>'+
             '<td class="tdPreventivo tdCostoUs tdAdded">&euro; '+costoUs+'</td>'+
             '<td class="tdPreventivo tdTotaleUs tdAdded">&euro; '+costoUs+'</td>'+
             '<td class="tdPreventivo tdRicarico numColSmall tdAdded">+ <input oninput="modificaRicarico($(this))" type="number" min="0" max="100" class="inputRicarico" value="'+parseInt(ricaricoAzienda)+'">%</td>'+
@@ -804,7 +833,7 @@ var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione, co
                 "numero_preventivo" : numeroPreventivo,
                 "revisione" : revisionePreventivo,
                 "ordine": numElement,
-                "nome_modificato": nome_sottolavorazione
+                "nome_modificato": ''
             }
         );
     }
@@ -878,7 +907,7 @@ var modificaRicaricoGenerale = function($this){
 
 var modificaRicaricoExtra = function($this){
 
-    var ricarico = parseInt($this.val());
+    /*var ricarico = parseInt($this.val());
 
     if( ricarico == 0 ){
         $('#divTotale').show();
@@ -894,7 +923,28 @@ var modificaRicaricoExtra = function($this){
 
         $('#divTotaleRicaricoExtra').html('<span><u>Totale:</u> &euro; '+totaleValue+'</span>');
 
-    }
+    }*/
+
+
+    $('.trBody').each(function(){
+
+        var idLavSplitted = $this.attr('id').split('_trBody-');
+        var classSottolav = idLavSplitted[0]+'_trSottolavorazione-'+idLavSplitted[1];
+
+        $('.'+classSottolav).each(function(){
+
+            var class1 = $(this).attr('class').split(' ')[0];
+            var class2 = $(this).attr('class').split(' ')[1];
+            var costoUnitario = $(this).children('td.tdCostoUnitario').text().split(' ')[1];
+
+            calcolaTotaleRigaSottolavorazione( class1, class2, costoUnitario);
+
+        });
+
+    });
+
+
+
 
     if( !disabilitaSocketio ){
         socketPreventivo.emit('modifica_ricarico_extra', {
@@ -940,8 +990,136 @@ var modificaRicarico = function($this){
 }
 
 /*******************************************************************************************/
+/* funzione ausiliaria per modificaAssistenzaLavorazione()*/
 
-var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura ){
+var cambiaCostoAssistenza = function( labelCosto, classSottolavorazione ){
+
+    $('.'+classSottolavorazione ).each(function(){
+
+        $(this).children('.tdCostoAssistenza').html('<label>'+labelCosto+'</label>');
+
+    });
+}
+
+/*******************************************************************************************/
+
+var modificaCostoAssistenza = function($this){
+
+    var newVal = $this.val();
+    var typeCosto = $this.parent().children('input[type="radio"]:checked').val();
+    var idContainer = $this.parent().parent().parent().attr('id');
+    var idContainerSplitted = idContainer.split('_trBody-');
+    var classSottolavorazione =  idContainerSplitted[0]+'_trSottolavorazione-'+idContainerSplitted[1];
+
+    if( typeCosto == 'perc' )
+        cambiaCostoAssistenza( newVal + ' %', classSottolavorazione);
+    else
+        cambiaCostoAssistenza( '&euro; '+ newVal, classSottolavorazione );
+
+    $('.'+classSottolavorazione).each(function(){
+
+        var class1 = $(this).attr('class').split(' ')[0];
+        var class2 = $(this).attr('class').split(' ')[1];
+        var costoUnitario = $(this).children('td.tdCostoUnitario').text().split(' ')[1];
+
+        calcolaTotaleRigaSottolavorazione( class1, class2, costoUnitario);
+    });
+
+
+}
+
+/*******************************************************************************************/
+
+var modificaTipoCostoAssistenza = function($this){
+
+    var newTipo = $this.val();
+    var costo = $this.parent().children('input[type="number"]').val();
+
+    var idContainer = $this.parent().parent().parent().attr('id');
+    var idContainerSplitted = idContainer.split('_trBody-');
+    var classSottolavorazione =  idContainerSplitted[0]+'_trSottolavorazione-'+idContainerSplitted[1];
+
+    if( newTipo == 'perc' )
+        cambiaCostoAssistenza( costo + ' %', classSottolavorazione);
+    else
+        cambiaCostoAssistenza( '&euro; '+ costo, classSottolavorazione );
+
+    $('.'+classSottolavorazione).each(function(){
+
+        var class1 = $(this).attr('class').split(' ')[0];
+        var class2 = $(this).attr('class').split(' ')[1];
+        var costoUnitario = $(this).children('td.tdCostoUnitario').text().split(' ')[1];
+
+        calcolaTotaleRigaSottolavorazione( class1, class2, costoUnitario);
+    });
+
+
+}
+
+/*******************************************************************************************/
+
+var modificaAssistenzaLavorazione = function($this){
+
+    var idContainer = $this.parent().parent().parent().attr('id');
+    var idContainerSplitted = idContainer.split('_trBody-');
+
+    var classSottolavorazione =  idContainerSplitted[0]+'_trSottolavorazione-'+idContainerSplitted[1];
+
+    var $tdCostoAssistenza = $this.parent().parent().parent().children('td.tdCostoAssistenza').children('div');
+    var inputAssistenzaContainer = $('#'+idContainer+' td.tdCostoAssistenza').children('div');
+
+    if( $this.val() == "No assistenza" ){
+        cambiaCostoAssistenza( '&euro; 0', classSottolavorazione );
+        inputAssistenzaContainer.children('input[type="number"]').val(0);
+        inputAssistenzaContainer.children('.radioPerc').trigger('click');
+
+    }
+    else{
+        $.each(arrayAssistenze, function(index, el){
+
+
+            if( el[0] == idContainer ){
+                if( el[1] == $this.val() ){
+                    $tdCostoAssistenza.hide();
+                    inputAssistenzaContainer.children('input[type="number"]').val(el[2]);
+
+                    if( el[3] ){
+                        cambiaCostoAssistenza( el[2] + ' %', classSottolavorazione);
+                        inputAssistenzaContainer.children('.radioPerc').trigger('click');
+                    }
+                    else{
+                        cambiaCostoAssistenza( '&euro; '+ el[2], classSottolavorazione );
+                        inputAssistenzaContainer.children('.radioEuro').trigger('click');
+
+                    }
+
+                }
+                else{
+                    $tdCostoAssistenza.show();
+
+                }
+
+            }
+        });
+    }
+
+    $('.'+classSottolavorazione).each(function(){
+
+        var class1 = $(this).attr('class').split(' ')[0];
+        var class2 = $(this).attr('class').split(' ')[1];
+        var costoUnitario = $(this).children('td.tdCostoUnitario').text().split(' ')[1];
+
+        calcolaTotaleRigaSottolavorazione( class1, class2, costoUnitario);
+    });
+
+
+
+}
+
+/*******************************************************************************************/
+
+var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
+                            nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte){
 
 
     numeroPreventivo = numeroPreventivoParametro;
@@ -968,26 +1146,55 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
         costoUs = costoLavorazione;
         costoLavorazione = costoLavorazione+(costoLavorazione*ricaricoAzienda/100);
 
+        var selectAssistenzeHtml = '<select onchange="modificaAssistenzaLavorazione($(this))">';
+
+        $.each(assistenzeDistinte, function(index, el){
+            selectAssistenzeHtml += '<option>'+el+'</option>';
+        });
+
+        selectAssistenzeHtml += '</select>';
+
+        var labelCostoAssistenza = '<label>';
+
+        if( tipoCostoAssistenza ){
+            labelCostoAssistenza += costoAssistenza +' %';
+        }
+        else
+            labelCostoAssistenza += '&euro; '+ costoAssistenza;
+
+        labelCostoAssistenza +='</label>';
+
+        arrayAssistenze.push([ classSettore+'_trBody-'+ordineLavorazioni, nome_assistenza, costoAssistenza, tipoCostoAssistenza ])
 
         //Preparo la riga della lavorazione
         var rowsToAdd='<tr id="'+classSettore+'_trBody-'+ordineLavorazioni+'" class="trBody '+classSettore+'_lastAdded">'+
                         '<td class="firstCol'+ordineLavorazioni+' firstCol">'+
                             '<label></label>'+
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
-                            '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+', '+costoUs+', '+parseInt(ricaricoAzienda)+')" class="ctrButton addElement fa fa-plus"></a>'+
+                            '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+', '+costoUs+', '+parseInt(ricaricoAzienda)+', '+costoAssistenza+', '+tipoCostoAssistenza+')" class="ctrButton addElement fa fa-plus"></a>'+
                         '</td>'+
-                        '<td class="tdPreventivo tdLavorazione"><textarea oninput="modificaNomeLavorazione($(this))" >'+tipologia+'</textarea></td>'+
+                        '<td class="tdPreventivo tdLavorazione">'+
+                            '<textarea oninput="modificaNomeLavorazione($(this))" >'+tipologia+'</textarea>'+
+                            '<div class="divNomeAssistenza"><label class="title">Assistenza:</label>'+selectAssistenzeHtml+'</div>'+
+                        '</td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
                         '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo numColSmall"></td>'+
+                        '<td class="tdPreventivo tdCostoAssistenza">'+
+                            '<div class="divCostoAssistenza" style="display:none">'+
+                                '<input oninput="modificaCostoAssistenza($(this))" class="inputCostoAssistenza" type="number" value="'+costoAssistenza+'">'+
+                                '<input onclick="modificaTipoCostoAssistenza($(this))" class="radioPerc" type="radio" value="perc" name="'+classSettore+'_trBody-'+ordineLavorazioni+'">%</input>'+
+                                '<input onclick="modificaTipoCostoAssistenza($(this))" class="radioEuro" type="radio" value="euro" name="'+classSettore+'_trBody-'+ordineLavorazioni+'">&euro;</input>'+
+                            '</div>'+
+                        '</td>'+
                         '<td class="tdPreventivo tdAdded"></td>'+
                         '<td class="tdPreventivo prezzoBase tdAdded"></td>'+
                         '<td class="tdPreventivo numColSmall tdAdded"></td>'+
                         '<td class="tdPreventivo colSmall"></td>'+
-                        '<td></td>'+
                     '</tr>'+
                     '<tr class="'+classSettore+'_trSottolavorazione-'+ordineLavorazioni+' sottolavNum-0">'+
                             '<td><a onclick="eliminaSottolavorazione($(this), \''+unitaMisura+'\')" class="delSottolavorazione fa fa-trash"></a></td>'+
@@ -997,6 +1204,9 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                                                                ordineLavorazioni)+
                             '<td class="tdPreventivo tdUnita numColSmall">'+unitaMisura+'</td>'+
                             '<td class="tdPreventivo tdCostoUnitario colSmall">&euro; '+costoLavorazione+'</td>'+
+                            '<td class="tdPreventivo tdCostoAssistenza">'+
+                                labelCostoAssistenza+
+                            '</td>'+
                             '<td class="tdPreventivo tdCostoUs tdAdded">&euro; '+costoUs+'</td>'+
                             '<td class="tdPreventivo tdTotaleUs tdAdded">&euro; '+costoUs+'</td>'+
                             '<td class="tdPreventivo tdRicarico numColSmall tdAdded">+ <input oninput="modificaRicarico($(this))" type="number" min="0" max="100" class="inputRicarico" value="'+parseInt(ricaricoAzienda)+'">%</td>'+
@@ -1007,6 +1217,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                             '<td class="quantita colSmall"></td>'+
                             '<td>'+unitaMisura+'</td>'+
                             '<td colSmall"></td>'+
+                            '<td class="tdPreventivo"></td>'+
                             '<td class="tdPreventivo tdAdded"></td>'+
                             '<td class="tdPreventivo tdAdded sumTotaliUs"></td>'+
                             '<td class="tdPreventivo tdAdded"></td>'+
@@ -1019,10 +1230,10 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
         // e il relativo footer
         if( !sezioneSettore.length ){
 
-            var colspanNum = 9;
+            var colspanNum = 10;
 
             if( !cbxStatus )
-                colspanNum = 12;
+                colspanNum = 13;
 
             $('#bodyPreventivo').append(
 
@@ -1040,6 +1251,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                     '<th class="thPreventivo thQuantita">Quantità</th>'+
                     '<th class="thPreventivo unitaClass">Unità</th>'+
                     '<th class="thPreventivo thPrezzoUnitario">Prezzo unitario</th>'+
+                    '<th class="thPreventivo thCostoAssistenza">Prezzo Assistenza</th>'+
                     '<th class="thPreventivo thAdded">Prezzo US</th>'+
                     '<th class="thPreventivo thAdded">Totale US</th>'+
                     '<th class="thPreventivo numColSmall thAdded">ricarico</th>'+
@@ -1056,6 +1268,18 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
             $('.'+classSettore+'_trFoot').last().after( rowsToAdd );
 
         }
+
+        /*seleziono l'assistenza correttamente*/
+
+        $('#'+classSettore+'_trBody-'+ordineLavorazioni+' td.tdLavorazione' ).children('div.divNomeAssistenza').children('select').val(nome_assistenza);
+        $('#'+classSettore+'_trBody-'+ordineLavorazioni+' td.tdLavorazione').children('div.divNomeAssistenza').children('select').trigger('change')
+
+        var radioAssistenzaContainer = $('#'+classSettore+'_trBody-'+ordineLavorazioni+' td.tdCostoAssistenza').children('div');
+
+        if( tipoCostoAssistenza )
+            radioAssistenzaContainer.children('.radioPerc').trigger('click');
+        else
+            radioAssistenzaContainer.children('.radioEuro').trigger('click');
 
         if( cbxStatus ){
             $('.thAdded').hide();

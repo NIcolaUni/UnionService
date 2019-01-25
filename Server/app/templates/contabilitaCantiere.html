@@ -1,0 +1,61 @@
+{% extends "paginaClienteBase.html" %}
+
+{% block content %}
+
+
+<div id="wrapper" class="col-md-8">
+    <section id="one" class="wrapper style2 spotlights">
+        <div class="inner innerPreventivo">
+            <h2 class="titleInCentro">
+                Contabilità cantiere <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a>
+            </h2>
+
+            <div id="tabContainer" class="features">
+                <div id="tabFattura" class="table-wrapper">
+                        <table class="alt">
+                            <tbody id="bodyTabella">
+                                <tr class="trHead headerTable">
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="3">Cantiere</th>
+                                    <th colspan="2">Fatturazione</th>
+                                </tr>
+                                <tr class="trHead">
+                                    <th></th>
+                                    <th> Voci lavorazione </th>
+                                    <th style="width:10%"> Budget </th>
+                                    <th style="width:10%"> Costi effettivi </th>
+                                    <th style="width:10%"> Controllo costi </th>
+                                    <th style="width:10%"> Fatture </th>
+                                    <th style="width:10%"> Controllo Fatture </th>
+                                </tr>
+                                {% for lavorazione in contabilita %}
+                                    <tr class="trBody">
+                                        <td>{{lavorazione.ordine_lav}}</td>
+                                        <td class="tdNomeLav">{{lavorazione.tipologia_lavorazione}}</td>
+                                        <td class="tdBudget">&euro; {{lavorazione.budget}}</td>
+                                        <td class="tdCostiEffettivi">&euro; <input class="inputNumber" type="number" min="0" value="{{lavorazione.costi_effettivi}}"> </td>
+                                        <td class="tdControlloCosti"></td>
+                                        <td class="tdFatture"> &euro; <input class="inputNumber" type="number" min="0" value="{{lavorazione.fattura}}"> </td>
+                                        <td class="tdControlloFatture"></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script>
+    var socketContabilita = io.connect("{{sockUrl}}"+'/contabilitaCantiere');
+
+    settaVariabiliSocketIo( '{{numero_preventivo}}', '{{revisione}}');
+
+</script>
+{% endblock %}

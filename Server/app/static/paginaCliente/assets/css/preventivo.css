@@ -479,3 +479,36 @@ div#ricaridoGeneraleContainer {
 div#ricaricoExtraContainer {
     display: inline-block;
 }
+
+.inputCostoAssistenza{
+    width: 25%;
+}
+
+label.title {
+    font-size: 18px;
+}
+
+.divNomeAssistenza select {
+    height: 20%;
+}
+
+td.tdCostoAssistenza label{
+    color: black;
+    font-weight: normal;
+    font-size: inherit;
+
+}
+
+th.thCostoAssistenza {
+    width: 11%;
+}
+
+.divCostoAssistenza input[type="radio"] {
+    width: 20%;
+    -webkit-appearance: radio;
+    opacity: initial;
+    float: none;
+    display: inline;
+    margin: 0 3% 0 3%;
+    cursor: pointer;
+}

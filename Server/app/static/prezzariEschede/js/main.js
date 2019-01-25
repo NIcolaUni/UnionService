@@ -184,6 +184,18 @@ var settaDimensioniIconaFilterZoneClose = function(){
         pulisciHeaderNewRow();
 
     });
-/*********************************************************/
+/*****************************************************************************/
+
+    $('.datiScheda td').mouseenter(function(){
+
+        $(this).children("input[type='number']").focus();
+        $(this).children("input[type='text']").focus();
+        $(this).children("textarea").focus();
+        $(this).children('div').children("input[type='number']").focus();
+        $(this).children('div').children("textarea").focus();
+    });
+
+
+/*****************************************************************************/
 
 });

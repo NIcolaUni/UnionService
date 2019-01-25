@@ -9,6 +9,10 @@
                     <th class="secondaCol" colspan="10">
                         <label>Selezionare/digitare il settore di lavorazione: </label>
                         <input id="impostaSettore" list="listaSettori" class="inputScheda" placeholder="settore di lavorazione..">
+                        <div id="aggiungiAssistenza">
+                            <label> Aggiungi assistenza </label>
+                            <div id="buttonAssistenza"><a class="fa fa-check" style="visibility:hidden"></a></div>
+                        </div>
                     </th>
                 </tr>
                 <tr class="headerTabella dimensionaTabella newRow">
@@ -38,7 +42,6 @@
                     </td>
                     <td style="width:6%" class="unitaMisura numCellBig no_cursor">
                         <select>
-                            <option>a corpo</option>
                             <option>cad</option>
                             <option>ml</option>
                             <option>mq</option>
@@ -71,6 +74,52 @@
                 </tr>
             </table>
         </div>
+        <div id="tabellaContainerNewRow2">
+            <table class="tabella">
+                <tr class="sezioneTabella dimensionaTabella newRow">
+                     <th colspan="11">
+                         <label>Assistenza</label>
+                          <div id="aggiungiNuovaAssistenza">
+                            <label> Nuova assistenza </label>
+                            <div id="buttonNuovaAssistenza"><a class="fa fa-check" style="visibility:hidden"></a></div>
+                          </div>
+                     </th>
+                </tr>
+                <tr class="headerTabella dimensionaTabella newRow">
+                    <th style="width:17%"> Nome </th>
+                    <th style="width:14%" > Costo </th>
+                </tr>
+                <tr class="datiScheda dimensionaTabella newRow">
+                    <td style="width:80%" class="nome_assistenza no_cursor">
+                       <div class="textareaContainer" style="display:none">
+                            <textarea id="newNomeAssistenza" placeholder="Nuova assistenza..."></textarea>
+                       </div>
+                       <div id="selectAssistenzaContainer">
+                          <select id="selectAssistenza" onchange="selectAssistenzaNewRow($(this))">
+                            <option>assitenza 1</option>
+                            <option>assistenza 2</option>
+                          </select>
+                          <div id="buttonEliminaAssistenza" onclick="eliminaAssistenza($(this))"  class="myBtn"><a class="fa fa-trash"></a></div>
+                          <div id="buttonModificaAssistenza" onclick="modificaNomeAssistenzaGenerale($(this))"  class="myBtn"><a class="fa fa-edit"></a></div>
+
+                       </div>
+
+                    </td>
+                    <td style="width:20%" class="costo_assistenza no_cursor">
+                       <div id="costoAssistenzaContainer" >
+                           <input type="number" value="0" placeholder="costo...">
+                           <input type="radio" class="radioBtn perc" name="typeCosto" value="perc">%</input>
+                           <input type="radio" class="radioBtn euro" name="typeCosto" value="euro">&euro;</input>
+                       </div>
+                       <!--<div id="labelCostoAssistenzaContainer">
+                           <label id="labelCostoAssistenza">10.5</label>
+                           <label id="labelTypeCostoAssistenza">&euro;</label>
+                       </div>-->
+                    </td>
+                </tr>
+
+            </table>
+        </div>
     </div>
 
     <div id="page-wrapper">
@@ -80,7 +129,7 @@
 
 
 
-        <div id="schedaArtigiani" class="scheda">
+        <div id="schedaLavorazioni" class="scheda">
 
             <div class="fc-toolbar fc-header-toolbar filterZoneScheda">
                 <div id="openCloseFilterSearch"><a class="fa fa-angle-double-up"></a></div>
@@ -126,34 +175,51 @@
 
             </div>
 
-            <div id="headerTableContainer_1">
-                 <div id="divHeaderTabella">
-                    <table class="tabella">
-                        <tr class="headerDelHeader dimensionaTabella">
-                            <th class="primaCol"></th>
-                            <th colspan="10" class="secondaCol"></th>
+            <div id="sezioneHeader">
+                <div id="headerTableContainer_1">
 
-                        </tr>
-                        <tr class="headerTabella dimensionaTabella">
-                            <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
-                            <th class="tipologia_lavorazione"> Tipologia lavorazione </th>
-                            <th  class="pertinenza"> Pertinenza </th>
-                            <th class="numCellBig"> Unità </th>
-                            <th class="numCellBig"> Fornitura </th>
-                            <th class="numCellSmall"> Posa </th>
-                            <th class="numCellSmall"> Costo (F+P) </th>
-                            <th class="numCellSmall"> Prezzo min </th>
-                            <th class="numCellSmall"> Prezzo max </th>
-                            <th class="dimensione"> Dimensioni </th>
-                            <th class="note"> Note </th>
-                        </tr>
-                    </table>
-                 </div>
+                    <div id="divHeaderTabella1">
+                        <table class="tabella">
+                            <tr class="headerDelHeader dimensionaTabella">
+                                <th class="primaCol"></th>
+                                <th colspan="10" class="secondaCol">Lavorazioni</th>
 
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th class="primaCol"><a class="fa fa-plus" id="addRow"></a></th>
+                                <th class="tipologia_lavorazione"> Tipologia lavorazione </th>
+                                <th  class="pertinenza"> Pertinenza </th>
+                                <th class="numCellBig"> Unità </th>
+                                <th class="numCellBig"> Fornitura </th>
+                                <th class="numCellSmall"> Posa </th>
+                                <th class="numCellSmall"> Costo (F+P) </th>
+                                <th class="numCellSmall"> Prezzo min </th>
+                                <th class="numCellSmall"> Prezzo max </th>
+                                <th class="dimensione"> Dimensioni </th>
+                                <th class="note"> Note </th>
+                            </tr>
+                        </table>
+                     </div>
+                </div>
+                <div id="headerTableContainer_2">
+
+                    <div id="divHeaderTabella2">
+                        <table class="tabella">
+                            <tr class="headerDelHeader dimensionaTabella">
+                                <th colspan="2">Assistenza</th>
+                            </tr>
+                            <tr class="headerTabella dimensionaTabella">
+                                <th class="nome_assistenza"> Nome </th>
+                                <th class="prezzo_assistenza"> Prezzo </th>
+
+                            </tr>
+                        </table>
+                     </div>
+                </div>
             </div>
 
             <div class="fc-view-container viewContainer">
-                <div id="tabellaContainer">
+                <div id="tabellaContainer1">
                     <table class="tabella">
 
                        <!-- <tr class="sezioneTabella dimensionaTabella">
@@ -202,6 +268,11 @@
                         </tr>-->
                     </table>
 
+                </div>
+                <div id="tabellaContainer2">
+                    <table class="tabella">
+
+                    </table>
                 </div>
             </div>
         </div>
@@ -435,6 +506,49 @@
 
             verificaSettorePresente($settore.val())
 
+
+            var nome, costo, tipoPrezzo;
+
+            if( $('#buttonAssistenza a').hasClass('checked') ){
+
+                if( $('#buttonNuovaAssistenza a').hasClass('checked') ){
+                    nome = $('#newNomeAssistenza').val().replace(/\n/g, '');
+
+                }
+                else{
+                    nome = $('#selectAssistenza option:selected').text();
+                }
+
+                if( nome == "No assistenza" ){
+                    nome = '';
+                    costo = 0;
+                    tipoPrezzo = 'perc';
+
+                }
+                else{
+
+                    if( $('#costoAssistenzaContainer input.radioBtn.perc').is(':checked') )
+                        tipoPrezzo = 'perc';
+                    else
+                        tipoPrezzo = 'euro';
+
+                    costo = $('#costoAssistenzaContainer input[type="number"]').val();
+
+                }
+            }
+            else{
+                nome = '';
+                costo = 0;
+                tipoPrezzo = 'perc';
+
+            }
+
+            if( costo == '' ){
+                costo = 0;
+                $('#costoAssistenzaContainer input[type="number"]').val(0);
+
+            }
+
             socketPrezzario.emit("registra_lavorazione",
                 {  "dip": "{{dipendente.username}}",
                    "settore": $settore.val(),
@@ -446,7 +560,10 @@
                    "pMin" : $prezzoMin.val(),
                    "pMax": $prezzoMax.val(),
                    "dimensione": $dimensioni.val(),
-                   "note": $note.val().replace(/\n/g, "")
+                   "note": $note.val().replace(/\n/g, ""),
+                   "nome_assistenza" : nome,
+                   "costo_assistenza" : costo,
+                   "tipoPrezzo": tipoPrezzo
                 }
             );
 
@@ -486,34 +603,37 @@
 
             calcolaCostoFornituraPosa($datiScheda1)
 
-            aggiungiRiga(false, '{{dipendente.username}}');
+
+            {% for assistenza in assistenze %}
+
+                {% if lavorazione.settore == assistenza.settore %}
+                    {% if lavorazione.tipologia_lavorazione == assistenza.tipologia_lavorazione %}
+
+                        /*setto l'header per aggiungere le righe con le informazioni necessarie
+                            per costruire una riga della tabella; mi funge da memoria
+                            temporanea */
+                        $('#newNomeAssistenza').val( '{{assistenza.nome}}' );
+                        $('#costoAssistenzaContainer input[type="number"]').val('{{assistenza.costo}}');
+
+                        {% if assistenza.prezzoPercentuale %}
+                            $('#costoAssistenzaContainer input.radioBtn.perc').click();
+                        {% else %}
+                            $('#costoAssistenzaContainer input.radioBtn.euro').click();
+                        {% endif %}
+
+                    {% endif %}
+                {%   endif %}
+            {% endfor %}
+
+
+
+
+            if( '{{lavorazione.daVerificare}}' == 'True' )
+                aggiungiRiga(true, '{{dipendente.username}}');
+            else
+                aggiungiRiga(false, '{{dipendente.username}}');
 
             pulisciHeaderNewRow();
-
-            if( '{{lavorazione.daVerificare}}' == 'True' ){
-
-                $table1= $('#tabellaContainer').children('table');
-
-                $table1.children('tbody').each(function(){
-
-                    if( $(this).hasClass('{{lavorazione.settore}}') ){
-                        $(this).children('tr').each(function(){
-
-                            if( $(this).children('td.tipologia_lavorazione').children('label').text() == '{{lavorazione.tipologia_lavorazione}}' )
-                            {
-                                $(this).addClass('daVerificare')
-
-                                $(this).css('background-color', 'yellow');
-
-                            }
-                        });
-
-                    }
-
-
-                });
-
-            }
 
 
 
@@ -521,9 +641,5 @@
 
         aggiungiEventListenerCalcolaCosto($('#tabellaContainerNewRow1 tr.datiScheda'));
 
-
-
-
-      //  regolaDimensioniHeader();
     </script>
 {% endblock%}

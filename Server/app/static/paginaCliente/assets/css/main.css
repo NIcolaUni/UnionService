@@ -3140,9 +3140,9 @@
 			text-align: left;
 		}
 
-		table thead {
+		/*table thead {
 			border-bottom: solid 2px rgba(255, 255, 255, 0.15);
-		}
+		}*/
 
 		table tfoot {
 			border-top: solid 2px rgba(255, 255, 255, 0.15);
@@ -4356,3 +4356,14 @@ button.elementPreventivo {
     /* margin-top: 5%; */
   }
 
+span#ctrlSpanContabilita {
+    width: 80%;
+    display: inline-block;
+    margin-left: 20%;
+}
+
+select#contabilitaSelect {
+    width: 50%;
+    display: inline-block;
+    margin-right: 5%;
+}

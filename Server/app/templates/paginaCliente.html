@@ -113,8 +113,8 @@
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.curvedlines/curvedLines.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.resize.js') }}"></script>
-        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/moment/min/moment.min.js') }}"></script>
-        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>
+        <!--<script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/moment/min/moment.min.js') }}"></script>
+        <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>-->
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot-orderBars/js/jquery.flot.orderBars.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot/jquery.flot.pie.js') }}"></script>
         <script src="{{url_for('static', filename='headerAndForm/vendors/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js') }}"></script>
@@ -154,478 +154,385 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie9.css') }}" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/ie8.css') }}" /><![endif]-->
 
-		<link rel="stylesheet" href="{{url_for('static', filename='css/agenda.css') }}">
-		<script src="{{url_for('static', filename='paginaCliente/assets/js/my_main.js') }}"></script>
+		<!--<link rel="stylesheet" href="{{url_for('static', filename='css/agenda.css') }}"> -->
+		<link rel="stylesheet" href="{{url_for('static', filename='paginaCliente/assets/css/agendaCliente.css') }}" />
+
 
 	</head>
 	<body data-ng-class="{ 'sw-toggled': mactrl.layoutType === '1', 'modal-open': mactrl.sidebarToggle.left === true }">
 
 
-	<header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
-  <aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+		<header id="header" data-ng-include="'header'" data-ng-controller="headerCtrl as hctrl"></header>
+		<aside id="sidebar" data-ng-include="'sidebarLeft'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
 
-	<aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+		<aside id="chat" data-ng-include="'/static/headerAndForm/template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
 
-	<div class="row">
-		<!-- Sidebar -->
-			<div class="col-md-2">
-			<section id="sidebar-client">
-				<div class="inner">
-					<nav>
-						<ul>
-							<li><a class="menuBar local" href="#intro">Profilo cliente</a></li>
-							<li><a class="menuBar local" href="#one">Preventivo edile</a></li>
-                            <li><a class="menuBar local" href="#two">Preventivo finiture</a></li>
-							<li><a class="menuBar local" href="#three">Preventivo varianti</a></li>
-                            <li><a class="menuBar local" href="#four">Pagamenti</a></li>
-                        </ul>
-					</nav>
+		<div class="row">
+			<!-- Sidebar -->
+				<div class="col-md-2">
+				<section id="sidebar-client">
+					<div class="inner">
+						<nav>
+							<ul>
+								<li><a class="menuBar local" href="#intro">Profilo cliente</a></li>
+								<li><a class="menuBar local" href="#one">Preventivo edile</a></li>
+								<li><a class="menuBar local" href="#two">Preventivo finiture</a></li>
+								<li><a class="menuBar local" href="#three">Preventivo varianti</a></li>
+								<li><a class="menuBar local" href="#four">Pagamenti</a></li>
+								<li><a class="menuBar local" href="#five">Contabilità cantiere</a></li>
+							</ul>
+						</nav>
+					</div>
+				</section>
 				</div>
-			</section>
-			</div>
 
-		<!-- Wrapper -->
-			<div id="wrapper" class="col-md-10">
+			<!-- Wrapper -->
+				<div id="wrapper" class="col-md-10">
 
-				<!-- Intro -->
-					<section id="intro" class="wrapper style1 fullscreen fade-up">
-						<div class="inner">
-							<h1 id="nomeCliente">{{cliente.nome}} {{cliente.cognome}}</h1>
-							<a id="showDifficolta" class="fa fa-user"></a>
-							<span class="difficoltaTitle" style="display:none">Livello: </span>
-							{% if cliente.difficolta == "facile" %}
-								<label class="difficoltaLabel" style="display:none">1</label>
-							{% elif  cliente.difficolta == "media" %}
-								<label class="difficoltaLabel" style="display:none">2</label>
-							{% elif  cliente.difficolta == "alta" %}
-								<label class="difficoltaLabel" style="display:none">3</label>
-							{% endif %}
+					<!-- Intro -->
+						<section id="intro" class="wrapper style1 fullscreen fade-up">
+							<div class="inner">
+								<h1 id="nomeCliente">{{cliente.nome}} {{cliente.cognome}}</h1>
+								<a id="showDifficolta" class="fa fa-user"></a>
+								<span class="difficoltaTitle" style="display:none">Livello: </span>
+								{% if cliente.difficolta == "facile" %}
+									<label class="difficoltaLabel" style="display:none">1</label>
+								{% elif  cliente.difficolta == "media" %}
+									<label class="difficoltaLabel" style="display:none">2</label>
+								{% elif  cliente.difficolta == "alta" %}
+									<label class="difficoltaLabel" style="display:none">3</label>
+								{% endif %}
 
-							<div style="display:none" class="changeLivelloCliente">
-								<div class="levelUp changeLev">
-									<a class="fa fa-angle-up"></a>
+								<div style="display:none" class="changeLivelloCliente">
+									<div class="levelUp changeLev">
+										<a class="fa fa-angle-up"></a>
+									</div>
+									<div class="levelDown changeLev">
+										<a class="fa fa-angle-down"></a>
+									</div>
 								</div>
-								<div class="levelDown changeLev">
-									<a class="fa fa-angle-down"></a>
-								</div>
-							</div>
 
-							<span id="tipologiaCliente">	Tipologia: {{cliente.tipologia}} </span>
+								<span id="tipologiaCliente">	Tipologia: {{cliente.tipologia}} </span>
 
-							<div class="row">
-								<div class="col-md-6">
-									<ul class="contact">
+								<div class="row">
+									<div class="col-md-6">
+										<ul class="contact">
 
-										<li>
-											<h3 class="titoloDatoCliente">Indirizzo:</h3>
-											<a class="fa fa-edit editDato" style="display:none"></a><br/>
-											<span>{{cliente.indirizzo}}</span>
-										</li>
-										<li>
-											<h3 class="titoloDatoCliente">Email:</h3>
-											<a class="fa fa-edit editDato" style="display:none"></a><br/>
-											<a href="#">{{cliente.email}}</a>
-										</li>
-										<li>
-											<h3 class="titoloDatoCliente">Telefono:</h3>
-											<a class="fa fa-edit editDato" style="display:none"></a><br/>
-											<span>{{cliente.telefono}}</span>
-										</li>
-										<li>
-											<h3 class="titoloDatoCliente">Lavorazione in corso:</h3>
+											<li>
+												<h3 class="titoloDatoCliente">Indirizzo:</h3>
 												<a class="fa fa-edit editDato" style="display:none"></a><br/>
-												<span>{{cliente.lavorazione}}</span>
-										</li>
-										<li id="sopralluogoLiEl">
-											<h3 class="titoloDatoCliente">Sopralluogo:</h3>
-											{% if not cliente.sopraluogo %}
-												<span>Non necessario</span>
-											{% else %}
-												<span>{{cliente.datasopralugo}}</span>
-											{% endif %}
-											<br/><br/><br/>
-											<a id="setSopraluogo" class="button">Imposta data sopraluogo/appuntamento</a>
-											<a id="closeAgenda"  style="display:none" class="button">Chiudi agenda</a>
-										</li>
-									</ul>
+												<span>{{cliente.indirizzo}}</span>
+											</li>
+											<li>
+												<h3 class="titoloDatoCliente">Email:</h3>
+												<a class="fa fa-edit editDato" style="display:none"></a><br/>
+												<a href="#">{{cliente.email}}</a>
+											</li>
+											<li>
+												<h3 class="titoloDatoCliente">Telefono:</h3>
+												<a class="fa fa-edit editDato" style="display:none"></a><br/>
+												<span>{{cliente.telefono}}</span>
+											</li>
+											<li>
+												<h3 class="titoloDatoCliente">Lavorazione in corso:</h3>
+													<a class="fa fa-edit editDato" style="display:none"></a><br/>
+													<span>{{cliente.lavorazione}}</span>
+											</li>
+											<li id="sopralluogoLiEl">
+												<h3 class="titoloDatoCliente">Sopralluogo:</h3>
+												{% if not cliente.sopraluogo %}
+													<span>Non necessario</span>
+												{% else %}
+													<span>{{cliente.datasopralugo}}</span>
+												{% endif %}
+												<br/><br/><br/>
+												<a id="setSopraluogo" class="button">Imposta data sopraluogo/appuntamento</a>
+												<a id="closeAgenda"  style="display:none" class="button">Chiudi agenda</a>
+											</li>
+										</ul>
+									</div>
+									<div class="col-md-6">
+										{%if dipendente.dirigente %}
+
+										<ul class="contact">
+											<h2>Dipendenti associati al cliente:</h2>
+												<li>
+													<h3>Ufficio commerciale:</h3>
+													{% for dip  in ufficioCommerciale %}
+														<span>{{dip.nome}} {{dip.cognome}}</span><br/>
+													{% endfor %}
+												</li>
+												<li>
+													<h3>Ufficio tecnico:</h3>
+													{% for dip  in ufficioTecnico %}
+														<span>{{dip.nome}} {{dip.cognome}}</span><br/>
+													{% endfor %}
+
+												</li>
+												<li>
+													<h3>Ufficio capicantiere:</h3>
+													{% for dip  in ufficioCapicantiere %}
+														<span>{{dip.nome}} {{dip.cognome}}</span><br/>
+													{% endfor %}
+
+												</li>
+										</ul>
+										{% endif %}
+									</div>
+									<a id="editCliente" class="fa fa-edit"></a>
 								</div>
-								<div class="col-md-6">
-									{%if dipendente.dirigente %}
-
-									<ul class="contact">
-										<h2>Dipendenti associati al cliente:</h2>
-											<li>
-												<h3>Ufficio commerciale:</h3>
-												{% for dip  in ufficioCommerciale %}
-													<span>{{dip.nome}} {{dip.cognome}}</span><br/>
-												{% endfor %}
-											</li>
-											<li>
-												<h3>Ufficio tecnico:</h3>
-												{% for dip  in ufficioTecnico %}
-													<span>{{dip.nome}} {{dip.cognome}}</span><br/>
-												{% endfor %}
-
-											</li>
-											<li>
-												<h3>Ufficio capicantiere:</h3>
-												{% for dip  in ufficioCapicantiere %}
-													<span>{{dip.nome}} {{dip.cognome}}</span><br/>
-												{% endfor %}
-
-											</li>
-									</ul>
-									{% endif %}
-								</div>
-								<a id="editCliente" class="fa fa-edit"></a>
 							</div>
-							<iframe id="agendaDipendente" src="{{url_for('agendaClientePag', dipUsername=dipendente.username)}}"></iframe>
-						</div>
-					</section>
+						</section>
 
 
 
-				<!-- One -->
-					<section id="one" class="wrapper style2 spotlights">
+					<!-- One -->
+						<section id="one" class="wrapper style2 spotlights">
 
-					</section>
+						</section>
+						<!-- Two -->
+
 					<!-- Two -->
+						<section id="two" class="wrapper style3 fade-up">
 
-				<!-- Two -->
-					<section id="two" class="wrapper style3 fade-up">
+						</section>
 
-					</section>
+					<!-- Three -->
+						<section id="three" class="wrapper style1 fade-up">
 
-				<!-- Three -->
-					<section id="three" class="wrapper style1 fade-up">
+						</section>
 
-					</section>
+					<!-- Four -->
+						<section id="four" class="wrapper style1-alt fade-up">
 
-                <!-- Four -->
-					<section id="four" class="wrapper style1-alt fade-up">
+						</section>
 
-					</section>
+					<!-- Five -->
+						<section id="five" class="wrapper style2-alt fade-up">
 
-			</div>
+						</section>
 
-		<!-- Scripts -->
-			<!--================================= JS Form =================================================================-->
-		   <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
-		   <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
-		   <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-		   <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
-	<!--===========================================================================================================-->
-<!--
-			<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.min.js') }}"></script> -->
-			<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrollex.min.js') }}"></script>
-			<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrolly.min.js') }}"></script>
-			<script src="{{url_for('static', filename='paginaCliente/assets/js/skel.min.js') }}"></script>
-			<script src="{{url_for('static', filename='paginaCliente/assets/js/util.js') }}"></script>
-			<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/respond.min.js') }}"></script><![endif]-->
-			<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
+				</div>
 
-			<script>
+				<div id="pageOverlay" style="display:none">
 
+						<div class="headerWindow">
+							<div id="closeAgendaBtn"><a class="fa fa-close"></a></div>
+						</div>
+						<div id="agendaContainer">
+							<div id='calendar' data-full-calendar></div>
+						</div>
 
+				</div>
 
-				$('#header > a').css('border-bottom', 'None' );
+			<!-- Scripts -->
+				<!--================================= JS Form =================================================================-->
+			   <script src="{{url_for('static', filename='form/vendor/animsition/js/animsition.min.js') }}"></script>
+			   <script src="{{url_for('static', filename='form/vendor/bootstrap/js/popper.js') }}"></script>
+			   <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+			   <script src="{{url_for('static', filename='form/vendor/select2/select2.min.js') }}"></script>
+		<!--===========================================================================================================-->
+	<!--
+				<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.min.js') }}"></script> -->
+				<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrollex.min.js') }}"></script>
+				<script src="{{url_for('static', filename='paginaCliente/assets/js/jquery.scrolly.min.js') }}"></script>
+				<script src="{{url_for('static', filename='paginaCliente/assets/js/skel.min.js') }}"></script>
+				<script src="{{url_for('static', filename='paginaCliente/assets/js/util.js') }}"></script>
+				<!--[if lte IE 8]><script src="{{url_for('static', filename='paginaCliente/assets/js/ie/respond.min.js') }}"></script><![endif]-->
+				<script src="{{url_for('static', filename='paginaCliente/assets/js/main.js') }}"></script>
+				<script src="{{url_for('static', filename='paginaCliente/assets/js/my_main.js') }}"></script>
 
-   				var socketHome = io.connect("{{sockUrl}}"+'/home');
-				var socketPreventivoEdile= io.connect("{{sockUrl}}"+'/preventivoEdile');
-				var socketPreventivoFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
-				var socketPreventivoVarianti= io.connect("{{sockUrl}}"+'/preventivoVarianti');
-				var socketAgenda= io.connect("{{sockUrl}}"+'/agenda');
-				var socketCliente= io.connect("{{sockUrl}}"+'/cliente');
+				<script>
 
-                socketHome.on('connect', function() {
-                    console.log('connected listino');
 
 
-                    socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
-                });
+					$('#header > a').css('border-bottom', 'None' );
 
-				$('.changeLev.levelUp').click(function(){
+					var socketHome = io.connect("{{sockUrl}}"+'/home');
+					var socketPreventivoEdile= io.connect("{{sockUrl}}"+'/preventivoEdile');
+					var socketPreventivoFiniture= io.connect("{{sockUrl}}"+'/preventivoFiniture');
+					var socketPreventivoVarianti= io.connect("{{sockUrl}}"+'/preventivoVarianti');
+					var socketAgenda= io.connect("{{sockUrl}}"+'/agenda');
+					var socketCliente= io.connect("{{sockUrl}}"+'/cliente');
 
-					var livelloCliente = parseInt($('label.difficoltaLabel').text());
+					socketHome.on('connect', function() {
+						console.log('connected listino');
 
-					if( livelloCliente+1 < 4 ){
-						$('label.difficoltaLabel').text(livelloCliente+1);
-						modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', livelloCliente+1);
-					}
-				});
 
-				$('.changeLev.levelDown').click(function(){
+						socketHome.emit('registra_sid',   {'username': '{{dipendente.username}}'} );
+					});
 
-					var livelloCliente = parseInt($('label.difficoltaLabel').text());
+					$('.changeLev.levelUp').click(function(){
 
-					if( livelloCliente-1 > 0 ){
-						$('label.difficoltaLabel').text(livelloCliente-1);
-						modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', livelloCliente-1);
-					}
-				});
+						var livelloCliente = parseInt($('label.difficoltaLabel').text());
 
-				socketPreventivoEdile.on('aggiornaAnteprimaPreventivoEdile', function(){
-    				$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
-    			});
+						if( livelloCliente+1 < 4 ){
+							$('label.difficoltaLabel').text(livelloCliente+1);
+							modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', livelloCliente+1);
+						}
+					});
 
-                socketPreventivoEdile.on('startModificaPreventivo', function(){
-                    window.location = "{{url_for('apriPreventivoEdile')}}";
-                });
+					$('.changeLev.levelDown').click(function(){
 
-				socketPreventivoEdile.on('confermaRegistrazionePreventivo', function(){
+						var livelloCliente = parseInt($('label.difficoltaLabel').text());
 
-					window.location = "{{url_for('apriPreventivoEdile')}}";
+						if( livelloCliente-1 > 0 ){
+							$('label.difficoltaLabel').text(livelloCliente-1);
+							modificaLivelloCliente('{{cliente.nome}}', '{{cliente.cognome}}', '{{cliente.indirizzo}}', livelloCliente-1);
+						}
+					});
 
-				});
+					socketPreventivoEdile.on('aggiornaAnteprimaPreventivoEdile', function(){
+						$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
+					});
 
-				socketPreventivoEdile.on('procediADownloadBudget', function(msg){
+					socketPreventivoEdile.on('startModificaPreventivo', function(){
+						window.location = "{{url_for('apriPreventivoEdile')}}";
+					});
 
-					window.open('/downloadBudgetEdile/'+msg['numero_preventivo']+'/'+msg['revisione'], '_blank');
-				});
+					socketPreventivoEdile.on('confermaRegistrazionePreventivo', function(){
 
+						window.location = "{{url_for('apriPreventivoEdile')}}";
 
-                socketPreventivoFiniture.on('confermaRegistrazionePreventivo', function(){
+					});
 
-					window.location = "{{url_for('apriPreventivoFiniture')}}";
+					socketPreventivoEdile.on('procediADownloadBudget', function(msg){
 
-				});
+						window.open('/downloadBudgetEdile/'+msg['numero_preventivo']+'/'+msg['revisione'], '_blank');
+					});
 
-				socketPreventivoFiniture.on('aggiornaAnteprimaPreventivoFiniture', function(){
-    				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
-    			});
 
+					socketPreventivoFiniture.on('confermaRegistrazionePreventivo', function(){
 
-				socketPreventivoFiniture.on('startModificaPreventivo', function(){
-                    window.location = "{{url_for('apriPreventivoFiniture')}}";
-                });
+						window.location = "{{url_for('apriPreventivoFiniture')}}";
 
+					});
 
-				socketPreventivoVarianti.on('confermaRegistrazionePreventivo', function(){
+					socketPreventivoFiniture.on('aggiornaAnteprimaPreventivoFiniture', function(){
+						$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
+					});
 
-					window.location = "{{url_for('apriPreventivoVarianti')}}";
 
-				});
+					socketPreventivoFiniture.on('startModificaPreventivo', function(){
+						window.location = "{{url_for('apriPreventivoFiniture')}}";
+					});
 
-				socketPreventivoVarianti.on('startModificaPreventivo', function(){
-                    window.location = "{{url_for('apriPreventivoVarianti')}}";
-                });
 
-                socketPreventivoVarianti.on('aggiornaAnteprimaPreventivoVarianti', function(){
-    				$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
-    			});
+					socketPreventivoVarianti.on('confermaRegistrazionePreventivo', function(){
 
+						window.location = "{{url_for('apriPreventivoVarianti')}}";
 
+					});
 
+					socketPreventivoVarianti.on('startModificaPreventivo', function(){
+						window.location = "{{url_for('apriPreventivoVarianti')}}";
+					});
 
-    			$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
-				$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
-				$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
-				$('section#four').load('{{url_for("pagamentiCliente")}}');
+					socketPreventivoVarianti.on('aggiornaAnteprimaPreventivoVarianti', function(){
+						$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
+					});
 
-				$('#closeAgenda').click( function(){
-					$('#agendaDipendente').css('display', 'none');
 
-					$('#setSopraluogo').show();
-					$('#closeAgenda').hide();
 
-				});
 
-				$('#setSopraluogo').click(function(){
+					$('section#one').load('{{url_for("anteprimaPreventivoEdile")}}');
+					$('section#two').load('{{url_for("anteprimaPreventivoFiniture")}}');
+					$('section#three').load('{{url_for("anteprimaPreventivoVarianti")}}');
+					$('section#four').load('{{url_for("pagamentiCliente")}}');
+					$('section#five').load('{{url_for("anteprimaContabilitaCantiere")}}');
 
-					$('#agendaDipendente').css('display', 'unset');
+				/*	$('#closeAgenda').click( function(){
+						$('#agendaDipendente').css('display', 'none');
 
-					$('#setSopraluogo').hide();
-					$('#closeAgenda').show();
+						$('#setSopraluogo').show();
+						$('#closeAgenda').hide();
 
+					});*/
 
-				   /* swal.withFormAsync({
-                        title: 'Imposta data sopraluogo',
-                        showCancelButton: true,
-                        confirmButtonColor: '#DD6B55',
-                        confirmButtonText: 'Ok',
-                        cancelButtonText: 'annulla',
-                        closeOnConfirm: true,
-                        formFields: [
 
-							{ id: 'luogo',  type: 'text', label: 'Luogo sopraluogo:', name: 'luogo' },
-							{ id: 'giorno',  type: 'date', label: 'Giorno sopraluogo:', name: 'giorno' },
+					/*$('#setSopraluogo').click(function(){
 
-                            { id: 'ora', type: 'time', label: 'Orario sopraluogo:', name: 'orario' },
+						$('#agendaDipendente').css('display', 'unset');
 
-                            { id: 'durata',  type: 'number', label: 'Durata in ore sopraluogo:', name: 'durata', value: 1 },
+						$('#setSopraluogo').hide();
+						$('#closeAgenda').show();
 
-							{ id: 'accompagnatore', label: 'Accompagnatore:',
-											type: 'select',
-											options: [
+					*/
+					   /* swal.withFormAsync({
+							title: 'Imposta data sopraluogo',
+							showCancelButton: true,
+							confirmButtonColor: '#DD6B55',
+							confirmButtonText: 'Ok',
+							cancelButtonText: 'annulla',
+							closeOnConfirm: true,
+							formFields: [
 
-											  {% for dip in colleghi %}
-											  {value: '{{dip.username}}', text: '{{dip.nome}} {{dip.cognome}}'},
+								{ id: 'luogo',  type: 'text', label: 'Luogo sopraluogo:', name: 'luogo' },
+								{ id: 'giorno',  type: 'date', label: 'Giorno sopraluogo:', name: 'giorno' },
 
-											  {% endfor %}
-											]},
+								{ id: 'ora', type: 'time', label: 'Orario sopraluogo:', name: 'orario' },
 
-                        ]
-                    }).then(function (context) {
-                        if(context._isConfirm){
-							socketAgenda.emit('imposta_sopraluogo', {
-								'dip' : '{{dipendente.username}}',
-								'cliente' : '{{cliente.nome}} {{cliente.cognome}}',
-								'giorno' : context.swalForm['giorno'],
-								'ora' : context.swalForm['ora'],
-								'durata': context.swalForm['durata'],
-								'accompagnatore': context.swalForm['accompagnatore'],
-								'luogo': context.swalForm['luogo']
-							});
-                        }
+								{ id: 'durata',  type: 'number', label: 'Durata in ore sopraluogo:', name: 'durata', value: 1 },
 
-                    });*/
+								{ id: 'accompagnatore', label: 'Accompagnatore:',
+												type: 'select',
+												options: [
 
-				});
-			</script>
+												  {% for dip in colleghi %}
+												  {value: '{{dip.username}}', text: '{{dip.nome}} {{dip.cognome}}'},
 
-			<script>
-				/*In questa parte viene settata l'agenda da far apparire nella pagina cliente*/
+												  {% endfor %}
+												]},
 
-				 $('.agenda').fullCalendar({
-					  header: {
-						left: 'prev,next today',
-						center: 'title',
-						right: 'month,agendaWeek,agendaDay,listWeek'
-					  },
-					  navLinks: true, // can click day/week names to navigate views
-					  //selectable: true,
-					 // selectHelper: true,
-					  editable: true,
-					  eventLimit: true, // allow "more" link when too many events
-
-					  events: [
-						{% for evento in agenda %}
-						{
-						  title: '{{evento.titolo}}\n{{evento.luogo}}\nAccompagnatore:',
-						  start: '{{evento.start_date}}',
-						  color: 'red'
-						},
-						{% endfor %}
-					   ],
-
-					  eventClick: function(calEvent, jsEvent, view) {
-
-
-
-						giornoSelected = $(this)
-						$('.clicked').each(function(){
-						  if( !$(this).is(giornoSelected) ){
-							$(this).removeClass('clicked');
-							$(this).popover('hide');
-						  }
-						});
-
-						if( !$(this).hasClass('clicked') ){
-						  $(this).addClass('clicked');
-						  contenuto = ' <div> \
-										  <div id="agenda-edit-event" class="popover-option '+calEvent._id+'">Modifica evento</div>     \
-										  <hr/> \
-										  <div id="agenda-del-event" class="popover-option '+calEvent._id+'">Rimuovi evento</div>     \
-										</div> \
-									  '
-
-						  $(this).popover({
-							  trigger: 'manual',
-							  container: 'body',
-							  html:true,
-							  content: contenuto
-						  });
-
-						  $(this).popover('show');
-
-						  $('#agenda-del-event').click(function(){
-
-							eventId=$(this).attr('class').split(' ')[1];
-
-							$('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
-								return eventId == evt._id;
-							})[0]._id);
-							$('.popover').remove();
-							$('.clicked').removeClass('clicked');
-
-
-						  });
-
-						  $('#agenda-edit-event').click(function(){
-
-								eventId=$(this).attr('class').split(' ')[1];
-
-
-								var start_date = moment(new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
-								return eventId == evt._id;
-							})[0].start) )
-
-								var end_date= moment( new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
-								return eventId == evt._id;
-							})[0].end) )
-
-
-
-								swal.withFormAsync({
-									title: 'Modifica evento',
-									showCancelButton: true,
-									confirmButtonColor: '#DD6B55',
-									confirmButtonText: 'Ok',
-									cancelButtonText: 'annulla',
-									closeOnConfirm: true,
-									formFields: [
-
-										{ id: 'titolo', label: 'Titolo evento:', name: 'titolo', value: calEvent.title, placeholder: 'titolo evento' },
-
-									]
-								}).then(function (context) {
-									if(context._isConfirm){
-
-
-										$('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
-											return eventId == evt._id;
-										})[0]._id);
-
-
-										$('.agenda').fullCalendar( 'addEventSource', {
-
-
-										  events: [
-											{
-											  title  : context.swalForm['titolo'],
-											  start  : start_date
-
-											}
-										  ]}
-										);
-
-
-
-										$('.popover').remove();
-										$('.clicked').removeClass('clicked');
-
-									}
-									else{
-										$('.popover').remove();
-										$('.clicked').removeClass('clicked');
-									}
-
+							]
+						}).then(function (context) {
+							if(context._isConfirm){
+								socketAgenda.emit('imposta_sopraluogo', {
+									'dip' : '{{dipendente.username}}',
+									'cliente' : '{{cliente.nome}} {{cliente.cognome}}',
+									'giorno' : context.swalForm['giorno'],
+									'ora' : context.swalForm['ora'],
+									'durata': context.swalForm['durata'],
+									'accompagnatore': context.swalForm['accompagnatore'],
+									'luogo': context.swalForm['luogo']
 								});
-						  });
-						}
-						else{
-							$(this).removeClass('clicked');
-							$(this).popover('hide');
-						}
+							}
 
-					  },
-					  dayClick: function(date, jsEvent, view) {
+						});*/
+	/*
+					});*/
+				</script>
+
+				<script>
+					/*In questa parte viene settata l'agenda da far apparire nella pagina cliente*/
+
+				/*	 $('.agenda').fullCalendar({
+						  header: {
+							left: 'prev,next today',
+							center: 'title',
+							right: 'month,agendaWeek,agendaDay,listWeek'
+						  },
+						  navLinks: true, // can click day/week names to navigate views
+						  //selectable: true,
+						 // selectHelper: true,
+						  editable: true,
+						  eventLimit: true, // allow "more" link when too many events
+
+						  events: [
+							{% for evento in agenda %}
+							{
+							  title: '{{evento.titolo}}\n{{evento.luogo}}\nAccompagnatore:',
+							  start: '{{evento.start_date}}',
+							  color: 'red'
+							},
+							{% endfor %}
+						   ],
+
+						  eventClick: function(calEvent, jsEvent, view) {
 
 
 
-						if( view.name == 'month'){
-
-							giornoSelected = $(this)
+							giornoSelected = $(this)agenda
 							$('.clicked').each(function(){
 							  if( !$(this).is(giornoSelected) ){
 								$(this).removeClass('clicked');
@@ -636,7 +543,9 @@
 							if( !$(this).hasClass('clicked') ){
 							  $(this).addClass('clicked');
 							  contenuto = ' <div> \
-											  <div id="agenda-add-event" class="popover-option">Aggiungi evento</div>     \
+											  <div id="agenda-edit-event" class="popover-option '+calEvent._id+'">Modifica evento</div>     \
+											  <hr/> \
+											  <div id="agenda-del-event" class="popover-option '+calEvent._id+'">Rimuovi evento</div>     \
 											</div> \
 										  '
 
@@ -649,10 +558,36 @@
 
 							  $(this).popover('show');
 
-							  $('#agenda-add-event').click(function(){
+							  $('#agenda-del-event').click(function(){
+
+								eventId=$(this).attr('class').split(' ')[1];
+
+								$('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
+									return eventId == evt._id;
+								})[0]._id);
+								$('.popover').remove();
+								$('.clicked').removeClass('clicked');
+
+
+							  });
+
+							  $('#agenda-edit-event').click(function(){
+
+									eventId=$(this).attr('class').split(' ')[1];
+
+
+									var start_date = moment(new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
+									return eventId == evt._id;
+								})[0].start) )
+
+									var end_date= moment( new Date($('.agenda').fullCalendar( 'clientEvents',function(evt) {
+									return eventId == evt._id;
+								})[0].end) )
+
+
 
 									swal.withFormAsync({
-										title: 'Nuovo evento',
+										title: 'Modifica evento',
 										showCancelButton: true,
 										confirmButtonColor: '#DD6B55',
 										confirmButtonText: 'Ok',
@@ -660,18 +595,17 @@
 										closeOnConfirm: true,
 										formFields: [
 
-											{ id: 'titolo', label: 'Titolo evento:', name: 'titolo',  placeholder: 'titolo evento' },
-
-											{ id: 'durata',  type: 'number', label: 'Durata giorni evento:', name: 'durata', value: 1 },
-
-
+											{ id: 'titolo', label: 'Titolo evento:', name: 'titolo', value: calEvent.title, placeholder: 'titolo evento' },
 
 										]
 									}).then(function (context) {
 										if(context._isConfirm){
 
-											var start_date = moment( date.format() )
-											var end_date = moment( date.format() ).add( parseInt(context.swalForm['durata']), 'd')
+
+											$('.agenda').fullCalendar( 'removeEvents',  $('.agenda').fullCalendar( 'clientEvents',function(evt) {
+												return eventId == evt._id;
+											})[0]._id);
+
 
 											$('.agenda').fullCalendar( 'addEventSource', {
 
@@ -679,79 +613,134 @@
 											  events: [
 												{
 												  title  : context.swalForm['titolo'],
-												  start  : start_date,
-												  end : end_date
+												  start  : start_date
+
 												}
 											  ]}
 											);
 
-											$('.clicked').popover('hide');
+
+
+											$('.popover').remove();
 											$('.clicked').removeClass('clicked');
-
-
 
 										}
 										else{
-											$('.clicked').popover('hide');
+											$('.popover').remove();
 											$('.clicked').removeClass('clicked');
 										}
 
 									});
-
-
-
 							  });
 							}
 							else{
 								$(this).removeClass('clicked');
 								$(this).popover('hide');
 							}
-						}
-						else if( view.name == 'agendaWeek' ){
-							console.log('week');
 
-						}
-						else if( view.name == 'agendaDay' ){
-							console.log('day');
+						  },
+						  dayClick: function(date, jsEvent, view) {
 
-						}
-					  }
-				 });
 
-				var difficoltaNascosta=true;
 
-				$('#showDifficolta').click(function(){
+							if( view.name == 'month'){
 
-					if( difficoltaNascosta ){
-						$('.difficoltaTitle').show();
-						$('.difficoltaLabel').show();
-						$('.changeLivelloCliente').css('display', 'inline-block');
-						difficoltaNascosta=false;
-					}
-					else{
-						$('.difficoltaTitle').hide();
-						$('.difficoltaLabel').hide();
-						$('.changeLivelloCliente').hide();
-						difficoltaNascosta=true;
-					}
-				});
+								giornoSelected = $(this)
+								$('.clicked').each(function(){
+								  if( !$(this).is(giornoSelected) ){
+									$(this).removeClass('clicked');
+									$(this).popover('hide');
+								  }
+								});
 
-				var editClienteNascosti=true;
+								if( !$(this).hasClass('clicked') ){
+								  $(this).addClass('clicked');
+								  contenuto = ' <div> \
+												  <div id="agenda-add-event" class="popover-option">Aggiungi evento</div>     \
+												</div> \
+											  '
 
-				$('#editCliente').click(function(){
+								  $(this).popover({
+									  trigger: 'manual',
+									  container: 'body',
+									  html:true,
+									  content: contenuto
+								  });
 
-					if( editClienteNascosti ){
-						$('.editDato').show();
-						editClienteNascosti=false;
-					}
-					else{
-						$('.editDato').hide();
-						editClienteNascosti=true;
-					}
+								  $(this).popover('show');
 
-				});
-			</script>
+								  $('#agenda-add-event').click(function(){
 
-	</div>
+										swal.withFormAsync({
+											title: 'Nuovo evento',
+											showCancelButton: true,
+											confirmButtonColor: '#DD6B55',
+											confirmButtonText: 'Ok',
+											cancelButtonText: 'annulla',
+											closeOnConfirm: true,
+											formFields: [
+
+												{ id: 'titolo', label: 'Titolo evento:', name: 'titolo',  placeholder: 'titolo evento' },
+
+												{ id: 'durata',  type: 'number', label: 'Durata giorni evento:', name: 'durata', value: 1 },
+
+
+
+											]
+										}).then(function (context) {
+											if(context._isConfirm){
+
+												var start_date = moment( date.format() )
+												var end_date = moment( date.format() ).add( parseInt(context.swalForm['durata']), 'd')
+
+												$('.agenda').fullCalendar( 'addEventSource', {
+
+
+												  events: [
+													{
+													  title  : context.swalForm['titolo'],
+													  start  : start_date,
+													  end : end_date
+													}
+												  ]}
+												);
+
+												$('.clicked').popover('hide');
+												$('.clicked').removeClass('clicked');
+
+
+
+											}
+											else{
+												$('.clicked').popover('hide');
+												$('.clicked').removeClass('clicked');
+											}
+
+										});
+
+
+
+								  });
+								}
+								else{
+									$(this).removeClass('clicked');
+									$(this).popover('hide');
+								}
+							}
+							else if( view.name == 'agendaWeek' ){
+								console.log('week');
+
+							}
+							else if( view.name == 'agendaDay' ){
+								console.log('day');
+
+							}
+						  }
+					 });*/
+
+
+				</script>
+
+		</div>
 	</body>
 </html>

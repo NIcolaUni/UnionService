@@ -28,7 +28,17 @@
 
         $('.features.pagamenti').remove();
 
-        var numPrevSelected =  $('#pagamentiSelect option:selected').attr('class').split('-')[1]
+        var numPrevSelected;
+
+        try{
+
+         numPrevSelected=  $('#pagamentiSelect option:selected').attr('class').split('-')[1]
+
+        }
+        catch(err){
+            console.log('tabella pagamenti cliente non creata');
+            return;
+        }
 
         var strToAdd='';
 

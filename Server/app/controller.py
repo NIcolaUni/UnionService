@@ -32,6 +32,8 @@ from .model.calendario import Calendario
 from .model.richiestaFerie import RichiestaFerie
 from .model.messaggio import Messaggio
 from .model.pagamentiCliente import PagamentiCliente
+from .model.assistenzaLavorazione import AssistenzaLavorazione
+from .model.contabilitaCantiere import ContabilitaCantiere
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 from .model.nocache import nocache
@@ -83,9 +85,10 @@ def prezzarioEdile():
     settori = SettoreLavorazione.query.all()
     prezzario =PrezzarioEdile.query.first()
     lavorazioni =  PrezzarioEdile.returnLavorazioni()
+    assistenze = AssistenzaLavorazione.query.all()
 
     return render_template('prezzarioEdile.html', dipendente=dip, prezzario=prezzario, settori=settori, lavorazioni=lavorazioni,
-                           scheda=True, prezzario_edile=True )
+                           assistenze=assistenze, scheda=True, prezzario_edile=True )
 
 
 @server.route('/agendaClientePag/<dipUsername>')
@@ -132,6 +135,66 @@ def paginaProfilo():
     calendario = Calendario.query.filter_by(dipendente=dip.username).all()
     return render_template('paginaProfilo.html', dipendente=dip, dipendenti=dipendenti, calendario=calendario)
 
+@server.route('/anteprimaContabilitaCantiere')
+@login_required
+def anteprimaContabilitaCantiere():
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+
+    preventiviEdili = PreventivoEdile.returnAllPreventiviCliente(nome_cliente=app.clienteSelezionato.nome,
+                                                                 cognome_cliente=app.clienteSelezionato.cognome,
+                                                                 indirizzo_cliente=app.clienteSelezionato.indirizzo)
+
+    preventiviEdili_distinti = []
+
+    for preventivo in preventiviEdili:
+
+        if not preventivo[0].stato:
+            preventivo_presente = False
+            for prev_dist in preventiviEdili_distinti:
+                if preventivo[0].numero_preventivo == prev_dist[2]:
+                    if preventivo[0].revisione <= prev_dist[3]:
+                        preventivo_presente = True
+
+            if not preventivo_presente:
+                preventiviEdili_distinti.append(
+                    (preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
+                     preventivo[0].numero_preventivo, preventivo[0].revisione ))
+
+    preventiviEdili_distinti = sorted(preventiviEdili_distinti, key=lambda tup: tup[2], reverse=True)
+
+    return render_template('anteprimaContabilitaCantiere.html', dipendente=dip, preventiviEdili_distinti=preventiviEdili_distinti)
+
+@server.route('/contabilita')
+@login_required
+def contabilita():
+    num_prev = app.contabilitaCantiereRichiesta[0]
+    revisione = app.contabilitaCantiereRichiesta[1]
+
+    dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
+
+    preventivo = PreventivoEdile.query.filter_by(numero_preventivo=num_prev, revisione=revisione,
+                                                 tipologia="edile").first()
+    cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente,
+                                             indirizzo=preventivo.indirizzo_cliente).first()
+
+
+    contabilita = ContabilitaCantiere.query.filter_by(numero_preventivo=num_prev, revisione=revisione).all()
+
+
+    return render_template('contabilitaCantiere.html', dipendente=dip, contabilita=contabilita, cliente=cliente,
+                           contabilitaCantiere=True, numero_preventivo=num_prev, revisione=revisione)
+
+
+@server.route('/contabilitaCantiere/<num_prev>/<revisione>/')
+@login_required
+def contabilitaCantiere(num_prev, revisione):
+
+    app.contabilitaCantiereRichiesta=(num_prev, revisione)
+
+    return redirect('/contabilita')
+
+
+
 
 @server.route('/newPreventivoEdile')
 @login_required
@@ -143,10 +206,13 @@ def newPreventivoEdile():
     preventivo = PreventivoEdile.query.filter_by(numero_preventivo=app.preventivoEdileSelezionato[0], revisione=app.preventivoEdileSelezionato[1], tipologia="edile").first()
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
+    assistenze = AssistenzaLavorazione.query.all()
+    assistenzeDistinte = AssistenzaLavorazione.returnAssistenzeDistinte()
 
     return render_template('preventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
                             preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile,
-                            lavorazioni=lavorazioni, preventivo=preventivo, preventivoEdile=True)
+                            lavorazioni=lavorazioni, preventivo=preventivo, assistenze=assistenze, assistenzeDistinte=assistenzeDistinte,
+                           preventivoEdile=True)
 
 
 @server.route('/apriPreventivoEdile')
@@ -160,10 +226,13 @@ def apriPreventivoEdile():
     infoPreventivo = PreventivoEdile.returnSinglePreventivo(numero_preventivo=app.preventivoEdileSelezionato[0], revisione=app.preventivoEdileSelezionato[1])
     cliente = ClienteAccolto.query.filter_by(nome=preventivo.nome_cliente, cognome=preventivo.cognome_cliente, indirizzo=preventivo.indirizzo_cliente).first()
     codicePreventivo=preventivo.calcolaCodicePreventivo()
+    assistenze = AssistenzaLavorazione.query.all()
+    assistenzeDistinte = AssistenzaLavorazione.returnAssistenzeDistinte()
 
     return render_template('preventivoEdile.html', codicePreventivo=codicePreventivo, settori=settori,
                             preventivoFullPage=True, cliente=cliente, prezzarioEdile=prezzarioEdile, lavorazioni=lavorazioni,
-                            preventivo=preventivo, preventivoEdile=True, infoPreventivo=infoPreventivo, dipendente=dip)
+                            preventivo=preventivo, preventivoEdile=True, infoPreventivo=infoPreventivo,
+                            assistenze=assistenze, assistenzeDistinte=assistenzeDistinte, dipendente=dip)
 
 @server.route('/downloadPreventivoEdile/<num_prev>/<revisione>')
 @nocache
@@ -350,11 +419,12 @@ def anteprimaPreventivoFiniture():
         preventivo_presente = False
         for prev_dist in preventiviEdili_distinti:
             if preventivo[0].numero_preventivo == prev_dist[2]:
-                preventivo_presente = True
+                if preventivo[0].revisione <= prev_dist[3]:
+                    preventivo_presente = True
 
         if not preventivo_presente:
             preventiviEdili_distinti.append((preventivo[0].intervento_commessa, preventivo[0].calcolaCodicePreventivo(),
-                                        preventivo[0].numero_preventivo))
+                                        preventivo[0].numero_preventivo, preventivo[0].revisione))
 
     return render_template('paginaCliente_prevFiniture.html', dipendente=dip, cliente=app.clienteSelezionato, countPreventiviFiniture=countPreventivi,
                            preventiviFiniture_distinti=preventivi_distinti, preventiviFiniture=preventivi,
@@ -797,6 +867,17 @@ def handle_registra_lavorazione(message):
                                          prezzoMin=message["pMin"], prezzoMax=message["pMax"],
                                           dimensione=message["dimensione"], fornitura=message["fornitura"], posa=message["posa"],
                                             note=message["note"])
+
+    prezzoPercentuale = False
+
+    if message['tipoPrezzo'] == 'perc':
+        prezzoPercentuale = True
+
+
+    AssistenzaLavorazione.registraAssistenza(nome = message['nome_assistenza'], costo= message['costo_assistenza'],
+                                             prezzoPercentuale= prezzoPercentuale, settore=message["settore"],
+                                             tipologia_lavorazione=message["tipologia"] )
+
     emit('confermaRegistrazioneLavorazione', namespace='/prezzario', room=dip.session_id)
 
 @socketio.on('modifica_lavorazione', namespace="/prezzario")
@@ -808,6 +889,21 @@ def handle_modifica_lavorazione(message):
 
     emit('conferma_modifica_lavorazione', namespace='/prezzario', room=dip.session_id)
 
+@socketio.on('modifica_assistenza', namespace="/prezzario")
+def handle_modifica_assistenza(message):
+
+    AssistenzaLavorazione.modificaAssistenza(nome=message['nome_assistenza'], tipologia_lavorazione=message['tipo_lav'],
+                                             settore=message['settore'], modifica={ message['toMod'] : message['value']})
+
+@socketio.on('modifica_nome_assistenza_generale', namespace="/prezzario")
+def handle_modifica_nome_assistenza_generale(message):
+
+    AssistenzaLavorazione.modificaNomeAssistenzaGenerale( old_nome = message['old_nome'], new_nome = message['new_nome'])
+
+@socketio.on('elimina_assistenza', namespace="/prezzario")
+def handle_elimina_assistenza(message):
+
+    AssistenzaLavorazione.eliminaAssistenza(nome=message['nome'])
 
 @socketio.on('modifica_ricarico_prezzario', namespace='/prezzario')
 def handle_modifica_ricarico_all(message):
@@ -1836,6 +1932,12 @@ def handle_checkaRata(message):
         else:
             PagamentiCliente.modificaPagamento(message['numero_preventivo'], {'saldo_pagato': True})
 
+@socketio.on('modifica_contabilita', namespace="/contabilitaCantiere")
+def handle_modifica_contabilita(message):
+
+    ContabilitaCantiere.modificaContabilita(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                            tipologia_lavorazione=message['tipologia_lavorazione'],
+                                            modifica={message['toMod'] : message['newVal']})
 
 
 @socketio.on_error('/cliente')
@@ -1910,3 +2012,7 @@ def error_handler(e):
 @socketio.on_error('/preventivoVarianti')
 def error_handler(e):
     server.logger.info("\n\n\npreventivo varianti: ci sono probelmi {}\n\n\n".format(e))
+
+@socketio.on_error('/contabilitaCantiere')
+def error_handler(e):
+    server.logger.info("\n\n\ncontabilita cantiere: ci sono probelmi {}\n\n\n".format(e))

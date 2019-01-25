@@ -162,6 +162,15 @@
 
             var settore = $('#selectSettore option:selected').text();
             var tipologia = $(this).text();
+            var assistenzeDistinte = [];
+
+            assistenzeDistinte.push('No assistenza');
+
+            {% for assistenza in assistenzeDistinte %}
+                {% if assistenza != '' %}
+                    assistenzeDistinte.push('{{assistenza}}');
+                {% endif %}
+            {% endfor %}
 
             {% for lavorazione in lavorazioni %}
 
@@ -174,10 +183,35 @@
                     if( lavorazioneToCompare == tipologia){
 
 
+                        var nome_assistenza, costoAssistenza, tipoCostoAssistenza;
+
+                        {% for assistenza in assistenze %}
+                            {% if assistenza.settore == lavorazione.settore  and
+                                assistenza.tipologia_lavorazione == lavorazione.tipologia_lavorazione %}
+
+                                nome_assistenza = '{{assistenza.nome}}';
+                                costoAssistenza = parseFloat('{{assistenza.costo}}');
+
+                                if( '{{assistenza.prezzoPercentuale}}' == 'True' ){
+                                   tipoCostoAssistenza  = true;
+                                }
+                                else
+                                    tipoCostoAssistenza = false;
+
+                                if( nome_assistenza == '' )
+                                {
+                                    nome_assistenza = 'No assistenza';
+                                    costoAssistenza =0;
+                                }
+
+                            {% endif %}
+                        {% endfor %}
+
                         aggiungiRiga( $(this), "{{preventivo.numero_preventivo}}", "{{preventivo.revisione}}",
                                 settoreToCompare, lavorazioneToCompare,
                                 parseFloat('{{lavorazione.prezzoMax}}'),
-                                '{{lavorazione.unitaMisura}}' );
+                                '{{lavorazione.unitaMisura}}', nome_assistenza, costoAssistenza, tipoCostoAssistenza,
+                                 assistenzeDistinte);
                     }
                 }
 

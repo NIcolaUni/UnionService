@@ -1,3 +1,47 @@
+.viewContainer {
+    position: absolute;
+    margin-left: -4%;
+    width: 100%;
+    overflow-y: scroll;
+    top: 11%;
+}
+
+div#sezioneHeader {
+    height: 9%;
+    position: absolute;
+ //   top: 11%;
+}
+
+
+#headerTableContainer_1{
+    display: inline-block;
+    position: absolute;
+}
+
+#headerTableContainer_2{
+    display: inline-block;
+    position: absolute;
+}
+
+div#tabellaContainer1 {
+    display: inline-block;
+    width: 73%;
+}
+
+div#tabellaContainer2 {
+    display: inline-block;
+    width: 22%;
+    right: 5%;
+    position: absolute;
+}
+
+div#tabellaContainerNewRow2 {
+    margin-left: 25%;
+    width: 50%;
+    position: absolute;
+    z-index: -1;
+}
+
 .note{
    // width: 20% !important;
 }
@@ -8,12 +52,6 @@ div#headerNewRow {
 
 .sezioneTabella.newRow input{
     width: 40%;
-}
-
-
-.viewContainer {
-    position: absolute;
-    margin-left: -2%;
 }
 
 .headerDelHeader {
@@ -75,4 +113,121 @@ td.primaColNewRow {
 
 th.primaColNewRow {
     display: none;
+}
+
+div#aggiungiAssistenza {
+
+    width: 13%;
+    display: inline-block;
+    float: right;
+    margin-right: 2%;
+}
+
+#aggiungiAssistenza label {
+    display: inline-block;
+    width: 80%;
+    cursor: pointer;
+}
+
+#buttonAssistenza {
+    background-color: white;
+    font-size: 13px;
+    cursor: pointer;
+    float: right;
+    display: inline-block;
+    margin-top: 3%;
+}
+
+div#buttonAssistenza a {
+    display: block;
+    margin: 0;
+
+}
+
+div#aggiungiNuovaAssistenza {
+
+    width: 20%;
+    display: inline-block;
+    float: right;
+    margin-right: 2%;
+}
+
+#aggiungiNuovaAssistenza label {
+    display: inline-block;
+    width: 80%;
+    cursor: pointer;
+}
+
+#buttonNuovaAssistenza {
+    background-color: white;
+    font-size: 13px;
+    cursor: pointer;
+    float: right;
+    display: inline-block;
+    margin-top: 3%;
+}
+
+div#buttonNuovaAssistenza a {
+    display: block;
+    margin: 0;
+
+}
+
+div#costoAssistenzaContainer input[type="number"]{
+    width: 40%;
+    color: black;
+
+}
+
+.textareaContainer {
+    width: 98%;
+}
+
+textarea#newNomeAssistenza {
+    width: 100%;
+}
+
+.myBtn {
+    font-size: 20px;
+    float: right;
+    display: inline-block;
+    padding-right: 1%;
+}
+
+.myBtn a{
+    display: block;
+    margin: 0;
+    cursor: pointer;
+    color: #5c5371;
+}
+
+/*
+.element_container {
+    height: 127px;
+    overflow-y: scroll;
+}*/
+
+.cellaTipologia{
+    height: 127px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.edit_nome_assistenza textarea {
+    width: 96%;
+    margin-top: 13%;
+}
+
+.input_costo_assistenza input[type='number']{
+    width: 40%;
+}
+
+textarea.cellaTextarea{
+
+    color: #787776;
+    resize: none;
+    height: 125px;
+    display: inline-block;
+    font-weight: bold;
+    width: 94%;
 }

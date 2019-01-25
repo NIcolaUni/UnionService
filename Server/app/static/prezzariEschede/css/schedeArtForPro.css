@@ -339,3 +339,11 @@ label.percSimbol {
     margin-top: 1%;
 }
 
+input[type="radio"]{
+    cursor: pointer;
+}
+
+input{
+    color: black;
+}
+

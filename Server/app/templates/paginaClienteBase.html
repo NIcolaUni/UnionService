@@ -167,6 +167,11 @@
             <script src="{{url_for('static', filename='paginaCliente/assets/js/preventivoFiniture.js') }}"></script>
         {% endif %}
 
+        {% if contabilitaCantiere %}
+            <link href="{{url_for('static', filename='paginaCliente/assets/css/preventivo.css') }}" rel="stylesheet">
+            <link href="{{url_for('static', filename='paginaCliente/assets/css/contabilitaCantiere.css') }}" rel="stylesheet">
+            <script src="{{url_for('static', filename='paginaCliente/assets/js/contabilitaCantiere.js') }}"></script>
+        {% endif %}
 <!--===========================================================================================================-->
 
 

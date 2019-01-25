@@ -8,6 +8,9 @@ class LavorazionePreventivoDBmodel(app.database.Model):
             ForeignKeyConstraint(['numero_preventivo', 'revisione', 'tipologia'],
                                  ['preventivo.numero_preventivo', 'preventivo.revisione', 'preventivo.tipologia'],
                                  ondelete='CASCADE', onupdate='CASCADE'),
+            ForeignKeyConstraint( ['settore', 'tipologia_lavorazione'],
+                                  ['lavorazione_edile.settore', 'lavorazione_edile.tipologia_lavorazione'],
+                                  onupdate="CASCADE")
             )
 
     numero_preventivo = Column(Integer())

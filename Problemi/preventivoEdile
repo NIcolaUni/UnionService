@@ -14,4 +14,13 @@
 9- drag n drop
 10- nel pdf stampa anche i settori di lavorazione
 11 - se su misura stampa anche le dimensioni
-12-quando aperto in modalita modifica non rienumera correttamente le sottolavorazioni lavorazioni.
+12- il secondo ricarico va applicato sul totale delle singole lavorazioni
+13 - sottolavorazioni con nome vuoto: alla modifica del nome non cambia la numerazione
+14: aggiungiper  ogni lavorazione un bottone apposito per trasformare la riga in lavorazione
+ ( cambiando di conseguenza la numerazione )
+15- nella stampa del budget aggiungere una riga "budget imprevisti" dopo il totale: questo
+valora viene richiesto alla stampa del budget
+
+16- valore di imprevisti va salvato ma richiesto ogni volta (lasciando il valore salvato come prezzo di default )
+
+17- aggiornare l'anteprima di preventivo aggiungendo l'assistenza

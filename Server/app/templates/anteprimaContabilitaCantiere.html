@@ -1,0 +1,21 @@
+<div class="inner">
+
+    <span id="titlePagamentiSpan">
+        <span><h2>Contabilità cantiere</h2></span>
+
+        <span id="ctrlSpanContabilita">
+            <select id="contabilitaSelect" >
+
+                {% for prev in preventiviEdili_distinti %}
+                <option class="numeroPreventivo-{{prev[2]}} revisione-{{prev[3]}}">{{prev[0]}} - US{{prev[1]}} rev.{{prev[3]}}</option>
+                {% endfor %}
+
+            </select>
+            <button onclick="apriPaginaContabilita()"> Apri </button>
+
+        </span>
+
+    </span>
+
+
+</div>

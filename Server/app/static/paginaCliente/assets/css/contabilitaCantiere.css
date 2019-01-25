@@ -1,0 +1,16 @@
+.headerTable {
+    background-color: indigo;
+}
+
+input.inputNumber {
+    width: 45%;
+    color: black;
+}
+
+.red{
+    color: red;
+}
+
+.green{
+    color: #05ff05;
+}

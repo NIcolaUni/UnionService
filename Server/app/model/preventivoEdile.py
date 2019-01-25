@@ -8,6 +8,7 @@ from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneCadDBmodel 
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMlDBmodel import SottolavorazioneMlDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMqDBmodel import SottolavorazioneMqDBmodel
 from .db.lavorazioniPreventivoEdile.sottolavorazioni.sottolavorazioneMcDBmodel import SottolavorazioneMcDBmodel
+from .contabilitaCantiere import ContabilitaCantiere
 from .pagamentiCliente import PagamentiCliente
 from .clienteAccolto import  ClienteAccolto
 from sqlalchemy import desc, func
@@ -999,6 +1000,13 @@ class PreventivoEdile(PreventivoDBmodel):
         preventivo.iva_totale = iva
 
         PreventivoEdile.commit()
+
+        prevBudget = PreventivoEdile.returnSingleBudget(numero_preventivo=numero_preventivo, revisione=revisione)
+
+        for lav in prevBudget[1]:
+            ContabilitaCantiere.creaContabilita(numero_preventivo=numero_preventivo, revisione=revisione,
+                                                tipologia_lavorazione=lav[0].nome_modificato, ordine_lav=lav[0].ordine,
+                                                budget=lav[2], costi_effettivi=0, fattura=0 )
 
 
     def __calcolaIndiceLastLavorazionePagineIntermedie__(startingIndex, grandezzaRighe):

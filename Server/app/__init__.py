@@ -44,5 +44,7 @@ rigaPresente = False
 tabellaRigaPresente = None
 prezzarioProdottiTipoCorrente = None
 
+contabilitaCantiereRichiesta = None # coppia dalla forma (num_prev, revisione)
+
 import app.controller
 
