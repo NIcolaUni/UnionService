@@ -95,7 +95,9 @@ class __SottolavorazioneMcPreventivo__(SottolavorazioneMcDBmodel):
 
 
 class __LavorazionePreventivo__(LavorazionePreventivoDBmodel):
-    def __init__(self,  numero_preventivo, revisione, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario):
+    def __init__(self,  numero_preventivo, revisione, ordine, settore,
+                    tipologia_lavorazione, unitaMisura, prezzoUnitario,
+                        assistenza, costo_assistenza, tipo_costo_assistenza ):
         self.numero_preventivo=numero_preventivo
         self.revisione = revisione
         self.ordine = ordine
@@ -106,6 +108,9 @@ class __LavorazionePreventivo__(LavorazionePreventivoDBmodel):
         self.nome_modificato = tipologia_lavorazione
         self.unitaMisura=unitaMisura
         self.prezzoUnitario=prezzoUnitario
+        self.assistenza = assistenza
+        self.costo_assistenza = costo_assistenza
+        self.tipo_costo_assistenza = tipo_costo_assistenza
 
 class __Commessa__(CommessaDBmodel):
     def __init__(self, numero_preventivo, intervento, indirizzo, comune):
@@ -256,7 +261,9 @@ class PreventivoEdile(PreventivoDBmodel):
             newLav = __LavorazionePreventivo__(numero_preventivo=lav.numero_preventivo, revisione=lav.revisione,
                                                ordine=lav.ordine,
                                                settore=lav.settore, tipologia_lavorazione=lav.tipologia_lavorazione,
-                                               unitaMisura=lav.unitaMisura, prezzoUnitario=lav.prezzoUnitario)
+                                               unitaMisura=lav.unitaMisura, prezzoUnitario=lav.prezzoUnitario,
+                                               assistenza=lav.assistenza, costo_assistenza=lav.costo_assistenza,
+                                               tipo_costo_assistenza=lav.tipo_costo_assistenza)
             returnList.append(newLav)
 
         return returnList
@@ -496,6 +503,7 @@ class PreventivoEdile(PreventivoDBmodel):
 
 
     def registraLavorazione( numero_preventivo, revisione, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario,
+                             assistenza, costo_assistenza, tipo_costo_assistenza,
                              numero, larghezza=None, altezza=None, profondita=None ):
 
         controlVar = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first()
@@ -505,7 +513,8 @@ class PreventivoEdile(PreventivoDBmodel):
         if controlVar is None:
             lavorazione = __LavorazionePreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
                                                     ordine=ordine, settore=settore, tipologia_lavorazione=tipologia_lavorazione,
-                                                    unitaMisura=unitaMisura, prezzoUnitario=prezzoUnitario)
+                                                    unitaMisura=unitaMisura, prezzoUnitario=prezzoUnitario,
+                                                    assistenza=assistenza, costo_assistenza=costo_assistenza, tipo_costo_assistenza=tipo_costo_assistenza)
             PreventivoDBmodel.addRow(lavorazione)
         else: # se la lavorazione e' gia' presente registra la sottolavorazione
 

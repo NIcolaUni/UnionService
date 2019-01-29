@@ -1612,7 +1612,8 @@ def handle_add_nuova_lavorazione(message):
     PreventivoEdile.registraLavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
                                          ordine=message['ordine'], settore=message['settore'], tipologia_lavorazione=message['lavorazione'],
                                         numero=1, larghezza=1, altezza=1, profondita=1, unitaMisura=message['unitaMisura'],
-                                        prezzoUnitario=message['prezzoUnitario'])
+                                        prezzoUnitario=message['prezzoUnitario'], assistenza=message['nome_assistenza'],
+                                        costo_assistenza=message['costo_assistenza'], tipo_costo_assistenza=message['tipo_costo_assistenza'])
 
 @socketio.on('elimina_lavorazione', namespace='/preventivoEdile')
 def handle_elimina_lavorazione(message):
@@ -1652,11 +1653,8 @@ def handle_modifica_ordine_sottolavorazione(message):
                                                    new_ordine_sottolavorazione=message['newOrdineSottolav'],
                                                    unitaMisura=message['unitaMisura'])
 
-
 @socketio.on('modifica_sottolavorazione', namespace='/preventivoEdile')
 def handle_modifica_sottolavorazione(message):
-
-    #app.server.logger.info("\n\nEntrato in mod_sottolav: messaggio: {}\n\n".format(message))
 
     numero_preventivo = message["numero_preventivo"]
     revisione = message["revisione"]
@@ -1669,6 +1667,24 @@ def handle_modifica_sottolavorazione(message):
     PreventivoEdile.modificaSottolavorazione(numero_preventivo=numero_preventivo, revisione=revisione,
                                                  ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione,
                                                  modifica=toChange, unitaMisura=unitaMisura)
+
+@socketio.on('modifica_assistenza_lavorazione', namespace='/preventivoEdile')
+def handle_modifica_assistenza_lavorazione(message):
+    numero_preventivo = message["numero_preventivo"]
+    revisione = message["revisione"]
+    ordine = message["ordine_lav"]
+
+    newVal = message['newVal']
+
+    if message['toMod'] == 'tipo_costo_assistenza':
+        if newVal == 'perc':
+            newVal = True
+        else:
+            newVal = False
+
+    PreventivoEdile.modificaLavorazione(numero_preventivo=numero_preventivo, revisione=revisione,
+                                        ordine=ordine, modifica={message['toMod'] : newVal })
+
 
 @socketio.on('stampa_budget', namespace='/preventivoEdile')
 def handle_stampa_preventivo(message):

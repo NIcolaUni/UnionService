@@ -24,3 +24,5 @@ valora viene richiesto alla stampa del budget
 16- valore di imprevisti va salvato ma richiesto ogni volta (lasciando il valore salvato come prezzo di default )
 
 17- aggiornare l'anteprima di preventivo aggiungendo l'assistenza
+
+18 - problema al cancellamento e poi reinserimento di una lavorazione: si sballa arrayAssistenza ( penso )

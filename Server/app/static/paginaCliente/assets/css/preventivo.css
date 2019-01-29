@@ -512,3 +512,12 @@ th.thCostoAssistenza {
     margin: 0 3% 0 3%;
     cursor: pointer;
 }
+
+.divCostoAssistenza div {
+    width: 70%;
+    display: inline-block;
+}
+
+a.copiaLavorazione {
+    cursor: pointer;
+}

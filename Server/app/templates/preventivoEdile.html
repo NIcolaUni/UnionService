@@ -211,7 +211,7 @@
                                 settoreToCompare, lavorazioneToCompare,
                                 parseFloat('{{lavorazione.prezzoMax}}'),
                                 '{{lavorazione.unitaMisura}}', nome_assistenza, costoAssistenza, tipoCostoAssistenza,
-                                 assistenzeDistinte);
+                                 assistenzeDistinte, false);
                     }
                 }
 
@@ -235,7 +235,31 @@
                             var idSettore = $(this).attr('id').split('_trBody-')[0];
                             var idLavorazione = $(this).attr('id').split('_trBody-')[1];
 
+                            /* modifico il nome della lavorazione */
                             $(this).children('td.tdLavorazione').children('textarea').val(nome_modificato);
+
+                            /*modifico l'assistenza*/
+
+                            $(this).children('td.tdCostoAssistenza').children('div').children('input').val('{{lavorazione[0].costo_assistenza}}');
+
+                            {% if lavorazione[0].tipo_costo_assistenza %}
+                                $(this).children('td.tdCostoAssistenza').children('div').children('div').children('input.radioPerc').trigger('click');
+                            {% else %}
+                                $(this).children('td.tdCostoAssistenza').children('div').children('div').children('input.radioEuro').trigger('click');
+                            {% endif %}
+
+                            {% if lavorazione[0].assistenza == '' %}
+                                $(this).children('td.tdLavorazione').children('div').children('select').val('No assistenza');
+                            {% else %}
+                                $(this).children('td.tdLavorazione').children('div').children('select').val('{{lavorazione[0].assistenza}}');
+
+                            {% endif %}
+
+                            $(this).children('td.tdLavorazione').children('div').children('select').trigger('change');
+                            $(this).children('td.tdCostoAssistenza').children('div').children('input').trigger('input');
+
+                           // $(this).children('td.tdLavorazione').children('td.tdCostoAssistenza').children('div').children('input').trigger('input');
+
 
                             {% for sottolavorazione in lavorazione[3] %}
     /*

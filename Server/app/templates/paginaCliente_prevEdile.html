@@ -52,12 +52,29 @@
         {% for preventivo in preventivi %}
             if( "{{preventivo[0].numero_preventivo}}"  == numero_preventivo &&  "{{preventivo[0].revisione}}"  == revisione ){
                 {% for lavorazione in preventivo[1][1] %}
-                    totale += parseFloat('{{lavorazione[2]}}');
+
+                    var totLav = parseFloat('{{lavorazione[2]}}');
+
+                    {% if lavorazione[0].assistenza != '' %}
+
+                        var costoAssistenza = parseFloat('{{lavorazione[0].costo_assistenza}}');
+
+                        {% if lavorazione[0].tipo_costo_assistenza %}
+                            totLav += (totLav*costoAssistenza)/100;
+                        {% else %}
+                            totLav += costoAssistenza;
+                        {% endif %}
+
+                        totLav = Math.round(totLav*100)/100;
+                    {% endif %}
+
+                    totale += totLav;
                 {% endfor %}
             }
 
         {% endfor %}
 
+        totale = Math.round( totale*100 )/100;
         $('#totalePrev').html( '<button style="display:none" id="btnPrev">Preventivo</button><button style="display:none" id="btnBudget">Budget</button><button onclick="revisionaPreventivo();" style="display:none" id="btnRevisione">Revisiona</button><span>Totale: &euro; '+ totale +'</span>');
 
     }
@@ -105,6 +122,20 @@
                                     {% if lavorazione[0].settore == settore %}
                                         var roundedQuantita = Math.round(parseFloat('{{lavorazione[1]}}')*100)/100;
                                         var roundedTotale =  Math.round(parseFloat('{{lavorazione[2]}}')*100)/100;
+
+                                        {% if lavorazione[0].assistenza != '' %}
+                                            var costoAssistenza = parseFloat('{{lavorazione[0].costo_assistenza}}');
+
+                                            {% if lavorazione[0].tipo_costo_assistenza %}
+                                                roundedTotale += (roundedTotale*costoAssistenza)/100;
+                                            {% else %}
+                                                roundedTotale += costoAssistenza;
+                                            {% endif %}
+
+                                            roundedTotale = Math.round(roundedTotale*100)/100;
+                                        {% endif %}
+
+
                                         strToAdd +=	'<tr> \
                                                         <td class="tdTipoLav">{{lavorazione[0].nome_modificato}}</td> \
                                                         <td class="tdQuantita">'+roundedQuantita+'</td> \

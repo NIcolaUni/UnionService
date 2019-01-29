@@ -23,4 +23,6 @@ class LavorazionePreventivoDBmodel(app.database.Model):
     nome_modificato = Column(String(500))
     unitaMisura = Column(String(10))
     prezzoUnitario = Column(Float())
-
+    assistenza = Column(String(500))
+    costo_assistenza = Column(Float())
+    tipo_costo_assistenza = Column(Boolean()) # true percentuale
