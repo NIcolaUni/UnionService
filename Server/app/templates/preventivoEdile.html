@@ -228,51 +228,34 @@
 
                 $('tr.trBody').each(function(){
 
-                    if( !$(this).hasClass('trSottolav') ){
+                    if( $(this).children('td.firstCol').children('label').text() == '{{lavorazione[0].ordine}}' ){
 
-                        if( $(this).children('td.firstCol').children('label').text() == '{{lavorazione[0].ordine}}' ){
+                        var idSettore = $(this).attr('id').split('_trBody-')[0];
+                        var idLavorazione = $(this).attr('id').split('_trBody-')[1];
 
-                            var idSettore = $(this).attr('id').split('_trBody-')[0];
-                            var idLavorazione = $(this).attr('id').split('_trBody-')[1];
+                        /* modifico il nome della lavorazione */
+                        $(this).children('td.tdLavorazione').children('textarea').val(nome_modificato);
 
-                            /* modifico il nome della lavorazione */
-                            $(this).children('td.tdLavorazione').children('textarea').val(nome_modificato);
+                        /*modifico l'assistenza*/
 
-                            /*modifico l'assistenza*/
+                        $(this).children('td.tdCostoAssistenza').children('div').children('input').val('{{lavorazione[0].costo_assistenza}}');
 
-                            $(this).children('td.tdCostoAssistenza').children('div').children('input').val('{{lavorazione[0].costo_assistenza}}');
+                        {% if lavorazione[0].tipo_costo_assistenza %}
+                            $(this).children('td.tdCostoAssistenza').children('div').children('div').children('input.radioPerc').trigger('click');
+                        {% else %}
+                            $(this).children('td.tdCostoAssistenza').children('div').children('div').children('input.radioEuro').trigger('click');
+                        {% endif %}
 
-                            {% if lavorazione[0].tipo_costo_assistenza %}
-                                $(this).children('td.tdCostoAssistenza').children('div').children('div').children('input.radioPerc').trigger('click');
-                            {% else %}
-                                $(this).children('td.tdCostoAssistenza').children('div').children('div').children('input.radioEuro').trigger('click');
-                            {% endif %}
+                        {% if lavorazione[0].assistenza == '' %}
+                            $(this).children('td.tdLavorazione').children('div').children('select').val('No assistenza');
+                        {% else %}
+                            $(this).children('td.tdLavorazione').children('div').children('select').val('{{lavorazione[0].assistenza}}');
 
-                            {% if lavorazione[0].assistenza == '' %}
-                                $(this).children('td.tdLavorazione').children('div').children('select').val('No assistenza');
-                            {% else %}
-                                $(this).children('td.tdLavorazione').children('div').children('select').val('{{lavorazione[0].assistenza}}');
+                        {% endif %}
 
-                            {% endif %}
+                        $(this).children('td.tdLavorazione').children('div').children('select').trigger('change');
+                        $(this).children('td.tdCostoAssistenza').children('div').children('input').trigger('input');
 
-                            $(this).children('td.tdLavorazione').children('div').children('select').trigger('change');
-                            $(this).children('td.tdCostoAssistenza').children('div').children('input').trigger('input');
-
-                           // $(this).children('td.tdLavorazione').children('td.tdCostoAssistenza').children('div').children('input').trigger('input');
-
-
-                            {% for sottolavorazione in lavorazione[3] %}
-    /*
-                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').val('{{sottolavorazione.ricarico}}');
-                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdRicarico').children('input').trigger('input');
-                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdNomeSottolavorazione').children('textarea').text('{{sottolavorazione.nome_modificato}}');
-
-
-                                $('tr.'+idSettore+'_trSottolavorazione-'+idLavorazione+'.sottolavNum-{{sottolavorazione.ordine_sottolavorazione}}').children('td.tdNomeSottolavorazione').children('textarea').trigger('input');
-
-    */
-                            {% endfor %}
-                        }
 
                     }
 
@@ -308,47 +291,71 @@
 
                     {% if lavorazione[0].settore == settore %}
 
-                        //trovo il numero che indica l'ordine nel select del bottone
-                        //associato alla lavorazione
+                        {% if not lavorazione[0].copia %}
 
-                        var ordineBottone = 0;
-                        var stopFor = false;
+                            //trovo il numero che indica l'ordine nel select del bottone
+                            //associato alla lavorazione
 
-
-                        {% for lavSelect in lavorazioni %}
-
-                            {% if lavSelect.tipologia_lavorazione != lavorazione[0].tipologia_lavorazione and lavSelect.settore == settore %}
-                                if( !stopFor ){
-                                    ordineBottone++;
-
-                                }
-
-                            {% elif lavSelect.tipologia_lavorazione == lavorazione[0].tipologia_lavorazione %}
-                               if( !stopFor ){
-                                    stopFor = true;
-
-                                }
-
-                            {% endif %}
-                        {% endfor %}
-
-                        var settore = '{{settore}}'.replace(/&#39;/g, "'");
-                        var tipologia_lavorazione ='{{lavorazione[0].tipologia_lavorazione}}'.replace(/&#39;/g, "'");
-                        var unitaMisura = '{{lavorazione[0].unitaMisura}}'
+                            var ordineBottone = 0;
+                            var stopFor = false;
 
 
-                        var classSettore = trovaClassSettore(settore);
-                        var idButton = trovaIdButtonLavorazione(classSettore, tipologia_lavorazione);
+                            {% for lavSelect in lavorazioni %}
 
-                        $('#selectSettore').val(settore);
-                        $('#selectSettore').trigger('change');
+                                {% if lavSelect.tipologia_lavorazione != lavorazione[0].tipologia_lavorazione and lavSelect.settore == settore %}
+                                    if( !stopFor ){
+                                        ordineBottone++;
 
-                        $('#'+idButton).trigger('click');
+                                    }
+
+                                {% elif lavSelect.tipologia_lavorazione == lavorazione[0].tipologia_lavorazione %}
+                                   if( !stopFor ){
+                                        stopFor = true;
+
+                                    }
+
+                                {% endif %}
+                            {% endfor %}
+
+                            var settore = '{{settore}}'.replace(/&#39;/g, "'");
+                            var tipologia_lavorazione ='{{lavorazione[0].tipologia_lavorazione}}'.replace(/&#39;/g, "'");
+                            var unitaMisura = '{{lavorazione[0].unitaMisura}}'
 
 
+                            var classSettore = trovaClassSettore(settore);
+                            var idButton = trovaIdButtonLavorazione(classSettore, tipologia_lavorazione);
+
+                            $('#selectSettore').val(settore);
+                            $('#selectSettore').trigger('change');
+
+                            $('#'+idButton).trigger('click');
+
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
+            {% endfor %}
 
+            /* le lavorazioni copia vengono inserite successivamente a tutte le lavorazioni
+                "normali" in modo tale di essere sicuri di "trovare il tasto" */
+
+            {% for settore in infoPreventivo[0] %}
+                {% for lavorazione in infoPreventivo[1] %}
+                    {% if lavorazione[0].settore == settore %}
+                        {% if lavorazione[0].copia %}
+
+                        /*    $('tr.trBody').each(function(){
+                                if( !$(this).hasClass('trCopia') ){
+                                    var numOfRow = $(this).attr('id').split('_trBody-')[1];
+
+                                    if( '{{lavorazione[0].ordine_lav_originale}}' == numOfRow ){
+                                        $(this).children('td.firstCol').children('div').children('a').trigger('click');
+                                    }
+                                }
+                            });*/
+
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
 
         }

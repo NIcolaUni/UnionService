@@ -26,3 +26,8 @@ class LavorazionePreventivoDBmodel(app.database.Model):
     assistenza = Column(String(500))
     costo_assistenza = Column(Float())
     tipo_costo_assistenza = Column(Boolean()) # true percentuale
+
+    # attributi delle lavorazioni copia
+    copia = Column(Boolean(), default=False) # true se e' una lavorazione copia
+    ordine_lav_originale = Column(Integer()) # settato solo se e' una lavorazione copia
+    settore_lav_originale = Column(String(100))

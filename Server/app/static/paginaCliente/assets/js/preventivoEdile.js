@@ -210,9 +210,9 @@ var resettaLavToCtrl = function(){
                 }
             });
 
-            if(!$(this).hasClass('trSottolav')){
-                tmp.push([ $(this).attr('id'), settore ]);
-            }
+
+            tmp.push([ $(this).attr('id'), settore ]);
+
 
 
         });
@@ -348,7 +348,7 @@ var rienumeraPagina = function( ){
 
         });
 
-        if( !disabilitaSocketio && !$(this).hasClass('trSottolav') ){
+        if( !disabilitaSocketio ){
             socketPreventivo.emit("modifica_ordine_lavorazione",
                             {
                                 "numero_preventivo" : numeroPreventivo,
@@ -376,10 +376,8 @@ var calcolaTotalePreventivo = function(){
     var totale = 0;
 
     $('.trBody').each(function(){
-        if(!$(this).hasClass('trSottolav')){
             var numEl = $(this).attr('id').split('_trBody-')[1];
             totale+=parseFloat($('.trFoot'+numEl).children('.footTot').text().split(' ')[1]);
-        }
 
     });
 
@@ -1203,6 +1201,68 @@ var modificaAssistenzaLavorazione = function($this){
 
 /*******************************************************************************************/
 
+var selezionaSettoreLavCopia = function(settore){
+
+    var settoriToPrint =[];
+    var settoreToRet = settore;
+
+    settoriToPrint.push({value: settore, text: settore});
+
+
+    $('#selectSettore option').each(function(){
+
+        var classSettore = $(this).attr('class');
+
+        if( $(this).text() != settore )
+            settoriToPrint.push({value: classSettore, text: $(this).text()});
+        else
+            settoriToPrint[0]['value'] = classSettore;
+
+    });
+
+    swal.withFormAsync({
+        title: 'Seleziona settore lavorazione copia:',
+        showCancelButton: false,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Ok',
+        cancelButtonText: 'annulla',
+        closeOnConfirm: true,
+        formFields: [
+
+            { id: 'settore',
+                type: 'select',
+                options: settoriToPrint},
+
+
+        ]
+    }).then(function (context) {
+        if(context._isConfirm){
+            settoreToRet = context.swalForm['settore']
+        }
+    });
+
+    return settoreToRet;
+
+}
+
+/*******************************************************************************************/
+
+var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
+                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte){
+
+    var settoreSelected = selezionaSettoreLavCopia(settore)
+
+    aggiungiRiga(null, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia,
+                    costoLavorazione, unitaMisura, nome_assistenza, costoAssistenza,
+                        tipoCostoAssistenza, assistenzeDistinte, true);
+
+
+    $('#memoriaLavorazioniAggiunte div.')
+
+}
+
+/*******************************************************************************************/
+
 var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
                             nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte, copia){
 
@@ -1213,6 +1273,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
     revisionePreventivo = revisionePreventivoParametro;
 
     if( copia  || !$button.hasClass('aggiunto') ){
+
 
         var ricaricoAzienda = parseInt($('#inputRicaricoGenerale').val());
 
@@ -1257,10 +1318,10 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
         arrayAssistenze.push([ classSettore+'_trBody-'+ordineLavorazioni, nome_assistenza, costoAssistenza, tipoCostoAssistenza ])
 
 
-        var parametriCopiaLavorazione = 'null, '+numeroPreventivoParametro+', '+revisionePreventivoParametro+', '+
-                                            settore+', \'\', '+costoLavorazione+', '+unitaMisura+', '+
+        var parametriCopiaLavorazione = numeroPreventivoParametro+', '+revisionePreventivoParametro+', '+
+                                            settore+', '+ tipologia +', '+costoLavorazione+', '+unitaMisura+', '+
                                                 nome_assistenza+', '+ costoAssistenza + ', '+ tipoCostoAssistenza +', '+
-                                                    assistenzeDistinte+ ', true';
+                                                    assistenzeDistinte;
 
         //Preparo la riga della lavorazione
         var rowsToAdd='<tr id="'+classSettore+'_trBody-'+ordineLavorazioni+'" class="trBody '+classSettore+'_lastAdded">'+
@@ -1269,7 +1330,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
                             '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+', '+costoUs+', '+parseInt(ricaricoAzienda)+', '+costoAssistenza+', '+tipoCostoAssistenza+')" class="ctrButton addElement fa fa-plus"></a>'+
                             '<div>'+
-                                '<a class="copiaLavorazione" onclick="aggiungiRiga('+parametriCopiaLavorazione+');"> copia </a>'+
+                                '<a class="copiaLavorazione" onclick="aggiungiRigaCopia('+parametriCopiaLavorazione+');"> copia </a>'+
                             '</div>'+
                         '</td>'+
                         '<td class="tdPreventivo tdLavorazione">'+
@@ -1391,7 +1452,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
         calcolaTotaleUs(classSettore+'_trSottolavorazione-'+ordineLavorazioni, 'sottolavNum-0');
 
         /*registro la riga nel database*/
-        if( !disabilitaSocketio ){
+        if( !disabilitaSocketio && !copia ){
             socketPreventivo.emit("add_nuova_lavorazione",
                 {
                     "numero_preventivo" : numeroPreventivo,
