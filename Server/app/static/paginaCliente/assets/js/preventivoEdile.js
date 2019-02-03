@@ -294,6 +294,7 @@ var rienumeraPagina = function( ){
         $(this).children('.firstCol'+counter).children('label').text(counter);
         $(this).children('.firstCol'+counter).children('.add-old'+oldNum).addClass('add-'+counter);
         $(this).children('.firstCol'+counter).children('.add-old'+oldNum).removeClass('add-old'+oldNum);
+        $(this).children('td.tdCostoAssistenza').children('div').children('div').children('input').attr('name', classSettore+'_trBody-'+counter );
 
 
         $oldSottolavorazioneRows=$('.'+classSettore+'_trSottolavorazione-old'+oldNum);
@@ -651,6 +652,7 @@ var eliminaLavorazione = function($this){
         settaLastElement(classSettore);
     }
 
+    calcolaTotaleParzialeSettore(classSettore);
     calcolaTotalePreventivo();
 
 
@@ -1199,12 +1201,13 @@ var modificaAssistenzaLavorazione = function($this){
 
 }
 
+
 /*******************************************************************************************/
 
-var selezionaSettoreLavCopia = function(settore){
+var selezionaSettoreLavCopia = function( numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
+                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte){
 
     var settoriToPrint =[];
-    var settoreToRet = settore;
 
     settoriToPrint.push({value: settore, text: settore});
 
@@ -1237,27 +1240,167 @@ var selezionaSettoreLavCopia = function(settore){
         ]
     }).then(function (context) {
         if(context._isConfirm){
-            settoreToRet = context.swalForm['settore']
+
+            aggiungiRigaCopia( numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
+                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte, context.swalForm['settore']);
         }
     });
 
-    return settoreToRet;
 
 }
+
 
 /*******************************************************************************************/
 
 var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
-                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte){
+                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte, settoreSelected){
 
-    var settoreSelected = selezionaSettoreLavCopia(settore)
 
-    aggiungiRiga(null, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia,
+    var nomeSettoreSelected = $('#selectSettore option.'+settoreSelected).text();
+    var idRow = aggiungiRiga(null, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia,
                     costoLavorazione, unitaMisura, nome_assistenza, costoAssistenza,
                         tipoCostoAssistenza, assistenzeDistinte, true);
 
+    /*Ricostruisco la riga costruita modificandone opportunamente id e classi in base al
+        nuovo settore selezionato */
+    var $rowLav =$('#'+idRow);
+    var $rowSottolav = $rowLav.next();
+    var $rowFoot = $rowSottolav.next();
 
-    $('#memoriaLavorazioniAggiunte div.')
+    $rowLav.children('td.tdLavorazione').children('textarea').text('');
+    $rowLav.children('td.tdLavorazione').children('div').children('select').val('No assistenza');
+    $rowLav.children('td.tdLavorazione').children('div').children('select').trigger('change');
+
+    var newLavId = settoreSelected + '_trBody-'+$rowLav.attr('id').split('_trBody-')[1];
+
+    var sottolavArrayClasses = $rowSottolav.attr('class').split(' ');
+    var sottolavFirstClass = sottolavArrayClasses[0];
+    var sottolavOtherClassesArray = sottolavArrayClasses.slice(1, sottolavArrayClasses.length );
+    var newSottolavFirstClass = settoreSelected + '_trSottolavorazione-' + sottolavFirstClass.split('_trSottolavorazione-')[1];
+
+
+    var newSottolavClass = newSottolavFirstClass + ' ';
+
+
+    $.each(sottolavOtherClassesArray, function(index, el){
+
+        if( index+1 == sottolavOtherClassesArray.length )
+            newSottolavClass += el;
+        else
+            newSottolavClass += el + ' ';
+
+
+    });
+
+    var footArrayClasses = $rowFoot.attr('class').split(' ');
+
+    var newFootClass = '';
+
+    $.each(footArrayClasses, function(index, el){
+
+        var spazio = ' ';
+
+        if( index+1 == footArrayClasses.length )
+            spazio = '';
+
+        if( index == 1 )
+            newFootClass += settoreSelected+'_trFoot'+spazio;
+        else
+            newFootClass += el+spazio;
+
+    });
+
+    var rowToMove = '<tr id="'+newLavId+'" class="'+$rowLav.attr('class')+'">'+$rowLav.html()+'</tr>'+
+                    '<tr class="'+newSottolavClass+'">'+$rowSottolav.html()+'</tr>'+
+                    '<tr class="'+newFootClass+'">'+$rowFoot.html()+'</tr>';
+
+
+    var indexElToDel;
+    $.each( arrayAssistenze, function(index, el){
+
+        if( el[0] == idRow )
+            indexElToDel = index;
+    });
+    arrayAssistenze.splice(indexElToDel, 1)
+
+    arrayAssistenze.push([newLavId, 'No assistenza', 0, true]);
+
+
+
+    var sezioneSettore =  $('#bodyPreventivo').children('.'+settoreSelected);
+
+    //se non e' gia' stata aggiunta una sezione lo faccio e subito sotto metto la lavorazione
+    // e il relativo footer
+    if( !sezioneSettore.length ){
+
+        var colspanNum = 10;
+
+        if( !cbxStatus )
+            colspanNum = 13;
+
+        $('#bodyPreventivo').append(
+
+            '<tr class="trHead '+settoreSelected+'">'+
+                '<td  colspan="'+colspanNum+'"  class="titleSettoreTd">'+nomeSettoreSelected+'</td>'+
+                '<td class="titleSettoreTd totaleSettore"></td>'+
+            '</tr>'+
+            '<tr class="trHead '+settoreSelected+'_head">'+
+                '<th class="thPreventivo"></th>'+
+                '<th class="thPreventivo"></th>'+
+                '<th class="thPreventivo numColSmall">N</th>'+
+                '<th class="thPreventivo numColSmall">L</th>'+
+                '<th class="thPreventivo numColSmall">H</th>'+
+                '<th class="thPreventivo numColSmall">P</th>'+
+                '<th class="thPreventivo thQuantita">Quantità</th>'+
+                '<th class="thPreventivo unitaClass">Unità</th>'+
+                '<th class="thPreventivo thPrezzoUnitario">Prezzo unitario</th>'+
+                '<th class="thPreventivo thCostoAssistenza">Prezzo Assistenza</th>'+
+                '<th class="thPreventivo thAdded">Prezzo US</th>'+
+                '<th class="thPreventivo thAdded">Totale US</th>'+
+                '<th class="thPreventivo numColSmall thAdded">ricarico</th>'+
+                '<th class="thPreventivo">Totale</th>'+
+            '</tr>'+
+            rowToMove
+
+        );
+
+    }
+    else{
+       // $("."+settoreSelected+"_lastAdded").removeClass(settoreSelected+"_lastAdded");
+        $('.'+settoreSelected+'_trFoot').last().after(rowToMove);
+
+    }
+    //$('#memoriaLavorazioniAggiunte div.')
+    if( cbxStatus ){
+        $('.thAdded').hide();
+        $('.tdAdded').hide();
+    }
+
+    $rowLav.remove();
+    $rowSottolav.remove();
+    $rowFoot.remove();
+
+    rienumeraPagina();
+
+    $('#'+newLavId).children('td.tdCostoAssistenza').children('div').children('input').val(0);
+    $('#'+newLavId).children('td.tdCostoAssistenza').children('div').children('div').children('input.radioPerc').click();
+    $('#'+newLavId).children('td.tdCostoAssistenza').children('div').children('input').trigger('input');
+
+    $('#selectSettore option').each(function(){
+        if( $(this).text() == settore )
+            calcolaTotaleParzialeSettore($(this).attr('class'));
+    });
+
+    $('textarea').unbind('mouseover').mouseover(function(){
+        $(this).focus();
+    });
+
+    $('input').unbind('mouseover').mouseover(function(){
+        $(this).focus();
+    });
+
+    calcolaTotaleRigaSottolavorazione(settoreSelected, newLavId.split('_trBody-')[1]);
+
 
 }
 
@@ -1272,17 +1415,19 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
     numeroPreventivo = numeroPreventivoParametro;
     revisionePreventivo = revisionePreventivoParametro;
 
+
     if( copia  || !$button.hasClass('aggiunto') ){
 
 
         var ricaricoAzienda = parseInt($('#inputRicaricoGenerale').val());
+        var classSettore;
 
         if( !copia ){
             //Segno nel bottono cliccato che e' una lavorazione aggiunto
             $button.addClass("aggiunto");
             $button.addClass("aggiunto-"+ordineLavorazioni);
 
-            var classSettore = $button.attr('id').split('_')[0];
+            classSettore = $button.attr('id').split('_')[0];
             var idSettore = parseInt($button.attr('id').split('_')[0].split('-')[1]);
 
             /*memorizzo nel apposita sezione l'aggiunta della classe "aggiunto-"+ordineLavorazioni al bottone*/
@@ -1293,11 +1438,19 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
             );
         }
+        else{
+            $('#selectSettore option').each(function(){
+                if( $(this).text() == settore )
+                    classSettore = $(this).attr('class');
+            });
+
+        }
 
         costoUs = costoLavorazione;
         costoLavorazione = costoLavorazione+(costoLavorazione*ricaricoAzienda/100);
 
         var selectAssistenzeHtml = '<select onchange="modificaAssistenzaLavorazione($(this))">';
+
 
         $.each(assistenzeDistinte, function(index, el){
             selectAssistenzeHtml += '<option>'+el+'</option>';
@@ -1317,11 +1470,17 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
         arrayAssistenze.push([ classSettore+'_trBody-'+ordineLavorazioni, nome_assistenza, costoAssistenza, tipoCostoAssistenza ])
 
+        var assistenzeDistinteParametro = '';
 
-        var parametriCopiaLavorazione = numeroPreventivoParametro+', '+revisionePreventivoParametro+', '+
-                                            settore+', '+ tipologia +', '+costoLavorazione+', '+unitaMisura+', '+
-                                                nome_assistenza+', '+ costoAssistenza + ', '+ tipoCostoAssistenza +', '+
-                                                    assistenzeDistinte;
+        $.each(assistenzeDistinte, function(index, el){
+            assistenzeDistinteParametro += "\'"+ el + "\', ";
+
+        });
+
+        var parametriCopiaLavorazione = numeroPreventivoParametro+', '+revisionePreventivoParametro+', \''+
+                                            settore+'\', \''+ tipologia +'\', '+costoUs+', \''+unitaMisura+'\', \''+
+                                                nome_assistenza+'\', '+ costoAssistenza + ', '+ tipoCostoAssistenza +', ['+
+                                                    assistenzeDistinteParametro+']';
 
         //Preparo la riga della lavorazione
         var rowsToAdd='<tr id="'+classSettore+'_trBody-'+ordineLavorazioni+'" class="trBody '+classSettore+'_lastAdded">'+
@@ -1330,7 +1489,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
                             '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+', '+costoUs+', '+parseInt(ricaricoAzienda)+', '+costoAssistenza+', '+tipoCostoAssistenza+')" class="ctrButton addElement fa fa-plus"></a>'+
                             '<div>'+
-                                '<a class="copiaLavorazione" onclick="aggiungiRigaCopia('+parametriCopiaLavorazione+');"> copia </a>'+
+                                '<a class="copiaLavorazione" onclick="selezionaSettoreLavCopia('+parametriCopiaLavorazione+');"> copia </a>'+
                             '</div>'+
                         '</td>'+
                         '<td class="tdPreventivo tdLavorazione">'+
@@ -1472,7 +1631,8 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
 
         /*ad ogni nuova aggiunta di elemento rinumera tuttoquanto*/
-        rienumeraPagina();
+        if(!copia)
+            rienumeraPagina();
 
         $('.inputRicarico').trigger('input');
 
@@ -1481,6 +1641,15 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
         ordineLavorazioni++;
     }
 
+    $('textarea').unbind('mouseover').mouseover(function(){
+        $(this).focus();
+    });
+
+    $('input').unbind('mouseover').mouseover(function(){
+        $(this).focus();
+    });
+
+    return classSettore+'_trBody-'+(ordineLavorazioni-1);
 }
 
 /*********************************************************************************/

@@ -57,3 +57,20 @@
 #calendar .fc-toolbar .fc-center {
     margin-top: -6px;
 }
+
+.fc-view-container {
+    /* height: 280px; */
+    /* color: black !important; */
+    display: block;
+    /* width: 94%; */
+    padding: 0 10% 1% 10%;
+
+}
+
+.fc td, .fc th {
+    border-color: #bda9a9;
+}
+
+.fc-toolbar.fc-header-toolbar {
+    margin-bottom: 1%;
+}
