@@ -97,7 +97,8 @@ class __SottolavorazioneMcPreventivo__(SottolavorazioneMcDBmodel):
 class __LavorazionePreventivo__(LavorazionePreventivoDBmodel):
     def __init__(self,  numero_preventivo, revisione, ordine, settore,
                     tipologia_lavorazione, unitaMisura, prezzoUnitario,
-                        assistenza, costo_assistenza, tipo_costo_assistenza ):
+                        assistenza, costo_assistenza, tipo_costo_assistenza, nome_modificato,
+                            copia=False, ordine_lav_originale=0, settore_lav_copia=''):
         self.numero_preventivo=numero_preventivo
         self.revisione = revisione
         self.ordine = ordine
@@ -105,12 +106,23 @@ class __LavorazionePreventivo__(LavorazionePreventivoDBmodel):
 
         self.settore = settore
         self.tipologia_lavorazione = tipologia_lavorazione
-        self.nome_modificato = tipologia_lavorazione
+        self.nome_modificato = nome_modificato
         self.unitaMisura=unitaMisura
         self.prezzoUnitario=prezzoUnitario
         self.assistenza = assistenza
         self.costo_assistenza = costo_assistenza
         self.tipo_costo_assistenza = tipo_costo_assistenza
+
+        self.copia=copia
+
+        if copia:
+            self.ordine_lav_originale=ordine_lav_originale
+            self.settore_lav_copia=settore_lav_copia
+        else:
+            self.ordine_lav_originale = ordine
+            self.settore_lav_copia = settore
+
+
 
 class __Commessa__(CommessaDBmodel):
     def __init__(self, numero_preventivo, intervento, indirizzo, comune):
@@ -263,7 +275,10 @@ class PreventivoEdile(PreventivoDBmodel):
                                                settore=lav.settore, tipologia_lavorazione=lav.tipologia_lavorazione,
                                                unitaMisura=lav.unitaMisura, prezzoUnitario=lav.prezzoUnitario,
                                                assistenza=lav.assistenza, costo_assistenza=lav.costo_assistenza,
-                                               tipo_costo_assistenza=lav.tipo_costo_assistenza)
+                                               tipo_costo_assistenza=lav.tipo_costo_assistenza,
+                                               nome_modificato=lav.nome_modificato,
+                                               copia=lav.copia, ordine_lav_originale=lav.ordine_lav_originale,
+                                               settore_lav_copia=lav.settore_lav_copia)
             returnList.append(newLav)
 
         return returnList
@@ -501,20 +516,54 @@ class PreventivoEdile(PreventivoDBmodel):
                                                          numero=1, larghezza=1, altezza=1, profondita=1,
                                                          prezzoBase=prezzoBase, ricarico=ricaricoGenerale, nome_modificato=nome_modificato)
 
+    def modificaPrezziClienteLavorazioni(numero_preventivo, revisione):
+
+        preventivo = PreventivoEdile.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).first()
+        lav_preventivo = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione).all()
+        lav_prezzario = LavorazioneEdileDBmodel.query.all()
+        nuovoPrezzo = 0
+
+
+        for lav in lav_preventivo:
+            for lav_to_ctrl in lav_prezzario:
+                if lav.settore == lav_to_ctrl.settore:
+                    if lav.tipologia_lavorazione == lav_to_ctrl.tipologia_lavorazione:
+
+                        nuovoPrezzo = lav_to_ctrl.prezzoMax+(lav_to_ctrl.prezzoMax*preventivo.ricarico_generale)/100;
+                        nuovoPrezzo += nuovoPrezzo*preventivo.ricarico_extra/100;
+
+            lav.prezzoUnitario = nuovoPrezzo
+
+        PreventivoEdile.commit()
 
     def registraLavorazione( numero_preventivo, revisione, ordine, settore, tipologia_lavorazione, unitaMisura, prezzoUnitario,
                              assistenza, costo_assistenza, tipo_costo_assistenza,
-                             numero, larghezza=None, altezza=None, profondita=None ):
+                             numero, larghezza=None, altezza=None, profondita=None, copia=False,
+                             ordine_lav_originale=0, settore_lav_copia=''):
 
         controlVar = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first()
         lavorazione = None
         ordineSottolavorazione = 0
 
         if controlVar is None:
-            lavorazione = __LavorazionePreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
-                                                    ordine=ordine, settore=settore, tipologia_lavorazione=tipologia_lavorazione,
-                                                    unitaMisura=unitaMisura, prezzoUnitario=prezzoUnitario,
-                                                    assistenza=assistenza, costo_assistenza=costo_assistenza, tipo_costo_assistenza=tipo_costo_assistenza)
+
+            if not copia:
+                lavorazione = __LavorazionePreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
+                                                        ordine=ordine, settore=settore, tipologia_lavorazione=tipologia_lavorazione,
+                                                        unitaMisura=unitaMisura, prezzoUnitario=prezzoUnitario,
+                                                        assistenza=assistenza, costo_assistenza=costo_assistenza, tipo_costo_assistenza=tipo_costo_assistenza,
+                                                        nome_modificato=tipologia_lavorazione)
+            else:
+                lavorazione = __LavorazionePreventivo__(numero_preventivo=numero_preventivo, revisione=revisione,
+                                                        ordine=ordine, settore=settore,
+                                                        tipologia_lavorazione=tipologia_lavorazione,
+                                                        unitaMisura=unitaMisura, prezzoUnitario=prezzoUnitario,
+                                                        assistenza=assistenza, costo_assistenza=costo_assistenza,
+                                                        tipo_costo_assistenza=tipo_costo_assistenza,
+                                                        nome_modificato='', copia=True,
+                                                        ordine_lav_originale=ordine_lav_originale,
+                                                        settore_lav_copia=settore_lav_copia)
+
             PreventivoDBmodel.addRow(lavorazione)
         else: # se la lavorazione e' gia' presente registra la sottolavorazione
 
@@ -550,10 +599,18 @@ class PreventivoEdile(PreventivoDBmodel):
 
         toDel = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione, ordine=ordine).first()
 
+        #verifico la presenza di eventuali lavorazioni copia e in caso modifico la loro referenza
+        lav_copia = __LavorazionePreventivo__.query.filter_by(numero_preventivo=numero_preventivo, revisione=revisione,
+                                                   copia=True, ordine_lav_originale=ordine).all()
+
+        for lav in lav_copia:
+            lav.ordine_lav_originale = lav.ordine # il commit viene poi fatto da delRow()
+
+
         # essendoci il vincolo d'integrita', eliminando una lavorazione si eliminano anche le relative sottolavorazioni
         PreventivoEdile.delRow(toDel)
 
-        app.server.logger.info('fin qua ok esco')
+
 
     def eliminaSottolavorazione(numero_preventivo, revisione, ordine, ordine_sottolavorazione):
 

@@ -279,6 +279,7 @@
             var primoGiro = true;
             var lastLavAdded = "";
 
+
             {% for settore in infoPreventivo[0] %}
 
                 if( primoGiro ){
@@ -329,35 +330,44 @@
                             $('#selectSettore').val(settore);
                             $('#selectSettore').trigger('change');
 
+
                             $('#'+idButton).trigger('click');
 
+                        {% else %}
+
+                            //recupero il costo della lavorazione senza ricarichi
+                            var costoUs = parseFloat('{{lavorazione[0].prezzoUnitario}}');
+                            var ricaricoGenerale = parseInt('{{preventivo.ricarico_generale}}');
+                            var ricaricoExtra = parseInt('{{preventivo.ricarico_extra}}');
+
+                            costoUs = costoUs*100/(100+ricaricoExtra);
+                            costoUs = costoUs*100/(100+ricaricoGenerale);
+
+                            //creo l'array assistenzeDistinte da passare come parametro
+                             var assistenzeDistinte = [];
+
+                             assistenzeDistinte.push("No assistenza");
+
+                             {% for assistenza in assistenzeDistinte %}
+                                 {% if assistenza != '' %}
+                                     assistenzeDistinte.push("{{assistenza}}");
+                                 {% endif %}
+                             {% endfor %}
+
+
+                            aggiungiRigaCopia( '{{lavorazione[0].numero_preventivo}}', '{{lavorazione[0].revisione}}',
+                                                    '{{lavorazione[0].ordine}}', '{{lavorazione[0].tipologia_lavorazione}}',
+                                                     costoUs, '{{lavorazione[0].unitaMisura}}', '{{lavorazione[0].assistenza}}',
+                                                         '{{lavorazione[0].costo_assistenza}}', '{{lavorazione[0].tipo_costo_assistenza}}',
+                                                          assistenzeDistinte, '{{lavorazione[0].settore_lav_copia}}',
+                                                            '{{lavorazione[0].ordine_lav_originale}}')
+
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endfor %}
 
-            /* le lavorazioni copia vengono inserite successivamente a tutte le lavorazioni
-                "normali" in modo tale di essere sicuri di "trovare il tasto" */
 
-            {% for settore in infoPreventivo[0] %}
-                {% for lavorazione in infoPreventivo[1] %}
-                    {% if lavorazione[0].settore == settore %}
-                        {% if lavorazione[0].copia %}
-
-                        /*    $('tr.trBody').each(function(){
-                                if( !$(this).hasClass('trCopia') ){
-                                    var numOfRow = $(this).attr('id').split('_trBody-')[1];
-
-                                    if( '{{lavorazione[0].ordine_lav_originale}}' == numOfRow ){
-                                        $(this).children('td.firstCol').children('div').children('a').trigger('click');
-                                    }
-                                }
-                            });*/
-
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
 
         }
 
@@ -371,6 +381,7 @@
         var aggiungiSottolavorazioniAux = function(starting_index){
             var firstTime =true;
             var indexReturned =0;
+
 
             $.each(lavToCtrl, function(index, lav){
 
@@ -397,10 +408,12 @@
                                 {% for sottolavorazione in lavorazione[3] %}
 
                                     if( !firstSottolav ){
+
                                         $('#'+idLav+' td.firstCol').children('a.addElement').trigger('click');
 
                                     }
                                     else{
+
                                         firstSottolav=false;
                                     }
 

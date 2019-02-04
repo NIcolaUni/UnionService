@@ -1515,9 +1515,12 @@ def handle_inserisci_note(message):
 @socketio.on('modifica_ricarico_sottolav', namespace='/preventivoEdile')
 def handle_modifica_ricarico_sottolav(message):
 
+    PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                       modifica={'ricarico_extra': message['ricaricoExtra']})
+
     PreventivoEdile.modificaSottolavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
                                              ordine=message['ordine_lavorazione'], ordine_sottolavorazione=message['ordine_sottolav'],
-                                             unitaMisura=message['unitaMisura'], modifica={'ricarico' : message['ricarico'], 'prezzoBase' : message['prezzoBase']});
+                                             unitaMisura=message['unitaMisura'], modifica={'ricarico' : message['ricaricoGenerale'], 'prezzoBase' : message['prezzoBase']});
 
 @socketio.on('registra_nuovo_preventivo', namespace='/preventivoEdile')
 def handle_registra_nuovo_preventivo(message):
@@ -1537,6 +1540,10 @@ def handle_modifica_ricarico_generale(message):
 
     PreventivoEdile.modificaPreventivo(numero_preventivo=message['numero_preventivo'],  revisione=message['revisione'],
                                              modifica={'ricarico_generale': message['ricarico']})
+
+@socketio.on('modifica_prezzi_cliente', namespace='/preventivoEdile')
+def handle_modifica_prezzi_cliente(message):
+    PreventivoEdile.modificaPrezziClienteLavorazioni(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'])
 
 @socketio.on('modifica_ricarico_extra', namespace='/preventivoEdile')
 def handle_modifica_ricarico_extra(message):
@@ -1614,6 +1621,17 @@ def handle_add_nuova_lavorazione(message):
                                         numero=1, larghezza=1, altezza=1, profondita=1, unitaMisura=message['unitaMisura'],
                                         prezzoUnitario=message['prezzoUnitario'], assistenza=message['nome_assistenza'],
                                         costo_assistenza=message['costo_assistenza'], tipo_costo_assistenza=message['tipo_costo_assistenza'])
+
+@socketio.on('add_nuova_lavorazione_copia', namespace='/preventivoEdile')
+def handle_add_nuova_lavorazione_copia(message):
+
+    PreventivoEdile.registraLavorazione(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                         ordine=message['ordine'], settore=message['settore'], tipologia_lavorazione=message['lavorazione'],
+                                        numero=1, larghezza=1, altezza=1, profondita=1, unitaMisura=message['unitaMisura'],
+                                        prezzoUnitario=message['prezzoUnitario'], assistenza=message['nome_assistenza'],
+                                        costo_assistenza=message['costo_assistenza'], tipo_costo_assistenza=message['tipo_costo_assistenza'],
+                                        copia=True, ordine_lav_originale=message['ordine_lav_originale'],
+                                        settore_lav_copia=message['settore_lav_copia'])
 
 @socketio.on('elimina_lavorazione', namespace='/preventivoEdile')
 def handle_elimina_lavorazione(message):

@@ -14,6 +14,21 @@ var lavToCtrl_changed = false;
 var arrayAssistenze = []; //memorizzo le assistenze originali di una lavorazione coi suoi dati;
                           // l'array ha la forma: [ [ id_riga_assistenza, nome_assistenza, costo, tipo_costo ], ... ]
 
+/********************************************************************************************/
+/* funzione per il debug */
+
+var stampaLavToCtrl= function(){
+
+
+    $.each(lavToCtrl, function(index, el){
+
+        alert( 'Riga '+ (index+1) +': ');
+        alert( el[0] + ' - ' + el[1]  );
+
+
+    });
+
+}
 
 /********************************************************************************************/
 /* funzione per il debug */
@@ -950,6 +965,11 @@ var modificaRicaricoGenerale = function($this){
             'revisione' : revisionePreventivo,
             'ricarico': nuovoRicarico
         });
+
+        socketPreventivo.emit('modifica_prezzi_cliente', {
+            'numero_preventivo': numeroPreventivo,
+            'revisione' : revisionePreventivo
+        });
     }
 
 }
@@ -958,52 +978,32 @@ var modificaRicaricoGenerale = function($this){
 
 var modificaRicaricoExtra = function($this){
 
-    /*var ricarico = parseInt($this.val());
-
-    if( ricarico == 0 ){
-        $('#divTotale').show();
-        $('#divTotaleRicaricoExtra').hide();
-    }
-    else if( ricarico > 0 ){
-        $('#divTotale').hide();
-        $('#divTotaleRicaricoExtra').show();
-
-        var totalValue = parseFloat($('#divTotale span').html().split(' ')[2]);
-
-        totaleValue = totalValue + (totalValue*ricarico/100);
-
-        $('#divTotaleRicaricoExtra').html('<span><u>Totale:</u> &euro; '+totaleValue+'</span>');
-
-    }*/
-
+    var ricaricoExtra = parseInt($this.val());
 
     $('.trBody').each(function(){
 
-        var idLavSplitted = $this.attr('id').split('_trBody-');
+        var idLavSplitted = $(this).attr('id').split('_trBody-');
+
+
         var classSottolav = idLavSplitted[0]+'_trSottolavorazione-'+idLavSplitted[1];
 
         $('.'+classSottolav).each(function(){
 
-            var class1 = $(this).attr('class').split(' ')[0];
-            var class2 = $(this).attr('class').split(' ')[1];
-            var costoUnitario = $(this).children('td.tdCostoUnitario').text().split(' ')[1];
-
-            calcolaTotaleRigaSottolavorazione( class1, class2, costoUnitario);
+            $(this).children('td.tdRicarico').children('input').trigger('input');
 
         });
 
     });
 
 
-
-
     if( !disabilitaSocketio ){
-        socketPreventivo.emit('modifica_ricarico_extra', {
+
+        socketPreventivo.emit('modifica_prezzi_cliente', {
             'numero_preventivo': numeroPreventivo,
-            'revisione' : revisionePreventivo,
-            'ricarico': ricarico
+            'revisione' : revisionePreventivo
         });
     }
+
 }
 
 /*******************************************************************************************/
@@ -1011,9 +1011,14 @@ var modificaRicaricoExtra = function($this){
 var modificaRicarico = function($this){
 
     var costoUs = parseFloat($this.parent().parent().children('td.tdCostoUs').text().split(' ')[1]);
-    var nuovoRicarico = $this.val();
+    var ricaricoGenerale = parseInt($this.val());
+    var ricaricoExtra = parseInt($('#inputRicaricoExtra').val());
 
-    var costoCliente = costoUs + (costoUs*nuovoRicarico/100);
+    var costoCliente = costoUs + (costoUs*ricaricoGenerale/100);
+
+    costoCliente += costoCliente*ricaricoExtra/100;
+
+    costoCliente = Math.round(costoCliente*100)/100;
 
     var classe1Sottolav =$this.parent().parent().attr('class').split(' ')[0];
     var classe2Sottolav =$this.parent().parent().attr('class').split(' ')[1];
@@ -1034,7 +1039,8 @@ var modificaRicarico = function($this){
             'ordine_sottolav' : ordineSottolav,
             'unitaMisura' : unitaMisura,
             'prezzoBase' : costoCliente,
-            'ricarico' : nuovoRicarico
+            'ricaricoGenerale' : ricaricoGenerale,
+            'ricaricoExtra' : ricaricoExtra
         });
     }
 
@@ -1204,8 +1210,8 @@ var modificaAssistenzaLavorazione = function($this){
 
 /*******************************************************************************************/
 
-var selezionaSettoreLavCopia = function( numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
-                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte){
+var selezionaSettoreLavCopia = function( $this, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
+                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte ){
 
     var settoriToPrint =[];
 
@@ -1241,8 +1247,11 @@ var selezionaSettoreLavCopia = function( numeroPreventivoParametro, revisionePre
     }).then(function (context) {
         if(context._isConfirm){
 
+            var ordine_lav_originale = $this.parent().parent().parent().attr('id').split('_trBody-')[1];
+
             aggiungiRigaCopia( numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
-                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte, context.swalForm['settore']);
+                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte, context.swalForm['settore'],
+                                    ordine_lav_originale );
         }
     });
 
@@ -1253,7 +1262,8 @@ var selezionaSettoreLavCopia = function( numeroPreventivoParametro, revisionePre
 /*******************************************************************************************/
 
 var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
-                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte, settoreSelected){
+                                    nome_assistenza, costoAssistenza, tipoCostoAssistenza, assistenzeDistinte, settoreSelected,
+                                    ordine_lav_originale){
 
 
     var nomeSettoreSelected = $('#selectSettore option.'+settoreSelected).text();
@@ -1376,6 +1386,36 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
         $('.tdAdded').hide();
     }
 
+    var ricaricoAzienda = parseInt($('#inputRicaricoGenerale').val());
+    var ricaricoExtra = parseInt($('#inputRicaricoExtra').val());
+
+    costoLavorazione += (costoLavorazione*ricaricoAzienda/100);
+
+    costoLavorazione += (costoLavorazione*ricaricoExtra/100);
+
+    costoLavorazione = Math.round(costoLavorazione*100)/100;
+
+    /*registro la riga nel database*/
+    if( !disabilitaSocketio ){
+        socketPreventivo.emit("add_nuova_lavorazione_copia",
+            {
+                "numero_preventivo" : numeroPreventivo,
+                "revisione" : revisionePreventivo,
+                "settore" : settore,
+                "lavorazione" : tipologia,
+                "unitaMisura" : unitaMisura,
+                "ordine": ordineLavorazioni-1,
+                "prezzoUnitario" : costoLavorazione,
+                "nome_assistenza" : 'No assistenza',
+                "costo_assistenza" : 0,
+                "tipo_costo_assistenza" : true,
+                "ordine_lav_originale" : ordine_lav_originale,
+                "settore_lav_copia": nomeSettoreSelected
+
+            }
+         );
+    }
+
     $rowLav.remove();
     $rowSottolav.remove();
     $rowFoot.remove();
@@ -1401,7 +1441,6 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
 
     calcolaTotaleRigaSottolavorazione(settoreSelected, newLavId.split('_trBody-')[1]);
 
-
 }
 
 /*******************************************************************************************/
@@ -1420,6 +1459,8 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
 
         var ricaricoAzienda = parseInt($('#inputRicaricoGenerale').val());
+        var ricaricoExtra = parseInt($('#inputRicaricoExtra').val());
+
         var classSettore;
 
         if( !copia ){
@@ -1447,7 +1488,11 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
         }
 
         costoUs = costoLavorazione;
-        costoLavorazione = costoLavorazione+(costoLavorazione*ricaricoAzienda/100);
+        costoLavorazione += (costoLavorazione*ricaricoAzienda/100);
+
+        costoLavorazione += (costoLavorazione*ricaricoExtra/100);
+
+        costoLavorazione = Math.round(costoLavorazione*100)/100;
 
         var selectAssistenzeHtml = '<select onchange="modificaAssistenzaLavorazione($(this))">';
 
@@ -1489,7 +1534,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
                             '<a onclick="aggiungiSottolavorazione($(this), \''+unitaMisura+'\', '+costoLavorazione+', '+costoUs+', '+parseInt(ricaricoAzienda)+', '+costoAssistenza+', '+tipoCostoAssistenza+')" class="ctrButton addElement fa fa-plus"></a>'+
                             '<div>'+
-                                '<a class="copiaLavorazione" onclick="selezionaSettoreLavCopia('+parametriCopiaLavorazione+');"> copia </a>'+
+                                '<a class="copiaLavorazione" onclick="selezionaSettoreLavCopia($(this), '+parametriCopiaLavorazione+');"> copia </a>'+
                             '</div>'+
                         '</td>'+
                         '<td class="tdPreventivo tdLavorazione">'+
@@ -1636,7 +1681,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
         $('.inputRicarico').trigger('input');
 
-        lavToCtrl.push([classSettore+'_trBody-'+ordineLavorazioni, settore]);
+       // lavToCtrl.push([classSettore+'_trBody-'+ordineLavorazioni, settore]);
 
         ordineLavorazioni++;
     }

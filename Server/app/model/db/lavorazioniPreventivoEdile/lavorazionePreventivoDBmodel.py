@@ -10,7 +10,12 @@ class LavorazionePreventivoDBmodel(app.database.Model):
                                  ondelete='CASCADE', onupdate='CASCADE'),
             ForeignKeyConstraint( ['settore', 'tipologia_lavorazione'],
                                   ['lavorazione_edile.settore', 'lavorazione_edile.tipologia_lavorazione'],
-                                  onupdate="CASCADE")
+                                  onupdate="CASCADE"),
+            ForeignKeyConstraint(['numero_preventivo', 'revisione', 'tipologia', 'ordine_lav_originale'],
+                                    ['lavorazione_preventivo_edile.numero_preventivo',
+                                     'lavorazione_preventivo_edile.revisione',
+                                        'lavorazione_preventivo_edile.tipologia',
+                                        'lavorazione_preventivo_edile.ordine' ],  onupdate="CASCADE")
             )
 
     numero_preventivo = Column(Integer())
@@ -29,5 +34,5 @@ class LavorazionePreventivoDBmodel(app.database.Model):
 
     # attributi delle lavorazioni copia
     copia = Column(Boolean(), default=False) # true se e' una lavorazione copia
-    ordine_lav_originale = Column(Integer()) # settato solo se e' una lavorazione copia
-    settore_lav_originale = Column(String(100))
+    ordine_lav_originale = Column(Integer())
+    settore_lav_copia = Column(String(100))
