@@ -43,4 +43,4 @@ class Imprevisti(ImprevistiDBmodel):
                                       modifica={
                                                 'nome_artigiano': nome_artigiano,
                                                 'impiego_artigiano': impiego_artigiano
-                                                ''})
+                                      })
