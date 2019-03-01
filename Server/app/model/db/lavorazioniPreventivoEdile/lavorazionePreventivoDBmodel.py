@@ -24,8 +24,8 @@ class LavorazionePreventivoDBmodel(app.database.Model):
     tipologia = Column(String(20))
 
     settore = Column(String(100))
-    tipologia_lavorazione = Column(String(500))
-    nome_modificato = Column(String(500))
+    tipologia_lavorazione = Column(String(1000))
+    nome_modificato = Column(String(1000))
     unitaMisura = Column(String(10))
     prezzoUnitario = Column(Float())
     assistenza = Column(String(500))

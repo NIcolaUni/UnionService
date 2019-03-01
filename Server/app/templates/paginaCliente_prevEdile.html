@@ -55,18 +55,6 @@
 
                     var totLav = parseFloat('{{lavorazione[2]}}');
 
-                    {% if lavorazione[0].assistenza != '' %}
-
-                        var costoAssistenza = parseFloat('{{lavorazione[0].costo_assistenza}}');
-
-                        {% if lavorazione[0].tipo_costo_assistenza %}
-                            totLav += (totLav*costoAssistenza)/100;
-                        {% else %}
-                            totLav += costoAssistenza;
-                        {% endif %}
-
-                        totLav = Math.round(totLav*100)/100;
-                    {% endif %}
 
                     totale += totLav;
                 {% endfor %}
@@ -119,21 +107,10 @@
                                                 </tr>';
 
                                 {% for lavorazione in preventivo[1][1] %}
-                                    {% if lavorazione[0].settore == settore %}
+                                    {% if ( lavorazione[0].settore == settore and not lavorazione[0].copia ) or
+                                            lavorazione[0].settore_lav_copia == settore and lavorazione[0].copia %}
                                         var roundedQuantita = Math.round(parseFloat('{{lavorazione[1]}}')*100)/100;
                                         var roundedTotale =  Math.round(parseFloat('{{lavorazione[2]}}')*100)/100;
-
-                                        {% if lavorazione[0].assistenza != '' %}
-                                            var costoAssistenza = parseFloat('{{lavorazione[0].costo_assistenza}}');
-
-                                            {% if lavorazione[0].tipo_costo_assistenza %}
-                                                roundedTotale += (roundedTotale*costoAssistenza)/100;
-                                            {% else %}
-                                                roundedTotale += costoAssistenza;
-                                            {% endif %}
-
-                                            roundedTotale = Math.round(roundedTotale*100)/100;
-                                        {% endif %}
 
 
                                         strToAdd +=	'<tr> \
@@ -176,8 +153,18 @@
             // di default setto come revisione quella piu' recente del piu' recente preventivo
             // generato per questo cliente
             if( "{{preventivo[0].numero_preventivo}}" == numero_preventivo ){
+
+                var revisioneToPrint;
+
+                {% if preventivo[0].revisione == 1 %}
+                    revisioneToPrint = 'originale';
+                {% else %}
+                    var numRev = parseInt('{{preventivo[0].revisione}}')-1;
+                    revisioneToPrint = 'revisione #'+numRev;
+                {% endif %}
+
                 if( firstCycle ){
-                    optionElement = '<option selected="selected" value="{{preventivo[0].revisione}}">revisione #{{preventivo[0].revisione}}</option>';
+                    optionElement = '<option selected="selected" value="{{preventivo[0].revisione}}">'+revisioneToPrint+'</option>';
                     firstCycle=false;
 
                     {% if not preventivo[0].stato %}
@@ -198,7 +185,7 @@
 
                 }
                 else
-                    optionElement = '<option value="{{preventivo[0].revisione}}">revisione #{{preventivo[0].revisione}}</option>';
+                    optionElement = '<option value="{{preventivo[0].revisione}}">'+revisioneToPrint+'</option>';
 
 
 
@@ -225,16 +212,81 @@
         $('#btnRevisione').show();
 
         $('#btnBudget').unbind('click').click(function(){
-            socketPreventivo.emit('stampa_budget', {
-                'dip' : '{{dipendente.username}}',
-                'numero_preventivo' : numero_preventivo,
-                'revisione' : revisione
+
+            var budget_salvato = 0;
+            {% for preventivo in preventivi %}
+                if( "{{preventivo[0].numero_preventivo}}" == numero_preventivo ){
+                    if( "{{preventivo[0].revisione}}" == revisione ){
+
+                        budget_salvato = parseFloat("{{preventivo[0].budget_imprevisti}}");
+                    }
+                }
+
+            {% endfor %}
+
+            swal.withFormAsync({
+                title: 'Inserire budget imprevisti',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+                formFields: [
+
+                 { id: 'imprevisti', type: 'number',  value: budget_salvato, name: 'imprevisti', placeholder: 'budget...' }
+
+                ]
+            }).then(function (context) {
+
+                if(context._isConfirm){
+
+                    socketPreventivo.emit('imposta_budget_imprevisti', {
+                        'dip': '{{dipendente.username}}',
+                        'numero_preventivo': numero_preventivo,
+                        'revisione': revisione,
+                        'budget' : context.swalForm['imprevisti']
+
+                    });
+
+                }
             });
+
+
         });
 
         $('#btnPrev').unbind('click').click(function(){
 
-            window.open('/downloadPreventivoEdile/'+numero_preventivo+'/'+revisione, '_blank');
+            swal.withFormAsync({
+                title: 'Selezionare il tipo di preventivo:',
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'annulla',
+                closeOnConfirm: true,
+                formFields: [
+
+                 { id: 'tipoPrev', type: 'select',  name: 'tipoPrev', options: [
+                      {value: '1', text: 'preventivo a corpo'},
+                      {value: '2', text: 'preventivo su misura'},
+                    ]},
+
+
+
+                ]
+            }).then(function (context) {
+
+                if(context._isConfirm){
+
+                    var scelta = parseInt( context.swalForm['tipoPrev'])
+
+                    window.open('/downloadPreventivoEdile/'+numero_preventivo+'/'+revisione+'/'+scelta, '_blank');
+
+
+                }
+            });
+
+
+
         });
 
     }
@@ -263,8 +315,10 @@
              var selRevisione = $('#revisioneSelect').val();
              var codicePreventivo =  $('#preventivoSelect option:selected').text().split(' - ')[1];
 
+             var selRevToPrint = parseInt(selRevisione)-1
+
              swal({
-                title: 'Si sta per la cancellare il preventivo '+ codicePreventivo +' rev.' +selRevisione,
+                title: 'Si sta per la cancellare il preventivo '+ codicePreventivo +' rev.' + selRevToPrint,
                 showCancelButton: true,
                 confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Ok',
@@ -352,8 +406,10 @@
             }
         {% endfor %}
 
+        var selRevToPrint = parseInt(selRevisione)-1
+
         swal.withFormAsync({
-            title: 'Si sta per modificare il preventivo ' + codicePreventivo + ' rev.'+selRevisione,
+            title: 'Si sta per modificare il preventivo ' + codicePreventivo + ' rev.'+selRevToPrint,
             text: 'I dati della commessa sono:',
             showCancelButton: true,
             confirmButtonColor: '#DD6B55',

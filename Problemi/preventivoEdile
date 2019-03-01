@@ -1,28 +1,13 @@
 
-1-  pdf intestazione non va nelle pagine centrali
+
+2-  riordino revisioni alla cancellazione di un preventivo
+
+5- drag n drop
+
+13- a misura l'assistenza esce il costo in euro e i prezzi sono senza assistenza
+
+14- giustificazione note a sinistra
+
+15- l'assistenza va sommata sul totale delle sottolavorazioni e non sulle singole sottolav
 
 
-2-  nel pdf se non viene inserito
-
-3-  inserire unità misura per gli sconti quando stampa
-
-4-  riordino revisioni alla cancellazione di un preventivo
-5- alert imprevisti alla stampa del budget budget ( fa inserire una quantita o percentuale o netto )
-6- nella stampa a misura mettere l h p + sottolavorazioni mostrate
-7- nel budget inserire fornitura e posa
-8- se iva a zero togliere la riga
-9- drag n drop
-10- nel pdf stampa anche i settori di lavorazione
-11 - se su misura stampa anche le dimensioni
-12- il secondo ricarico va applicato sul totale delle singole lavorazioni
-13 - sottolavorazioni con nome vuoto: alla modifica del nome non cambia la numerazione
-14: aggiungiper  ogni lavorazione un bottone apposito per trasformare la riga in lavorazione
- ( cambiando di conseguenza la numerazione )
-15- nella stampa del budget aggiungere una riga "budget imprevisti" dopo il totale: questo
-valora viene richiesto alla stampa del budget
-
-16- valore di imprevisti va salvato ma richiesto ogni volta (lasciando il valore salvato come prezzo di default )
-
-17- aggiornare l'anteprima di preventivo aggiungendo l'assistenza
-
-18 - problema al cancellamento e poi reinserimento di una lavorazione: si sballa arrayAssistenza ( penso )

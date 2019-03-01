@@ -46,71 +46,136 @@
 
             if( numPrevSelected == '{{pagamento.numero_preventivo}}' ){
 
+                var countPagamentiCompletati = 0;
+
 
                 strToAdd ='<div class="features pagamenti"><table id="pagamentiTable"><thead><th>Preventivo Edile  </th><th> Scelta Finiture </th><th> Varianti </th><th>Totale</th>';
                 var totale = parseFloat('{{pagamento.totale_prev_edile}}') + parseFloat('{{pagamento.totale_prev_finiture}}') + parseFloat('{{pagamento.totale_prev_varianti}}');
 
-                totaliStr = '<td> &euro; {{pagamento.totale_prev_edile}} </td><td> &euro; {{pagamento.totale_prev_finiture}} </td><td> &euro;  {{pagamento.totale_prev_varianti}} </td><td> &euro; '+ totale +'</td>'
+                totaliStr = '<td> &euro; {{pagamento.totale_prev_edile}} </td><td> &euro; {{pagamento.totale_prev_finiture}} </td><td> &euro;  {{pagamento.totale_prev_varianti}} </td><td> &euro; '+ Math.round(totale*100)/100 +'</td>'
                 if( totale < 15000 )
                 {
-                    strToAdd += '<th> Acconto </th><th> Prima rata </th><th> Saldo 20% </th></thead><tbody>';
+                    strToAdd += '<th> Acconto 50% </th><th> Prima rata 30%+50% </th><th> Saldo 20% </th></thead><tbody>';
 
+                    strToAdd += '<tr>';
                     strToAdd += totaliStr;
 
+
+                    strToAdd += '<td> &euro; {{pagamento.acconto}} </td>'
+                    strToAdd += '<td> &euro; {{pagamento.prima_rata}} </td>'
+                    strToAdd += '<td> &euro; {{pagamento.saldo}} </td>'
+
+
+                    strToAdd += '</tr>';
+                    strToAdd += '<tr>';
+
                     {% if pagamento.acconto_pagato %}
-                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+' pagato"></span> </td>'
+                        countPagamentiCompletati++;
+                    {% endif %}
+                    {% if pagamento.prima_rata_pagata %}
+                        countPagamentiCompletati++;
+                    {% endif %}
+                    {% if pagamento.saldo_pagato %}
+                        countPagamentiCompletati++;
+                    {% endif %}
+
+                    if( countPagamentiCompletati == 3 )
+                        strToAdd += '<td class="statusPagamento green">PAGATO</td><td></td><td></td><td></td>'
+                    else
+                        strToAdd += '<td class="statusPagamento red">DA SALDARE</td><td></td><td></td><td></td>'
+
+                    {% if pagamento.acconto_pagato %}
+                        strToAdd += '<td> <span class="checkPagamento acconto num_prev-'+numPrevSelected+' pagato"></span> </td>'
                     {% else %}
-                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+'"></span> </td>'
+                        strToAdd += '<td><span class="checkPagamento acconto num_prev-'+numPrevSelected+'"></span> </td>'
                     {% endif %}
 
                     {% if pagamento.prima_rata_pagata %}
-                        strToAdd += '<td> &euro; {{pagamento.prima_rata}}  <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+' pagato"></span> </td>'
+                        strToAdd += '<td> <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+' pagato"></span> </td>'
                     {% else %}
-                        strToAdd += '<td> &euro; {{pagamento.prima_rata}}  <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+'"></span></td>'
+                        strToAdd += '<td> <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+'"></span></td>'
                     {% endif %}
 
+                    {% if pagamento.saldo_pagato%}
+                        strToAdd += '<td> <span class="checkPagamento saldo num_prev-'+numPrevSelected+' pagato"></td>'
+                    {% else %}
+                        strToAdd += '<td> <span class="checkPagamento saldo num_prev-'+numPrevSelected+'"></td>'
+                    {% endif %}
+
+                    strToAdd += '</tr>';
 
                 }
                 else{
 
-                    strToAdd += '<th> Acconto </th><th> Prima rata </th><th> Seconda rata </th><th> Terza rata </th><th> Saldo 10% </th></thead><tbody>';
+                    strToAdd += '<th> Acconto 30% </th><th> Prima rata 20%+50% </th><th> Seconda rata  20%+50%+50% </th><th> Terza rata 20%+50% </th><th> Saldo 10% </th></thead><tbody>';
+                    strToAdd += '<tr>';
                     strToAdd += totaliStr;
 
+                    strToAdd += '<td> &euro; {{pagamento.acconto}} </td>'
+                    strToAdd += '<td> &euro; {{pagamento.prima_rata}} </td>'
+                    strToAdd += '<td> &euro; {{pagamento.seconda_rata}} </td>'
+                    strToAdd += '<td> &euro; {{pagamento.terza_rata}} </td>'
+                    strToAdd += '<td> &euro; {{pagamento.saldo}} </td>'
+
+                    strToAdd += '</tr>';
+                    strToAdd += '<tr>';
+
                     {% if pagamento.acconto_pagato %}
-                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+' pagato"></td>'
+                        countPagamentiCompletati++;
+                    {% endif %}
+                    {% if pagamento.prima_rata_pagata %}
+                        countPagamentiCompletati++;
+                    {% endif %}
+                    {% if pagamento.seconda_rata_pagata %}
+                        countPagamentiCompletati++;
+                    {% endif %}
+                    {% if pagamento.terza_rata_pagata %}
+                        countPagamentiCompletati++;
+                    {% endif %}
+                    {% if pagamento.saldo_pagato %}
+                        countPagamentiCompletati++;
+                    {% endif %}
+
+                    if( countPagamentiCompletati == 5 )
+                        strToAdd += '<td class="statusPagamento green">PAGATO</td><td></td><td></td><td></td>'
+                    else
+                        strToAdd += '<td>statusPagamento red</td>DA SALDARE<td></td><td></td><td></td>'
+
+                    {% if pagamento.acconto_pagato %}
+                        strToAdd += '<td>  <span class="checkPagamento acconto num_prev-'+numPrevSelected+' pagato"></td>'
                     {% else %}
-                        strToAdd += '<td> &euro; {{pagamento.acconto}} <span class="checkPagamento acconto num_prev-'+numPrevSelected+'"></td>'
+                        strToAdd += '<td> <span class="checkPagamento acconto num_prev-'+numPrevSelected+'"></td>'
                     {% endif %}
 
                     {% if pagamento.prima_rata_pagata %}
-                        strToAdd += '<td> &euro; {{pagamento.prima_rata}} <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+' pagato"></td>'
+                        strToAdd += '<td> <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+' pagato"></td>'
                     {% else %}
-                        strToAdd += '<td> &euro; {{pagamento.prima_rata}} <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+'"></td>'
+                        strToAdd += '<td> <span class="checkPagamento prima_rata num_prev-'+numPrevSelected+'"></td>'
                     {% endif %}
 
                     {% if pagamento.seconda_rata_pagata %}
-                        strToAdd += '<td> &euro; {{pagamento.seconda_rata}} <span class="checkPagamento seconda_rata num_prev-'+numPrevSelected+' pagato"></td>'
+                        strToAdd += '<td> <span class="checkPagamento seconda_rata num_prev-'+numPrevSelected+' pagato"></td>'
                     {% else %}
-                        strToAdd += '<td> &euro; {{pagamento.seconda_rata}} <span class="checkPagamento seconda_rata num_prev-'+numPrevSelected+'"></td>'
+                        strToAdd += '<td> <span class="checkPagamento seconda_rata num_prev-'+numPrevSelected+'"></td>'
                     {% endif %}
 
                     {% if pagamento.terza_rata_pagata %}
-                        strToAdd += '<td> &euro; {{pagamento.terza_rata}} <span class="checkPagamento terza_rata num_prev-'+numPrevSelected+' pagato"></td>'
+                        strToAdd += '<td> <span class="checkPagamento terza_rata num_prev-'+numPrevSelected+' pagato"></td>'
                     {% else %}
-                        strToAdd += '<td> &euro; {{pagamento.terza_rata}} <span class="checkPagamento terza_rata num_prev-'+numPrevSelected+'"></td>'
+                        strToAdd += '<td> <span class="checkPagamento terza_rata num_prev-'+numPrevSelected+'"></td>'
+                    {% endif %}
+
+                    {% if pagamento.saldo_pagato%}
+                        strToAdd += '<td> <span class="checkPagamento saldo num_prev-'+numPrevSelected+' pagato"></td>'
+                    {% else %}
+                        strToAdd += '<td> <span class="checkPagamento saldo num_prev-'+numPrevSelected+'"></td>'
                     {% endif %}
 
 
 
+                    strToAdd += '</tr>';
+
                 }
-
-
-                {% if pagamento.saldo_pagato%}
-                    strToAdd += '<td> &euro; {{pagamento.saldo}} <span class="checkPagamento saldo num_prev-'+numPrevSelected+' pagato"></td>'
-                {% else %}
-                    strToAdd += '<td> &euro; {{pagamento.saldo}} <span class="checkPagamento saldo num_prev-'+numPrevSelected+'"></td>'
-                {% endif %}
-
 
                 strToAdd += '</tbody></table></div>';
 
@@ -129,6 +194,41 @@
                 $(this).removeClass('pagato');
             else
                 $(this).addClass('pagato');
+
+            var $row = $(this).parent().parent();
+;
+            var numeroPagamenti = 3;
+
+            if ( $row.children('td').length == 9 ){
+                numeroPagamenti = 5;
+            }
+
+            $cellaStatus = $row.children('td.statusPagamento');
+
+            if( $('span.pagato').length == numeroPagamenti ){
+
+                $cellaStatus.html('PAGATO');
+
+                if( $cellaStatus.hasClass('red') ){
+                    $cellaStatus.removeClass('red');
+                }
+
+                if( !$cellaStatus.hasClass('green') ){
+                    $cellaStatus.addClass('green');
+                }
+            }
+            else{
+                $cellaStatus.html('DA SALDARE');
+
+                if( $cellaStatus.hasClass('green') ){
+                    $cellaStatus.removeClass('green');
+                }
+
+                if( !$cellaStatus.hasClass('red') ){
+                    $cellaStatus.addClass('red');
+                }
+
+            }
 
 
 

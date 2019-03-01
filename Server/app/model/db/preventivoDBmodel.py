@@ -36,4 +36,5 @@ class PreventivoDBmodel(DbUSinterface, DbUSinterface.db.Model):
     sconto_totale = Column(Float(), default=0)
     tipologia_sconto_totale = Column(Integer(), default=1) # 1 no sconto, 2 netto, 3 percentuale, 4 forzato
     iva_totale = Column(Integer(), default=0)
+    budget_imprevisti = Column(Float(), default=0)
 

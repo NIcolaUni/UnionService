@@ -8,7 +8,7 @@ class LavorazioneEdileDBmodel(DbUSinterface, DbUSinterface.db.Model):
             PrimaryKeyConstraint('settore', 'tipologia_lavorazione'),
             )
 
-    tipologia_lavorazione = Column(String(500))
+    tipologia_lavorazione = Column(String(1000))
     settore = Column(String(200),  ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="CASCADE"))
     pertinenza = Column(String(100), ForeignKey('settore_lavorazione.nome', onupdate="CASCADE", ondelete="SET DEFAULT"), server_default="Non definito")
     unitaMisura = Column(String(10))

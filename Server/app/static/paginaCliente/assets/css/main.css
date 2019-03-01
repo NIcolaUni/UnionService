@@ -4394,3 +4394,17 @@ select#contabilitaSelect {
     display: inline-block;
     margin-right: 5%;
 }
+
+select#tipoPrev {
+    border: 1px solid;
+}
+
+
+td.statusPagamento.green{
+    color: lime;
+}
+
+td.statusPagamento.red{
+    color: red;
+}
+

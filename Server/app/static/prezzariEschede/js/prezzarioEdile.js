@@ -71,7 +71,12 @@ var pulisciHeaderNewRow = function(){
         }
     });
 
-    $('#headerNewRow td.fornituraPosa').children('label').html('&euro; 0');
+
+   // alert( $('#tabellaContainerNewRow1 table.tabella').children('tbody').children('.datiScheda').children('td.fornituraPosa').html())
+    $('#tabellaContainerNewRow1 table.tabella').children('tbody').children('.datiScheda').children('td.fornituraPosa').html('&euro; 0');
+
+
+   // $('#headerNewRow td.fornituraPosa').children('label').html('&euro; 0');
 
     $('#headerNewRow textarea').each(function(){
 
@@ -1286,6 +1291,19 @@ var aggiungiRiga = function(daVerificare, usernameDip){
 
     rowNumber++ ;
 
+    $('td.posa input').on('input', function(){
+       var somma= parseFloat($(this).parent().parent().children('td.fornitura').children('input').val())+parseFloat($(this).val());
+       $(this).parent().parent().children('td.fornituraPosa').html('&euro; '+somma);
+    });
+
+    $('td.fornitura input').on( 'input', function(){
+       var somma= parseFloat($(this).parent().parent().children('td.posa').children('input').val())+parseFloat($(this).val());
+       $(this).parent().parent().children('td.fornituraPosa').html('&euro; '+somma);
+    });
+
+    $('td.posa input').trigger('input')
+
+
 } // FINE AGGIUNGI RIGA
 
 /****************************************************************************************/
@@ -1579,6 +1597,17 @@ $(function(){
             equalizzaAltezzaHeader();
             window.addEventListener('resize', equalizzaAltezzaHeader());
         }, 100);
+
+        $('td.posa input').on('input', function(){
+           var somma= parseFloat($(this).parent().parent().children('td.fornitura').children('input').val())+parseFloat($(this).val());
+           $(this).parent().parent().children('td.fornituraPosa').html('&euro; '+somma);
+        });
+
+        $('td.fornitura input').on( 'input', function(){
+           var somma= parseFloat($(this).parent().parent().children('td.posa').children('input').val())+parseFloat($(this).val());
+           $(this).parent().parent().children('td.fornituraPosa').html('&euro; '+somma);
+        });
+
 });
 
 /**************************************************************************************/

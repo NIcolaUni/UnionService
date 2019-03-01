@@ -22,6 +22,6 @@ class SottolavorazioneCadDBmodel(app.database.Model):
     prezzoBase = Column(Float())
     ricarico = Column(Integer())
 
-    nome_modificato = Column(String(500))
+    nome_modificato = Column(String(1000))
 
 

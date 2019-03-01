@@ -1,15 +1,26 @@
-1- la modifica di fornitura e posa non aggiorna il costo...
 
 2- la modifica del nome della lavorazione viene applicata solo al prossimo refresh
 
-4- inserire il settore "assistenza"
-
-5- ad ogni lavorazione si può associare o meno l'assistenza
-
-6- il prezzo dell'assistenza è netto o percentuale
-
-7- nel preventivo edile l'assistenza deve essere possibile forzarla ( inserirne una non presente in db )
 
 8- l'aggiunta di spazi nel nome di una lavorazione causa problemi alla riapertura della prezzario
 
 9- la modifica di solo forniture e/o posa non fa prendere il prezzo finale nel preventivo
+
+10- dare la possibilità di spostare una lavorazione di settore
+
+12- dare con il drugndrop la possibiloità di ordinare i settori: quest'ordine definirà l'ordine di visualizzazione
+del relativo settore nel preventivo
+
+13- guarda che escono le righe disallineate
+
+14- filtri da risistemare
+
+15- budget con colore logo
+
+16 - fornitura posa solo se diversi da zero
+
+17 - aggiungere opzione assistenza euro/(unitaMisura) ( moltiplichi per il totale )
+
+18 - prima della stampa del budget oltre al budget_imprevisti presentare una tabella
+    contenente le assistenze ( con le relative lavorazioni ) presenti nel preventivo
+    e a fianco il valore in euro di queste, modificabile.

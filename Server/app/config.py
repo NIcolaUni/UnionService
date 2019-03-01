@@ -6,4 +6,6 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = 'app/static/immaginiProfilo'
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+    DEBUG = True
+    DEBUG_WITH_APTANA = True
 

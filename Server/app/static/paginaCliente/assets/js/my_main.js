@@ -117,6 +117,22 @@ $(function(){
 
     });
 
+    $('.editDato').click(function(){
+
+        var tipoCampo =$(this).parent().children('h3').text()
+
+        var toMod = ''
+/*
+        if( tipoCampo == 'Indirizzo:')
+        if( tipoCampo == 'Telefono:')
+
+        else if( tipoCampo == 'Email:')
+
+        else if( tipoCampo == 'Lavorazione in corso:')*/
+
+
+    });
+
 });
 
 

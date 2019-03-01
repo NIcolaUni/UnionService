@@ -85,6 +85,7 @@ var pulisciHeaderNewRow = function(){
         }
     });
 
+
     if( $('#tabellaContainerNewRow2 .datiScheda').hasClass('azienda') ){
        $('#tabellaContainerNewRow2 .datiScheda').removeClass('azienda')
 

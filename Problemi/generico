@@ -1,1 +1,10 @@
 -Devi adattare il preventivo finiture e il preventivo varianti al preventivo edile
+
+- [ a, b, c] [ d, e, f ] , numLastSottolav = 3
+
+- if len(arr1) == numSottolavInserite:
+        prossimoArray()
+
+- if  numSottolavInserite == numLastSottolav:
+        prossimaPagina()
+

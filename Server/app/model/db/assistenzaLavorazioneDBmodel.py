@@ -15,5 +15,5 @@ class AssistenzaLavorazioneDBmodel(DbUSinterface, DbUSinterface.db.Model):
     costo = Column(Float())
     prezzoPercentuale =Column(Boolean()) # true percentuale, false netto
 
-    tipologia_lavorazione = Column(String(500))
+    tipologia_lavorazione = Column(String(1000))
     settore = Column(String(200))

@@ -32,3 +32,6 @@ input#sconto {
     margin-left: 39%;
 }
 
+a.copiaLavorazione {
+    display:none;
+}

@@ -34,6 +34,7 @@ from .model.messaggio import Messaggio
 from .model.pagamentiCliente import PagamentiCliente
 from .model.assistenzaLavorazione import AssistenzaLavorazione
 from .model.contabilitaCantiere import ContabilitaCantiere
+from .model.imprevisti import Imprevisti
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_socketio import emit, join_room, leave_room
 from .model.nocache import nocache
@@ -167,6 +168,10 @@ def anteprimaContabilitaCantiere():
 @server.route('/contabilita')
 @login_required
 def contabilita():
+
+    if app.contabilitaCantiereRichiesta is None:
+        return redirect('/homepage')
+
     num_prev = app.contabilitaCantiereRichiesta[0]
     revisione = app.contabilitaCantiereRichiesta[1]
 
@@ -178,11 +183,15 @@ def contabilita():
                                              indirizzo=preventivo.indirizzo_cliente).first()
 
 
-    contabilita = ContabilitaCantiere.query.filter_by(numero_preventivo=num_prev, revisione=revisione).all()
+    contabilita = ContabilitaCantiere.query.filter_by(numero_preventivo=num_prev, revisione=revisione).order_by(ContabilitaCantiere.ordine_lav).all()
 
+    pagamenti = PagamentiCliente.query.filter_by(numero_preventivo=num_prev).all()
+    imprevisti = Imprevisti.query.filter_by(numero_preventivo=num_prev, revisione=revisione).order_by(Imprevisti.ordine).all()
+    artigiani = Artigiano.query.all()
 
     return render_template('contabilitaCantiere.html', dipendente=dip, contabilita=contabilita, cliente=cliente,
-                           contabilitaCantiere=True, numero_preventivo=num_prev, revisione=revisione)
+                           contabilitaCantiere=True, numero_preventivo=num_prev, revisione=revisione,
+                            pagamenti=pagamenti, imprevisti=imprevisti, artigiani=artigiani)
 
 
 @server.route('/contabilitaCantiere/<num_prev>/<revisione>/')
@@ -234,12 +243,21 @@ def apriPreventivoEdile():
                             preventivo=preventivo, preventivoEdile=True, infoPreventivo=infoPreventivo,
                             assistenze=assistenze, assistenzeDistinte=assistenzeDistinte, dipendente=dip)
 
-@server.route('/downloadPreventivoEdile/<num_prev>/<revisione>')
+@server.route('/downloadPreventivoEdile/<num_prev>/<revisione>/<int:tipo_prev>')
 @nocache
 @login_required
-def downloadPreventivoEdile(num_prev, revisione):
+def downloadPreventivoEdile(num_prev, revisione, tipo_prev):
 
-    return send_from_directory(directory='preventiviLatexDir', filename='preventivoEdile-{}_{}.pdf'.format(num_prev, revisione))
+    nomePdf = ''
+
+
+    if tipo_prev == 2:
+        nomePdf = 'preventivoEdile-{}_{}.pdf'.format(num_prev, revisione)
+    else:
+        nomePdf = 'preventivoEdile_suMisura-{}_{}.pdf'.format(num_prev, revisione)
+        app.server.logger.info('\n\nEPpur sono qua {}\n\n'.format(nomePdf))
+
+    return send_from_directory(directory='preventiviLatexDir', filename=nomePdf)
 
 @server.route('/downloadPreventivoFiniture/<num_prev>/<revisione>')
 @login_required
@@ -312,6 +330,12 @@ def apriPaginaCliente():
 
     app.formCercaCliente = ApriPaginaClienteForm(request.form)
     scelta = app.formCercaCliente.nome_cognome_indirizzo.data
+
+    scelta = scelta.strip()
+
+    if scelta == '':
+        return redirect('/homepage')
+
     (cognomeCliente, nomeCliente, indirizzoCliente) = scelta.split(" . ")
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
     app.clienteSelezionato = ClienteAccolto.query.filter_by(nome=nomeCliente, cognome=cognomeCliente, indirizzo=indirizzoCliente).first()
@@ -332,6 +356,9 @@ def apriPaginaCliente():
 @server.route('/clientBack')
 @login_required
 def clientBack():
+
+    if app.clienteSelezionato is None:
+        return redirect('/homepage')
 
     dip = Dipendente.query.filter_by(username=current_user.get_id()).first()
 
@@ -1341,7 +1368,6 @@ def handle_modifica_ordine_prodotto(message):
 
 @socketio.on('modifica_prodotto', namespace='/preventivoFiniture')
 def handle_modifica_prodotto(message):
-    app.server.logger.info('\n\nciaoo {}'.format(message['ordine']))
     PreventivoFiniture.modificaProdotto(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
                                         ordine=message['ordine'], modifica={'quantita': message['quantita'],
                                                                             'diffCapitolato': message['diffCapitolato']})
@@ -1680,7 +1706,12 @@ def handle_modifica_sottolavorazione(message):
     ordine_sottolavorazione = message["ordine_sottolavorazione"]
     unitaMisura = message["unitaMisura"]
 
-    toChange = { message['fieldToChange'] : message['newValue']}
+    newValue = message['newValue']
+
+    if newValue == '' or newValue == ' ':
+        newValue = 0
+
+    toChange = { message['fieldToChange'] : newValue}
 
     PreventivoEdile.modificaSottolavorazione(numero_preventivo=numero_preventivo, revisione=revisione,
                                                  ordine=ordine, ordine_sottolavorazione=ordine_sottolavorazione,
@@ -1700,10 +1731,16 @@ def handle_modifica_assistenza_lavorazione(message):
         else:
             newVal = False
 
-    PreventivoEdile.modificaLavorazione(numero_preventivo=numero_preventivo, revisione=revisione,
-                                        ordine=ordine, modifica={message['toMod'] : newVal })
+    if  message['toMod'] == 'assistenza' and ( newVal == 'No assistenza' or newVal == '' ):
+        PreventivoEdile.modificaLavorazione(numero_preventivo=numero_preventivo, revisione=revisione,
+                                            ordine=ordine, modifica={'assistenza' : 'No assistenza',
+                                                                      'costo_assistenza' : 0,
+                                                                      'tipo_costo_assistenza' : True})
+    else:
+        PreventivoEdile.modificaLavorazione(numero_preventivo=numero_preventivo, revisione=revisione,
+                                             ordine=ordine, modifica={message['toMod'] : newVal })
 
-
+'''
 @socketio.on('stampa_budget', namespace='/preventivoEdile')
 def handle_stampa_preventivo(message):
     dip = Dipendente.query.filter_by(username=message['dip']).first()
@@ -1713,6 +1750,23 @@ def handle_stampa_preventivo(message):
 
     emit('procediADownloadBudget', {'numero_preventivo':message['numero_preventivo'], 'revisione': message['revisione']},
             namespace='/preventivoEdile', room=dip.session_id)
+'''
+
+@socketio.on('imposta_budget_imprevisti', namespace='/preventivoEdile')
+def handle_imposta_budget_imprevisti(message):
+    dip = Dipendente.query.filter_by(username=message['dip']).first()
+
+    PreventivoEdile.impostaBudgetImprevisti(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                                budget=message['budget'])
+
+    PreventivoEdile.stampaPreventivo(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                     iva=0,
+                                     tipoSconto=0, sconto=0, chiudiPreventivo=False, sumisura=True, budget=True)
+
+    emit('procediADownloadBudget',
+         {'numero_preventivo': message['numero_preventivo'], 'revisione': message['revisione']},
+         namespace='/preventivoEdile', room=dip.session_id)
+
 
 @socketio.on('stampa_preventivo', namespace='/preventivoEdile')
 def handle_stampa_preventivo(message):
@@ -1723,7 +1777,9 @@ def handle_stampa_preventivo(message):
                                      chiudiPreventivo=message['chiudiPreventivo'], sumisura=message['sumisura'])
 
     if status:
-        emit('procediADownload', {'numero_preventivo':message['numero_preventivo'], 'revisione': message['revisione']},
+        emit('procediADownload', {'numero_preventivo':message['numero_preventivo'],
+                                        'revisione': message['revisione'], 'chiudiPreventivo': message['chiudiPreventivo'],
+                                        'sumisura': message['sumisura']},
                 namespace='/preventivoEdile', room=dip.session_id)
     else:
         emit('errore_commessa_incompleta', namespace="/preventivoEdile", room=dip.session_id)
@@ -1969,9 +2025,48 @@ def handle_checkaRata(message):
 @socketio.on('modifica_contabilita', namespace="/contabilitaCantiere")
 def handle_modifica_contabilita(message):
 
-    ContabilitaCantiere.modificaContabilita(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
-                                            tipologia_lavorazione=message['tipologia_lavorazione'],
-                                            modifica={message['toMod'] : message['newVal']})
+    newVal = round(float(message['newVal'])*100)/100
+
+    if message['tipologia'] == 'budget_imprevisti':
+        ContabilitaCantiere.modificaBudgetImprevistiContabilita(numero_preventivo=message['numero_preventivo'],
+                                                revisione=message['revisione'],
+                                                modifica={message['toMod']: newVal})
+
+    else:
+        ContabilitaCantiere.modificaContabilita(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                                tipologia=message['tipologia'], ordine_lav=message['ordine'],
+                                                modifica={message['toMod'] : newVal})
+
+@socketio.on('modifica_artigiano_contabilita', namespace='/contabilitaCantiere')
+def handle_modifica_artigiano_contabilita(message):
+
+    if message['tipologia'] == 'imprevisti':
+        Imprevisti.impostaArtigiano(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                        ordine=message['ordine_lav'], nome_artigiano=message['nome_artigiano'],
+                                            impiego_artigiano=message['impiego_artigiano'] )
+    else:
+        ContabilitaCantiere.impostaArtigiano(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                                tipologia=message['tipologia'], ordine_lav=message['ordine_lav'],
+                                                    nome_artigiano=message['nome_artigiano'],
+                                                        impiego_artigiano=message['impiego_artigiano'])
+
+@socketio.on('registra_imprevisto', namespace="/contabilitaCantiere")
+def handle_registra_imprevisto(message):
+
+    Imprevisti.registraImprevisto(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                   ordine=message['ordine'])
+
+
+@socketio.on('elimina_imprevisto', namespace="/contabilitaCantiere")
+def handle_elimina_imprevisto(message):
+    Imprevisti.eliminaImprevisto(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                  ordine=message['ordine'])
+
+@socketio.on('modifica_imprevisto', namespace="/contabilitaCantiere")
+def handle_modifica_imprevisto(message):
+    Imprevisti.modificaImprevisto(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
+                                  ordine=message['ordine'], modifica={ message['toMod'] : message['val'] })
+
 
 
 @socketio.on_error('/cliente')

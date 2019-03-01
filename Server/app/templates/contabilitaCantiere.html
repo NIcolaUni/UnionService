@@ -10,11 +10,15 @@
                 Contabilità cantiere <a href="{{url_for('clientBack')}}" class="fa fa-compress expandPreventivoIcon"></a>
             </h2>
 
-            <div id="tabContainer" class="features">
+            <div id="tabContainer" class="featuresContabilita">
                 <div id="tabFattura" class="table-wrapper">
-                        <table class="alt">
+                        <table class="alt edile">
                             <tbody id="bodyTabella">
+                                <tr class="trHead titleTable">
+                                    <th colspan="8">Preventivo Edile</th>
+                                </tr>
                                 <tr class="trHead headerTable">
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th colspan="3">Cantiere</th>
@@ -23,6 +27,7 @@
                                 <tr class="trHead">
                                     <th></th>
                                     <th> Voci lavorazione </th>
+                                    <th> Artigiano </th>
                                     <th style="width:10%"> Budget </th>
                                     <th style="width:10%"> Costi effettivi </th>
                                     <th style="width:10%"> Controllo costi </th>
@@ -31,21 +36,135 @@
                                 </tr>
                                 {% for lavorazione in contabilita %}
                                     <tr class="trBody">
-                                        <td>{{lavorazione.ordine_lav}}</td>
-                                        <td class="tdNomeLav">{{lavorazione.tipologia_lavorazione}}</td>
+                                        <td class="tdOrdineLav">{{lavorazione.ordine_lav}}</td>
+                                        <td class="tdNomeLav">{{lavorazione.nome_lav}}</td>
+                                        <td class="tdArtigiano">
+                                            <select onchange="modificaArtigianoLavorazione($(this))" class="selectArtigiano">
+                                                    <option>no artigiano</option>
+                                                {% for artigiano in artigiani %}
+                                                    <option>{{artigiano.nominativo}} - {{artigiano.impiego}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
                                         <td class="tdBudget">&euro; {{lavorazione.budget}}</td>
-                                        <td class="tdCostiEffettivi">&euro; <input class="inputNumber" type="number" min="0" value="{{lavorazione.costi_effettivi}}"> </td>
+                                        <td class="tdCostiEffettivi">&euro; <input class="inputNumber effettuaControllo" type="number" min="0" value="{{lavorazione.costi_effettivi}}"> </td>
                                         <td class="tdControlloCosti"></td>
-                                        <td class="tdFatture"> &euro; <input class="inputNumber" type="number" min="0" value="{{lavorazione.fattura}}"> </td>
+                                        <td class="tdFatture"> &euro; <input class="inputNumber effettuaControllo" type="number" min="0" value="{{lavorazione.fattura}}"> </td>
                                         <td class="tdControlloFatture"></td>
                                     </tr>
                                 {% endfor %}
+
+
                             </tbody>
                             <tfoot>
 
                             </tfoot>
                         </table>
-                    </div>
+                        <table class="alt budget_imprevisti">
+                            <tbody id="bodyTabellaBudget">
+                                <tr class="trHead titleTable">
+                                    <th colspan="8">Budget Imprevisti</th>
+                                </tr>
+                                <tr class="trHead">
+                                    <th></th>
+                                    <th></th>
+                                    <th>Artigiano</th>
+                                    <th style="width:10%"> Budget </th>
+                                    <th style="width:10%"> Costi effettivi </th>
+                                    <th style="width:10%"> Controllo costi </th>
+                                    <th style="width:10%"> Fatture </th>
+                                    <th style="width:10%"> Controllo Fatture </th>
+                                </tr>
+                                <tr class="trBody budget_imprevisti">
+                                    <td><a id="aggiungiImprevisti" class="fa fa-plus"></a></td>
+                                    <td>Budget Imprevisti</td>
+                                    <td></td>
+                                    <td class="tdBudget">&euro; {{contabilita[0].budget_imprevisti}}</td>
+                                    <td></td>
+                                    <td class="tdControlloCosti"></td>
+                                    <td class="tdFatture"></td>
+                                    <td class="tdControlloFatture"></td>
+                                </tr>
+                                {% for imprevisto in imprevisti %}
+                                <tr class="trBody imprevisti">
+                                    <td class="tdOrdineImprevisto"><label class="ordineImprevisto">{{imprevisto.ordine}}</label><a onclick="eliminaImprevisto($(this))" class="fa fa-trash eliminaImprevisto"></a></td>
+                                    <td class="tdNomeImprevisto"><textarea oninput="modificaNomeImprevisto($(this))" class="nomeImprevisto">{{imprevisto.nome}}</textarea></td>
+                                    <td class="tdArtigiano">
+                                        <select onchange="modificaArtigianoLavorazione($(this))" class="selectArtigiano">
+                                                <option>no artigiano</option>
+                                            {% for artigiano in artigiani %}
+                                                <option>{{artigiano.nominativo}} - {{artigiano.impiego}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                    <td class="tdCostiEffettivi">&euro; <input oninput="modificaCostoImprevisto($(this))" class="inputNumber costoImprevisto" type="number" min="0" value="{{imprevisto.costo}}"> </td>
+                                    <td class="tdControlloCosti"></td>
+                                    <td class="tdFatture"> &euro; <input oninput="modificaCostoFatturaImprevisto($(this))" class="inputNumber fatturaImprevisto effettuaControllo" type="number" min="0" value="{{imprevisto.costo_fattura}}"> </td>
+                                    <td class="tdControlloFatture"></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                </div>
+
+            </div>
+
+            <div id="resultsContainer" class="featuresContabilita">
+                <div id="tabReults" class="table-wrapper">
+                    <table class="alt">
+                        <tbody id="bodyTabellaResult">
+
+                            <tr class="trBody totale">
+                                <td colspan="2">Totale:</td>
+                                <td class="tdArtigiano"></td>
+                                <td class="tdTotBudget" style="width:10%">  </td>
+                                <td class="tdTotCostiEffettivi" style="width:10%">  </td>
+                                <td class="tdTotControlloCosti" style="width:10%">  </td>
+                                <td class="tdTotFatture"style="width:10%">  </td>
+                                <td class="tdTotControlloFatture" style="width:10%">  </td>
+                            </tr>
+                            <tr class="trBody prezzoClienteContratto">
+                                <td colspan="2">Prezzo cliente da contratto:</td>
+                                <td class="tdArtigiano"></td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td class="prezzoContratto" style="width:10%">&euro; {{pagamenti[0].totale_prev_edile}} </td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                            </tr>
+                            <tr class="trBody">
+                                <td colspan="2">Prezzo cliente da scelta finiture:</td>
+                                <td class="tdArtigiano"></td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                            </tr>
+                            <tr class="trBody">
+                                <td colspan="2">Varianti cliente complessive:</td>
+                                <td class="tdArtigiano"></td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                            </tr>
+                            <tr class="trBody utile">
+                                <td colspan="2">Utile contratto:</td>
+                                <td class="tdArtigiano"></td>
+                                <td class="utile_netto_costi_eff" style="width:10%">  </td>
+                                <td class="utile_perc_costi_eff" style="width:10%">  </td>
+                                <td style="width:10%">  </td>
+                                <td class="utile_netto_fatture" style="width:10%">  </td>
+                                <td class="utile_perc_fatture" style="width:10%">  </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
 
         </div>
@@ -56,6 +175,24 @@
     var socketContabilita = io.connect("{{sockUrl}}"+'/contabilitaCantiere');
 
     settaVariabiliSocketIo( '{{numero_preventivo}}', '{{revisione}}');
+
+    {% for lavorazione in contabilita %}
+        {% if lavorazione.nome_artigiano != 'no artigiano' %}
+            $('td.tdNomeLav').each(function(){
+
+                if($(this).text() == '{{lavorazione.nome_lav}}'){
+                    $(this).parent().children('td.tdArtigiano').children('select').val('{{lavorazione.nome_artigiano}} - {{lavorazione.impiego_artigiano}}')
+                }
+            });
+        {% endif %}
+    {% endfor %}
+
+    var tmpList = [];
+    {% for artigiano in artigiani %}
+        tmpList.push('{{artigiano.nominativo}} - {{artigiano.impiego}}')
+    {% endfor %}
+
+    impostaListaArtigiani(tmpList);
 
 </script>
 {% endblock %}

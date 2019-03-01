@@ -1,5 +1,15 @@
-1- ricordati la riga dei totali
+
 2- dare la possibilita di aggiungere "lavorazioni impreviste" sia selezionate da un elenco
     preso a database che scritto a mano
+3- utile sia sul costo effettivo che sulla fattura
 
+4 - più stretto il numero lavorazione
+5-non esce nome lavorazione
+6 -select per ogni lavorazione con lista artigiano
 
+4- utile riga netto riga percentuale
+7 - controllo fatture = fattura-costiEff
+
+8-inserire nel titolo il codice del preventivo
+
+9-non si imposta l'artigiano negli imprevisti ( e nemmeno nel database alla creazione viene settato il 'no artigiano')

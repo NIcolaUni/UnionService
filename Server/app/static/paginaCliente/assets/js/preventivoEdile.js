@@ -194,19 +194,6 @@ var aggiungiNote = function($this){
 
 }
 
-/************************************************************************************************/
-
-function rienumeraMemoriaLavorazioni(){
-
-    var counter = 1;
-    $('#memoriaLavorazioniAggiunte').children('.settoreMemorizzato').each(function(){
-        $(this).children('div').each(function(){
-            $(this).text('aggiunto-'+counter);
-            counter+=1;
-        });
-
-    });
-}
 
 /*******************************************************************************************/
 
@@ -277,9 +264,20 @@ var rienumeraPagina = function( ){
         $(this).children('.firstCol-old'+oldNum).children('.add-'+oldNum).addClass('add-old'+oldNum);
         $(this).children('.firstCol-old'+oldNum).children('.add-'+oldNum).removeClass('add-'+oldNum);
 
-        /*modifico i pulsanti "aggiungi elemento" degli elementi presenti*/
+        /*modifico i pulsanti "aggiungi elemento" degli elementi presenti
+            e la memoria apposita*/
         $('.aggiunto-'+oldNum).addClass('aggiunto-old'+oldNum);
         $('.aggiunto-'+oldNum).removeClass('aggiunto-'+oldNum);
+
+        $('#memoriaLavorazioniAggiunte').children('.settoreMemorizzato').each(function(){
+
+            $(this).children('div').each(function(){
+                var oldName = $(this).text()
+                $(this).text('aggiunto-old-'+oldName.split('-')[1]);
+
+            });
+
+        });
 
 
     });
@@ -299,6 +297,17 @@ var rienumeraPagina = function( ){
 
         $('.aggiunto-old'+oldNum).addClass('aggiunto-'+counter);
         $('.aggiunto-old'+oldNum).removeClass('aggiunto-old'+oldNum);
+
+        /*rienumero la memoria lavorazioni*/
+        var buttonId = $('.aggiunto-'+counter).attr('id')
+        $('#memoriaLavorazioniAggiunte').children('.settoreMemorizzato').each(function(){
+
+            $(this).children('div.'+buttonId).each(function(){
+                $(this).text('aggiunto-'+counter);
+
+            });
+
+        });
 
 
         $(this).attr('id', classSettore+'_trBody-'+counter);
@@ -380,8 +389,6 @@ var rienumeraPagina = function( ){
     });
 
 
-
-    rienumeraMemoriaLavorazioni();
     resettaLavToCtrl();
 }
 
@@ -397,7 +404,16 @@ var calcolaTotalePreventivo = function(){
 
     });
 
-    $('#divTotale').html('<span><u>Totale:</u> &euro; ' + Math.round(totale*100)/100 + '</span>' );
+   /* var totaleUs = 0;
+
+    $('.trBody').each(function(){
+            var numEl = $(this).attr('id').split('_trBody-')[1];
+            totale+=parseFloat($('.trFoot'+numEl).children('.footTot').text().split(' ')[1]);
+
+    });
+*/
+
+    $('#divTotale').html('<span><u>Totale cliente:</u> &euro; ' + Math.round(totale*100)/100 + '</span>' );
 }
 
 
@@ -542,6 +558,7 @@ var modificaQuantitaSottolavorazione = function($this){
     numero =parseFloat($this.val());
     variabile =$this.attr('class').split(' ')[2];
 
+
     if( !disabilitaSocketio ){
         socketPreventivo.emit("modifica_sottolavorazione", {
             'numero_preventivo': numeroPreventivo,
@@ -591,13 +608,6 @@ var righeDimensioniSottolavorazione = function( unita, prezzoBase, numElement){
     }
 }
 
-/*********************************************************************************************/
-
-var settaLastElement = function(classSettore){
-
-    $('tr[id^='+classSettore+'_trBody]').last().addClass(classSettore+'_lastAdded');
-
-}
 
 /***********************************************************************************************/
 var countLavorazioniSettore = function(classSettore){
@@ -632,14 +642,13 @@ var eliminaLavorazione = function($this){
     var idElementToDel=$this.parent().parent().attr('id');
     var numEl = idElementToDel.split('_trBody-')[1];
     var classSettore =idElementToDel.split('_trBody-')[0];
-    var lastEl = $('#'+idElementToDel).hasClass(classSettore+'_lastAdded'); //variabile booleana
-
+    var numSettore = classSettore.split('-')[1];
 
     $('#'+idElementToDel).remove();
     $('.'+classSettore+'_trSottolavorazione-'+numEl).remove();
     $('.trFoot'+numEl).remove();
 
-    $('#memoriaLavorazioniAggiunte-'+classSettore).children('div').each(function(){
+    $('#memoriaLavorazioniAggiunte-'+numSettore).children('div').each(function(){
         if( $(this).text() == 'aggiunto-'+numEl )
             $(this).remove();
     });
@@ -663,9 +672,6 @@ var eliminaLavorazione = function($this){
 
     rienumeraPagina();
 
-    if( lastEl ){
-        settaLastElement(classSettore);
-    }
 
     calcolaTotaleParzialeSettore(classSettore);
     calcolaTotalePreventivo();
@@ -904,6 +910,13 @@ var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione, co
         );
     }
 
+    $('textarea').unbind('mouseover').mouseover(function(){
+        $(this).focus();
+    });
+
+    $('input').unbind('mouseover').mouseover(function(){
+        $(this).focus();
+    });
 }
 
 /********************************************************************************************/
@@ -1267,12 +1280,13 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
 
 
     var nomeSettoreSelected = $('#selectSettore option.'+settoreSelected).text();
+
     var idRow = aggiungiRiga(null, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia,
                     costoLavorazione, unitaMisura, nome_assistenza, costoAssistenza,
                         tipoCostoAssistenza, assistenzeDistinte, true);
-
     /*Ricostruisco la riga costruita modificandone opportunamente id e classi in base al
         nuovo settore selezionato */
+
     var $rowLav =$('#'+idRow);
     var $rowSottolav = $rowLav.next();
     var $rowFoot = $rowSottolav.next();
@@ -1288,6 +1302,17 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
     var sottolavOtherClassesArray = sottolavArrayClasses.slice(1, sottolavArrayClasses.length );
     var newSottolavFirstClass = settoreSelected + '_trSottolavorazione-' + sottolavFirstClass.split('_trSottolavorazione-')[1];
 
+
+    var newLavClass = '';
+
+    newLavClass = $rowLav.attr('class');
+
+   /* $.each($rowLav.attr('class').split(' '), function(index, el){
+        if( index+1 != $rowLav.attr('class').split(' ').length )
+            newLavClass += el + ' ';
+
+
+    });*/
 
     var newSottolavClass = newSottolavFirstClass + ' ';
 
@@ -1320,7 +1345,7 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
 
     });
 
-    var rowToMove = '<tr id="'+newLavId+'" class="'+$rowLav.attr('class')+'">'+$rowLav.html()+'</tr>'+
+    var rowToMove = '<tr id="'+newLavId+'" class="'+newLavClass+'">'+$rowLav.html()+'</tr>'+
                     '<tr class="'+newSottolavClass+'">'+$rowSottolav.html()+'</tr>'+
                     '<tr class="'+newFootClass+'">'+$rowFoot.html()+'</tr>';
 
@@ -1376,11 +1401,10 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
 
     }
     else{
-       // $("."+settoreSelected+"_lastAdded").removeClass(settoreSelected+"_lastAdded");
         $('.'+settoreSelected+'_trFoot').last().after(rowToMove);
 
     }
-    //$('#memoriaLavorazioniAggiunte div.')
+
     if( cbxStatus ){
         $('.thAdded').hide();
         $('.tdAdded').hide();
@@ -1416,9 +1440,13 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
          );
     }
 
+
+   // ordineLavorazioni++;
+
     $rowLav.remove();
     $rowSottolav.remove();
     $rowFoot.remove();
+    $('.settoreTmp').remove();
 
     rienumeraPagina();
 
@@ -1457,7 +1485,6 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
     if( copia  || !$button.hasClass('aggiunto') ){
 
-
         var ricaricoAzienda = parseInt($('#inputRicaricoGenerale').val());
         var ricaricoExtra = parseInt($('#inputRicaricoExtra').val());
 
@@ -1482,12 +1509,15 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
         else{
             $('#selectSettore option').each(function(){
                 if( $(this).text() == settore )
+                {
                     classSettore = $(this).attr('class');
+                }
+
             });
 
         }
 
-        costoUs = costoLavorazione;
+        costoUs = Math.round(costoLavorazione*100)/100;
         costoLavorazione += (costoLavorazione*ricaricoAzienda/100);
 
         costoLavorazione += (costoLavorazione*ricaricoExtra/100);
@@ -1527,8 +1557,16 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                                                 nome_assistenza+'\', '+ costoAssistenza + ', '+ tipoCostoAssistenza +', ['+
                                                     assistenzeDistinteParametro+']';
 
+        var extraClass;
+
+        if(copia)
+            extraClass = ' lavorazioneCopia';
+        else
+            extraClass = ''
+
+
         //Preparo la riga della lavorazione
-        var rowsToAdd='<tr id="'+classSettore+'_trBody-'+ordineLavorazioni+'" class="trBody '+classSettore+'_lastAdded">'+
+        var rowsToAdd='<tr id="'+classSettore+'_trBody-'+ordineLavorazioni+'" class="trBody'+extraClass+'">'+
                         '<td class="firstCol'+ordineLavorazioni+' firstCol">'+
                             '<label></label>'+
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
@@ -1563,7 +1601,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                         '<td class="tdPreventivo colSmall"></td>'+
                     '</tr>'+
                     '<tr class="'+classSettore+'_trSottolavorazione-'+ordineLavorazioni+' sottolavNum-0">'+
-                            '<td><a onclick="eliminaSottolavorazione($(this), \''+unitaMisura+'\')" class="delSottolavorazione fa fa-trash"></a></td>'+
+                            '<td></td>'+
                             '<td class="tdPreventivo tdNomeSottolavorazione"></td>'+
                             righeDimensioniSottolavorazione(  unitaMisura,
                                                               costoLavorazione,
@@ -1601,13 +1639,18 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
             if( !cbxStatus )
                 colspanNum = 13;
 
+            var classSettoreCopia = '';
+
+            if(copia)
+                classSettoreCopia = ' settoreTmp'
+
             $('#bodyPreventivo').append(
 
-                '<tr class="trHead '+classSettore+'">'+
+                '<tr class="trHead '+classSettore+classSettoreCopia+'">'+
                     '<td  colspan="'+colspanNum+'"  class="titleSettoreTd">'+settore+'</td>'+
                     '<td class="titleSettoreTd totaleSettore"></td>'+
                 '</tr>'+
-                '<tr class="trHead '+classSettore+'_head">'+
+                '<tr class="trHead '+classSettore+'_head'+classSettoreCopia+'">'+
                     '<th class="thPreventivo"></th>'+
                     '<th class="thPreventivo"></th>'+
                     '<th class="thPreventivo numColSmall">N</th>'+
@@ -1621,7 +1664,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                     '<th class="thPreventivo thAdded">Prezzo US</th>'+
                     '<th class="thPreventivo thAdded">Totale US</th>'+
                     '<th class="thPreventivo numColSmall thAdded">ricarico</th>'+
-                    '<th class="thPreventivo">Totale</th>'+
+                    '<th class="thPreventivo">Totale <br/> Cliente</th>'+
                 '</tr>'+
                 rowsToAdd
 
@@ -1629,10 +1672,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
         }
         else{
-
-            $("."+classSettore+"_lastAdded").removeClass(classSettore+"_lastAdded");
             $('.'+classSettore+'_trFoot').last().after( rowsToAdd );
-
         }
 
         /*seleziono l'assistenza correttamente*/
@@ -1712,7 +1752,7 @@ var aggiungiSettoriELavorazioni = function(listaLavorazioni){
              '<div id="memoriaLavorazioniAggiunte-'+counterSettori+'" class="settoreMemorizzato"></div>'
         );
 
-        var counterLavorazioni = 0;
+        var counterLavorazioni = 1;
 
         settoreELav[1].forEach(function(lavorazione){
             $('#listaElementFattura').append(

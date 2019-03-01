@@ -118,7 +118,19 @@
         var socketPreventivo= io.connect("{{sockUrl}}"+'/preventivoEdile');
 
         socketPreventivo.on( 'procediADownload', function(msg){
-            window.open('/downloadPreventivoEdile/'+msg['numero_preventivo']+'/'+msg['revisione'], '_blank');
+
+            var scelta;
+            if( msg['sumisura'] )
+                scelta = 1;
+            else
+                scelta = 2;
+
+            window.open('/downloadPreventivoEdile/'+msg['numero_preventivo']+'/'+msg['revisione']+'/'+scelta, '_blank');
+
+
+            if( msg['chiudiPreventivo'] )
+                window.location  = "{{url_for('clientBack')}}";
+
         });
 
         socketPreventivo.on( 'errore_commessa_incompleta', function(){
@@ -291,7 +303,8 @@
 
                 {% for lavorazione in infoPreventivo[1] %}
 
-                    {% if lavorazione[0].settore == settore %}
+                    {% if (lavorazione[0].settore == settore and not lavorazione[0].copia ) or
+                           (lavorazione[0].settore_lav_copia == settore and lavorazione[0].copia ) %}
 
                         {% if not lavorazione[0].copia %}
 
@@ -354,12 +367,26 @@
                                  {% endif %}
                              {% endfor %}
 
+                             {% if lavorazione[0].tipo_costo_assistenza %}
+                                var costo_assistenza = true;
+                             {% else %}
+                                var costo_assistenza = false;
+                             {% endif %}
+
+                            var classSettore = '';
+                            $('#selectSettore option').each(function(){
+                                if( $(this).text() == '{{lavorazione[0].settore_lav_copia}}' )
+                                {
+                                    classSettore = $(this).attr('class');
+                                }
+
+                            });
 
                             aggiungiRigaCopia( '{{lavorazione[0].numero_preventivo}}', '{{lavorazione[0].revisione}}',
-                                                    '{{lavorazione[0].ordine}}', '{{lavorazione[0].tipologia_lavorazione}}',
+                                                    '{{lavorazione[0].settore}}', '{{lavorazione[0].tipologia_lavorazione}}',
                                                      costoUs, '{{lavorazione[0].unitaMisura}}', '{{lavorazione[0].assistenza}}',
-                                                         '{{lavorazione[0].costo_assistenza}}', '{{lavorazione[0].tipo_costo_assistenza}}',
-                                                          assistenzeDistinte, '{{lavorazione[0].settore_lav_copia}}',
+                                                         '{{lavorazione[0].costo_assistenza}}', costo_assistenza,
+                                                          assistenzeDistinte, classSettore,
                                                             '{{lavorazione[0].ordine_lav_originale}}')
 
                         {% endif %}
