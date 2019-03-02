@@ -2042,8 +2042,10 @@ def handle_modifica_artigiano_contabilita(message):
 
     if message['tipologia'] == 'imprevisti':
         Imprevisti.impostaArtigiano(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
-                                        ordine=message['ordine_lav'], nome_artigiano=message['nome_artigiano'],
-                                            impiego_artigiano=message['impiego_artigiano'] )
+                                    ordine=message['ordine_lav'], nome_artigiano=message['nome_artigiano'],
+                                      impiego_artigiano=message['impiego_artigiano'])
+
+
     else:
         ContabilitaCantiere.impostaArtigiano(numero_preventivo=message['numero_preventivo'], revisione=message['revisione'],
                                                 tipologia=message['tipologia'], ordine_lav=message['ordine_lav'],

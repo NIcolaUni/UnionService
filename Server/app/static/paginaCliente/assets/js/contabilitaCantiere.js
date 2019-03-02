@@ -231,6 +231,7 @@ var eliminaImprevisto = function($this){
         });
 
     rienumeraImprevisti();
+    settaTotaleContabilita();
 
 }
 
@@ -289,7 +290,6 @@ var modificaCostoFatturaImprevisto = function($this){
 
 var modificaArtigianoLavorazione = function($this){
 
-    alert('ndsjsjksjk')
     var $riga = $this.parent().parent();
     var selectedChoiceArray = $this.val().split(' - ');
     var nome_artigiano = selectedChoiceArray[0];
@@ -305,6 +305,7 @@ var modificaArtigianoLavorazione = function($this){
     else if( tipologia == 'Budget Imprevisti'){
         tipologia='imprevisti';
         ordine_lav = parseInt($riga.children('td.tdOrdineImprevisto').children('label.ordineImprevisto').text())
+        alert(ordine_lav)
     }
 
     if(!disabilitaSocketIo)

@@ -4991,3 +4991,332 @@ ValueError: not enough values to unpack (expected 3, got 1)
 [2019-03-01 11:29:17 +0100] [1582] [INFO] Starting gunicorn 19.7.1
 [2019-03-01 11:29:17 +0100] [645] [INFO] Worker exiting (pid: 645)
 [2019-03-01 11:29:18 +0100] [597] [INFO] Shutting down: Master
+[2019-03-01 16:32:43 +0100] [611] [DEBUG] Current configuration:
+  on_reload: <function OnReload.on_reload at 0x7efcb93f50d0>
+  max_requests: 0
+  keyfile: None
+  syslog_addr: udp://localhost:514
+  when_ready: <function WhenReady.when_ready at 0x7efcb93f5268>
+  pre_fork: <function Prefork.pre_fork at 0x7efcb93f5400>
+  worker_exit: <function WorkerExit.worker_exit at 0x7efcb93fa268>
+  ssl_version: 2
+  post_fork: <function Postfork.post_fork at 0x7efcb93f5598>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7efcb93f5730>
+  child_exit: <function ChildExit.child_exit at 0x7efcb93fa0d0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7efcb93fa400>
+  check_config: False
+  limit_request_line: 4094
+  ca_certs: None
+  pre_request: <function PreRequest.pre_request at 0x7efcb93f5d90>
+  preload_app: False
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  daemon: False
+  group: 0
+  initgroups: False
+  forwarded_allow_ips: ['127.0.0.1']
+  proxy_allow_ips: ['127.0.0.1']
+  worker_class: eventlet
+  suppress_ragged_eofs: True
+  limit_request_field_size: 8190
+  logconfig: None
+  worker_connections: 1000
+  raw_paste_global_conf: []
+  reload_engine: auto
+  pythonpath: None
+  do_handshake_on_connect: False
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  limit_request_fields: 100
+  spew: False
+  umask: 0
+  config: None
+  worker_int: <function WorkerInt.worker_int at 0x7efcb93f58c8>
+  enable_stdio_inheritance: False
+  proxy_protocol: False
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  capture_output: False
+  statsd_prefix: 
+  certfile: None
+  syslog_prefix: None
+  tmp_upload_dir: None
+  backlog: 2048
+  syslog_facility: user
+  statsd_host: None
+  keepalive: 2
+  on_exit: <function OnExit.on_exit at 0x7efcb93fa598>
+  proc_name: None
+  paste: None
+  default_proc_name: Server:application
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  sendfile: None
+  cert_reqs: 0
+  raw_env: []
+  pidfile: /var/run/gunicorn.pid
+  worker_tmp_dir: None
+  user: 0
+  logger_class: gunicorn.glogging.Logger
+  ciphers: TLSv1
+  accesslog: None
+  max_requests_jitter: 0
+  on_starting: <function OnStarting.on_starting at 0x7efcb93e5ea0>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7efcb93f5a60>
+  pre_exec: <function PreExec.pre_exec at 0x7efcb93f5bf8>
+  workers: 1
+  threads: 1
+  graceful_timeout: 30
+  bind: ['127.0.0.1:3000']
+  post_request: <function PostRequest.post_request at 0x7efcb93f5ea0>
+  reload: False
+  loglevel: debug
+  syslog: False
+  timeout: 30
+[2019-03-01 16:32:43 +0100] [611] [INFO] Starting gunicorn 19.7.1
+[2019-03-01 16:32:43 +0100] [611] [DEBUG] Arbiter booted
+[2019-03-01 16:32:43 +0100] [611] [INFO] Listening at: http://127.0.0.1:3000 (611)
+[2019-03-01 16:32:43 +0100] [611] [INFO] Using worker: eventlet
+[2019-03-01 16:32:43 +0100] [668] [INFO] Booting worker with pid: 668
+[2019-03-01 16:32:43 +0100] [611] [DEBUG] 1 workers
+[2019-03-01 16:34:58 +0100] [1354] [DEBUG] Current configuration:
+  timeout: 30
+  loglevel: debug
+  suppress_ragged_eofs: True
+  reload_engine: auto
+  spew: False
+  worker_tmp_dir: None
+  umask: 0
+  tmp_upload_dir: None
+  proxy_protocol: False
+  ciphers: TLSv1
+  when_ready: <function WhenReady.when_ready at 0x7f6232c4d268>
+  limit_request_fields: 100
+  user: 0
+  initgroups: False
+  secure_scheme_headers: {'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  proxy_allow_ips: ['127.0.0.1']
+  raw_paste_global_conf: []
+  pre_fork: <function Prefork.pre_fork at 0x7f6232c4d400>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f6232c4da60>
+  child_exit: <function ChildExit.child_exit at 0x7f6232c520d0>
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  proc_name: None
+  accesslog: None
+  capture_output: False
+  keyfile: None
+  post_fork: <function Postfork.post_fork at 0x7f6232c4d598>
+  pre_exec: <function PreExec.pre_exec at 0x7f6232c4dbf8>
+  pre_request: <function PreRequest.pre_request at 0x7f6232c4dd90>
+  workers: 1
+  max_requests: 0
+  max_requests_jitter: 0
+  graceful_timeout: 30
+  worker_exit: <function WorkerExit.worker_exit at 0x7f6232c52268>
+  enable_stdio_inheritance: False
+  default_proc_name: Server:application
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  keepalive: 2
+  check_config: False
+  pythonpath: None
+  post_request: <function PostRequest.post_request at 0x7f6232c4dea0>
+  preload_app: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  logger_class: gunicorn.glogging.Logger
+  logconfig: None
+  ssl_version: 2
+  statsd_host: None
+  worker_class: eventlet
+  syslog: False
+  syslog_facility: user
+  statsd_prefix: 
+  daemon: False
+  threads: 1
+  reload: False
+  worker_connections: 1000
+  syslog_addr: udp://localhost:514
+  certfile: None
+  limit_request_line: 4094
+  limit_request_field_size: 8190
+  on_exit: <function OnExit.on_exit at 0x7f6232c52598>
+  sendfile: None
+  raw_env: []
+  pidfile: /var/run/gunicorn.pid
+  group: 0
+  forwarded_allow_ips: ['127.0.0.1']
+  bind: ['127.0.0.1:3000']
+  cert_reqs: 0
+  ca_certs: None
+  paste: None
+  config: None
+  on_starting: <function OnStarting.on_starting at 0x7f6232c3dea0>
+  on_reload: <function OnReload.on_reload at 0x7f6232c4d0d0>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f6232c4d730>
+  worker_int: <function WorkerInt.worker_int at 0x7f6232c4d8c8>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f6232c52400>
+  syslog_prefix: None
+  backlog: 2048
+  do_handshake_on_connect: False
+[2019-03-01 16:34:58 +0100] [1354] [INFO] Starting gunicorn 19.7.1
+[2019-03-01 16:34:58 +0100] [611] [INFO] Handling signal: term
+[2019-03-01 16:34:58 +0100] [1450] [DEBUG] Current configuration:
+  ciphers: TLSv1
+  syslog_addr: udp://localhost:514
+  syslog_facility: user
+  preload_app: False
+  accesslog: None
+  pidfile: /var/run/gunicorn.pid
+  cert_reqs: 0
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f6e5a856a60>
+  on_exit: <function OnExit.on_exit at 0x7f6e5a85b598>
+  certfile: None
+  ca_certs: None
+  suppress_ragged_eofs: True
+  do_handshake_on_connect: False
+  worker_tmp_dir: None
+  pythonpath: None
+  paste: None
+  proxy_protocol: False
+  on_reload: <function OnReload.on_reload at 0x7f6e5a8560d0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f6e5a85b400>
+  capture_output: False
+  logger_class: gunicorn.glogging.Logger
+  syslog_prefix: None
+  enable_stdio_inheritance: False
+  statsd_host: None
+  statsd_prefix: 
+  raw_env: []
+  initgroups: False
+  limit_request_line: 4094
+  worker_connections: 1000
+  graceful_timeout: 30
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f6e5a856730>
+  keyfile: None
+  check_config: False
+  when_ready: <function WhenReady.when_ready at 0x7f6e5a856268>
+  pre_exec: <function PreExec.pre_exec at 0x7f6e5a856bf8>
+  workers: 1
+  timeout: 30
+  backlog: 2048
+  keepalive: 2
+  default_proc_name: Server:application
+  reload_engine: auto
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  user: 0
+  on_starting: <function OnStarting.on_starting at 0x7f6e5a846ea0>
+  pre_request: <function PreRequest.pre_request at 0x7f6e5a856d90>
+  post_request: <function PostRequest.post_request at 0x7f6e5a856ea0>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f6e5a85b268>
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  sendfile: None
+  daemon: False
+  group: 0
+  tmp_upload_dir: None
+  worker_int: <function WorkerInt.worker_int at 0x7f6e5a8568c8>
+  child_exit: <function ChildExit.child_exit at 0x7f6e5a85b0d0>
+  limit_request_field_size: 8190
+  spew: False
+  worker_class: eventlet
+  max_requests_jitter: 0
+  bind: ['127.0.0.1:3000']
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  limit_request_fields: 100
+  forwarded_allow_ips: ['127.0.0.1']
+  ssl_version: 2
+  config: None
+  pre_fork: <function Prefork.pre_fork at 0x7f6e5a856400>
+  logconfig: None
+  proxy_allow_ips: ['127.0.0.1']
+  raw_paste_global_conf: []
+  proc_name: None
+  threads: 1
+  syslog: False
+  reload: False
+  max_requests: 0
+  post_fork: <function Postfork.post_fork at 0x7f6e5a856598>
+  umask: 0
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  loglevel: debug
+[2019-03-01 16:34:58 +0100] [1450] [INFO] Starting gunicorn 19.7.1
+[2019-03-01 16:34:59 +0100] [668] [INFO] Worker exiting (pid: 668)
+[2019-03-01 16:34:59 +0100] [611] [INFO] Shutting down: Master
+[2019-03-03 00:08:57 +0100] [579] [DEBUG] Current configuration:
+  threads: 1
+  raw_env: []
+  user: 0
+  proxy_allow_ips: ['127.0.0.1']
+  post_fork: <function Postfork.post_fork at 0x7f597e073598>
+  tmp_upload_dir: None
+  keyfile: None
+  statsd_prefix: 
+  limit_request_fields: 100
+  ssl_version: 2
+  suppress_ragged_eofs: True
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  syslog: False
+  syslog_prefix: None
+  statsd_host: None
+  worker_tmp_dir: None
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f597e073730>
+  graceful_timeout: 30
+  certfile: None
+  worker_exit: <function WorkerExit.worker_exit at 0x7f597e078268>
+  spew: False
+  preload_app: False
+  daemon: False
+  group: 0
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  paste: None
+  workers: 1
+  keepalive: 2
+  do_handshake_on_connect: False
+  sendfile: None
+  reload_engine: auto
+  limit_request_line: 4094
+  backlog: 2048
+  pre_exec: <function PreExec.pre_exec at 0x7f597e073bf8>
+  child_exit: <function ChildExit.child_exit at 0x7f597e0780d0>
+  umask: 0
+  limit_request_field_size: 8190
+  proxy_protocol: False
+  worker_class: eventlet
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  proc_name: None
+  when_ready: <function WhenReady.when_ready at 0x7f597e073268>
+  pre_fork: <function Prefork.pre_fork at 0x7f597e073400>
+  on_exit: <function OnExit.on_exit at 0x7f597e078598>
+  config: None
+  pre_request: <function PreRequest.pre_request at 0x7f597e073d90>
+  accesslog: None
+  loglevel: debug
+  check_config: False
+  max_requests_jitter: 0
+  logconfig: None
+  bind: ['127.0.0.1:3000']
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  forwarded_allow_ips: ['127.0.0.1']
+  worker_int: <function WorkerInt.worker_int at 0x7f597e0738c8>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f597e078400>
+  ca_certs: None
+  pidfile: /var/run/gunicorn.pid
+  on_starting: <function OnStarting.on_starting at 0x7f597e063ea0>
+  capture_output: False
+  syslog_facility: user
+  enable_stdio_inheritance: False
+  pythonpath: None
+  default_proc_name: Server:application
+  on_reload: <function OnReload.on_reload at 0x7f597e0730d0>
+  post_request: <function PostRequest.post_request at 0x7f597e073ea0>
+  max_requests: 0
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f597e073a60>
+  timeout: 30
+  raw_paste_global_conf: []
+  logger_class: gunicorn.glogging.Logger
+  ciphers: TLSv1
+  syslog_addr: udp://localhost:514
+  reload: False
+  worker_connections: 1000
+  initgroups: False
+  cert_reqs: 0
+[2019-03-03 00:08:57 +0100] [579] [INFO] Starting gunicorn 19.7.1
+[2019-03-03 00:08:57 +0100] [579] [DEBUG] Arbiter booted
+[2019-03-03 00:08:57 +0100] [579] [INFO] Listening at: http://127.0.0.1:3000 (579)
+[2019-03-03 00:08:57 +0100] [579] [INFO] Using worker: eventlet
+[2019-03-03 00:08:57 +0100] [663] [INFO] Booting worker with pid: 663
+[2019-03-03 00:08:57 +0100] [579] [DEBUG] 1 workers

@@ -187,6 +187,23 @@
         {% endif %}
     {% endfor %}
 
+    {% for imprevisto in imprevisti %}
+        {% if imprevisto.nome_artigiano != 'no artigiano' %}
+
+            $('td.tdNomeImprevisto').each(function(){
+
+                var ordineImprevisto = parseInt($(this).parent().children('td.tdOrdineImprevisto').children('label').text());
+
+                if($(this).children('textarea').val() == '{{imprevisto.nome}}'){
+                    if( ordineImprevisto == parseInt('{{imprevisto.ordine}}') ){
+                        $(this).parent().children('td.tdArtigiano').children('select').val('{{imprevisto.nome_artigiano}} - {{imprevisto.impiego_artigiano}}')
+                    }
+                }
+            });
+
+        {% endif %}
+    {% endfor %}
+
     var tmpList = [];
     {% for artigiano in artigiani %}
         tmpList.push('{{artigiano.nominativo}} - {{artigiano.impiego}}')

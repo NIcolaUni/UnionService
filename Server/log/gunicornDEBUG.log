@@ -1,0 +1,706 @@
+[2019-02-18 15:07:09 +0100] [23302] [DEBUG] Current configuration:
+  daemon: False
+  max_requests: 0
+  raw_env: []
+  user: 0
+  ca_certs: None
+  child_exit: <function ChildExit.child_exit at 0x7fa374489158>
+  limit_request_fields: 100
+  pre_fork: <function Prefork.pre_fork at 0x7fa374485488>
+  pythonpath: None
+  logger_class: gunicorn.glogging.Logger
+  worker_tmp_dir: None
+  default_proc_name: Server:application
+  syslog_prefix: None
+  worker_connections: 1000
+  statsd_host: None
+  sendfile: None
+  secure_scheme_headers: {'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTOCOL': 'ssl'}
+  logconfig: None
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fa374485ae8>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fa374489488>
+  initgroups: False
+  pre_exec: <function PreExec.pre_exec at 0x7fa374485c80>
+  backlog: 2048
+  max_requests_jitter: 0
+  raw_paste_global_conf: []
+  worker_int: <function WorkerInt.worker_int at 0x7fa374485950>
+  enable_stdio_inheritance: False
+  graceful_timeout: 30
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  proc_name: None
+  on_reload: <function OnReload.on_reload at 0x7fa374485158>
+  worker_class: eventlet
+  timeout: 30
+  when_ready: <function WhenReady.when_ready at 0x7fa3744852f0>
+  spew: False
+  tmp_upload_dir: None
+  certfile: None
+  on_exit: <function OnExit.on_exit at 0x7fa374489620>
+  threads: 1
+  reload: False
+  limit_request_line: 4094
+  proxy_allow_ips: ['127.0.0.1']
+  limit_request_field_size: 8190
+  keyfile: None
+  accesslog: None
+  umask: 0
+  statsd_prefix: 
+  preload_app: False
+  pidfile: /var/run/gunicorn.pid
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fa3744857b8>
+  post_request: <function PostRequest.post_request at 0x7fa374485f28>
+  bind: ['127.0.0.1:3000']
+  forwarded_allow_ips: ['127.0.0.1']
+  do_handshake_on_connect: False
+  group: 0
+  syslog_addr: udp://localhost:514
+  syslog_facility: user
+  post_fork: <function Postfork.post_fork at 0x7fa374485620>
+  worker_exit: <function WorkerExit.worker_exit at 0x7fa3744892f0>
+  check_config: False
+  keepalive: 2
+  pre_request: <function PreRequest.pre_request at 0x7fa374485e18>
+  syslog: False
+  config: None
+  suppress_ragged_eofs: True
+  workers: 1
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicornDEBUG.log
+  capture_output: False
+  on_starting: <function OnStarting.on_starting at 0x7fa374479f28>
+  ssl_version: 2
+  loglevel: debug
+  reload_engine: auto
+  cert_reqs: 0
+  ciphers: TLSv1
+  paste: None
+  proxy_protocol: False
+[2019-02-18 15:07:09 +0100] [23302] [INFO] Starting gunicorn 19.7.1
+[2019-02-18 15:07:09 +0100] [23302] [DEBUG] Arbiter booted
+[2019-02-18 15:07:09 +0100] [23302] [INFO] Listening at: http://127.0.0.1:3000 (23302)
+[2019-02-18 15:07:09 +0100] [23302] [INFO] Using worker: eventlet
+[2019-02-18 15:07:09 +0100] [23305] [INFO] Booting worker with pid: 23305
+[2019-02-18 15:07:09 +0100] [23302] [DEBUG] 1 workers
+[2019-02-18 15:07:54 +0100] [23305] [DEBUG] GET /homepage
+[2019-02-18 15:07:54 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /chat
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /getNotifiche
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /getImpegni
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /sidebarLeft
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /header
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:55 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] GET /homepage
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:56 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:57 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:07:57 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:07:57 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:07:57 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:08:47 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:08:47 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:08:59 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:08:59 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:00 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:07 +0100] [23305] [DEBUG] POST /apriPaginaCliente
+[2019-02-18 15:09:07 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:07 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:07 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /anteprimaPreventivoEdile
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /anteprimaPreventivoFiniture
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /anteprimaPreventivoVarianti
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /pagamentiCliente
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /anteprimaContabilitaCantiere
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /getNotifiche
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /sidebarLeft
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] GET /header
+[2019-02-18 15:09:08 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /homepage
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:09 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:10 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:15 +0100] [23305] [DEBUG] GET /apriPreventivoEdile
+[2019-02-18 15:09:15 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:15 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:15 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:15 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:15 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:15 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] GET /getNotifiche
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] GET /sidebarLeft
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] GET /header
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:16 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] GET /homepage
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:17 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:18 +0100] [23305] [DEBUG] POST /socket.io/
+[2019-02-18 15:09:18 +0100] [23305] [DEBUG] GET /socket.io/
+[2019-02-18 15:09:18 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:18 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:09:24 +0100] [23305] [INFO] 
+
+Entrato dentro generaPdfPreventivoLavorazioni
+
+
+[2019-02-18 15:09:24 +0100] [23305] [INFO] 
+
+Entrato dentro __costruisciCorpoPreventivoSuMisura__
+
+
+[2019-02-18 15:09:24 +0100] [23305] [INFO] 
+
+Entrato dentro __aggiungiRigaAssistenzaPreventivoSuMisura__
+
+
+[2019-02-18 15:09:24 +0100] [23305] [INFO] 
+
+Entrato dentro __aggiungiRigaAssistenzaPreventivoSuMisura__
+
+
+[2019-02-18 15:09:24 +0100] [23305] [INFO] 
+
+Entrato dentro __aggiungiRigaAssistenzaPreventivoSuMisura__
+
+
+[2019-02-18 15:09:24 +0100] [23305] [INFO] 
+
+Entrato dentro __concludiPreventivoSuMisura__
+
+
+[2019-02-18 15:09:25 +0100] [23305] [DEBUG] GET /downloadPreventivoEdile/100/2/1
+[2019-02-18 15:09:25 +0100] [23305] [INFO] 
+
+EPpur sono qua
+
+
+[2019-02-18 15:09:25 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:12:13 +0100] [23305] [DEBUG] GET /downloadPreventivoEdile/100/1/1
+[2019-02-18 15:12:13 +0100] [23305] [INFO] 
+
+EPpur sono qua
+
+
+[2019-02-18 15:12:13 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:12:26 +0100] [23305] [DEBUG] GET /downloadPreventivoEdile/100/1/1
+[2019-02-18 15:12:26 +0100] [23305] [INFO] 
+
+EPpur sono qua
+
+
+[2019-02-18 15:12:26 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:12:32 +0100] [23305] [DEBUG] GET /downloadPreventivoEdile/100/2/1
+[2019-02-18 15:12:32 +0100] [23305] [INFO] 
+
+EPpur sono qua
+
+
+[2019-02-18 15:12:32 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:12:36 +0100] [23305] [DEBUG] GET /downloadPreventivoEdile/100/2
+[2019-02-18 15:12:36 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:12:41 +0100] [23305] [DEBUG] GET /downloadPreventivoEdile/100/2/1
+[2019-02-18 15:12:41 +0100] [23305] [INFO] 
+
+EPpur sono qua
+
+
+[2019-02-18 15:12:41 +0100] [23305] [DEBUG] Closing connection. 
+[2019-02-18 15:12:49 +0100] [23305] [INFO] 
+
+Entrato dentro generaPdfPreventivoLavorazioni
+
+
+[2019-02-18 15:12:49 +0100] [23305] [INFO] 
+
+
+preventivo edile: ci sono probelmi Can't convert 'tuple' object to str implicitly
+
+
+
+[2019-02-18 15:15:09 +0100] [23302] [INFO] Handling signal: int
+[2019-02-18 15:15:10 +0100] [23305] [INFO] Worker exiting (pid: 23305)
+[2019-02-18 15:15:10 +0100] [23302] [INFO] Shutting down: Master
+[2019-02-18 15:16:57 +0100] [23761] [DEBUG] Current configuration:
+  enable_stdio_inheritance: False
+  cert_reqs: 0
+  daemon: False
+  tmp_upload_dir: None
+  accesslog: None
+  limit_request_fields: 100
+  proxy_protocol: False
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  capture_output: False
+  syslog_addr: udp://localhost:514
+  max_requests: 0
+  graceful_timeout: 30
+  sendfile: None
+  suppress_ragged_eofs: True
+  on_reload: <function OnReload.on_reload at 0x7f7c5ded8158>
+  pre_request: <function PreRequest.pre_request at 0x7f7c5ded8e18>
+  worker_class: eventlet
+  threads: 1
+  worker_int: <function WorkerInt.worker_int at 0x7f7c5ded8950>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f7c5ded8ae8>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f7c5dedc2f0>
+  bind: ['127.0.0.1:3000']
+  preload_app: False
+  raw_env: []
+  group: 0
+  syslog: False
+  limit_request_line: 4094
+  syslog_facility: user
+  post_fork: <function Postfork.post_fork at 0x7f7c5ded8620>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f7c5dedc488>
+  initgroups: False
+  forwarded_allow_ips: ['127.0.0.1']
+  ca_certs: None
+  user: 0
+  do_handshake_on_connect: False
+  spew: False
+  pidfile: /var/run/gunicorn.pid
+  worker_connections: 1000
+  max_requests_jitter: 0
+  pre_exec: <function PreExec.pre_exec at 0x7f7c5ded8c80>
+  ciphers: TLSv1
+  child_exit: <function ChildExit.child_exit at 0x7f7c5dedc158>
+  config: None
+  timeout: 30
+  keepalive: 2
+  logconfig: None
+  backlog: 2048
+  reload: False
+  paste: None
+  ssl_version: 2
+  check_config: False
+  loglevel: debug
+  proxy_allow_ips: ['127.0.0.1']
+  workers: 1
+  syslog_prefix: None
+  statsd_host: None
+  pythonpath: None
+  raw_paste_global_conf: []
+  pre_fork: <function Prefork.pre_fork at 0x7f7c5ded8488>
+  limit_request_field_size: 8190
+  on_starting: <function OnStarting.on_starting at 0x7f7c5deccf28>
+  on_exit: <function OnExit.on_exit at 0x7f7c5dedc620>
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https'}
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicornDEBUG.log
+  worker_tmp_dir: None
+  statsd_prefix: 
+  reload_engine: auto
+  umask: 0
+  certfile: None
+  logger_class: gunicorn.glogging.Logger
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  keyfile: None
+  when_ready: <function WhenReady.when_ready at 0x7f7c5ded82f0>
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f7c5ded87b8>
+  proc_name: None
+  post_request: <function PostRequest.post_request at 0x7f7c5ded8f28>
+  default_proc_name: Server:application
+[2019-02-18 15:16:57 +0100] [23761] [INFO] Starting gunicorn 19.7.1
+[2019-02-18 15:16:57 +0100] [23761] [DEBUG] Arbiter booted
+[2019-02-18 15:16:57 +0100] [23761] [INFO] Listening at: http://127.0.0.1:3000 (23761)
+[2019-02-18 15:16:57 +0100] [23761] [INFO] Using worker: eventlet
+[2019-02-18 15:16:57 +0100] [23764] [INFO] Booting worker with pid: 23764
+[2019-02-18 15:16:57 +0100] [23761] [DEBUG] 1 workers
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] POST /socket.io/
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] POST /socket.io/
+[2019-02-18 15:16:57 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:16:58 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:16:58 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:16:58 +0100] [23764] [DEBUG] POST /socket.io/
+[2019-02-18 15:16:58 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:16:58 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:16:58 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:16:58 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:01 +0100] [23764] [DEBUG] GET /homepage
+[2019-02-18 15:17:01 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:01 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:01 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] GET /chat
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] GET /getNotifiche
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] GET /getImpegni
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] GET /sidebarLeft
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] GET /header
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:02 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /homepage
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:03 +0100] [23764] [DEBUG] Closing connection. 
+[2019-02-18 15:17:08 +0100] [23761] [INFO] Handling signal: int
+[2019-02-18 15:17:09 +0100] [23764] [INFO] Worker exiting (pid: 23764)
+[2019-02-18 15:17:09 +0100] [23761] [INFO] Shutting down: Master
+[2019-02-18 15:17:15 +0100] [23788] [DEBUG] Current configuration:
+  worker_exit: <function WorkerExit.worker_exit at 0x7fa2a53a12f0>
+  timeout: 30
+  ca_certs: None
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  config: None
+  pre_fork: <function Prefork.pre_fork at 0x7fa2a539d488>
+  pidfile: /var/run/gunicorn.pid
+  proxy_allow_ips: ['127.0.0.1']
+  default_proc_name: Server:application
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7fa2a539d7b8>
+  worker_tmp_dir: None
+  ssl_version: 2
+  ciphers: TLSv1
+  reload_engine: auto
+  syslog_addr: udp://localhost:514
+  limit_request_line: 4094
+  post_fork: <function Postfork.post_fork at 0x7fa2a539d620>
+  logger_class: gunicorn.glogging.Logger
+  syslog: False
+  statsd_prefix: 
+  user: 0
+  initgroups: False
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-PROTO': 'https', 'X-FORWARDED-SSL': 'on'}
+  limit_request_fields: 100
+  post_request: <function PostRequest.post_request at 0x7fa2a539df28>
+  pythonpath: None
+  on_exit: <function OnExit.on_exit at 0x7fa2a53a1620>
+  logconfig: None
+  spew: False
+  workers: 1
+  worker_int: <function WorkerInt.worker_int at 0x7fa2a539d950>
+  bind: ['127.0.0.1:3000']
+  threads: 1
+  max_requests: 0
+  group: 0
+  raw_paste_global_conf: []
+  worker_class: eventlet
+  max_requests_jitter: 0
+  check_config: False
+  accesslog: None
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicornDEBUG.log
+  when_ready: <function WhenReady.when_ready at 0x7fa2a539d2f0>
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7fa2a53a1488>
+  daemon: False
+  forwarded_allow_ips: ['127.0.0.1']
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  enable_stdio_inheritance: False
+  on_starting: <function OnStarting.on_starting at 0x7fa2a5391f28>
+  on_reload: <function OnReload.on_reload at 0x7fa2a539d158>
+  pre_request: <function PreRequest.pre_request at 0x7fa2a539de18>
+  proxy_protocol: False
+  certfile: None
+  suppress_ragged_eofs: True
+  proc_name: None
+  syslog_prefix: None
+  preload_app: False
+  umask: 0
+  paste: None
+  statsd_host: None
+  worker_connections: 1000
+  graceful_timeout: 30
+  keepalive: 2
+  keyfile: None
+  capture_output: False
+  reload: False
+  do_handshake_on_connect: False
+  sendfile: None
+  tmp_upload_dir: None
+  limit_request_field_size: 8190
+  loglevel: debug
+  cert_reqs: 0
+  worker_abort: <function WorkerAbort.worker_abort at 0x7fa2a539dae8>
+  child_exit: <function ChildExit.child_exit at 0x7fa2a53a1158>
+  raw_env: []
+  syslog_facility: user
+  pre_exec: <function PreExec.pre_exec at 0x7fa2a539dc80>
+  backlog: 2048
+[2019-02-18 15:17:15 +0100] [23788] [INFO] Starting gunicorn 19.7.1
+[2019-02-18 15:17:15 +0100] [23788] [DEBUG] Arbiter booted
+[2019-02-18 15:17:15 +0100] [23788] [INFO] Listening at: http://127.0.0.1:3000 (23788)
+[2019-02-18 15:17:15 +0100] [23788] [INFO] Using worker: eventlet
+[2019-02-18 15:17:15 +0100] [23791] [INFO] Booting worker with pid: 23791
+[2019-02-18 15:17:15 +0100] [23788] [DEBUG] 1 workers
+[2019-02-18 15:17:17 +0100] [23791] [DEBUG] GET /homepage
+[2019-02-18 15:17:18 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:18 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:18 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /chat
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /getNotifiche
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /getImpegni
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /sidebarLeft
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /header
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /homepage
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:19 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:20 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:20 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:20 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:20 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:27 +0100] [23791] [DEBUG] POST /apriPaginaCliente
+[2019-02-18 15:17:27 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:27 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:27 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /anteprimaPreventivoEdile
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /anteprimaPreventivoFiniture
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /anteprimaPreventivoVarianti
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /pagamentiCliente
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /anteprimaContabilitaCantiere
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /getNotifiche
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /sidebarLeft
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /header
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:28 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /homepage
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:29 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:30 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:30 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:30 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:30 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:30 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:30 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:34 +0100] [23791] [DEBUG] GET /apriPreventivoEdile
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] GET /getNotifiche
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] GET /sidebarLeft
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] GET /header
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:35 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] GET /homepage
+[2019-02-18 15:17:36 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:37 +0100] [23791] [DEBUG] POST /socket.io/
+[2019-02-18 15:17:37 +0100] [23791] [DEBUG] GET /socket.io/
+[2019-02-18 15:17:37 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:37 +0100] [23791] [DEBUG] Closing connection. 
+[2019-02-18 15:17:58 +0100] [23788] [INFO] Handling signal: int
+[2019-02-18 15:17:59 +0100] [23791] [INFO] Worker exiting (pid: 23791)
+[2019-02-18 15:17:59 +0100] [23788] [INFO] Shutting down: Master
