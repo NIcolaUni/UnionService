@@ -1,6 +1,6 @@
 class PannelloRisultatiSelect{
 
-    constructor(){
+    constructor(int){
 
     }
 }
