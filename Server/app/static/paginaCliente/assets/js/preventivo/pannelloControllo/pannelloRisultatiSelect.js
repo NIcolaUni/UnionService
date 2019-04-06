@@ -1,0 +1,6 @@
+class PannelloRisultatiSelect{
+
+    constructor(){
+
+    }
+}
