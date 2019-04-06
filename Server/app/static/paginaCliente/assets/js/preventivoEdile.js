@@ -14,6 +14,13 @@ var lavToCtrl_changed = false;
 var arrayAssistenze = []; //memorizzo le assistenze originali di una lavorazione coi suoi dati;
                           // l'array ha la forma: [ [ id_riga_assistenza, nome_assistenza, costo, tipo_costo ], ... ]
 
+var mapRigheToMove = []; // usato per l'ordinamento con drag n drop
+var righeToMove = []; // usato per l'ordinamento con drag n drop
+var righeLavInOrdinamento = false; // usato per l'ordinamento con drag n drop
+
+var settoriInOrdinamento = false;
+var tbodyHiddenBuffer = []
+
 /********************************************************************************************/
 /* funzione per il debug */
 
@@ -190,7 +197,7 @@ var aggiungiNote = function($this){
 
     socketPreventivo.emit('inserisci_note', {   'numero_preventivo': numeroPreventivo,
                                                         'revisione': revisionePreventivo,
-                                                        'nota': $this.val() });
+                                                        'nota': $this.val().trim().replace(/\n/g, ""), });
 
 }
 
@@ -246,6 +253,7 @@ var rienumeraPagina = function( ){
         $('.'+classSettore+'_trSottolavorazione-'+oldNum).addClass(classSettore+'_trSottolavorazione-old'+oldNum);
         $('.'+classSettore+'_trSottolavorazione-'+oldNum).removeClass(classSettore+'_trSottolavorazione-'+oldNum);
 
+
         $(this).next('.trFoot'+oldNum).addClass('trFoot-old'+oldNum);
         $(this).next('.trFoot'+oldNum).removeClass('trFoot'+oldNum);
 
@@ -283,10 +291,25 @@ var rienumeraPagina = function( ){
     });
 
     /* effettuo la stessa operazione di ridenominazione su arrayAssistenze */
-
+    var tmpArrayAssistenze = [];
     $.each(arrayAssistenze, function(index, el){
         el[0] = el[0].split('_trBody-')[0]+'_trBody-old'+el[0].split('_trBody-')[1];
+        tmpArrayAssistenze.push(el);
     });
+
+    arrayAssistenze = tmpArrayAssistenze;
+
+
+    var tmpMapRigheToMove = []
+    $.each(mapRigheToMove, function(index, el){
+        var elSplitted = el.split('_trSottolavorazione-')
+        el =elSplitted[0]+'_trSottolavorazione-old'+elSplitted[1];
+
+        tmpMapRigheToMove.push(el);
+
+    });
+
+    mapRigheToMove=tmpMapRigheToMove;
 
 
     /*effettuo l'effettiva rienumerazione*/
@@ -334,6 +357,19 @@ var rienumeraPagina = function( ){
             $(this).addClass(typeOfDim);
         });
 
+        tmpMapRigheToMove = [];
+
+        $.each(mapRigheToMove, function(index, el){
+
+            if( el == classSettore+'_trSottolavorazione-old'+ oldNum ){
+                el = classSettore+'_trSottolavorazione-'+counter;
+            }
+
+            tmpMapRigheToMove.push(el);
+
+        });
+
+        mapRigheToMove = tmpMapRigheToMove;
 
         $oldSottolavorazioneRows.each(function(){
             $(this).removeClass(classSettore+'_trSottolavorazione-old'+oldNum);
@@ -772,6 +808,9 @@ var modificaNomeSottolavorazione = function($this){
     var ordineSottolav = classRowSottolav[1].split('-')[1];
     var nome_modificato =  $this.parent().parent().children('.tdNomeSottolavorazione').children('textarea').val();
 
+    nome_modificato=nome_modificato.trim().replace(/\n/g, "");
+
+
     if( !disabilitaSocketio ){
         socketPreventivo.emit("modifica_nome_sottolavorazione",
             {
@@ -791,50 +830,7 @@ var modificaNomeSottolavorazione = function($this){
 
     var nome_originario = $('#'+tmp[0]+'_trBody-'+tmp[1]+ ' td.tdLavorazione').children('textarea').val();
 
-    /* Trasformo la sottolavorazione in lavorazione se non lo è gia:
-        -creo una nuova lavorazione
-        -riordino */
 
-/*
-    if(!$('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).hasClass('trBody') && nome_originario != nome_modificato ){
-        sottolavFirstCol = $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children().first().html();
-
-        $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children().first().addClass('firstCol');
-        $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children().first().addClass('firstCol'+(ordineLavorazioni));
-        $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children().first().html( '<label>'+(ordineLavorazioni)+'<label>');
-
-
-        var costoUnitario = $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children('td.tdCostoUnitario').html().split(' ')[1];
-        var settore = classRowSottolav[0].split('_trSottolavorazione-')[0].split('-')[1];
-        $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).attr('id', 'settore-'+settore+'_trBody-'+(ordineLavorazioni));
-        $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).addClass('trBody');
-        $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).addClass('trSottolav');
-        var nome_settore = $('.trHead.settore-'+0).children('.titleSettoreTd').first().html();
-
-        /*registro una nuova lavorazione nel database*/
- /*       if( !disabilitaSocketio ){
-            socketPreventivo.emit("add_nuova_lavorazione",
-                {
-                    "numero_preventivo" : numeroPreventivo,
-                    "revisione" : revisionePreventivo,
-                    "settore" : nome_settore,
-                    "lavorazione" : $this.parent().parent().children('.tdNomeSottolavorazione').children('textarea').val(),
-                    "unitaMisura" : $this.parent().parent().children('td.tdUnita').html(),
-                    "ordine": ordineLavorazioni,
-                    "prezzoUnitario" : costoUnitario
-
-                }
-             );
-        }
-*/
-
-        /*rinumera tutte le lavorazione*/
-  /*      rienumeraPagina();
-        $('.'+classRowSottolav[0]+'.'+classRowSottolav[1]).children().first().append('<a onclick="eliminaSottolavorazione($(this), \'mq\')" class="delSottolavorazione fa fa-trash"></a>');
-        $('.inputRicarico').trigger('input');
-
-        ordineLavorazioni++;
-    }*/
 
 }
 
@@ -922,7 +918,7 @@ var aggiungiSottolavorazione = function($this, unitaMisura, costoLavorazione, co
 /********************************************************************************************/
 var modificaNomeLavorazione = function($this){
 
-    var nuovoValore = $this.val();
+    var nuovoValore = $this.val().trim().replace(/\n/g, "");
     var ordineLav = $this.parent().parent().children('td.firstCol').children('label').text();
     var ordineSettore = $this.parent().parent().attr('id').split('_trBody-')[0].split('-')[1];
 
@@ -1471,6 +1467,164 @@ var aggiungiRigaCopia = function( numeroPreventivoParametro, revisionePreventivo
 
 }
 
+/********************************************************************************************/
+
+var mostraFootLav = function(){
+
+
+    $('.trBody').each(function(){
+        var $lavRow = $(this);
+        var idLavorazioneSplitted = $(this).attr('id').split('_trBody-');
+        var sottolavorazioniAssociate = idLavorazioneSplitted[0]+'_trSottolavorazione-'+idLavorazioneSplitted[1];
+
+        $.each(mapRigheToMove, function(index, el){
+            if(sottolavorazioniAssociate == el){
+                var righeToMoveLenght = righeToMove[index].length;
+
+                while( righeToMoveLenght != 0 ){
+                    $lavRow.after(righeToMove[index][righeToMoveLenght-1]);
+                    righeToMoveLenght--;
+                }
+            }
+
+        });
+        $(this).children('td.tdLavorazione').children('div.divNomeAssistenza').show();
+    });
+
+
+}
+
+/********************************************************************************************/
+
+var nascondiFootLav = function($this){
+
+    var trbodyParent = $this.parent();
+    var tmpRowBuffer = [];
+    var tmpMapBuffer = [];
+
+    trbodyParent.children('.trBody').each(function(){
+        var idLavorazioneSplitted = $(this).attr('id').split('_trBody-');
+        var sottolavorazioniAssociate = idLavorazioneSplitted[0]+'_trSottolavorazione-'+idLavorazioneSplitted[1];
+
+        //copio in tmp2 tutte le righe dele sottolav e il footer di una riga lavorazione per poterli poi eliminare
+
+        var tmp2 = [];
+        $('.'+sottolavorazioniAssociate).each(function(){
+            tmp2.push($(this));
+
+        });
+
+        tmp2.push($('.trFoot'+idLavorazioneSplitted[1]));
+
+        //tmpRowBuffer e' un array di array; ogni elemento e' un array contenente le righe associate ad una riga
+        tmpRowBuffer.push(tmp2);
+        tmpMapBuffer.push(sottolavorazioniAssociate);
+
+        righeToMove = tmpRowBuffer;
+        mapRigheToMove = tmpMapBuffer;
+
+        $('.'+sottolavorazioniAssociate).remove();
+        $('.trFoot'+idLavorazioneSplitted[1]).remove();
+
+        $(this).children('td.tdLavorazione').children('div.divNomeAssistenza').hide();
+
+
+    });
+
+
+
+
+}
+
+/*******************************************************************************************/
+
+var startStopOrdinamentoLavorazioni = function($this){
+
+    if( righeLavInOrdinamento ){
+        righeLavInOrdinamento = false;
+        mostraFootLav();
+        rienumeraPagina();
+
+        $("tbody").sortable("destroy");
+    }
+    else{
+        righeLavInOrdinamento = true;
+        nascondiFootLav($this);
+
+        $('tbody').sortable({
+
+            stop: function(){
+                rienumeraPagina();
+
+            }
+        });
+    }
+}
+
+/*******************************************************************************************/
+
+var mostraTbodySettori = function(){
+
+    $('#bodyPreventivo').children('thead').each(function(){
+
+        var $thead = $(this);
+
+        $.each(tbodyHiddenBuffer, function(index, el){
+            if( el.attr('class') == $thead.attr('class').split(' ')[0] ){
+                $thead.after(el);
+            }
+
+        });
+
+    });
+
+    rienumeraPagina();
+
+}
+
+/*******************************************************************************************/
+
+var nascondiTbodySettori = function(){
+
+    tbodyHiddenBuffer = [];
+    $('#bodyPreventivo').children('tbody').each(function(){
+        tbodyHiddenBuffer.push($(this)) ;
+        $(this).remove();
+    });
+
+
+}
+
+/******************************************************************************************/
+
+var startStopOrdinamentoSettori = function(){
+    if( settoriInOrdinamento ){
+        settoriInOrdinamento = false;
+        mostraTbodySettori();
+        $("#bodyPreventivo").sortable("destroy");
+    }
+    else{
+        settoriInOrdinamento = true;
+        nascondiTbodySettori();
+        $('#bodyPreventivo').sortable({
+            items: 'thead',
+            placeholder: 'drop-highlight',
+            stop: function(){
+                rienumeraPagina();
+
+            }
+        });
+    }
+
+}
+
+/******************************************************************************************/
+
+var bloccaDrugFunctionality = function(){
+    $('tBody').removeClass('ui-sortable');
+    $('tBody').removeClass('ui-sortable-handle');
+}
+
 /*******************************************************************************************/
 
 var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventivoParametro, settore, tipologia, costoLavorazione, unitaMisura,
@@ -1566,7 +1720,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
 
         //Preparo la riga della lavorazione
-        var rowsToAdd='<tr id="'+classSettore+'_trBody-'+ordineLavorazioni+'" class="trBody'+extraClass+'">'+
+        var rowsToAdd='<tr onclick="bloccaDrugFunctionality();" ondblclick="startStopOrdinamentoLavorazioni($(this));" id="'+classSettore+'_trBody-'+ordineLavorazioni+'" class="trBody'+extraClass+'">'+
                         '<td class="firstCol'+ordineLavorazioni+' firstCol">'+
                             '<label></label>'+
                             '<a onclick="eliminaLavorazione($(this))" class="delElement fa fa-trash"></a>'+
@@ -1628,7 +1782,7 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                             '<td class="footTot"></td>'+
                      '</tr>';
 
-        var sezioneSettore =  $('#bodyPreventivo').children('.'+classSettore);
+        var sezioneSettore =  $('#bodyPreventivo').children('thead').children('.'+classSettore);
 
         //se non e' gia' stata aggiunta una sezione lo faccio e subito sotto metto la lavorazione
         // e il relativo footer
@@ -1646,11 +1800,12 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
 
             $('#bodyPreventivo').append(
 
-                '<tr class="trHead '+classSettore+classSettoreCopia+'">'+
+                '<thead class="'+classSettore+'">'+
+                '<tr ondblclick="startStopOrdinamentoSettori();" class="trHead '+classSettore+classSettoreCopia+'">'+
                     '<td  colspan="'+colspanNum+'"  class="titleSettoreTd">'+settore+'</td>'+
                     '<td class="titleSettoreTd totaleSettore"></td>'+
                 '</tr>'+
-                '<tr class="trHead '+classSettore+'_head'+classSettoreCopia+'">'+
+                '<tr class="trHead '+classSettore+'_head'+classSettoreCopia+' col_legenda">'+
                     '<th class="thPreventivo"></th>'+
                     '<th class="thPreventivo"></th>'+
                     '<th class="thPreventivo numColSmall">N</th>'+
@@ -1666,7 +1821,9 @@ var aggiungiRiga= function($button, numeroPreventivoParametro, revisionePreventi
                     '<th class="thPreventivo numColSmall thAdded">ricarico</th>'+
                     '<th class="thPreventivo">Totale <br/> Cliente</th>'+
                 '</tr>'+
-                rowsToAdd
+                '</thead><tbody class="'+classSettore+'">'+
+                rowsToAdd+
+                '</tbody>'
 
             );
 

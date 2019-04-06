@@ -1035,12 +1035,11 @@ class PdfGenerator():
                                               \\hline
                                               \\begin{spacing}{0.3}
                                                 \\textbf{NOTE} \\newline
-                                                \\hfill
+                                                \\vspace{2.5mm}
                                     '''
-            if preventivo.note is not None:
-                latexScript += '{\\centering ' + preventivo.note + '}'
-            else:
-                latexScript += '{\\centering }'
+            if preventivo.note is not None and preventivo.note != '':
+                latexScript += preventivo.note
+
 
             latexScript += '''
                                               \\end{spacing}&
@@ -1687,7 +1686,7 @@ class PdfGenerator():
                   mode='w') as fileTex:
             fileTex.write(latexScript)
 
-        os.system("cd app/preventiviLatexDir && pdflatex {}".format(nomeFileTex))
+        os.system("cd app/preventiviLatexDir && pdflatex {}&".format(nomeFileTex))
 
         # if chiudiPreventivo:
         #    os.system("cd app/preventiviLatexDir && rm *.tex *.aux *.log")

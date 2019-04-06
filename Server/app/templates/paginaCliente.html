@@ -193,6 +193,7 @@
 						<section id="intro" class="wrapper style1 fullscreen fade-up">
 							<div class="inner">
 								<h1 id="nomeCliente">{{cliente.nome}} {{cliente.cognome}}</h1>
+								<a class="nomeCliente fa fa-edit editDato" onclick="modificaDatiCliente($(this))" style="display:none"></a>
 								<a id="showDifficolta" class="fa fa-user"></a>
 								<span class="difficoltaTitle" style="display:none">Livello: </span>
 								{% if cliente.difficolta == "facile" %}
@@ -206,13 +207,20 @@
 								<div style="display:none" class="changeLivelloCliente">
 									<div class="levelUp changeLev">
 										<a class="fa fa-angle-up"></a>
-									</div>
+									</div>onchange="modificaDatiCliente($(this))"
 									<div class="levelDown changeLev">
 										<a class="fa fa-angle-down"></a>
 									</div>
 								</div>
 
-								<span id="tipologiaCliente">	Tipologia: {{cliente.tipologia}} </span>
+								<div id="tipologiaClienteContainer">
+									<span id="tipologiaCliente">	Tipologia: {{cliente.tipologia}} </span>
+									<select id="selectTipologiaCliente" onchange="modificaDatiCliente($(this))" style="display:none">
+										<option>immobiliare</option>
+										<option>privato</option>
+										<option>azienda</option>
+									</select>
+								</div>
 
 								<div class="row">
 									<div class="col-md-6">
@@ -220,22 +228,22 @@
 
 											<li>
 												<h3 class="titoloDatoCliente">Indirizzo:</h3>
-												<a class="fa fa-edit editDato" style="display:none"></a><br/>
+												<a class="indirizzo fa fa-edit editDato" onclick="modificaDatiCliente($(this))" style="display:none"></a><br/>
 												<span>{{cliente.indirizzo}}</span>
 											</li>
 											<li>
 												<h3 class="titoloDatoCliente">Email:</h3>
-												<a class="fa fa-edit editDato" style="display:none"></a><br/>
-												<a href="#">{{cliente.email}}</a>
+												<a class="email fa fa-edit editDato" onclick="modificaDatiCliente($(this))" style="display:none"></a><br/>
+												<span>{{cliente.email}}</a>
 											</li>
 											<li>
 												<h3 class="titoloDatoCliente">Telefono:</h3>
-												<a class="fa fa-edit editDato" style="display:none"></a><br/>
+												<a class="telefono fa fa-edit editDato" onclick="modificaDatiCliente($(this))" style="display:none"></a><br/>
 												<span>{{cliente.telefono}}</span>
 											</li>
 											<li>
 												<h3 class="titoloDatoCliente">Lavorazione in corso:</h3>
-													<a class="fa fa-edit editDato" style="display:none"></a><br/>
+													<a class="lavorazione fa fa-edit editDato" onclick="modificaDatiCliente($(this))" style="display:none"></a><br/>
 													<span>{{cliente.lavorazione}}</span>
 											</li>
 											<li id="sopralluogoLiEl">
@@ -344,6 +352,7 @@
 
 				<script>
 
+					$('#selectTipologiaCliente').val('{{cliente.tipologia}}');
 
 
 					$('#header > a').css('border-bottom', 'None' );

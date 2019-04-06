@@ -137,7 +137,7 @@ class PreventivoEdile(PreventivoDBmodel):
     def __init__(self, numero_preventivo, data, nome_cliente, cognome_cliente,
                  indirizzo_cliente, dipendente_generatore, intervento_commessa, indirizzo_commessa,  comune_commessa,
                  ricarico_generale,
-                 stato=True, note=None, revisione=1):
+                 stato=True, note='', revisione=1):
 
         oldCommessa = __Commessa__.query.filter_by(numero_preventivo=numero_preventivo,
                                                    intervento=intervento_commessa).first()

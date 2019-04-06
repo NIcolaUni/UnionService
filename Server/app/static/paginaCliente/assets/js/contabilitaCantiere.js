@@ -305,7 +305,6 @@ var modificaArtigianoLavorazione = function($this){
     else if( tipologia == 'Budget Imprevisti'){
         tipologia='imprevisti';
         ordine_lav = parseInt($riga.children('td.tdOrdineImprevisto').children('label.ordineImprevisto').text())
-        alert(ordine_lav)
     }
 
     if(!disabilitaSocketIo)
@@ -459,7 +458,7 @@ $(function(){
         });
 
         var $rowToInsert= '<tr class="trBody imprevisti"> \
-                                    <td><label class="ordineImprevisto">'+ordine_imprevisto+'</label><a onclick="eliminaImprevisto($(this))" class="fa fa-trash eliminaImprevisto"></a></td> \
+                                    <td class="tdOrdineImprevisto"><label class="ordineImprevisto">'+ordine_imprevisto+'</label><a onclick="eliminaImprevisto($(this))" class="fa fa-trash eliminaImprevisto"></a></td> \
                                     <td class="tdNomeImprevisto"><textarea  oninput="modificaNomeImprevisto($(this))" class="nomeImprevisto"></textarea></td> \
                                     <td class="tdArtigiano"> \
                                         <select onchange="modificaArtigianoLavorazione($(this))" class="selectArtigiano">'+

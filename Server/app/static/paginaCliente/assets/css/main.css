@@ -4332,7 +4332,7 @@ button.elementPreventivo {
   }
 
   #tipologiaCliente{
-    float: right;
+    //float: right;
   }
 
   .titoloDatoCliente{
@@ -4340,7 +4340,8 @@ button.elementPreventivo {
   }
 
   .editDato{
-    margin-left: 5%;
+    margin-left: 1%;
+    cursor: pointer;
   }
 
   .changeLivelloCliente {
@@ -4406,5 +4407,21 @@ td.statusPagamento.green{
 
 td.statusPagamento.red{
     color: red;
+}
+
+span.checkPagamento {
+    margin-left: 16%;
+}
+
+select#selectTipologiaCliente {
+    width: 60%;
+    display: inline-block;
+
+}
+
+div#tipologiaClienteContainer {
+
+    display: inline-block;
+    float: right;
 }
 

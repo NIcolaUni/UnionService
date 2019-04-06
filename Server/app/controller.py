@@ -189,9 +189,11 @@ def contabilita():
     imprevisti = Imprevisti.query.filter_by(numero_preventivo=num_prev, revisione=revisione).order_by(Imprevisti.ordine).all()
     artigiani = Artigiano.query.all()
 
+    codicePreventivo = preventivo.calcolaCodicePreventivo()
+
     return render_template('contabilitaCantiere.html', dipendente=dip, contabilita=contabilita, cliente=cliente,
                            contabilitaCantiere=True, numero_preventivo=num_prev, revisione=revisione,
-                            pagamenti=pagamenti, imprevisti=imprevisti, artigiani=artigiani)
+                            pagamenti=pagamenti, imprevisti=imprevisti, artigiani=artigiani, codicePreventivo=codicePreventivo)
 
 
 @server.route('/contabilitaCantiere/<num_prev>/<revisione>/')
@@ -568,10 +570,10 @@ def accoglienza(error):
 
     if request.method == 'POST':
 
-        app.server.logger.info('\n\n\nprevalidate\n\n')
         if app.accoglienzaForm.validate_on_submit():
-            app.server.logger.info('\n\n\nvalidato\n\n')
-            ClienteAccolto.registraCliente(nome=app.accoglienzaForm.nome.data, cognome=app.accoglienzaForm.cognome.data, indirizzo=app.app.accoglienzaForm.indirizzo.data,
+            ClienteAccolto.registraCliente(nome=app.accoglienzaForm.nome.data, cognome=app.accoglienzaForm.cognome.data, #indirizzo=app.app.accoglienzaForm.indirizzo.data,
+                                           via= app.accoglienzaForm.via.data, civico =app.accoglienzaForm.civico.data,
+                                           regione=app.accoglienzaForm.regione.data, cap= app.accoglienzaForm.cap.data,
                                            telefono=app.accoglienzaForm.telefono.data, email=app.accoglienzaForm.email.data, difficolta=app.accoglienzaForm.difficolta.data,
                                            tipologia=app.accoglienzaForm.tipologia.data, referenza=app.accoglienzaForm.referenza.data, sopraluogo=app.accoglienzaForm.sopraluogo.data,
                                            lavorazione=app.accoglienzaForm.lavorazione.data, commerciale=current_user.get_id())
@@ -1985,6 +1987,52 @@ def handle_cambia_livello_difficolta(message):
 
     ClienteAccolto.modificaDifficolta(nome=message['nome'], cognome=message['cognome'],
                                       indirizzo=message['indirizzo'], valore=message['valore'])
+
+@socketio.on('modificaDatiCliente', namespace='/cliente')
+def handle_modificaDatiCliente(message):
+
+    app.server.logger.info('\n\n\neNTRROOoooo\n\n')
+
+    if message['toMod'] == 'indirizzo':
+        indirizzo = '{} {}, {} {}'.format(message['val1'], message['val2'], message['val3'], message['val4'], )
+
+        ClienteAccolto.modificaDatiCliente(nome=message['oldNome'], cognome=message['oldCognome'],
+                                            indirizzo=message['oldIndirizzo'], modifica={
+                                                                                           'indirizzo': indirizzo,
+                                                                                           'via': message['val1'],
+                                                                                           'civico' : message['val2'],
+                                                                                           'regione' : message['val3'],
+                                                                                           'cap': message['val4']})
+
+    elif message['toMod'] == 'telefono':
+        ClienteAccolto.modificaDatiCliente(nome=message['oldNome'], cognome=message['oldCognome'],
+                                           indirizzo=message['oldIndirizzo'], modifica={
+                                                                                            'telefono': message['val1']
+                                                                                        })
+
+    elif message['toMod'] == 'email':
+        ClienteAccolto.modificaDatiCliente(nome=message['oldNome'], cognome=message['oldCognome'],
+                                           indirizzo=message['oldIndirizzo'], modifica={
+                                                                                            'email': message['val1']
+                                                                                        })
+    elif message['toMod'] == 'nomeCliente':
+
+        ClienteAccolto.modificaDatiCliente(nome=message['oldNome'], cognome=message['oldCognome'],
+                                           indirizzo=message['oldIndirizzo'], modifica={
+                                                                                            'nome': message['val1'],
+                                                                                            'cognome': message['val2']
+                                                                                        })
+    elif message['toMod'] == 'lavorazione':
+        ClienteAccolto.modificaDatiCliente(nome=message['oldNome'], cognome=message['oldCognome'],
+                                           indirizzo=message['oldIndirizzo'], modifica={
+                                                                                            'lavorazione': message['val1']
+                                                                                       })
+    elif message['toMod'] == 'tipologia':
+        ClienteAccolto.modificaDatiCliente(nome=message['oldNome'], cognome=message['oldCognome'],
+                                           indirizzo=message['oldIndirizzo'], modifica={
+                'tipologia': message['val1']
+            })
+
 
 @socketio.on('checkaRata', namespace='/pagamentiCliente')
 def handle_checkaRata(message):

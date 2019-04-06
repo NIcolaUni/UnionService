@@ -53,7 +53,11 @@ class DipFittizioForm(FlaskForm):
 class ClienteAccoltoForm(FlaskForm):
     nome = StringField("Nome del cliente", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
     cognome = StringField("Cognome del cliente", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=30)])
-    indirizzo = StringField("Indirizzo residenza", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+   # indirizzo = StringField("Indirizzo residenza", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+    via = StringField("Via", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+    civico = StringField("Civico", validators=[DataRequired("Campo obbligatorio!"), Length(min= 1, max=6)])
+    regione = StringField("Regione", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=120)])
+    cap = StringField("CAP", validators=[DataRequired("Campo obbligatorio!"), Length(min= 3, max=10)])
     telefono = StringField("Telefono", validators=[DataRequired("Campo obbligatorio!"), Length(min= 8, max=12)])
     email = StringField("Email")
     difficolta = RadioField("Difficoltà cliente", choices=[("facile","Facile"), ("media", "Media"), ("alta", "Alta")])

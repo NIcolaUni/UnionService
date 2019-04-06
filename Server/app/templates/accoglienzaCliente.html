@@ -19,10 +19,26 @@
 			        {{form.cognome}}
 				</div>
 
-                <div class="wrap-input100 " >
-					<span class="label-input100">Indirizzo<span class="asteriscoRosso">*</span></span>
-		            {{form.indirizzo}}
+                <div class="wrap-input100 rs1-wrap-input100 " >
+					<span class="label-input100">Via<span class="asteriscoRosso">*</span></span>
+			        {{form.via}}
 				</div>
+
+                <div class="wrap-input100 rs1-wrap-input100 " >
+					<span class="label-input100">Civico<span class="asteriscoRosso">*</span></span>
+			        {{form.civico}}
+				</div>
+
+                <div class="wrap-input100 rs1-wrap-input100 " >
+					<span class="label-input100">Regione<span class="asteriscoRosso">*</span></span>
+			        {{form.regione}}
+				</div>
+
+                <div class="wrap-input100 rs1-wrap-input100 " >
+					<span class="label-input100">CAP<span class="asteriscoRosso">*</span></span>
+			        {{form.cap}}
+				</div>
+
 
                 <div class="wrap-input100 rs1-wrap-input100 " >
 					<span class="label-input100">Telefono<span class="asteriscoRosso">*</span></span>
@@ -290,17 +306,62 @@
             {% endfor %}
 
     /*====================================================================================================================*/
-    /*=================================Imposta stampa errore indirizzo=====================================================*/
+    /*=================================Imposta stampa errore via=====================================================*/
 
             notValidated=true;
-            {% for error in form.indirizzo.errors %}
+            {% for error in form.via.errors %}
 
             if(notValidated){
-                $("div:has(> input#indirizzo)").addClass("validate-input");
+                $("div:has(> input#via)").addClass("validate-input");
                 notValidated=false;
             }
-            $("div:has(> input#indirizzo)").attr("data-validate", "{{error}}");
-            showValidate($("input#indirizzo"));
+            $("div:has(> input#via)").attr("data-validate", "{{error}}");
+            showValidate($("input#via"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+    /*=================================Imposta stampa errore civico=====================================================*/
+
+            notValidated=true;
+            {% for error in form.civico.errors %}
+
+            if(notValidated){
+                $("div:has(> input#civico)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#civico)").attr("data-validate", "{{error}}");
+            showValidate($("input#civico"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+    /*=================================Imposta stampa errore regione=====================================================*/
+
+            notValidated=true;
+            {% for error in form.regione.errors %}
+
+            if(notValidated){
+                $("div:has(> input#regione)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#regione)").attr("data-validate", "{{error}}");
+            showValidate($("input#regione"));
+
+            {% endfor %}
+
+    /*====================================================================================================================*/
+    /*=================================Imposta stampa errore cap=====================================================*/
+
+            notValidated=true;
+            {% for error in form.cap.errors %}
+
+            if(notValidated){
+                $("div:has(> input#cap)").addClass("validate-input");
+                notValidated=false;
+            }
+            $("div:has(> input#cap)").attr("data-validate", "{{error}}");
+            showValidate($("input#cap"));
 
             {% endfor %}
 
@@ -345,11 +406,11 @@
             {% for error in form.lavorazione.errors %}
 
             if(notValidated){
-                $("div:has(> input#lavorazione)").addClass("validate-input");
+                $("div:has(> textarea#lavorazione)").addClass("validate-input");
                 notValidated=false;
             }
-            $("div:has(> input#lavorazione)").attr("data-validate", "{{error}}");
-            showValidate($("input#lavorazione"));
+            $("div:has(> textarea#lavorazione)").attr("data-validate", "{{error}}");
+            showValidate($("textarea#lavorazione"));
 
             {% endfor %}
 
