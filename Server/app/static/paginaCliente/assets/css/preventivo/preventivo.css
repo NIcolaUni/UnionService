@@ -1,4 +1,27 @@
-#settore preventivo
+//pannelloRisultatiSelect
+
+#pannelloRisultati {
+    display: block;
+    position: relative;
+    height: 400px;
+    width: 40%;
+    margin-left: 20%;
+    margin-top: 20px;
+}
+
+#listaRisultati {
+    display: inline-block;
+    list-style-type: none;
+    height: 100%;
+    width: 100%;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    overflow-y: scroll;
+}
+
+//settore preventivo
 
 .trHead {
  background-color: lightslategrey;
@@ -6,7 +29,7 @@
 
 
 
-#cella preventivo
+//cella preventivo
 
 .tdPreventivo {
     color: black;

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="it">
+    <head>
+        <meta chatset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Gestionale Aziendale UnionService</title>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="static/bootstrap/4.3.1/css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="static/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="static/home_dipendente/css/home_dipendente.css">
+        <link rel="stylesheet" href="static/home_dipendente/css/header.css">
+        <link rel="stylesheet" href="static/home_dipendente/css/control_panel.css">
+        <link rel="stylesheet" href="static/home_dipendente/css/note.css">
+
+
+    </head>
+
+    <body>
+
+        <div class="container-fluid" id="page-container">
+            <nav class="navbar navbar-expand-sm header_home">
+
+                <div  class="header-section" id="header_left">
+
+                     <div class="nav-item" id="control_panel_icon">
+                        <a class="nav-link headerItem fa fa-angle-double-right"></a>
+                    </div>
+                    <div class="nav-item" id="logo">
+                        <a id="logoAzienda"><img src="static/img/logo-azienda.png"></a>
+                    </div>
+
+
+
+                </div>
+                <div class="header-section" id="header_right">
+                    <div class="nav-item" id="search_client_form">
+                            <form class="form-inline">
+                                <input class="form-control mr-sm-2" type="search" placeholder="Nome cliente" aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
+                            </form>
+                        </div>
+
+                        <div id="raggruppamento-header-right" class="raggruppamento-nav-item">
+                            <div class="nav-item" id="chat_icon">
+                                <a class="nav-link headerItem fa fa-comments-o"></a>
+                            </div>
+                            <div class="nav-item" id="alert_icon">
+                                <a class="nav-link headerItem fa fa-bell"></a>
+                            </div>
+
+                        </div>
+
+                </div>
+
+            </nav>
+
+            <nav  id="miniscreen-base_activity" class="navbar d-sm-block d-md-none responsive-menu">
+                <div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="fa fa-bars"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Agenda</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Calendario</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Gestione dipendenti</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Accogli cliente</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Invia mail</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="control-panel">
+                <div id="header-section" class="section-control-panel"></div>
+                <div id="content-section" class="section-control-panel"></div>
+            </div>
+
+
+            <div id="row-pagina" class="row">
+
+                <!-- colonna eventi -->
+                <div class="col-md-2 d-md-block d-sm-none  col-left">
+                    <div id="base_activity_container" class="container-fluid">
+                        <div id="base_activity_slider_wrapper" class="slider-wrapper">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8 col-sm-10">
+
+                    <div id="title_space" class="row">
+                        <h2>Welcome  <span> Nicola Pancheri</span></h2>
+                          <p> <span class="orange">Commerciale
+                           dirigente </span></p>
+
+                    </div>
+
+                    <div id="note_space" class="row">
+
+                        <div id="note_container">
+
+                            <div id="note_title" class="row">
+                                <h3>NOTE del GIORNO</h3>
+                            </div>
+                            <div id="note_content" class="row">
+                                 <div id="addNotaBtn" onclick="apriAggiungiNota()">
+                                     <a class="fa fa-plus"></a>
+
+                                     <div id="componi_nota" style="display:none">
+                                         <div id="container_textarea_nota" class="row">
+                                            <textarea id="textarea_nota" placeholder="Testo..."></textarea>
+                                         </div>
+                                         <div id="area_destinatario_nota" class="row">
+                                            <div id="container_select_destinatario_nota">
+                                                <select id="select_destinatario_nota">
+                                                    <option>gigi</option>
+                                                    <option>franco</option>
+                                                    <option>luica</option>
+                                                </select>
+
+                                            </div>
+                                            <div id="control_area_destinatario_nota">
+                                                <div id="annulla_nota" class="control_button_destinatario_note"><a class="fa fa-close" style="color:red"></a></div>
+
+                                                <div id="conferma_nota" class="control_button_destinatario_note"><a class="fa fa-check" style="color:green"></a></div>
+
+                                            </div>
+
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div id="area_note_registrate">
+
+                                     <div class="nota_personale nota_dipendente">
+
+                                        <div class="checkbox_area_personale">
+                                            <div class="checkbox_container">
+                                                <input class="hidden_checkbox_note" type="checkbox" id="test1" onclick="sottolineaNotaVisionata($(this))" />
+                                                <label class="checkbox_note" for="test1"></label>
+                                            </div>
+                                            <div class="delNota"><a class="fa fa-close"></a></div>
+                                        </div>
+                                        <div class="messaggio_nota_container">
+                                          <label class="messaggio_nota"> Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullamco laboriosam, nisi ut aliquid ex ea commodi consequatur. Duis aute irure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</label>
+                                        </div>
+
+
+                                     </div>
+                                     <div class="nota_dirigente nota_dipendente">
+                                       <!-- <input class="hidden_checkbox_note" type="checkbox" value="">
+                                        <span class="checkbox_note"><i class="checked_sign_note"></i></span>-->
+                                        <div class="checkbox_area_dirigente">
+                                            <div class="checkbox_container">
+                                                <input class="hidden_checkbox_note" type="checkbox" id="test2" onclick="sottolineaNotaVisionata($(this))" />
+                                                <label class="checkbox_note" for="test2"></label>
+                                            </div>
+                                            <div class="nome_dirigente_note"> Mario Rossi: </div>
+                                            <div class="delNota"><a class="fa fa-close"></a></div>
+                                        </div>
+                                        <div class="messaggio_nota_container">
+                                          <label class="messaggio_nota"> Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrum exercitationem ullamco laboriosam, nisi ut aliquid ex ea commodi consequatur. Duis aute irure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</label>
+                                        </div>
+
+
+                                     </div>
+                                     <!--<div class="nota_dirigente">
+
+                                     </div>-->
+                                 </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="col-md-2 col-sm-2 col-right">
+                    <div id="chat_container" class="container-fluid">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="static/jquery/3.4.1/js/jquery.min.js"></script>
+        <script src="static/popper/1.14.7/js/popper.min.js"></script>
+        <script src="static/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="static/home_dipendente/js/home_dipendente.js"></script>
+
+        <script>
+            aggiungiFunzionalitaDipendenteBase();
+            $('.toggle-menu').click(function(){
+                $('.show-menu').slideToggle( "slow" );
+
+            });
+
+/*
+	$('.show-menu a').click(function() {
+    	$('.show-menu').fadeOut('slow');
+  });*/
+
+        </script>
+    </body>
+</html>
+
+

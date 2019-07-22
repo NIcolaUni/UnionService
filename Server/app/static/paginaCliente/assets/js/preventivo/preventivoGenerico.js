@@ -1,8 +1,12 @@
 class PreventivoGenerico{
 
-    constructor(nomiColonna, intestazioneSettore, grandezzeCelle, listaColonneVisibili){
-        this.tabellaPreventivo = TabellaPreventivo(nomiColonna, intestazioneSettore, grandezzeCelle, listaColonneVisibili);
+    constructor(nomiColonna, intestazioneSettore, grandezzeCelle, listaColonneVisibili,
+                    listaOptionsSelects, listaNomiElementi, listaIdSettoriPerElementi){
+
+        this.tabellaPreventivo = TabellaPreventivo(nomiColonna, intestazioneSettore, grandezzeCelle, listaColonneVisibili, this);
+        this.pannelloControllo = PannelloControllo(listaOptionsSelects, listaNomiElementi, listaIdSettoriPerElementi, this)
         this.celleNascoste = false;
+
     }
 
     hideShowCelleNascoste(){
