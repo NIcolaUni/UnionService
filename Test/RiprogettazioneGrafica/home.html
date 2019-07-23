@@ -11,99 +11,54 @@
 
         <link rel="stylesheet" href="static/font-awesome/4.7.0/css/font-awesome.min.css">
 
+        <!-- css applicazione -->
+        <link rel="stylesheet" href="static/css/main.css">
         <link rel="stylesheet" href="static/home_dipendente/css/home_dipendente.css">
         <link rel="stylesheet" href="static/home_dipendente/css/note.css">
+        <link rel="stylesheet" href="static/header/css/header.css">
+        <link rel="stylesheet" href="static/control_panel/css/control_panel.css">
+        <link rel="stylesheet" href="static/attivita_base/css/attivita_base.css">
 
 
     </head>
 
     <body>
 
-        <div class="container-fluid" id="page-container">
-            <nav class="navbar navbar-expand-sm header_home">
-                <div class="container-fluid">
 
-                    <div class="navbar-nav ml-auto my-2 my-lg-0" id="header_left">
-
-                        <div class="nav-item" id="control_bar_icon">
-                            <a class="nav-link headerItem fa fa-angle-double-right"></a>
-                        </div>
-                        <div class="nav-item" id="logo">
-
-                        </div>
-
-                    </div>
-                    <div class="navbar-nav ml-auto my-2 my-lg-0" id="header_right">
-
-
-                        <div class="nav-item" id="search_client_icon">
-                            <a class="nav-link headerItem fa fa-search"></a>
-                        </div>
-                        <div class="nav-item" id="alert_icon">
-                            <a class="nav-link headerItem fa fa-bell"></a>
-                        </div>
-                      <!--  <div class="nav-item" id="resize_page_icon">
-                            <a class="nav-link headerItem fa fa-angle-down" style="font-size:48px;"></a>
-                        </div>-->
-
-                    </div>
-                </div>
-            </nav>
-
-            <div id="row-pagina" class="row">
-
-                <!-- colonna eventi -->
-                <div class="col-2 col-left">
-                    <div id="base_activity_container" class="container-fluid">
-                        <div id="base_activity_slider_wrapper" class="slider-wrapper">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-8">
-
-                    <div id="title_space" class="row">
-                        <h2>Welcome  <span> Nicola Pancheri</span></h2>
-                          <p> <span class="orange">Commerciale
-                           dirigente </span></p>
-
-                    </div>
-
-                    <div id="note_space" class="row">
-
-
-                    </div>
-
-
-                </div>
-
-                <div class="col-2 col-right">
-                    <div id="chat_container" class="container-fluid">
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="static/jquery/3.3.1/js/jquery.slim.min.js"></script>
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="static/jquery/3.4.1/js/jquery.min.js"></script>
         <script src="static/popper/1.14.7/js/popper.min.js"></script>
         <script src="static/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script src="static/home_dipendente/js/home_dipendente.js"></script>
-        <script src="static/home_dipendente/js/note/oggettoBase.js"></script>
+
+        <!--JS APPLICAZIONE -->
+        <script src="static/js/oggettoBase.js"></script>
+
+
+        <!-- control_panel -->
+        <script src="static/control_panel/js/control_panel.js"></script>
+
+        <!-- header -->
+        <script src="static/header/js/areaNotifiche.js"></script>
+        <script src="static/header/js/raggruppamentoIcone.js"></script>
+        <script src="static/header/js/search_bar.js"></script>
+        <script src="static/header/js/header.js"></script>
+
+        <!-- attività base -->
+        <script src="static/attivita_base/js/attivita_base.js"></script>
+
+        <!-- note -->
         <script src="static/home_dipendente/js/note/notaBase.js"></script>
         <script src="static/home_dipendente/js/note/notaPersonale.js"></script>
         <script src="static/home_dipendente/js/note/notaDirigente.js"></script>
         <script src="static/home_dipendente/js/note/settaNote.js"></script>
         <script src="static/home_dipendente/js/note/noteDipendente.js"></script>
+        <script src="static/home_dipendente/js/note/notePage.js"></script>
+
+        <script src="static/home_dipendente/js/home_dipendente.js"></script>
+
 
         <script>
-            aggiungiFunzionalitaDipendenteBase();
-
-            var noteDip = new NoteDipendente(null);
-            noteDip.referenzaDOM.appendTo($('#note_space'));
-
+            var home_page = new Home_dipendente();
         </script>
     </body>
 </html>

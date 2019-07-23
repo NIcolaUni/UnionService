@@ -1,25 +1,23 @@
 class NoteDipendente extends OggettoBase {
-    constructor(oggettoGeneratore){
+    constructor(oggettoGeneratore, $where_to_append){
         super($('<div id="note_container"> \
                     <div id="note_title" class="row"> \
                         <h3>NOTE del GIORNO</h3> \
                     </div> \
                     <div id="note_content" class="row">\
-                    </div>'), oggettoGeneratore);
+                    </div>'), oggettoGeneratore, $where_to_append);
         this.nome='sono il padre'
         this.note = [];
         this.areaAggiungiNota = null;
         this.corpoListaNote = null;
-        this.costruisciCorpoListaNote();
         this.costruisciAreaAggiungiNota();
+        this.costruisciCorpoListaNote();
 
-        this.areaAggiungiNota.referenzaDOM.appendTo(this.referenzaDOM.children('#note_content'));
-        this.corpoListaNote.appendTo(this.referenzaDOM.children('#note_content'));
+
     }
 
     costruisciAreaAggiungiNota(){
-        var setta_note = new SettaNote(this, ['gigi', 'marco']);
-
+        var setta_note = new SettaNote(this, this.referenzaDOM.children('#note_content'),  ['gigi', 'marco']);
         this.areaAggiungiNota = setta_note;
 
     }
@@ -28,6 +26,7 @@ class NoteDipendente extends OggettoBase {
 
         var corpoListaNote = $('<div id="area_note_registrate"></div>');
         this.corpoListaNote = corpoListaNote;
+        this.corpoListaNote.appendTo(this.referenzaDOM.children('#note_content'));
     }
 
     equindi(){
@@ -108,15 +107,14 @@ class NoteDipendente extends OggettoBase {
         var nota = null;
 
         if( personale ){
-            nota = new NotaPersonale( this, messaggio,lastId+1);
+            nota = new NotaPersonale( this, this.corpoListaNote, messaggio,lastId+1);
 
 
         }
         else{
-            nota = new NotaDirigente( this, messaggio, lastId+1, dirigente);
+            nota = new NotaDirigente( this, this.corpoListaNote, messaggio, lastId+1, dirigente);
         }
 
-        nota.referenzaDOM.appendTo(this.corpoListaNote);
 
         this.note.push(nota);
 

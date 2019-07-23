@@ -1,0 +1,97 @@
+div#control-panel {
+    background: white;
+    width: 305px;
+    height: 88%;
+    position: fixed;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+
+}
+
+div#header-section {
+    height: 20%;
+    background: url('../../img/profile-menu.png');
+    background-size: cover;
+    padding: 15px;
+}
+
+div#content-section {
+    height: 80%;
+}
+
+#control-panel-foto-dip {
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    border: 2px solid #aaa38e;
+    margin-bottom: 25%;
+}
+
+#control-panel-nome-dip{
+    color: white;
+}
+
+#foto-dip{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.option-control_panel{
+    list-style-type: none;
+    height: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: 'robotolight';
+    color: #8e7f55;
+
+}
+
+.option-control_panel:hover {
+    background: #f7f7f7;
+}
+
+.option-control_panel a {
+    width: 100%;
+}
+
+.opzione-estentibile{
+    width: 85% !important;
+}
+
+#extends-database-options{
+    width: 10%;
+}
+
+.option-control_panel i {
+    margin-left: 5%;
+    font-style: normal;
+}
+
+#content-section > ul {
+    width: 100%;
+    padding: 15px;
+}
+
+/*
+.options-li{
+    height: unset;
+}*/
+
+li.nav-item.prezzario-option a {
+    color: #8e7f55;
+    text-align: left;
+}
+
+.prezzario-option a:hover{
+    background: #dad5d5;
+}
+
+li#databases-list-control-panel {
+    padding: 0;
+}
+
+ul.navbar-nav.databases-list {
+    padding: 15px;
+}

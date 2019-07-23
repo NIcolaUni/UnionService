@@ -11,9 +11,11 @@
 
         <link rel="stylesheet" href="static/font-awesome/4.7.0/css/font-awesome.min.css">
 
+        <!-- css applicazione -->
+        <link rel="stylesheet" href="static/css/main.css">
         <link rel="stylesheet" href="static/home_dipendente/css/home_dipendente.css">
-        <link rel="stylesheet" href="static/home_dipendente/css/header.css">
-        <link rel="stylesheet" href="static/home_dipendente/css/control_panel.css">
+        <link rel="stylesheet" href="static/header/css/header.css">
+        <link rel="stylesheet" href="static/control_panel/css/control_panel.css">
         <link rel="stylesheet" href="static/home_dipendente/css/note.css">
 
 
@@ -26,9 +28,7 @@
 
                 <div  class="header-section" id="header_left">
 
-                     <div class="nav-item" id="control_panel_icon">
-                        <a class="nav-link headerItem fa fa-angle-double-right"></a>
-                    </div>
+
                     <div class="nav-item" id="logo">
                         <a id="logoAzienda"><img src="static/img/logo-azienda.png"></a>
                     </div>
@@ -38,21 +38,24 @@
                 </div>
                 <div class="header-section" id="header_right">
                     <div class="nav-item" id="search_client_form">
-                            <form class="form-inline">
-                                <input class="form-control mr-sm-2" type="search" placeholder="Nome cliente" aria-label="Search">
-                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
-                            </form>
-                        </div>
+                        <form class="form-inline">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Nome cliente" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
+                        </form>
+                    </div>
 
-                        <div id="raggruppamento-header-right" class="raggruppamento-nav-item">
-                            <div class="nav-item" id="chat_icon">
-                                <a class="nav-link headerItem fa fa-comments-o"></a>
-                            </div>
-                            <div class="nav-item" id="alert_icon">
-                                <a class="nav-link headerItem fa fa-bell"></a>
-                            </div>
-
+                    <div id="raggruppamento-header-right" class="raggruppamento-nav-item">
+                        <div class="nav-item" id="chat_icon">
+                            <a class="nav-link headerItem fa fa-comments-o"></a>
                         </div>
+                        <div class="nav-item" id="alert_icon">
+                            <a class="nav-link headerItem fa fa-bell"></a>
+                        </div>
+                        <div class="nav-item" id="control_panel_icon">
+                            <a class="nav-link headerItem fa fa-angle-double-right"></a>
+                        </div>
+                    </div>
+
 
                 </div>
 
@@ -88,11 +91,6 @@
                 </div>
             </nav>
 
-            <div id="control-panel">
-                <div id="header-section" class="section-control-panel"></div>
-                <div id="content-section" class="section-control-panel"></div>
-            </div>
-
 
             <div id="row-pagina" class="row">
 
@@ -104,7 +102,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-8 col-sm-10">
+                <div class="col-md-10 col-sm-12">
 
                     <div id="title_space" class="row">
                         <h2>Welcome  <span> Nicola Pancheri</span></h2>
@@ -194,10 +192,45 @@
 
                 </div>
 
-                <div class="col-md-2 col-sm-2 col-right">
-                    <div id="chat_container" class="container-fluid">
+            </div>
 
-                    </div>
+            <div id="control-panel">
+                <div id="header-section" class="section-control-panel">
+                    <div id="control-panel-foto-dip"><img id="foto-dip" src="static/img/nicola_pancheri.jpg"></div>
+                    <div id="control-panel-nome-dip"><label>Nicola Pancheri</label></div>
+                </div>
+                <div id="content-section" class="section-control-panel">
+                    <ul>
+                        <li class="option-control_panel">
+                            <a class="fa fa-user"><i>Pagina Profilo</i></a>
+                        </li>
+                         <li id="databases-list-control-panel" class="option-control_panel options-li navbar-toggler" data-toggle="collapse" data-target="#navbarNavDropdowndDatabase" aria-controls="navbarNavDropdowndDatabase" aria-expanded="false" aria-label="Toggle navigation database">
+                            <a class="fa fa-database opzione-estentibile"><i>Database</i></a>
+                            <a id="extends-database-options" class="fa fa-plus"></a>
+                            <div class="collapse navbar-collapse" id="navbarNavDropdowndDatabase">
+                                <ul class="navbar-nav databases-list">
+                                    <li class="nav-item prezzario-option active">
+                                        <a class="nav-link" href="#">Prezzario Edile</a>
+                                    </li>
+                                    <li class="nav-item prezzario-option">
+                                        <a class="nav-link" href="#">Prezzario Prodotti</a>
+                                    </li>
+                                    <li class="nav-item prezzario-option">
+                                        <a class="nav-link" href="#">Scheda Fornitori</a>
+                                    </li>
+                                    <li class="nav-item prezzario-option">
+                                        <a class="nav-link" href="#">Scheda Artigiani</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                        <li class="option-control_panel">
+                            <a class="fa fa-sign-out"><i>Logout</i></a>
+                        </li>
+
+                    </ul>
+
                 </div>
             </div>
 
@@ -207,7 +240,8 @@
         <script src="static/jquery/3.4.1/js/jquery.min.js"></script>
         <script src="static/popper/1.14.7/js/popper.min.js"></script>
         <script src="static/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script src="static/home_dipendente/js/home_dipendente.js"></script>
+        <script src="static/home_dipendente/js/home_dipendente_old.js"></script>
+        <script src="static/home_dipendente/js/control_panel.js"></script>
 
         <script>
             aggiungiFunzionalitaDipendenteBase();
@@ -216,10 +250,6 @@
 
             });
 
-/*
-	$('.show-menu a').click(function() {
-    	$('.show-menu').fadeOut('slow');
-  });*/
 
         </script>
     </body>

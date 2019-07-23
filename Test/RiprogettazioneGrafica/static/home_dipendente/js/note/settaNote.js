@@ -1,10 +1,10 @@
 class SettaNote extends OggettoBase {
-    constructor(oggettoGeneratore, listaDipendenti ){ //listaDipendenti è vuota in caso il dipendente non sia anche dirigente
+    constructor(oggettoGeneratore, $where_to_append, listaDipendenti ){ //listaDipendenti è vuota in caso il dipendente non sia anche dirigente
         super($('<div id="addNotaBtn"> \
                     <a class="fa fa-plus"></a> \
                     <div id="componi_nota" style="display:none"> \
                     </div> \
-                 </div>'), oggettoGeneratore);
+                 </div>'), oggettoGeneratore, $where_to_append);
 
         this.annulla_nota_btn = $('<div id="annulla_nota" class="control_button_destinatario_note"><a class="fa fa-close" style="color:red"></a></div>');
         this.conferma_nota_btn = $('<div id="conferma_nota" class="control_button_destinatario_note"><a class="fa fa-check" style="color:green"></a></div>');
@@ -41,7 +41,6 @@ class SettaNote extends OggettoBase {
         this.conferma_nota_btn.click(function(){
             thisRef.confermaInvioNota();
         });
-
 
 
     }

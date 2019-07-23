@@ -28,55 +28,6 @@ div#row-pagina {
 
 }
 
-div.slider-wrapper::-webkit-scrollbar {
-    display: none;
-}
-
-div.col-left {
-  padding: 0 0 0 0;
-  height: 92%
-}
-
-div#base_activity_container{
-    width: 100%;
-    height: 100%;
-}
-
-div#base_activity_slider_wrapper{
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-
-}
-
-
-div.attivitaBaseDipendente {
-    display: inline-block;
-
-    background: aqua;
-
-    width: 170px;
-    height: 170px;
-    text-align: center;
-    color: white;
-    font-size: 18px;
-    margin-bottom: 30px;
-    border-radius: 50%;
-}
-
-div.attivitaBaseDipendente > a {
-    color: white;
-}
-
-
-div.attivitaBaseDipendente i {
-    padding-top: 50px;
-    display: block;
-    font-size: 36px;
-    margin-bottom: 10px;
-}
-
 ul#elementi_header{
 
     width: 100%;

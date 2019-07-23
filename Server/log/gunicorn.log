@@ -19761,3 +19761,534 @@ Alternativa al post ()<app.model.form.ClienteAccoltoForm object at 0x7f86f0f6b32
 [2019-07-22 11:18:51 +0200] [655] [DEBUG] GET /socket.io/
 [2019-07-22 11:18:51 +0200] [655] [DEBUG] Closing connection. 
 [2019-07-22 11:18:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:13 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 12:37:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:13 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:37:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /chat
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /getNotifiche
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /getImpegni
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /sidebarLeft
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] GET /header
+[2019-07-22 12:37:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] GET /popper.js.map
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 12:37:15 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] GET /chat
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] GET /getNotifiche
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] GET /getImpegni
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] GET /sidebarLeft
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] GET /header
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:05 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /popper.js.map
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:06 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:07 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 12:40:07 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 12:40:07 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 12:40:07 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:30 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 14:02:30 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:30 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:30 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /chat
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /getNotifiche
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /getImpegni
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /sidebarLeft
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /header
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /popper.js.map
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:31 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:32 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:33 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:02:33 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:02:33 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:02:33 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:03:00 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:03:00 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:47 +0200] [655] [DEBUG] GET /
+[2019-07-22 14:28:47 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:47 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 14:28:47 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:47 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:47 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /chat
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /getNotifiche
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /getImpegni
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /sidebarLeft
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /header
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /homepage
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 14:28:48 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:49 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:49 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 15:30:51 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:11 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:11 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:13 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] POST /socket.io/
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] GET /socket.io/
+[2019-07-22 16:49:14 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 17:47:42 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 17:47:42 +0200] [655] [DEBUG] Closing connection. 
+[2019-07-22 17:47:51 +0200] [599] [INFO] Handling signal: term
+[2019-07-22 17:47:52 +0200] [655] [INFO] Worker exiting (pid: 655)
+[2019-07-22 17:47:53 +0200] [599] [INFO] Shutting down: Master
+[2019-07-23 11:17:57 +0200] [605] [DEBUG] Current configuration:
+  post_worker_init: <function PostWorkerInit.post_worker_init at 0x7f3fdea69730>
+  worker_abort: <function WorkerAbort.worker_abort at 0x7f3fdea69a60>
+  daemon: False
+  max_requests: 0
+  graceful_timeout: 30
+  access_log_format: %(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
+  raw_paste_global_conf: []
+  keyfile: None
+  statsd_host: None
+  workers: 1
+  do_handshake_on_connect: False
+  worker_int: <function WorkerInt.worker_int at 0x7f3fdea698c8>
+  errorlog: /home/nicola/Documenti/Lavoro/UnionService/Server/log/gunicorn.log
+  statsd_prefix: 
+  sendfile: None
+  raw_env: []
+  worker_tmp_dir: None
+  paste: None
+  cert_reqs: 0
+  reload_engine: auto
+  tmp_upload_dir: None
+  max_requests_jitter: 0
+  syslog_addr: udp://localhost:514
+  limit_request_line: 4094
+  post_request: <function PostRequest.post_request at 0x7f3fdea69ea0>
+  config: None
+  bind: ['127.0.0.1:3000']
+  pre_request: <function PreRequest.pre_request at 0x7f3fdea69d90>
+  worker_exit: <function WorkerExit.worker_exit at 0x7f3fdea6e268>
+  keepalive: 2
+  proc_name: None
+  default_proc_name: Server:application
+  initgroups: False
+  accesslog: None
+  logconfig: None
+  ca_certs: None
+  ciphers: TLSv1
+  enable_stdio_inheritance: False
+  preload_app: False
+  on_starting: <function OnStarting.on_starting at 0x7f3fdea59ea0>
+  syslog_facility: user
+  when_ready: <function WhenReady.when_ready at 0x7f3fdea69268>
+  backlog: 2048
+  limit_request_fields: 100
+  pre_fork: <function Prefork.pre_fork at 0x7f3fdea69400>
+  pre_exec: <function PreExec.pre_exec at 0x7f3fdea69bf8>
+  user: 0
+  ssl_version: 2
+  post_fork: <function Postfork.post_fork at 0x7f3fdea69598>
+  pidfile: /var/run/gunicorn.pid
+  group: 0
+  secure_scheme_headers: {'X-FORWARDED-PROTOCOL': 'ssl', 'X-FORWARDED-SSL': 'on', 'X-FORWARDED-PROTO': 'https'}
+  forwarded_allow_ips: ['127.0.0.1']
+  spew: False
+  proxy_allow_ips: ['127.0.0.1']
+  on_reload: <function OnReload.on_reload at 0x7f3fdea690d0>
+  child_exit: <function ChildExit.child_exit at 0x7f3fdea6e0d0>
+  on_exit: <function OnExit.on_exit at 0x7f3fdea6e598>
+  worker_class: eventlet
+  timeout: 30
+  reload: False
+  check_config: False
+  nworkers_changed: <function NumWorkersChanged.nworkers_changed at 0x7f3fdea6e400>
+  loglevel: debug
+  logger_class: gunicorn.glogging.Logger
+  syslog: False
+  syslog_prefix: None
+  pythonpath: None
+  proxy_protocol: False
+  certfile: None
+  suppress_ragged_eofs: True
+  worker_connections: 1000
+  capture_output: False
+  chdir: /home/nicola/Documenti/Lavoro/UnionService/Server
+  threads: 1
+  umask: 0
+  limit_request_field_size: 8190
+[2019-07-23 11:17:57 +0200] [605] [INFO] Starting gunicorn 19.7.1
+[2019-07-23 11:17:57 +0200] [605] [DEBUG] Arbiter booted
+[2019-07-23 11:17:57 +0200] [605] [INFO] Listening at: http://127.0.0.1:3000 (605)
+[2019-07-23 11:17:57 +0200] [605] [INFO] Using worker: eventlet
+[2019-07-23 11:17:57 +0200] [688] [INFO] Booting worker with pid: 688
+[2019-07-23 11:17:57 +0200] [605] [DEBUG] 1 workers
+[2019-07-23 11:49:14 +0200] [688] [DEBUG] GET /
+[2019-07-23 11:49:14 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:14 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 11:49:14 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /chat
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /getNotifiche
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /getImpegni
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /sidebarLeft
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /header
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:16 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:20 +0200] [688] [DEBUG] GET /popper.js.map
+[2019-07-23 11:49:20 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:58 +0200] [688] [DEBUG] GET /PrezzarioEdile
+[2019-07-23 11:49:58 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:58 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:58 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:58 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:58 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] GET /chat
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] GET /getNotifiche
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] GET /sidebarLeft
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] GET /header
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:49:59 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] GET /popper.js.map
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:50:00 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:01 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 11:50:01 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 11:50:01 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 11:50:01 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:12 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 12:08:12 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:12 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:12 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /chat
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /getNotifiche
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /getImpegni
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /sidebarLeft
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /header
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /popper.js.map
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:13 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 12:08:14 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:08:14 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:14 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:14 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:14 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:14 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:15 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:08:15 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:08:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:08:15 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:56 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:38:57 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:57 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:57 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:57 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:38:57 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:38:57 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:23 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 12:50:23 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:23 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:23 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /chat
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /getNotifiche
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /getImpegni
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /sidebarLeft
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /header
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 12:50:24 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:25 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:50:25 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:25 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:25 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:25 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:26 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 12:50:26 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 12:50:26 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 12:50:26 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] GET /
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] GET /chat
+[2019-07-23 13:02:53 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /getNotifiche
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /getImpegni
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /sidebarLeft
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /header
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /homepage
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:02:54 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:03:04 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:03:04 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:46 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:46 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:47 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] POST /socket.io/
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] GET /socket.io/
+[2019-07-23 13:21:48 +0200] [688] [DEBUG] Closing connection. 
+[2019-07-23 13:33:04 +0200] [688] [DEBUG] GET /popper.js.map
+[2019-07-23 13:33:04 +0200] [688] [DEBUG] Closing connection. 

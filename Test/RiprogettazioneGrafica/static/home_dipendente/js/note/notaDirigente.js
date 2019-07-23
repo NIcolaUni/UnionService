@@ -1,5 +1,5 @@
 class NotaDirigente extends NotaBase {
-    constructor( oggettoGeneratore, messaggio, idNota, dirigente){
+    constructor( oggettoGeneratore, $where_to_append, messaggio, idNota, dirigente){
         super($('<div id="nota_dip_'+idNota+'" class="nota_dirigente nota_dipendente"> \
                     <div class="checkbox_area_dirigente checkbox_area"> \
                         <div class="checkbox_container"> \
@@ -8,7 +8,7 @@ class NotaDirigente extends NotaBase {
                     </div> \
                     <div class="messaggio_nota_container"> \
                     </div> \
-                 </div>'), oggettoGeneratore, messaggio, idNota);
+                 </div>'), oggettoGeneratore, $where_to_append, messaggio, idNota);
 
         this.idDirigente = true;
         this.dirigente = dirigente; //nome del dirigente

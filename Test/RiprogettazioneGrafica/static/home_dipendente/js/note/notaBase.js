@@ -1,6 +1,6 @@
 class NotaBase extends OggettoBase {
-    constructor( referenzaDOM, oggettoGeneratore, messaggio, idNota){
-        super( referenzaDOM, oggettoGeneratore);
+    constructor( referenzaDOM, oggettoGeneratore, $where_to_append, messaggio, idNota){
+        super( referenzaDOM, oggettoGeneratore, $where_to_append);
 
 
         this.id = idNota //intero associato ad ogni nota aggiunta incrementando il valore dell'ultima nota registrata
