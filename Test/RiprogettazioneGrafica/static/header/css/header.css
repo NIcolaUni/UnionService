@@ -1,6 +1,9 @@
 
 .header_home {
     margin-bottom: 50px;
+    position: fixed;
+    width: 100%;
+    z-index: 3;
 }
 
 .header_home .container {
@@ -103,6 +106,7 @@ div#areaNotifiche {
     border-bottom: 1px solid #edb75554;
     margin: 0;
     padding: 10px;
+    background: #ffc1078a;
 }
 
 #zonaTitolo_areaAlertChatHeader label {
@@ -118,3 +122,17 @@ div#zonaContenuto_areaAlertChatHeader {
     width: 100%;
     height: 80%;
 }
+
+input#cap_cliente_input {
+    width: 90px;
+}
+
+select#regione_select {
+    width: 20%;
+}
+
+div#input_container_addr {
+    margin-top: 20px;
+}
+
+

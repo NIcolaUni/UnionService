@@ -23,6 +23,10 @@ div#row-pagina {
     height: 100%;
 }
 
+#row-pagina > div {
+    margin-top: 96px;
+}
+
 
 .col-right {
 

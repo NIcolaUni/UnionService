@@ -1,0 +1,22 @@
+#calendario_activity_container{
+
+    height: 100%;
+    width: 100%;
+}
+
+#calendario_space {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+}
+
+#calendario{
+    height: 100%;
+    width: 100%;
+    background: white;
+}
+
+#calendario .month-container{
+    display: inline-block;
+    padding: 45px;
+}

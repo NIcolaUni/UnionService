@@ -7,37 +7,103 @@ class AttivitaBase extends OggettoBase {
                     </div> \
                 </div>'), oggettoGeneratore, $where_to_append);
 
-        this.aggiungiFunzionalitaDipendenteBase();
+
+        this.activity_list = [];
+        this.height_pagine = 0;
+
+
     }
 
-    aggiungiFunzionalitaDipendenteBase(){
+    popolaActivityList(){
 
-        for( var i = 0; i < 6; i++){
-            if( i == 0 ){
-                this.referenzaDOM.children('#base_activity_container').children('#base_activity_slider_wrapper').append('<div class="attivitaBaseDipendente" style="background:#08021b"><a class="homebutton active" href="#"><i class="fa fa-home"></i>Home</a><div>');
+        var $space_btns = this.referenzaDOM.children('#base_activity_container').children('#base_activity_slider_wrapper');
+
+        this.activity_list.push( new Note_btn(this, $space_btns, this.padre.note_page) );
+        this.activity_list.push( new Agenda_btn(this, $space_btns, this.padre.agenda_page) );
+        this.activity_list.push( new Calendario_btn(this, $space_btns, this.padre.calendario_page) );
+        this.activity_list.push( new Gestione_dip_btn(this, $space_btns, this.padre.gestione_dip_page) );
+        this.activity_list.push( new Accogli_cliente_btn(this, $space_btns, this.padre.accogli_cliente_page) );
+        this.activity_list.push( new Email_btn(this, $space_btns, this.padre.email_page) );
+
+        this.abilitaBottoni();
+    }
+
+
+    abilitaBottoni(){
+
+        this.height_pagine = $('.activity_container').first().height();
+
+        $('#sezione_presentazione').css('height', 'auto');
+        $('.activity_container').css('height', this.height_pagine+'px');
+
+
+        var cambiaPagina = function( height_pagine, activity_btn_selected ){
+
+            var mostraActivityContainer = function(){
+                $('.activity_container').each(function(){
+                    $(this).css('visibility', 'visible');
+                });
+            }
+
+            var nascondiActivityContainerNonAttivi = function(){
+                $('.activity_container').each(function(){
+                    if( $(this).attr('id') != activity_btn_selected.paginaAssociata.referenzaDOM.attr('id') )
+                        $(this).css('visibility', 'hidden');
+                });
 
             }
-            else if( i == 1 ){
-                this.referenzaDOM.children('#base_activity_container').children('#base_activity_slider_wrapper').append('<div class="attivitaBaseDipendente" style="background:#110633"><a class="agendaButton" href="#"><i class="fa fa-book"></i>Agenda</a><div>');
+
+            var id_selezionato = activity_btn_selected.paginaAssociata.id_in_slider;
+
+            var id_corrente = activity_btn_selected.padre.padre.attivita_corrente.id_in_slider;
+            var id_referenzaDOM = activity_btn_selected.padre.padre.attivita_corrente.referenzaDOM.attr('id');
+
+            mostraActivityContainer();
+
+
+            if( id_corrente > id_selezionato ){
+
+                var offset = id_corrente-id_selezionato;
+                var spostamento = offset*height_pagine;
+                $('#sezione_presentazione' ).animate({'margin-top': '+='+spostamento+'px'}, 300, nascondiActivityContainerNonAttivi);
+              //  $('#note_activity_container').hide();
+            }
+            else if( id_corrente < id_selezionato ){
+
+                var offset = id_selezionato-id_corrente;
+                var spostamento = offset*height_pagine;
+                $('#sezione_presentazione').animate({'margin-top': '-='+spostamento+'px'}, 300, nascondiActivityContainerNonAttivi);
+                //$('#note_activity_container').hide();
 
             }
-            else if( i == 2 ){
-                this.referenzaDOM.children('#base_activity_container').children('#base_activity_slider_wrapper').append('<div class="attivitaBaseDipendente" style="background:#251163"><a class="calendarButton" href="#"><i class="fa fa-calendar"></i>Calendario</a><div>');
-
+            else{
+               // alert('non faccio niente')
+               nascondiActivityContainerNonAttivi();
             }
-            else if( i == 3 ){
-                this.referenzaDOM.children('#base_activity_container').children('#base_activity_slider_wrapper').append('<div class="attivitaBaseDipendente" style="background:#3b19a5"><a class="gestioneDipButton" href="#"><i class="fa fa-user-plus"></i>Gestione <br> Dipendenti</a><div>');
 
-            }
-            else if( i == 4 ){
-                this.referenzaDOM.children('#base_activity_container').children('#base_activity_slider_wrapper').append('<div class="attivitaBaseDipendente" style="background:#674abf"><a class="accoglienzaButton" href="#"><i class="fa fa-address-book-o"></i>Accogli <br> Cliente</a><div>');
+            activity_btn_selected.padre.padre.attivita_corrente = activity_btn_selected.paginaAssociata;
 
-            }
-            else if( i == 5 ){
-                this.referenzaDOM.children('#base_activity_container').children('#base_activity_slider_wrapper').append('<div class="attivitaBaseDipendente" style="background:#40005F"><a class="contactbutton" href="#"><i class="fa fa-envelope"></i>Invia un email</a><div>');
 
-            }
+            $.each(activity_btn_selected.padre.activity_list, function(index, activity){
+                activity.paginaDisattiva();
+            });
+
+            activity_btn_selected.paginaAttiva();
+          /*  */
+
 
         }
+
+        var height_pagine = this.height_pagine;
+
+        $.each(this.activity_list, function(index, activity){
+            activity.abilitaBottone(cambiaPagina, height_pagine)
+        });
+
+
+
     }
+
+
+
 }

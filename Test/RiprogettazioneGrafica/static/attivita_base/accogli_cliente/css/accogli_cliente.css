@@ -1,0 +1,65 @@
+#accogli_cliente_activity_container{
+    height: 100%;
+    width: 100%;
+}
+
+div#accogli_cliente_space {
+    height: 90%;
+    width: 90%;
+    margin: 0 auto;
+    background: white;
+    border-radius: 85px;
+}
+
+#accogli_cliente_title {
+    height: 20%;
+    padding: 66px;
+}
+
+#accogli_cliente_form_space {
+    height: 80%;
+}
+
+div#accogli_cliente_title label {
+    text-align: center;
+    height: 100%;
+    width: 80%;
+    font-family: Montserrat-Black;
+    font-size: 51px;
+    color: #333333;
+    line-height: 1.2;
+}
+
+#new_cliente_image_container{
+    height: 100px;
+    width: 100px;
+    display: inline-block;
+    border-radius: 50%;
+
+}
+
+#new_cliente_image_container > img {
+    height: 100%;
+    width: 150%;
+    border-radius: 50%;
+}
+
+#accogli_cliente_forms_container {
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 65px;
+}
+
+input#cognome_cliente_input {
+    float: right;
+}
+
+input#civico_cliente_input {
+    width: 70px;
+}
+
+form#accogli_cliente_form_addr > div {
+    display: inline-block;
+    margin: 0 auto;
+    width: 40%;
+}

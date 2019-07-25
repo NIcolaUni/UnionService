@@ -1,0 +1,25 @@
+#agenda_activity_container{
+
+    height: 100%;
+    width: 100%;
+}
+
+#agenda_space {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+}
+
+#agenda th, td{
+   border-color: #bfbcbc !important;
+   background: white;
+}
+
+#agenda .fc-header-toolbar{
+    height: 80px;
+    margin: 0;
+}
+
+#agenda .fc-view-container{
+
+}
