@@ -31,7 +31,7 @@ class AttivitaBase extends OggettoBase {
 
     abilitaBottoni(){
 
-        this.height_pagine = $('.activity_container').first().height();
+        this.height_pagine = 882;
 
         $('#sezione_presentazione').css('height', 'auto');
         $('.activity_container').css('height', this.height_pagine+'px');
